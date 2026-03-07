@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HET PATEL | DevOps Architect</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=Fira+Code&display=swap');
+        :root { --glow: #00ff41; --bg: #020202; }
+        body { background-color: var(--bg); color: #fff; font-family: 'Space Grotesk', sans-serif; overflow-x: hidden; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .mono { font-family: 'Fira Code', monospace; }
+        .text-glow { text-shadow: 0 0 15px var(--glow); color: var(--glow); }
+        .terminal-window { background: #0a0a0a; border: 1px solid #333; border-radius: 12px; height: 400px; display: flex; flex-direction: column; }
+        .terminal-body { padding: 15px; flex-grow: 1; overflow-y: auto; scrollbar-width: none; }
+        .terminal-input-line { display: flex; align-items: center; gap: 8px; }
+        .terminal-input { background: transparent; border: none; outline: none; color: #fff; width: 100%; font-family: 'Fira Code', monospace; }
+        .output-line { margin-bottom: 4px; }
+    </style>
+</head>
+<body class="selection:bg-green-500/30">
+
+    <!-- NAVIGATION -->
+    <nav class="fixed top-0 left-0 w-full p-6 flex justify-between items-center z-50 glass border-b-0">
+        <div class="mono font-bold text-xl tracking-tighter text-glow">HETOPS_</div>
+        <div class="flex gap-8 text-xs mono tracking-widest">
+            <a href="https://dash.hetops.dev" target="_blank" class="hover:text-green-400 transition">DASHBOARD</a>
+            <a href="https://status.hetops.dev" target="_blank" class="hover:text-green-400 transition">STATUS</a>
+            <a href="https://github.com" target="_blank" class="hover:text-green-400 transition">GITHUB</a>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <div class="min-h-screen flex flex-col justify-center px-6 md:px-24 relative pt-20">
+        <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-green-500/5 blur-[120px] rounded-full"></div>
+        
+        <div data-aos="fade-up" class="mb-12">
+            <h2 class="mono text-green-500 mb-4 tracking-[0.4em] uppercase text-sm">// Infrastructure_as_Art</h2>
+            <h1 class="text-6xl md:text-8xl font-bold tracking-tighter mb-4">
+                The <span class="text-green-500">Oracle Beast</span> <br>
+                is <span class="italic font-light text-white/50">Online.</span>
+            </h1>
+        </div>
+
+        <!-- INTERACTIVE TERMINAL -->
+        <div class="max-w-3xl w-full terminal-window shadow-2xl glass" data-aos="fade-right">
+            <div class="bg-white/5 px-4 py-2 flex justify-between items-center border-b border-white/10">
+                <div class="flex gap-2">
+                    <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                    <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                    <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                </div>
+                <span class="text-[10px] mono text-gray-400 uppercase tracking-widest">Guest@hetops.dev</span>
+            </div>
+            
+            <div id="terminal-content" class="terminal-body mono text-sm leading-relaxed text-gray-300">
+                <p class="text-green-500">Welcome to HETOPS OS v2.0.0...</p>
+                <p class="text-gray-500 text-xs mb-4">Type 'help' to see available commands.</p>
+                <div id="output"></div>
+                <div class="terminal-input-line">
+                    <span class="text-green-500">visitor@hetops:~$</span>
+                    <input type="text" id="terminal-input" class="terminal-input" autofocus spellcheck="false">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CARDS SECTION -->
+    <section class="py-24 px-6 md:px-24 grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="glass p-8 rounded-3xl group hover:border-green-500/50 transition duration-500" data-aos="fade-up">
+            <i data-lucide="layout-dashboard" class="mb-6 text-green-500"></i>
+            <h3 class="text-2xl font-bold mb-2 text-white">Ops Dashboard</h3>
+            <p class="text-gray-400 text-sm mb-6">Centralized control plane for all deployed microservices and nodes.</p>
+            <a href="https://dash.hetops.dev" target="_blank" class="px-4 py-2 bg-white/5 rounded-lg text-xs mono hover:bg-green-500/20 transition">ACCESS_DASHBOARD</a>
+        </div>
+
+        <div class="glass p-8 rounded-3xl group hover:border-blue-500/50 transition duration-500" data-aos="fade-up" data-aos-delay="100">
+            <i data-lucide="activity" class="mb-6 text-blue-500"></i>
+            <h3 class="text-2xl font-bold mb-2 text-white">System Health</h3>
+            <p class="text-gray-400 text-sm mb-6">Real-time uptime monitoring and incident alerting via Uptime Kuma.</p>
+            <a href="https://status.hetops.dev" target="_blank" class="px-4 py-2 bg-white/5 rounded-lg text-xs mono hover:bg-blue-500/20 transition">VIEW_STATUS</a>
+        </div>
+
+        <div class="glass p-8 rounded-3xl group hover:border-purple-500/50 transition duration-500" data-aos="fade-up" data-aos-delay="200">
+            <i data-lucide="shield" class="mb-6 text-purple-500"></i>
+            <h3 class="text-2xl font-bold mb-2 text-white">Security Hub</h3>
+            <p class="text-gray-400 text-sm mb-6">Automated SSL management and secure tunneling for Azure endpoints.</p>
+            <a href="https://hub.hetops.dev" target="_blank" class="px-4 py-2 bg-white/5 rounded-lg text-xs mono hover:bg-purple-500/20 transition">MGMT_PORTAL</a>
+        </div>
+    </section>
+
+    <footer class="p-12 border-t border-white/5 text-center mono text-[10px] text-gray-500 tracking-[0.5em]">
+        HETOPS_INFRASTRUCTURE // 2026 // ALL_SYSTEMS_OPERATIONAL
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init();
+        lucide.createIcons();
+
+        const input = document.getElementById('terminal-input');
+        const output = document.getElementById('output');
+        const terminalContent = document.getElementById('terminal-content');
+
+        const commands = {
+            help: "Available commands: [about] [stats] [stack] [links] [clear]",
+            about: "I am Het Patel, a DevOps Engineer specialized in Oracle Cloud (ARM architecture) and Azure automation. I build high-availability infrastructure that scales efficiently.",
+            stats: "--- SYSTEM STATS ---\nCPU: 4 OCPUs (ARM Ampere)\nRAM: 24GB Total (DDR4)\nDISK: 150GB Block Storage\nREGION: India West (Mumbai)\nUPTIME: 99.99%",
+            stack: "--- THE TECH STACK ---\n- Orchestration: Coolify / Docker\n- Cloud: Oracle Cloud, Azure\n- Proxy: Traefik (Automated SSL)\n- Monitoring: Uptime Kuma, Netdata",
+            links: "Redirecting... [Dashboard: dash.hetops.dev] [Status: status.hetops.dev] [Hub: hub.hetops.dev]",
+            clear: "clear"
+        };
+
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                const val = input.value.toLowerCase().trim();
+                const response = commands[val] || `Command not found: ${val}. Type 'help' for options.`;
+                
+                if (val === 'clear') {
+                    output.innerHTML = '';
+                } else {
+                    const line = document.createElement('div');
+                    line.className = 'output-line';
+                    line.innerHTML = `<span class="text-green-500">visitor@hetops:~$</span> ${val}<br><span class="text-white/60">${response.replace(/\n/g, '<br>')}</span>`;
+                    output.appendChild(line);
+                }
+                
+                input.value = '';
+                terminalContent.scrollTop = terminalContent.scrollHeight;
+            }
+        });
+
+        // Focus input on terminal click
+        document.querySelector('.terminal-window').addEventListener('click', () => {
+            input.focus();
+        });
+    </script>
+</body>
+</html>
