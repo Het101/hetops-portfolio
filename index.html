@@ -28,54 +28,98 @@
         .file { color: #f39c12; }
         .exe { color: #2ecc71; font-weight: bold; }
         
-        /* SCROLL REVEAL (Stable) */
+        /* SCROLL REVEAL (Enhanced) */
         .scroll-reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; }
         .scroll-reveal.active { opacity: 1; transform: translateY(0); }
+        .scroll-reveal-left { opacity: 0; transform: translateX(-50px); transition: all 0.8s ease-out; }
+        .scroll-reveal-left.active { opacity: 1; transform: translateX(0); }
+        .scroll-reveal-right { opacity: 0; transform: translateX(50px); transition: all 0.8s ease-out; }
+        .scroll-reveal-right.active { opacity: 1; transform: translateX(0); }
+        .stagger-1 { transition-delay: 0.1s; }
+        .stagger-2 { transition-delay: 0.2s; }
+        .stagger-3 { transition-delay: 0.3s; }
+        .stagger-4 { transition-delay: 0.4s; }
+        
+        /* TYPING ANIMATION */
+        .typing-cursor::after { content: '|'; animation: blink 1s infinite; color: #00ff41; }
+        @keyframes blink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }
+        
+        /* FLOATING PARTICLES */
+        .particle { position: absolute; width: 4px; height: 4px; background: rgba(0, 255, 65, 0.3); border-radius: 50%; animation: float 20s infinite; }
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100vh) translateX(100px); opacity: 0; }
+        }
+        
+        /* SKILL BAR ANIMATION */
+        .skill-bar { height: 8px; background: rgba(255, 255, 255, 0.1); border-radius: 10px; overflow: hidden; position: relative; }
+        .skill-progress { height: 100%; background: linear-gradient(90deg, #00f260, #0575e6); border-radius: 10px; width: 0; transition: width 1.5s ease-out; position: relative; }
+        .skill-progress::after { content: ''; position: absolute; top: 0; right: 0; width: 20px; height: 100%; background: rgba(255,255,255,0.3); filter: blur(10px); animation: shimmer 2s infinite; }
+        @keyframes shimmer { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(-100px); } }
+        
+        /* PROJECT CARD HOVER */
+        .project-card { position: relative; overflow: hidden; }
+        .project-card::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(0, 242, 96, 0.1), transparent); transition: left 0.5s; }
+        .project-card:hover::before { left: 100%; }
+        
+        /* PULSE ANIMATION */
+        @keyframes pulse-ring { 0% { transform: scale(0.8); opacity: 1; } 100% { transform: scale(1.2); opacity: 0; } }
+        .pulse-dot::before { content: ''; position: absolute; top: 50%; left: 50%; width: 100%; height: 100%; border-radius: 50%; background: inherit; transform: translate(-50%, -50%); animation: pulse-ring 1.5s infinite; }
         
         /* PIPELINE UI */
         .node { position: relative; padding-left: 30px; border-left: 2px solid #222; }
         .node::before { content: ""; position: absolute; left: -9px; top: 0; width: 16px; height: 16px; border-radius: 50%; background: #222; border: 3px solid var(--bg); }
         .node.current::before { background: #00ff41; box-shadow: 0 0 15px #00ff41; border: none; }
+        
+        /* SMOOTH SCROLL */
+        html { scroll-behavior: smooth; }
     </style>
 </head>
 <body>
 
-    <!-- DYNAMIC BACKGROUND -->
+    <!-- DYNAMIC BACKGROUND WITH PARTICLES -->
     <div class="fixed top-0 left-0 w-full h-full z-[-1] overflow-hidden pointer-events-none">
         <div class="absolute top-[-10%] right-[-10%] w-[600px] h-[600px] bg-emerald-500/5 blur-[120px] rounded-full"></div>
         <div class="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] bg-blue-600/5 blur-[120px] rounded-full"></div>
+        <div id="particles-container"></div>
     </div>
 
     <!-- NAVBAR -->
-    <nav class="fixed top-0 w-full z-50 p-6 flex justify-between items-center bg-black/50 backdrop-blur-lg border-b border-white/5">
+    <nav class="fixed top-0 w-full z-50 p-6 flex justify-between items-center bg-black/50 backdrop-blur-lg border-b border-white/5 transition-all duration-300" id="navbar">
         <div class="font-black text-2xl tracking-tighter italic">HET<span class="text-emerald-500">OPS_</span></div>
         <div class="hidden md:flex gap-10 text-[10px] uppercase font-bold tracking-[0.4em] items-center">
             <a href="#infra" class="hover:text-emerald-400 transition">Infrastructure</a>
+            <a href="#skills" class="hover:text-purple-400 transition">Skills</a>
+            <a href="#projects" class="hover:text-amber-400 transition">Projects</a>
             <a href="#exp" class="hover:text-blue-400 transition">Experience</a>
+            <a href="#contact" class="hover:text-pink-400 transition">Contact</a>
             <a href="https://dash.hetops.dev" target="_blank" class="text-emerald-500 px-4 py-2 border border-emerald-500/30 rounded-full hover:bg-emerald-500 hover:text-black transition">Command Center</a>
         </div>
     </nav>
 
-    <!-- HERO SECTION (NO REVEAL CLASS = NO BLACK SCREEN) -->
+    <!-- HERO SECTION -->
     <section class="min-h-screen flex flex-col justify-center px-6 md:px-24 pt-20">
         <div class="grid lg:grid-cols-2 gap-16 items-center">
-            <div>
+            <div class="scroll-reveal-left">
                 <h2 class="font-mono text-emerald-500 mb-4 tracking-[0.4em] text-xs uppercase">// DEVOPS_ENGINEER_II</h2>
                 <h1 class="text-7xl md:text-9xl font-black tracking-tighter leading-none mb-8">
-                    HET <br> <span class="gradient-text">PATEL.</span>
+                    HET <br> <span class="gradient-text typing-cursor" id="typed-text">PATEL.</span>
                 </h1>
                 <p class="text-gray-400 text-xl max-w-lg mb-10 leading-relaxed font-light">
                     Building <span class="text-white font-semibold">automated resilience</span> at Techdome. 
                     Mastering the 24GB Oracle ARM Beast & Azure Cloud.
                 </p>
                 <div class="flex gap-6">
-                    <a href="https://linkedin.com/in/het11" target="_blank" class="p-4 glass-card rounded-2xl text-emerald-400"><i data-lucide="linkedin"></i></a>
-                    <a href="https://github.com/Het101" target="_blank" class="p-4 glass-card rounded-2xl text-blue-400"><i data-lucide="github"></i></a>
+                    <a href="https://linkedin.com/in/het11" target="_blank" class="p-4 glass-card rounded-2xl text-emerald-400 hover:scale-110 transition-transform"><i data-lucide="linkedin"></i></a>
+                    <a href="https://github.com/Het101" target="_blank" class="p-4 glass-card rounded-2xl text-blue-400 hover:scale-110 transition-transform"><i data-lucide="github"></i></a>
+                    <a href="mailto:hetpatidar09@gmail.com" class="p-4 glass-card rounded-2xl text-purple-400 hover:scale-110 transition-transform"><i data-lucide="mail"></i></a>
                 </div>
             </div>
 
             <!-- THE TERMINAL -->
-            <div class="terminal-container">
+            <div class="terminal-container scroll-reveal-right">
                 <div class="terminal-header">
                     <div class="flex gap-2">
                         <div class="w-3 h-3 rounded-full bg-[#ff5f56]"></div>
@@ -99,32 +143,165 @@
     </section>
 
     <!-- SERVICE GRID -->
-    <section id="infra" class="py-32 px-6 md:px-24 bg-[#050505] scroll-reveal">
-        <h3 class="text-[10px] uppercase tracking-[0.5em] text-gray-600 mb-16 font-bold">// CLOUD_INFRASTRUCTURE_NODES</h3>
+    <section id="infra" class="py-32 px-6 md:px-24 bg-[#050505]">
+        <h3 class="text-[10px] uppercase tracking-[0.5em] text-gray-600 mb-16 font-bold scroll-reveal">// CLOUD_INFRASTRUCTURE_NODES</h3>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <a href="https://dash.hetops.dev" target="_blank" class="glass-card p-8 h-48 flex flex-col justify-between">
+            <a href="https://dash.hetops.dev" target="_blank" class="glass-card p-8 h-48 flex flex-col justify-between scroll-reveal stagger-1">
                 <i data-lucide="layout-grid" class="text-emerald-500"></i>
                 <div><h4 class="font-bold text-lg">Dashboard</h4><p class="text-xs text-gray-500 mono">dash.hetops.dev</p></div>
             </a>
-            <a href="https://status.hetops.dev" target="_blank" class="glass-card p-8 h-48 flex flex-col justify-between">
+            <a href="https://status.hetops.dev" target="_blank" class="glass-card p-8 h-48 flex flex-col justify-between scroll-reveal stagger-2">
                 <i data-lucide="activity" class="text-blue-500"></i>
                 <div><h4 class="font-bold text-lg">Reliability</h4><p class="text-xs text-gray-500 mono">status.hetops.dev</p></div>
             </a>
-            <a href="https://tools.hetops.dev" target="_blank" class="glass-card p-8 h-48 flex flex-col justify-between">
+            <a href="https://tools.hetops.dev" target="_blank" class="glass-card p-8 h-48 flex flex-col justify-between scroll-reveal stagger-3">
                 <i data-lucide="wrench" class="text-amber-500"></i>
                 <div><h4 class="font-bold text-lg">Dev Toolkit</h4><p class="text-xs text-gray-500 mono">tools.hetops.dev</p></div>
             </a>
-            <a href="https://hub.hetops.dev" target="_blank" class="glass-card p-8 h-48 flex flex-col justify-between">
+            <a href="https://hub.hetops.dev" target="_blank" class="glass-card p-8 h-48 flex flex-col justify-between scroll-reveal stagger-4">
                 <i data-lucide="cpu" class="text-purple-500"></i>
                 <div><h4 class="font-bold text-lg">Coolify</h4><p class="text-xs text-gray-500 mono">hub.hetops.dev</p></div>
             </a>
         </div>
     </section>
 
+    <!-- SKILLS SHOWCASE -->
+    <section id="skills" class="py-32 px-6 md:px-24">
+        <h3 class="text-[10px] uppercase tracking-[0.5em] text-gray-600 mb-16 font-bold scroll-reveal">// TECHNICAL_CAPABILITIES</h3>
+        <div class="grid lg:grid-cols-2 gap-16">
+            <div class="scroll-reveal-left">
+                <div class="space-y-8">
+                    <div>
+                        <div class="flex justify-between mb-3">
+                            <span class="text-sm font-bold text-emerald-400">Cloud Platforms (AWS, Azure, GCP, OCI)</span>
+                            <span class="text-xs text-gray-500 font-mono">95%</span>
+                        </div>
+                        <div class="skill-bar"><div class="skill-progress" data-width="95"></div></div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between mb-3">
+                            <span class="text-sm font-bold text-blue-400">Kubernetes & Docker</span>
+                            <span class="text-xs text-gray-500 font-mono">92%</span>
+                        </div>
+                        <div class="skill-bar"><div class="skill-progress" data-width="92"></div></div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between mb-3">
+                            <span class="text-sm font-bold text-purple-400">CI/CD (Jenkins, GitLab, GitHub Actions)</span>
+                            <span class="text-xs text-gray-500 font-mono">90%</span>
+                        </div>
+                        <div class="skill-bar"><div class="skill-progress" data-width="90"></div></div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between mb-3">
+                            <span class="text-sm font-bold text-amber-400">Infrastructure as Code (Terraform, Ansible)</span>
+                            <span class="text-xs text-gray-500 font-mono">88%</span>
+                        </div>
+                        <div class="skill-bar"><div class="skill-progress" data-width="88"></div></div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between mb-3">
+                            <span class="text-sm font-bold text-pink-400">Monitoring & Observability (Prometheus, Grafana)</span>
+                            <span class="text-xs text-gray-500 font-mono">85%</span>
+                        </div>
+                        <div class="skill-bar"><div class="skill-progress" data-width="85"></div></div>
+                    </div>
+                </div>
+            </div>
+            <div class="scroll-reveal-right">
+                <div class="glass-card p-8 h-full flex flex-col justify-between">
+                    <div>
+                        <h4 class="text-2xl font-bold mb-6 gradient-text">Core Competencies</h4>
+                        <ul class="space-y-4 text-gray-400">
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle" class="text-emerald-500 mt-1 flex-shrink-0"></i>
+                                <span>Multi-cloud architecture design & migration</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle" class="text-emerald-500 mt-1 flex-shrink-0"></i>
+                                <span>Kubernetes cluster management & optimization</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle" class="text-emerald-500 mt-1 flex-shrink-0"></i>
+                                <span>Automated deployment pipelines (CI/CD)</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle" class="text-emerald-500 mt-1 flex-shrink-0"></i>
+                                <span>Infrastructure automation & IaC</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle" class="text-emerald-500 mt-1 flex-shrink-0"></i>
+                                <span>Security & compliance implementation</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle" class="text-emerald-500 mt-1 flex-shrink-0"></i>
+                                <span>Performance tuning & cost optimization</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="mt-8 pt-8 border-t border-white/10">
+                        <p class="text-xs text-gray-600 uppercase font-mono mb-2">Certifications</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-3 py-1 bg-emerald-500/10 border border-emerald-500/30 rounded-lg text-xs font-mono text-emerald-400">AWS Certified</span>
+                            <span class="px-3 py-1 bg-blue-500/10 border border-blue-500/30 rounded-lg text-xs font-mono text-blue-400">Azure Certified</span>
+                            <span class="px-3 py-1 bg-purple-500/10 border border-purple-500/30 rounded-lg text-xs font-mono text-purple-400">CKA</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PROJECTS SHOWCASE -->
+    <section id="projects" class="py-32 px-6 md:px-24 bg-[#050505]">
+        <h3 class="text-[10px] uppercase tracking-[0.5em] text-gray-600 mb-16 font-bold scroll-reveal">// INFRASTRUCTURE_PROJECTS</h3>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="glass-card p-8 project-card scroll-reveal stagger-1">
+                <div class="flex items-center justify-between mb-6">
+                    <i data-lucide="server" class="text-emerald-500"></i>
+                    <span class="text-[9px] uppercase tracking-widest text-gray-600 font-mono">Infrastructure</span>
+                </div>
+                <h4 class="text-xl font-bold mb-3">HetOps Platform</h4>
+                <p class="text-gray-400 text-sm mb-6 leading-relaxed">Self-hosted infrastructure on Oracle ARM (24GB) with Coolify, Traefik, and automated SSL management. Multi-service deployment platform.</p>
+                <div class="flex flex-wrap gap-2">
+                    <span class="text-[10px] px-2 py-1 bg-emerald-500/10 rounded text-emerald-400">OCI</span>
+                    <span class="text-[10px] px-2 py-1 bg-blue-500/10 rounded text-blue-400">Docker</span>
+                    <span class="text-[10px] px-2 py-1 bg-purple-500/10 rounded text-purple-400">Traefik</span>
+                </div>
+            </div>
+            <div class="glass-card p-8 project-card scroll-reveal stagger-2">
+                <div class="flex items-center justify-between mb-6">
+                    <i data-lucide="activity" class="text-blue-500"></i>
+                    <span class="text-[9px] uppercase tracking-widest text-gray-600 font-mono">Monitoring</span>
+                </div>
+                <h4 class="text-xl font-bold mb-3">Observability Stack</h4>
+                <p class="text-gray-400 text-sm mb-6 leading-relaxed">Comprehensive monitoring solution with Prometheus, Grafana, and Loki. Real-time alerts and performance dashboards.</p>
+                <div class="flex flex-wrap gap-2">
+                    <span class="text-[10px] px-2 py-1 bg-amber-500/10 rounded text-amber-400">Prometheus</span>
+                    <span class="text-[10px] px-2 py-1 bg-orange-500/10 rounded text-orange-400">Grafana</span>
+                    <span class="text-[10px] px-2 py-1 bg-pink-500/10 rounded text-pink-400">Loki</span>
+                </div>
+            </div>
+            <div class="glass-card p-8 project-card scroll-reveal stagger-3">
+                <div class="flex items-center justify-between mb-6">
+                    <i data-lucide="git-branch" class="text-purple-500"></i>
+                    <span class="text-[9px] uppercase tracking-widest text-gray-600 font-mono">Automation</span>
+                </div>
+                <h4 class="text-xl font-bold mb-3">CI/CD Pipelines</h4>
+                <p class="text-gray-400 text-sm mb-6 leading-relaxed">Automated deployment workflows with GitHub Actions, GitLab CI, and Jenkins. Zero-downtime deployments with rollback capabilities.</p>
+                <div class="flex flex-wrap gap-2">
+                    <span class="text-[10px] px-2 py-1 bg-gray-500/10 rounded text-gray-400">GitHub Actions</span>
+                    <span class="text-[10px] px-2 py-1 bg-purple-500/10 rounded text-purple-400">GitLab CI</span>
+                    <span class="text-[10px] px-2 py-1 bg-red-500/10 rounded text-red-400">Jenkins</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- EXPERIENCE PIPELINE -->
-    <section id="exp" class="py-32 px-6 md:px-24 scroll-reveal">
+    <section id="exp" class="py-32 px-6 md:px-24">
         <div class="grid lg:grid-cols-2 gap-24">
-            <div>
+            <div class="scroll-reveal-left">
                 <h3 class="text-[10px] uppercase tracking-[0.5em] text-gray-600 mb-12 font-bold">// DEPLOYMENT_HISTORY</h3>
                 <div class="space-y-12 ml-4">
                     <div class="node current">
@@ -139,13 +316,13 @@
                     </div>
                 </div>
             </div>
-            <div>
+            <div class="scroll-reveal-right">
                 <h3 class="text-[10px] uppercase tracking-[0.5em] text-gray-600 mb-12 font-bold">// TECH_INVENTORY</h3>
                 <div class="flex flex-wrap gap-3">
-                    <span class="px-4 py-2 glass-card rounded-xl text-xs font-mono text-emerald-400">AWS / GCP / AZURE</span>
-                    <span class="px-4 py-2 glass-card rounded-xl text-xs font-mono text-blue-400">Kubernetes / Docker</span>
-                    <span class="px-4 py-2 glass-card rounded-xl text-xs font-mono text-purple-400">Jenkins / Terraform</span>
-                    <span class="px-4 py-2 glass-card rounded-xl text-xs font-mono text-amber-400">GitHub Actions</span>
+                    <span class="px-4 py-2 glass-card rounded-xl text-xs font-mono text-emerald-400 hover:scale-105 transition-transform">AWS / GCP / AZURE</span>
+                    <span class="px-4 py-2 glass-card rounded-xl text-xs font-mono text-blue-400 hover:scale-105 transition-transform">Kubernetes / Docker</span>
+                    <span class="px-4 py-2 glass-card rounded-xl text-xs font-mono text-purple-400 hover:scale-105 transition-transform">Jenkins / Terraform</span>
+                    <span class="px-4 py-2 glass-card rounded-xl text-xs font-mono text-amber-400 hover:scale-105 transition-transform">GitHub Actions</span>
                 </div>
                 <div class="mt-12 p-8 glass-card border-white/5">
                     <p class="text-xs text-gray-500 uppercase mono mb-2">Education_Protocol</p>
@@ -156,20 +333,167 @@
         </div>
     </section>
 
+    <!-- CONTACT SECTION -->
+    <section id="contact" class="py-32 px-6 md:px-24 bg-[#050505]">
+        <div class="max-w-4xl mx-auto">
+            <h3 class="text-[10px] uppercase tracking-[0.5em] text-gray-600 mb-16 font-bold text-center scroll-reveal">// ESTABLISH_CONNECTION</h3>
+            <div class="grid md:grid-cols-2 gap-12">
+                <div class="scroll-reveal-left">
+                    <h4 class="text-3xl font-bold mb-6 gradient-text">Let's Build Something Amazing</h4>
+                    <p class="text-gray-400 mb-8 leading-relaxed">
+                        Looking for a DevOps engineer who can streamline your infrastructure, automate deployments, and scale your cloud operations? Let's connect.
+                    </p>
+                    <div class="space-y-4">
+                        <a href="mailto:hetpatidar09@gmail.com" class="flex items-center gap-4 p-4 glass-card rounded-xl hover:border-emerald-500/40 transition group">
+                            <div class="p-3 bg-emerald-500/10 rounded-lg group-hover:bg-emerald-500/20 transition">
+                                <i data-lucide="mail" class="text-emerald-500"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-500 uppercase font-mono">Email</p>
+                                <p class="font-semibold">hetpatidar09@gmail.com</p>
+                            </div>
+                        </a>
+                        <a href="https://linkedin.com/in/het11" target="_blank" class="flex items-center gap-4 p-4 glass-card rounded-xl hover:border-blue-500/40 transition group">
+                            <div class="p-3 bg-blue-500/10 rounded-lg group-hover:bg-blue-500/20 transition">
+                                <i data-lucide="linkedin" class="text-blue-500"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-500 uppercase font-mono">LinkedIn</p>
+                                <p class="font-semibold">linkedin.com/in/het11</p>
+                            </div>
+                        </a>
+                        <a href="https://github.com/Het101" target="_blank" class="flex items-center gap-4 p-4 glass-card rounded-xl hover:border-purple-500/40 transition group">
+                            <div class="p-3 bg-purple-500/10 rounded-lg group-hover:bg-purple-500/20 transition">
+                                <i data-lucide="github" class="text-purple-500"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-500 uppercase font-mono">GitHub</p>
+                                <p class="font-semibold">github.com/Het101</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="scroll-reveal-right">
+                    <div class="glass-card p-8 h-full">
+                        <h5 class="text-xl font-bold mb-6">Quick Stats</h5>
+                        <div class="space-y-6">
+                            <div>
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-sm text-gray-400">Active Projects</span>
+                                    <span class="text-2xl font-bold text-emerald-500">12+</span>
+                                </div>
+                                <div class="h-2 bg-white/5 rounded-full overflow-hidden">
+                                    <div class="h-full bg-gradient-to-r from-emerald-500 to-blue-500 w-[90%]"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-sm text-gray-400">Uptime</span>
+                                    <span class="text-2xl font-bold text-blue-500">99.9%</span>
+                                </div>
+                                <div class="h-2 bg-white/5 rounded-full overflow-hidden">
+                                    <div class="h-full bg-gradient-to-r from-blue-500 to-purple-500 w-[99%]"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-sm text-gray-400">Cloud Platforms</span>
+                                    <span class="text-2xl font-bold text-purple-500">5</span>
+                                </div>
+                                <div class="h-2 bg-white/5 rounded-full overflow-hidden">
+                                    <div class="h-full bg-gradient-to-r from-purple-500 to-pink-500 w-[85%]"></div>
+                                </div>
+                            </div>
+                            <div class="mt-8 pt-8 border-t border-white/10">
+                                <p class="text-xs text-gray-500 uppercase font-mono mb-3">System Status</p>
+                                <div class="flex items-center gap-3">
+                                    <div class="relative w-3 h-3 pulse-dot bg-emerald-500 rounded-full"></div>
+                                    <span class="text-sm text-emerald-500 font-mono">ALL_SYSTEMS_OPERATIONAL</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <footer class="p-12 text-center border-t border-white/5 font-mono text-[9px] text-gray-700 tracking-[0.8em]">
         HETOPS // DEVOPS_ENGINEER_II // ALL_SYSTEMS_OPTIMAL
     </footer>
 
     <script>
-        // STABLE REVEAL ENGINE
+        // ENHANCED REVEAL ENGINE
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
         }, { threshold: 0.1 });
 
+        // PARTICLE SYSTEM
+        function createParticles() {
+            const container = document.getElementById('particles-container');
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+                container.appendChild(particle);
+            }
+        }
+
+        // SKILL BAR ANIMATION
+        function animateSkillBars() {
+            const skillBars = document.querySelectorAll('.skill-progress');
+            skillBars.forEach(bar => {
+                const width = bar.getAttribute('data-width');
+                setTimeout(() => { bar.style.width = width + '%'; }, 200);
+            });
+        }
+
+        // NAVBAR SCROLL EFFECT
+        let lastScroll = 0;
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            const currentScroll = window.pageYOffset;
+            if (currentScroll > 100) {
+                navbar.style.padding = '1rem 1.5rem';
+                navbar.style.background = 'rgba(0, 0, 0, 0.95)';
+            } else {
+                navbar.style.padding = '1.5rem 1.5rem';
+                navbar.style.background = 'rgba(0, 0, 0, 0.5)';
+            }
+            lastScroll = currentScroll;
+        });
+
         window.addEventListener('DOMContentLoaded', () => {
-            document.querySelectorAll('.scroll-reveal').forEach(el => observer.observe(el));
+            // Initialize all scroll reveals
+            document.querySelectorAll('.scroll-reveal, .scroll-reveal-left, .scroll-reveal-right').forEach(el => observer.observe(el));
+            
+            // Initialize icons
             lucide.createIcons();
-            setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleTimeString(); }, 1000);
+            
+            // Start clock
+            setInterval(() => { 
+                const clock = document.getElementById('clock');
+                if (clock) clock.innerText = new Date().toLocaleTimeString(); 
+            }, 1000);
+            
+            // Create particles
+            createParticles();
+            
+            // Animate skill bars when visible
+            const skillSection = document.getElementById('skills');
+            if (skillSection) {
+                const skillObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            animateSkillBars();
+                            skillObserver.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.3 });
+                skillObserver.observe(skillSection);
+            }
         });
 
         const input = document.getElementById('terminal-input');
@@ -227,6 +551,10 @@ CPU: ARM Ampere Altra (4 OCPU)
 RAM: 24GB LPDDR4
 Host: hetops.dev
 Status: All systems nominal.`,
+            contact: `<span class="text-white font-bold">--- COMMUNICATION CHANNELS ---</span>
+📧 Email:    <a href="mailto:hetpatidar09@gmail.com" class="text-emerald-400 underline">hetpatidar09@gmail.com</a>
+💼 LinkedIn: <a href="https://linkedin.com/in/het11" class="text-blue-400 underline">linkedin.com/in/het11</a>
+🐙 GitHub:   <a href="https://github.com/Het101" class="text-purple-400 underline">github.com/Het101</a>`,
             clear: "clear"
         };
 
