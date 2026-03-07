@@ -3,73 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HET PATEL | DevOps II @ Techdome</title>
+    <title>HET PATEL | DevOps Engineer II</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;500;800&family=Fira+Code&display=swap');
-        :root { --glow: #00ff41; --bg: #020202; }
-        body { background-color: var(--bg); color: #fff; font-family: 'Plus Jakarta Sans', sans-serif; scroll-behavior: smooth; }
+        
+        :root { --glow: #00ff41; --bg: #050505; }
+        body { background-color: var(--bg); color: #fff; font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; overflow-x: hidden; }
+        
+        /* High-Performance Animations */
+        .reveal { opacity: 0; transform: translateY(20px); transition: all 0.8s ease-out; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        
         .glass { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); }
-        .mono { font-family: 'Fira Code', monospace; }
         .text-glow { text-shadow: 0 0 15px var(--glow); color: var(--glow); }
-        .terminal-window { background: #080808; border: 1px solid #333; border-radius: 12px; height: 500px; display: flex; flex-direction: column; box-shadow: 0 25px 50px -12px rgba(0, 255, 65, 0.1); }
-        .terminal-body { padding: 20px; flex-grow: 1; overflow-y: auto; scrollbar-width: none; font-size: 13px; line-height: 1.6; }
-        .terminal-input { background: transparent; border: none; outline: none; color: #fff; width: 100%; font-family: 'Fira Code', monospace; }
+        .mono { font-family: 'Fira Code', monospace; }
+
+        /* Terminal Styling */
+        .terminal-window { background: #080808; border: 1px solid #333; border-radius: 12px; height: 500px; display: flex; flex-direction: column; position: relative; }
+        .terminal-window::before { content: ""; position: absolute; inset: 0; border-radius: 12px; padding: 1px; background: linear-gradient(to bottom right, #333, #00ff4133, #333); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); mask-composite: exclude; pointer-events: none; }
+        .terminal-body { padding: 20px; flex-grow: 1; overflow-y: auto; font-size: 13px; line-height: 1.6; scrollbar-width: none; }
+        .terminal-input { background: transparent; border: none; outline: none; color: #fff; width: 100%; font-family: 'Fira Code'; }
         .prompt { color: var(--glow); font-weight: bold; }
-        .skill-badge { background: rgba(0, 255, 65, 0.05); border: 1px solid rgba(0, 255, 65, 0.1); padding: 4px 12px; border-radius: 99px; font-size: 11px; color: #00ff41; font-family: 'Fira Code'; }
+        
+        /* Pipeline Experience UI */
+        .pipeline-node { position: relative; padding-left: 2rem; border-left: 2px solid #1a1a1a; }
+        .pipeline-node::before { content: ""; position: absolute; left: -9px; top: 0; width: 16px; height: 16px; border-radius: 50%; background: #1a1a1a; border: 2px solid var(--bg); }
+        .pipeline-node.active::before { background: var(--glow); box-shadow: 0 0 15px var(--glow); }
+
+        .skill-tag { background: rgba(0, 255, 65, 0.05); border: 1px solid rgba(0, 255, 65, 0.1); padding: 4px 12px; border-radius: 8px; font-size: 11px; color: #00ff41; font-family: 'Fira Code'; transition: 0.3s; }
+        .skill-tag:hover { background: rgba(0, 255, 65, 0.2); transform: translateY(-2px); }
     </style>
 </head>
 <body class="selection:bg-green-500/30">
 
-    <!-- NAVIGATION -->
     <nav class="fixed top-0 w-full z-50 p-6 flex justify-between items-center glass border-b-0">
         <div class="mono font-bold text-xl tracking-tighter text-glow">HETOPS_</div>
-        <div class="hidden md:flex gap-8 text-[10px] mono uppercase tracking-[0.4em]">
-            <a href="#about" class="hover:text-green-400 transition">About</a>
-            <a href="https://tools.hetops.dev" target="_blank" class="hover:text-green-400 transition">Utilities</a>
-            <a href="https://dash.hetops.dev" target="_blank" class="hover:text-green-400 transition">Dashboard</a>
-            <a href="https://status.hetops.dev" target="_blank" class="text-green-500 font-bold border-b border-green-500 pb-1">Status</a>
+        <div class="flex gap-8 text-[10px] mono uppercase tracking-[0.4em]">
+            <a href="https://tools.hetops.dev" target="_blank" class="hover:text-green-400">Utilities</a>
+            <a href="https://dash.hetops.dev" target="_blank" class="hover:text-green-400">Dashboard</a>
+            <a href="https://status.hetops.dev" target="_blank" class="text-green-500 font-bold border-b border-green-500">Status</a>
         </div>
     </nav>
 
-    <!-- HERO / TERMINAL -->
+    <!-- HERO SECTION -->
     <section class="min-h-screen flex flex-col justify-center px-6 md:px-24 pt-24 relative overflow-hidden">
         <div class="absolute top-1/4 -right-20 w-96 h-96 bg-green-500/10 blur-[120px] rounded-full"></div>
         
         <div class="grid lg:grid-cols-2 gap-16 items-center">
-            <div data-aos="fade-right">
-                <h2 class="mono text-green-500 mb-4 tracking-[0.5em] text-xs animate-pulse">// ACCESS_GRANTED: HET_PATEL</h2>
-                <h1 class="text-6xl md:text-8xl font-black tracking-tighter leading-none mb-6">DEV<span class="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-600">OPS.</span></h1>
-                <p class="text-gray-400 text-lg max-w-lg mb-8">
-                    Senior DevOps Engineer at <span class="text-white font-bold">Techdome</span>. 
-                    Specializing in Multi-Cloud architectures and resilient CI/CD pipelines.
+            <div class="reveal">
+                <h2 class="mono text-green-500 mb-4 tracking-[0.5em] text-xs uppercase italic">// DevOps_Engineer_II</h2>
+                <h1 class="text-7xl md:text-9xl font-black tracking-tighter leading-none mb-6">HET <br> PATEL.</h1>
+                <p class="text-gray-400 text-lg max-w-lg mb-8 leading-relaxed">
+                    Senior-level automation specialist at <span class="text-white font-bold">Techdome</span>. 
+                    Merging Multi-Cloud engineering with the art of high-availability silicon.
                 </p>
                 <div class="flex gap-6">
-                    <a href="https://linkedin.com/in/het11" target="_blank" class="p-3 glass rounded-2xl hover:bg-green-500/10 transition"><i data-lucide="linkedin"></i></a>
-                    <a href="https://github.com/Het101" target="_blank" class="p-3 glass rounded-2xl hover:bg-green-500/10 transition"><i data-lucide="github"></i></a>
-                    <a href="mailto:hetpatidar09@gmail.com" class="p-3 glass rounded-2xl hover:bg-green-500/10 transition"><i data-lucide="mail"></i></a>
+                    <a href="https://linkedin.com/in/het11" target="_blank" class="p-4 glass rounded-2xl hover:bg-green-500/10 transition"><i data-lucide="linkedin"></i></a>
+                    <a href="https://github.com/Het101" target="_blank" class="p-4 glass rounded-2xl hover:bg-green-500/10 transition"><i data-lucide="github"></i></a>
                 </div>
             </div>
 
-            <!-- TERMINAL -->
-            <div class="terminal-window glass" data-aos="zoom-in" data-aos-delay="200">
+            <!-- THE TERMINAL -->
+            <div class="terminal-window glass reveal" style="transition-delay: 200ms;">
                 <div class="bg-white/5 px-4 py-2 flex justify-between items-center border-b border-white/10">
                     <div class="flex gap-2">
-                        <div class="w-2 h-2 rounded-full bg-red-500"></div>
-                        <div class="w-2 h-2 rounded-full bg-yellow-500"></div>
-                        <div class="w-2 h-2 rounded-full bg-green-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-[#ff5f56]"></div>
+                        <div class="w-3 h-3 rounded-full bg-[#ffbd2e]"></div>
+                        <div class="w-3 h-3 rounded-full bg-[#27c93f]"></div>
                     </div>
-                    <span class="text-[9px] mono text-gray-500 uppercase tracking-widest">het@techdome-beast:~</span>
+                    <span class="text-[10px] mono text-gray-500 uppercase tracking-widest">het@techdome-beast:~</span>
                 </div>
                 <div id="terminal-content" class="terminal-body mono text-gray-300">
-                    <div id="output">
-                        <p class="text-green-500 font-bold">HETOPS_OS [AARCH64] v2.5.1</p>
-                        <p class="text-gray-500 text-xs mb-4 italic">Type 'help' to begin session...</p>
-                    </div>
-                    <div class="flex gap-2">
+                    <div id="output"></div>
+                    <div class="flex gap-2 items-center">
                         <span class="prompt">visitor@hetops:~$</span>
                         <input type="text" id="terminal-input" class="terminal-input" autofocus spellcheck="false" autocomplete="off">
                     </div>
@@ -78,115 +86,153 @@
         </div>
     </section>
 
-    <!-- EXPERIENCE / ABOUT -->
-    <section id="about" class="py-32 px-6 md:px-24">
-        <div class="grid lg:grid-cols-2 gap-24">
-            <div data-aos="fade-up">
-                <h3 class="text-xs uppercase tracking-[0.5em] text-gray-500 mb-8 font-bold">// CAREER_LOGS</h3>
-                <div class="border-l border-white/10 pl-8 space-y-12">
-                    <div class="relative">
-                        <div class="absolute -left-[37px] top-1 w-4 h-4 rounded-full bg-green-500 shadow-[0_0_10px_#00ff41]"></div>
-                        <h4 class="text-xl font-bold">DevOps Engineer II <span class="text-green-500 font-mono text-sm ml-2">@ Techdome</span></h4>
-                        <p class="text-xs text-gray-500 mt-1 mb-4 mono">Aug 2025 — Present</p>
-                        <p class="text-gray-400 text-sm leading-relaxed">Leading Multi-Cloud strategies and infrastructure-as-code deployments using AWS, GCP, and Azure.</p>
+    <!-- EXPERIENCE PIPELINE -->
+    <section class="py-32 px-6 md:px-24 bg-[#080808]">
+        <div class="grid lg:grid-cols-2 gap-20">
+            <div class="reveal">
+                <h3 class="text-xs uppercase tracking-[0.5em] text-gray-500 mb-16 font-bold">// DEPLOYMENT_HISTORY</h3>
+                <div class="space-y-12">
+                    <div class="pipeline-node active">
+                        <h4 class="text-2xl font-bold">DevOps Engineer II</h4>
+                        <p class="text-green-500 mono text-sm mb-2">Techdome // Aug 2025 — Present</p>
+                        <p class="text-gray-400 text-sm">Orchestrating multi-cloud infrastructure (AWS, GCP, Azure) and scaling Kubernetes workloads for enterprise-grade resilience.</p>
                     </div>
-                    <div class="relative">
-                        <div class="absolute -left-[37px] top-1 w-4 h-4 rounded-full bg-zinc-700"></div>
-                        <h4 class="text-xl font-bold">DevOps Engineer <span class="text-gray-500 font-mono text-sm ml-2">@ Datagroker</span></h4>
-                        <p class="text-xs text-gray-500 mt-1 mb-4 mono">2023 — 2025</p>
-                        <p class="text-gray-400 text-sm leading-relaxed">Implemented high-frequency CI/CD pipelines and managed critical production uptime.</p>
+                    <div class="pipeline-node">
+                        <h4 class="text-xl font-bold">DevOps Engineer</h4>
+                        <p class="text-gray-500 mono text-sm mb-2">Datagroker // 2023 — 2025</p>
+                        <p class="text-gray-500 text-sm">2-year tenure focusing on end-to-end CI/CD automation and production environment stability.</p>
                     </div>
                 </div>
             </div>
 
-            <div data-aos="fade-left">
-                <h3 class="text-xs uppercase tracking-[0.5em] text-gray-500 mb-8 font-bold">// CORE_STRENGTHS</h3>
-                <div class="flex flex-wrap gap-3">
-                    <span class="skill-badge">Kubernetes</span>
-                    <span class="skill-badge">Docker Swarm</span>
-                    <span class="skill-badge">Terraform</span>
-                    <span class="skill-badge">Jenkins</span>
-                    <span class="skill-badge">GitHub Actions</span>
-                    <span class="skill-badge">Azure DevOps</span>
-                    <span class="skill-badge">Coolify</span>
-                    <span class="skill-badge">Prometheus</span>
-                </div>
-                <div class="mt-12 p-8 glass rounded-3xl border-green-500/20">
-                    <h4 class="mono text-xs text-gray-400 mb-4 uppercase">Academic_Background</h4>
-                    <p class="text-lg">B.Tech in Computer Engineering</p>
-                    <p class="text-sm text-green-500 mono">Charusat University</p>
+            <div class="reveal" style="transition-delay: 300ms;">
+                <h3 class="text-xs uppercase tracking-[0.5em] text-gray-500 mb-16 font-bold">// TECHNICAL_INVENTORY</h3>
+                <div class="grid grid-cols-2 gap-8">
+                    <div>
+                        <p class="text-gray-500 text-[10px] uppercase mb-4 tracking-widest">Cloud_Providers</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="skill-tag">AWS</span><span class="skill-tag">Azure</span><span class="skill-tag">GCP</span><span class="skill-tag">OCI</span>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-[10px] uppercase mb-4 tracking-widest">CI_CD_Engines</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="skill-tag">Jenkins</span><span class="skill-tag">GitLab</span><span class="skill-tag">GitHub Actions</span>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-[10px] uppercase mb-4 tracking-widest">Orchestration</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="skill-tag">Kubernetes</span><span class="skill-tag">Docker</span><span class="skill-tag">Terraform</span>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-[10px] uppercase mb-4 tracking-widest">Education</p>
+                        <p class="text-sm font-bold">B.Tech Computer Engineering</p>
+                        <p class="text-xs text-gray-400">Charusat University</p>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <footer class="p-12 text-center border-t border-white/5 mono text-[10px] text-gray-600 tracking-[0.5em]">
-        HETOPS_INFRASTRUCTURE // LIVE_AT // 140.245.13.138
+    <footer class="p-12 text-center border-t border-white/5 mono text-[9px] text-gray-600 tracking-[0.8em] uppercase">
+        Node_ID: Oracle-ARM-Beast // Status: <span class="text-green-500">Online</span>
     </footer>
 
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
-        AOS.init({ duration: 1000, once: true });
-        lucide.createIcons();
+        // FAIL-SAFE REVEAL ENGINE
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('active');
+            });
+        }, { threshold: 0.1 });
+
+        window.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+            lucide.createIcons();
+            bootTerminal();
+        });
 
         const input = document.getElementById('terminal-input');
         const output = document.getElementById('output');
         const terminalContent = document.getElementById('terminal-content');
         let history = []; let historyIndex = -1;
 
+        async function bootTerminal() {
+            const lines = [
+                "Establishing encrypted link to hetops.dev...",
+                "Bypassing firewalls...",
+                "Access Granted. Identity: HET_PATEL_II",
+                "----------------------------------------",
+                "Type 'help' for available career commands."
+            ];
+            for (let line of lines) {
+                await new Promise(r => setTimeout(r, 150));
+                writeLine(line, 'text-green-500 text-xs');
+            }
+        }
+
+        function writeLine(text, color = 'text-gray-400') {
+            const div = document.createElement('div');
+            div.className = `mb-1 ${color}`;
+            div.innerHTML = text.replace(/\n/g, '<br>');
+            output.appendChild(div);
+            terminalContent.scrollTop = terminalContent.scrollHeight;
+        }
+
         const commands = {
-            help: `Available commands:
-  <span class="text-green-400">about</span>    - Executive summary
-  <span class="text-green-400">exp</span>      - Work history timeline
-  <span class="text-green-400">edu</span>      - Academic background
-  <span class="text-green-400">links</span>    - Active portals (dash, status, tools)
-  <span class="text-green-400">neofetch</span> - System specification
-  <span class="text-green-400">ls</span>       - List virtual filesystem
-  <span class="text-green-400">clear</span>    - Clear terminal buffer`,
+            help: `Available Career Modules:
+  <span class="text-green-400">about</span>    - High-level executive summary
+  <span class="text-green-400">exp</span>      - Deep dive into Techdome & Datagroker
+  <span class="text-green-400">edu</span>      - Academic credentials
+  <span class="text-green-400">skills</span>   - Full technical arsenal
+  <span class="text-green-400">neofetch</span> - Hardware specification of this server
+  <span class="text-green-400">ls</span>       - List available infrastructure nodes
+  <span class="text-green-400">clear</span>    - Purge terminal buffer`,
             
-            about: "Het Patel: DevOps Engineer II at Techdome. Specialized in Multi-Cloud automation (AWS, GCP, Azure) and Kubernetes.",
-            exp: `<span class="text-green-500 font-bold">Techdome</span>: Aug 2025 - Present (DevOps II)
-<span class="text-blue-400 font-bold">Datagroker</span>: 2023 - 2025 (DevOps Engineer)`,
-            edu: "Bachelor of Technology in Computer Engineering from <span class="text-white">Charusat University</span>.",
-            links: `Active Infrastructure Portals:
-- <a href="https://dash.hetops.dev" target="_blank" class="text-green-400 underline">dash.hetops.dev</a>  (Management Dashboard)
-- <a href="https://status.hetops.dev" target="_blank" class="text-green-400 underline">status.hetops.dev</a> (Uptime Kuma)
-- <a href="https://tools.hetops.dev" target="_blank" class="text-green-400 underline">tools.hetops.dev</a>  (DevOps Utilities)
-- <a href="https://hub.hetops.dev" target="_blank" class="text-green-400 underline">hub.hetops.dev</a>    (Coolify Hub)`,
-            neofetch: `<span class="text-green-500 font-bold">            .oodMMMMMMMMMMMMoo.
+            about: "DevOps Engineer II with 2+ years of experience in Multi-Cloud automation. I focus on high-availability, cost-optimization, and CI/CD security.",
+            exp: `[1] <span class="text-green-500">Techdome</span>: DevOps Engineer II (Aug 2025 - Present)
+[2] <span class="text-blue-400">Datagroker</span>: DevOps Engineer (2023 - 2025)`,
+            edu: "B.Tech in Computer Engineering from Charusat University.",
+            skills: "Expertise: AWS, Azure, GCP, Kubernetes, Docker, Jenkins, Terraform, GitLab CI.",
+            neofetch: `<span class="text-green-500">            .oodMMMMMMMMMMMMoo.
         .odMMMMMMMMMMMMMMMMMMMMbo.
       .dMMMMMMMMMMMMMMMMMMMMMMMMMMb.</span>
     ---------------------------------
     <span class="text-green-500">OS</span>: Ubuntu 24.04 ARM (Oracle Beast)
-    <span class="text-green-500">Kernel</span>: 6.8.0-101-ARM64
-    <span class="text-green-500">Uptime</span>: 100% Reliability
     <span class="text-green-500">CPU</span>: ARM Ampere Altra (4 OCPU)
-    <span class="text-green-500">RAM</span>: 24GB LPDDR4`,
-            ls: `<span class="text-blue-400 font-bold">drwxr-xr-x</span>  projects/
-<span class="text-blue-400 font-bold">drwxr-xr-x</span>  infrastructure/
-<span class="text-white font-bold">-rw-r--r--</span>  career_summary.log
-<span class="text-white font-bold">-rw-r--r--</span>  techdome_credentials.enc`
+    <span class="text-green-500">RAM</span>: 24GB LPDDR4
+    <span class="text-green-500">Cloud</span>: Oracle Cloud Infrastructure`,
+            ls: `<span class="text-blue-400">infrastructure/</span>  <span class="text-blue-400">ci-cd-pipelines/</span>  het_resume.v2.pdf`
         };
 
         input.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
                 const val = input.value.trim();
                 const cmd = val.toLowerCase();
-                if (cmd === 'clear') { output.innerHTML = ''; } 
-                else if (val !== "") {
+                if (cmd === 'clear') { 
+                    output.innerHTML = ''; 
+                } else if (val !== "") {
                     history.push(val); historyIndex = history.length;
-                    const response = commands[cmd] || `bash: command not found: ${val}. Type 'help' to see allowed commands.`;
-                    const div = document.createElement('div');
-                    div.className = 'mb-4';
-                    div.innerHTML = `<span class="prompt">visitor@hetops:~$</span> ${val}<br><span class="text-gray-400 whitespace-pre-wrap">${response}</span>`;
-                    output.appendChild(div);
+                    const response = commands[cmd] || `Unknown command: ${val}. Type 'help' for authorized commands.`;
+                    
+                    const cmdLine = document.createElement('div');
+                    cmdLine.className = 'mb-1';
+                    cmdLine.innerHTML = `<span class="prompt">visitor@hetops:~$</span> ${val}`;
+                    output.appendChild(cmdLine);
+                    
+                    const respLine = document.createElement('div');
+                    respLine.className = 'mb-4 text-gray-400 whitespace-pre-wrap';
+                    respLine.innerHTML = response;
+                    output.appendChild(respLine);
                 }
                 input.value = '';
                 terminalContent.scrollTop = terminalContent.scrollHeight;
-            } else if (e.key === 'ArrowUp') {
-                if (historyIndex > 0) { historyIndex--; input.value = history[historyIndex]; }
-            } else if (e.key === 'ArrowDown') {
-                if (historyIndex < history.length - 1) { historyIndex++; input.value = history[historyIndex]; } else { historyIndex = history.length; input.value = ''; }
+            } else if (e.key === 'ArrowUp' && historyIndex > 0) {
+                historyIndex--; input.value = history[historyIndex];
+            } else if (e.key === 'ArrowDown' && historyIndex < history.length - 1) {
+                historyIndex++; input.value = history[historyIndex];
             }
         });
 
