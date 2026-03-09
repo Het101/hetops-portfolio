@@ -3,6 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Het Patel - DevOps Engineer II specializing in multi-cloud orchestration, Kubernetes, and CI/CD automation. View my projects and experience.">
+    <meta name="keywords" content="DevOps, Kubernetes, AWS, Azure, GCP, Terraform, CI/CD, Het Patel">
+    <meta property="og:title" content="HET PATEL | DevOps Engineer II">
+    <meta property="og:description" content="Building automated resilience. Mastering multi-cloud orchestration & infrastructure excellence.">
+    <meta property="og:type" content="website">
     <title>HET PATEL | DevOps Engineer II</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -14,8 +19,10 @@
         
         /* THE VIBRANT UI */
         .gradient-text { background: linear-gradient(90deg, #00f260 0%, #0575e6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 24px; transition: all 0.3s ease; }
-        .glass-card:hover { border-color: rgba(0, 242, 96, 0.4); transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4); }
+        .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 24px; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05), 0 10px 30px -10px rgba(0, 0, 0, 0.5); }
+        .glass-card:hover { border-color: rgba(0, 242, 96, 0.5); transform: translateY(-8px); box-shadow: inset 0 0 0 1px rgba(0, 242, 96, 0.2), 0 20px 40px rgba(0, 242, 96, 0.15), 0 10px 30px -10px rgba(0, 0, 0, 0.5); }
+        .nav-link.active { color: #00ff41 !important; position: relative; }
+        .nav-link.active::after { content: ''; position: absolute; bottom: -6px; left: 0; width: 100%; height: 2px; background: #00ff41; box-shadow: 0 0 10px #00ff41; }
         
         /* HARDCORE TERMINAL */
         .terminal-container { background: #0a0a0a; border: 1px solid #333; border-radius: 12px; height: 500px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 30px 60px rgba(0,0,0,0.5); }
@@ -103,6 +110,18 @@
         .node.current::before { background: #00ff41; box-shadow: 0 0 15px #00ff41; border: none; animation: pulse-node 1.5s ease-in-out infinite; }
         @keyframes pulse-node { 0%, 100% { box-shadow: 0 0 15px #00ff41; } 50% { box-shadow: 0 0 30px #00ff41, 0 0 40px rgba(0, 255, 65, 0.5); } }
         
+        /* TERMINAL FLOATING STATES */
+        .terminal-container { transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); transform-origin: bottom right; z-index: 100; }
+        .terminal-container.floating { position: fixed; bottom: 100px; right: 24px; width: 450px; height: 500px; box-shadow: 0 30px 60px rgba(0,0,0,0.8); border: 1px solid rgba(0, 242, 96, 0.3); margin: 0; }
+        .terminal-container.minimized { transform: scale(0) translateY(200px); opacity: 0; pointer-events: none; }
+        
+        #floating-term-btn { position: fixed; bottom: 80px; right: 24px; width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 99; transform: scale(0); opacity: 0; pointer-events: none; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer; box-shadow: 0 10px 30px rgba(0, 255, 65, 0.2); border: 1px solid rgba(0, 255, 65, 0.3); background: #0a0a0a; }
+        #floating-term-btn.visible { transform: scale(1); opacity: 1; pointer-events: all; animation: glow-pulse 3s infinite; }
+        
+        @media (max-width: 768px) {
+            .terminal-container.floating { width: calc(100% - 48px); bottom: 100px; right: 24px; }
+        }
+
         /* SMOOTH SCROLL */
         html { scroll-behavior: smooth; }
     </style>
@@ -120,83 +139,102 @@
     <nav class="fixed top-0 w-full z-50 p-6 flex justify-between items-center bg-black/50 backdrop-blur-lg border-b border-white/5 transition-all duration-300" id="navbar">
         <div class="font-black text-2xl tracking-tighter italic">HET<span class="text-emerald-500">OPS_</span></div>
         <div class="hidden md:flex gap-10 text-[10px] uppercase font-bold tracking-[0.4em] items-center">
-            <a href="#infra" class="hover:text-emerald-400 transition">Infrastructure</a>
-            <a href="#skills" class="hover:text-purple-400 transition">Skills</a>
-            <a href="#projects" class="hover:text-amber-400 transition">Projects</a>
-            <a href="#exp" class="hover:text-blue-400 transition">Experience</a>
-            <a href="#contact" class="hover:text-pink-400 transition">Contact</a>
-            <a href="https://dash.hetops.dev" target="_blank" class="text-emerald-500 px-4 py-2 border border-emerald-500/30 rounded-full hover:bg-emerald-500 hover:text-black transition">Command Center</a>
+            <a href="#exp" class="nav-link hover:text-blue-400 transition">Experience</a>
+            <a href="#skills" class="nav-link hover:text-purple-400 transition">Skills</a>
+            <a href="#projects" class="nav-link hover:text-amber-400 transition">Projects</a>
+            <a href="#case-studies" class="nav-link hover:text-purple-400 transition">Case Studies</a>
+            <a href="#infra" class="nav-link hover:text-emerald-400 transition">Infrastructure</a>
+            <a href="#blog" class="nav-link hover:text-cyan-400 transition">Blog</a>
+            <a href="#contact" class="nav-link hover:text-pink-400 transition">Contact</a>
+            <a href="https://dash.hetops.dev" target="_blank" rel="noopener noreferrer" class="text-emerald-500 px-4 py-2 border border-emerald-500/30 rounded-full hover:bg-emerald-500 hover:text-black transition">Dashboard</a>
         </div>
     </nav>
 
+    <main>
     <!-- HERO SECTION -->
-    <section class="min-h-screen flex flex-col justify-center px-6 md:px-24 pt-20">
+    <header class="min-h-screen flex flex-col justify-center px-6 md:px-24 pt-20">
         <div class="grid lg:grid-cols-2 gap-16 items-center">
             <div class="scroll-reveal-left">
                 <h2 class="font-mono text-emerald-500 mb-4 tracking-[0.4em] text-xs uppercase">// DEVOPS_ENGINEER_II</h2>
                 <h1 class="text-7xl md:text-9xl font-black tracking-tighter leading-none mb-8">
                     HET <br> <span class="gradient-text typing-cursor" id="typed-text">PATEL.</span>
                 </h1>
-                <p class="text-gray-400 text-xl max-w-lg mb-10 leading-relaxed font-light">
-                    Building <span class="text-white font-semibold">automated resilience</span> at Techdome. 
-                    Mastering the 24GB Oracle ARM Beast & Azure Cloud.
+                <p class="text-gray-400 text-xl max-w-lg mb-4 leading-relaxed font-light">
+                    Building <span class="text-white font-semibold">automated resilience</span> at Techdome. Mastering multi-cloud orchestration & infrastructure excellence.
                 </p>
+                <p class="text-emerald-500 text-sm font-mono mb-10">→ Kubernetes • Docker • AWS/Azure/GCP • Terraform • CI/CD</p>
                 <div class="flex gap-6">
-                    <a href="https://linkedin.com/in/het11" target="_blank" class="p-4 glass-card rounded-2xl text-emerald-400 hover:scale-110 transition-transform float-animated"><i data-lucide="linkedin"></i></a>
-                    <a href="https://github.com/Het101" target="_blank" class="p-4 glass-card rounded-2xl text-blue-400 hover:scale-110 transition-transform float-animated"><i data-lucide="github"></i></a>
-                    <a href="mailto:hetpatidar09@gmail.com" class="p-4 glass-card rounded-2xl text-purple-400 hover:scale-110 transition-transform float-animated"><i data-lucide="mail"></i></a>
+                    <a href="https://linkedin.com/in/het11" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn Profile" class="p-4 glass-card rounded-2xl text-emerald-400 hover:scale-110 transition-transform float-animated"><i data-lucide="linkedin"></i></a>
+                    <a href="https://github.com/Het101" target="_blank" rel="noopener noreferrer" aria-label="GitHub Profile" class="p-4 glass-card rounded-2xl text-blue-400 hover:scale-110 transition-transform float-animated"><i data-lucide="github"></i></a>
+                    <a href="mailto:hetpatidar09@gmail.com" aria-label="Send Email" class="p-4 glass-card rounded-2xl text-purple-400 hover:scale-110 transition-transform float-animated"><i data-lucide="mail"></i></a>
                 </div>
             </div>
 
             <!-- THE TERMINAL -->
-            <div class="terminal-container scroll-reveal-right">
-                <div class="terminal-header">
-                    <div class="flex gap-2">
-                        <div class="w-3 h-3 rounded-full bg-[#ff5f56]"></div>
-                        <div class="w-3 h-3 rounded-full bg-[#ffbd2e]"></div>
-                        <div class="w-3 h-3 rounded-full bg-[#27c93f]"></div>
-                    </div>
+            <div class="w-full h-[500px] relative scroll-reveal-right">
+                <div class="terminal-container w-full h-full absolute top-0 left-0" id="terminal-main">
+                    <div class="terminal-header group relative">
+                        <div class="flex gap-2 items-center">
+                            <div class="w-3 h-3 rounded-full bg-[#ff5f56] hover:bg-[#ff4036] cursor-pointer flex items-center justify-center transition-colors" id="term-close" title="Minimize"><span class="text-[8px] opacity-0 group-hover:opacity-100 text-black font-bold">×</span></div>
+                            <div class="w-3 h-3 rounded-full bg-[#ffbd2e] hover:bg-[#ffaa00] cursor-pointer flex items-center justify-center transition-colors" id="term-min" title="Minimize"><span class="text-[8px] opacity-0 group-hover:opacity-100 text-black font-bold">−</span></div>
+                            <div class="w-3 h-3 rounded-full bg-[#27c93f] hover:bg-[#1db831] cursor-pointer flex items-center justify-center transition-colors" id="term-max" title="Maximize"><span class="text-[8px] opacity-0 group-hover:opacity-100 text-black font-bold">+</span></div>
+                        </div>
+                    <div class="absolute left-1/2 transform -translate-x-1/2 text-[10px] font-mono text-gray-400 font-bold tracking-widest hidden md:block">bash — hetops_os</div>
                     <div id="clock" class="text-[10px] font-mono text-gray-500"></div>
                 </div>
                 <div id="terminal-content" class="terminal-body">
-                    <div id="output">
-                        <p class="text-[#00ff41] font-bold">➜  ~ hetops_os --init --session=production</p>
-                        <p class="text-gray-500 mb-4">Verifying identity... ACCESS_GRANTED [het_patel_ii]</p>
+                    <div id="output" class="mb-4">
+                        <!-- Boot sequence injected via JS -->
                     </div>
-                    <div class="flex gap-2">
+                    <div id="terminal-input-row" class="flex gap-2" style="display: none;">
                         <span class="prompt-user">visitor@hetops</span><span class="text-white">:</span><span class="prompt-dir">~</span><span class="text-white">$</span>
-                        <input type="text" id="terminal-input" class="terminal-input" autofocus spellcheck="false" autocomplete="off">
+                        <input type="text" id="terminal-input" class="terminal-input" spellcheck="false" autocomplete="off">
                     </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </header>
+
+
+
+    <!-- EXPERIENCE PIPELINE -->
+    <section id="exp" class="py-32 px-6 md:px-24">
+        <div class="grid lg:grid-cols-2 gap-24">
+            <div class="scroll-reveal-left">
+                <h3 class="text-[10px] uppercase tracking-[0.5em] text-gray-600 mb-12 font-bold">// DEPLOYMENT_HISTORY</h3>
+                <div class="space-y-12 ml-4">
+                    <div class="node current">
+                        <h4 class="text-2xl font-bold">DevOps Engineer II</h4>
+                        <p class="text-emerald-500 font-mono text-xs mb-3">Techdome // Aug 2025 - Present</p>
+                        <p class="text-gray-400 text-sm leading-relaxed">Multi-cloud automation and K8s orchestration at scale.</p>
+                    </div>
+                    <div class="node">
+                        <h4 class="text-xl font-bold text-gray-400">DevOps Engineer</h4>
+                        <p class="text-gray-600 font-mono text-xs mb-3">Datagroker // 2023 - 2025</p>
+                        <p class="text-gray-600 text-sm">Engineered CI/CD pipelines and production server stability.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="scroll-reveal-right">
+                <h3 class="text-[10px] uppercase tracking-[0.5em] text-gray-600 mb-12 font-bold">// TECH_INVENTORY</h3>
+                <div class="flex flex-wrap gap-3">
+                    <span class="px-4 py-2 glass-card rounded-xl text-xs font-mono text-emerald-400 hover:scale-105 transition-transform">AWS / GCP / AZURE</span>
+                    <span class="px-4 py-2 glass-card rounded-xl text-xs font-mono text-blue-400 hover:scale-105 transition-transform">Kubernetes / Docker</span>
+                    <span class="px-4 py-2 glass-card rounded-xl text-xs font-mono text-purple-400 hover:scale-105 transition-transform">Jenkins / Terraform</span>
+                    <span class="px-4 py-2 glass-card rounded-xl text-xs font-mono text-amber-400 hover:scale-105 transition-transform">GitHub Actions</span>
+                </div>
+                <div class="mt-12 p-8 glass-card border-white/5">
+                    <p class="text-xs text-gray-500 uppercase mono mb-2">Education_Protocol</p>
+                    <p class="text-lg font-bold">B.Tech Computer Engineering</p>
+                    <p class="text-emerald-500 text-sm mono">Charusat University</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- SERVICE GRID -->
-    <section id="infra" class="py-32 px-6 md:px-24 bg-[#050505]">
-        <h3 class="text-[10px] uppercase tracking-[0.5em] text-gray-600 mb-16 font-bold scroll-reveal">// CLOUD_INFRASTRUCTURE_NODES</h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <a href="https://dash.hetops.dev" target="_blank" class="glass-card p-8 h-48 flex flex-col justify-between scroll-reveal stagger-1">
-                <i data-lucide="layout-grid" class="text-emerald-500"></i>
-                <div><h4 class="font-bold text-lg">Dashboard</h4><p class="text-xs text-gray-500 mono">dash.hetops.dev</p></div>
-            </a>
-            <a href="https://status.hetops.dev" target="_blank" class="glass-card p-8 h-48 flex flex-col justify-between scroll-reveal stagger-2">
-                <i data-lucide="activity" class="text-blue-500"></i>
-                <div><h4 class="font-bold text-lg">Reliability</h4><p class="text-xs text-gray-500 mono">status.hetops.dev</p></div>
-            </a>
-            <a href="https://tools.hetops.dev" target="_blank" class="glass-card p-8 h-48 flex flex-col justify-between scroll-reveal stagger-3">
-                <i data-lucide="wrench" class="text-amber-500"></i>
-                <div><h4 class="font-bold text-lg">Dev Toolkit</h4><p class="text-xs text-gray-500 mono">tools.hetops.dev</p></div>
-            </a>
-            <a href="https://hub.hetops.dev" target="_blank" class="glass-card p-8 h-48 flex flex-col justify-between scroll-reveal stagger-4">
-                <i data-lucide="cpu" class="text-purple-500"></i>
-                <div><h4 class="font-bold text-lg">Coolify</h4><p class="text-xs text-gray-500 mono">hub.hetops.dev</p></div>
-            </a>
-        </div>
-    </section>
-
     <!-- SKILLS SHOWCASE -->
-    <section id="skills" class="py-32 px-6 md:px-24">
+    <section id="skills" class="bg-[#050505] py-32 px-6 md:px-24">
         <h3 class="text-[10px] uppercase tracking-[0.5em] text-gray-600 mb-16 font-bold scroll-reveal">// TECHNICAL_CAPABILITIES</h3>
         <div class="grid lg:grid-cols-2 gap-16 items-stretch">
             <div class="scroll-reveal-left">
@@ -285,7 +323,7 @@
     </section>
 
     <!-- PROJECTS SHOWCASE -->
-    <section id="projects" class="py-32 px-6 md:px-24 bg-[#050505]">
+    <section id="projects" class="py-32 px-6 md:px-24">
         <h3 class="text-[10px] uppercase tracking-[0.5em] text-gray-600 mb-16 font-bold scroll-reveal">// INFRASTRUCTURE_PROJECTS</h3>
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             <div class="glass-card p-8 project-card scroll-reveal stagger-1">
@@ -330,43 +368,166 @@
         </div>
     </section>
 
-    <!-- EXPERIENCE PIPELINE -->
-    <section id="exp" class="py-32 px-6 md:px-24">
-        <div class="grid lg:grid-cols-2 gap-24">
-            <div class="scroll-reveal-left">
-                <h3 class="text-[10px] uppercase tracking-[0.5em] text-gray-600 mb-12 font-bold">// DEPLOYMENT_HISTORY</h3>
-                <div class="space-y-12 ml-4">
-                    <div class="node current">
-                        <h4 class="text-2xl font-bold">DevOps Engineer II</h4>
-                        <p class="text-emerald-500 font-mono text-xs mb-3">Techdome // Aug 2025 - Present</p>
-                        <p class="text-gray-400 text-sm leading-relaxed">Multi-cloud automation and K8s orchestration at scale.</p>
+    <!-- CASE STUDIES / PROJECT DEEP-DIVES -->
+    <section id="case-studies" class="bg-[#050505] py-32 px-6 md:px-24">
+        <h3 class="text-[10px] uppercase tracking-[0.5em] text-gray-600 mb-16 font-bold scroll-reveal">// CASE_STUDIES_&_DEEP_DIVES</h3>
+        <div class="grid md:grid-cols-2 gap-12">
+            <div class="glass-card p-8 scroll-reveal-left relative overflow-hidden flex flex-col opacity-80">
+                <div class="absolute top-4 right-4 bg-yellow-500/20 text-yellow-500 text-[10px] px-2 py-1 rounded font-bold uppercase tracking-wider z-10">Coming Soon</div>
+                <div class="blur-md select-none transition-all duration-500 flex flex-col h-full pointer-events-none">
+                    <div class="mb-6 pb-6 border-b border-white/10 pr-24">
+                        <span class="text-emerald-500 text-sm font-mono uppercase">💼 Infrastructure Migration</span>
+                        <h4 class="text-2xl font-bold mt-2">Multi-Cloud Migration Framework</h4>
                     </div>
-                    <div class="node">
-                        <h4 class="text-xl font-bold text-gray-400">DevOps Engineer</h4>
-                        <p class="text-gray-600 font-mono text-xs mb-3">Datagroker // 2023 - 2025</p>
-                        <p class="text-gray-600 text-sm">Engineered CI/CD pipelines and production server stability.</p>
+                    <p class="text-gray-400 mb-6 leading-relaxed">Architected and executed migration of 50+ microservices across AWS, Azure, and OCI. Implemented automated deployment pipelines reducing deployment time by 75%.</p>
+                    <div class="space-y-3 mb-6">
+                        <div><span class="text-xs text-gray-600">IMPACT:</span> <span class="text-emerald-400 font-bold">$2M annual savings</span></div>
+                        <div><span class="text-xs text-gray-600">TIMELINE:</span> <span class="text-blue-400 font-bold">8 months (zero downtime)</span></div>
+                        <div><span class="text-xs text-gray-600">TEAM:</span> <span class="text-purple-400 font-bold">Led 5 DevOps engineers</span></div>
+                    </div>
+                    <div class="flex flex-wrap gap-2 mt-auto">
+                        <span class="text-[10px] px-2 py-1 bg-emerald-500/10 rounded text-emerald-400 font-mono">AWS</span>
+                        <span class="text-[10px] px-2 py-1 bg-blue-500/10 rounded text-blue-400 font-mono">Azure</span>
+                        <span class="text-[10px] px-2 py-1 bg-red-500/10 rounded text-red-400 font-mono">Kubernetes</span>
+                        <span class="text-[10px] px-2 py-1 bg-yellow-500/10 rounded text-yellow-400 font-mono">Terraform</span>
                     </div>
                 </div>
             </div>
-            <div class="scroll-reveal-right">
-                <h3 class="text-[10px] uppercase tracking-[0.5em] text-gray-600 mb-12 font-bold">// TECH_INVENTORY</h3>
-                <div class="flex flex-wrap gap-3">
-                    <span class="px-4 py-2 glass-card rounded-xl text-xs font-mono text-emerald-400 hover:scale-105 transition-transform">AWS / GCP / AZURE</span>
-                    <span class="px-4 py-2 glass-card rounded-xl text-xs font-mono text-blue-400 hover:scale-105 transition-transform">Kubernetes / Docker</span>
-                    <span class="px-4 py-2 glass-card rounded-xl text-xs font-mono text-purple-400 hover:scale-105 transition-transform">Jenkins / Terraform</span>
-                    <span class="px-4 py-2 glass-card rounded-xl text-xs font-mono text-amber-400 hover:scale-105 transition-transform">GitHub Actions</span>
-                </div>
-                <div class="mt-12 p-8 glass-card border-white/5">
-                    <p class="text-xs text-gray-500 uppercase mono mb-2">Education_Protocol</p>
-                    <p class="text-lg font-bold">B.Tech Computer Engineering</p>
-                    <p class="text-emerald-500 text-sm mono">Charusat University</p>
+            <div class="glass-card p-8 scroll-reveal-right relative overflow-hidden flex flex-col opacity-80">
+                <div class="absolute top-4 right-4 bg-yellow-500/20 text-yellow-500 text-[10px] px-2 py-1 rounded font-bold uppercase tracking-wider z-10">Coming Soon</div>
+                <div class="blur-md select-none transition-all duration-500 flex flex-col h-full pointer-events-none">
+                    <div class="mb-6 pb-6 border-b border-white/10 pr-24">
+                        <span class="text-purple-500 text-sm font-mono uppercase">📊 Observability Engineering</span>
+                        <h4 class="text-2xl font-bold mt-2">Enterprise Monitoring Stack</h4>
+                    </div>
+                    <p class="text-gray-400 mb-6 leading-relaxed">Built comprehensive observability platform with Prometheus, Grafana, and Loki. Implemented distributed tracing for 100+ services, reducing MTTR by 60%.</p>
+                    <div class="space-y-3 mb-6">
+                        <div><span class="text-xs text-gray-600">METRICS:</span> <span class="text-emerald-400 font-bold">500K events/hour</span></div>
+                        <div><span class="text-xs text-gray-600">STORAGE:</span> <span class="text-blue-400 font-bold">90-day retention optimized</span></div>
+                        <div><span class="text-xs text-gray-600">AVAILABILITY:</span> <span class="text-green-400 font-bold">99.98% uptime</span></div>
+                    </div>
+                    <div class="flex flex-wrap gap-2 mt-auto">
+                        <span class="text-[10px] px-2 py-1 bg-amber-500/10 rounded text-amber-400 font-mono">Prometheus</span>
+                        <span class="text-[10px] px-2 py-1 bg-orange-500/10 rounded text-orange-400 font-mono">Grafana</span>
+                        <span class="text-[10px] px-2 py-1 bg-pink-500/10 rounded text-pink-400 font-mono">Loki</span>
+                        <span class="text-[10px] px-2 py-1 bg-cyan-500/10 rounded text-cyan-400 font-mono">Jaeger</span>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- SERVICE GRID -->
+    <section id="infra" class="py-32 px-6 md:px-24">
+        <h3 class="text-[10px] uppercase tracking-[0.5em] text-gray-600 mb-16 font-bold scroll-reveal">// CLOUD_INFRASTRUCTURE_NODES</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <a href="https://dash.hetops.dev" target="_blank" rel="noopener noreferrer" class="glass-card p-8 h-48 flex flex-col justify-between scroll-reveal stagger-1">
+                <i data-lucide="layout-grid" class="text-emerald-500"></i>
+                <div><h4 class="font-bold text-lg">Dashboard</h4><p class="text-xs text-gray-500 mono">dash.hetops.dev</p></div>
+            </a>
+            <a href="https://status.hetops.dev" target="_blank" rel="noopener noreferrer" class="glass-card p-8 h-48 flex flex-col justify-between scroll-reveal stagger-2">
+                <i data-lucide="activity" class="text-blue-500"></i>
+                <div><h4 class="font-bold text-lg">Reliability</h4><p class="text-xs text-gray-500 mono">status.hetops.dev</p></div>
+            </a>
+            <a href="https://tools.hetops.dev" target="_blank" rel="noopener noreferrer" class="glass-card p-8 h-48 flex flex-col justify-between scroll-reveal stagger-3">
+                <i data-lucide="wrench" class="text-amber-500"></i>
+                <div><h4 class="font-bold text-lg">Dev Toolkit</h4><p class="text-xs text-gray-500 mono">tools.hetops.dev</p></div>
+            </a>
+            <a href="https://hub.hetops.dev" target="_blank" rel="noopener noreferrer" class="glass-card p-8 h-48 flex flex-col justify-between scroll-reveal stagger-4">
+                <i data-lucide="cpu" class="text-purple-500"></i>
+                <div><h4 class="font-bold text-lg">Coolify</h4><p class="text-xs text-gray-500 mono">hub.hetops.dev</p></div>
+            </a>
+        </div>
+    </section>
+
+    <!-- BLOG / TECHNICAL ARTICLES -->
+    <section id="blog" class="bg-[#050505] py-32 px-6 md:px-24">
+        <h3 class="text-[10px] uppercase tracking-[0.5em] text-gray-600 mb-16 font-bold scroll-reveal">// TECHNICAL_INSIGHTS_&_BLOG</h3>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <a href="https://medium.com/@het101/scaling-kubernetes-at-enterprise-scale-c3a3c9256671" target="_blank" rel="noopener noreferrer" class="glass-card p-8 scroll-reveal stagger-1 hover:scale-105 transition-transform block cursor-pointer">
+                <div class="text-cyan-400 text-sm font-mono uppercase mb-3 flex justify-between items-center">
+                    <span># Kubernetes Best Practices</span>
+                    <i data-lucide="external-link" class="w-4 h-4 text-gray-500"></i>
+                </div>
+                <h4 class="text-lg font-bold mb-3">Scaling Kubernetes at Enterprise Scale</h4>
+                <p class="text-gray-400 text-sm mb-4 line-clamp-3">Advanced patterns for managing 100+ node clusters, resource optimization, and cost-effective scaling strategies for production workloads.</p>
+                <div class="flex gap-2 flex-wrap text-[10px]">
+                    <span class="px-2 py-1 bg-cyan-500/10 rounded text-cyan-400">K8s</span>
+                    <span class="px-2 py-1 bg-blue-500/10 rounded text-blue-400">Scaling</span>
+                </div>
+            </a>
+            <article class="glass-card p-8 scroll-reveal stagger-2 relative overflow-hidden flex flex-col opacity-80">
+                <div class="absolute top-4 right-4 bg-yellow-500/20 text-yellow-500 text-[10px] px-2 py-1 rounded font-bold uppercase tracking-wider z-10">Coming Soon</div>
+                <div class="blur-sm select-none transition-all duration-500 flex flex-col h-full pointer-events-none">
+                    <div class="text-green-400 text-sm font-mono uppercase mb-3 pr-24"># Infrastructure as Code</div>
+                    <h4 class="text-lg font-bold mb-3">Terraform at Scale: Real-World Patterns</h4>
+                    <p class="text-gray-400 text-sm mb-4 line-clamp-3">Production-tested Terraform architecture, module design, state management, and CI/CD pipeline integration for enterprise deployments.</p>
+                    <div class="flex gap-2 flex-wrap text-[10px] mt-auto">
+                        <span class="px-2 py-1 bg-green-500/10 rounded text-green-400">Terraform</span>
+                        <span class="px-2 py-1 bg-yellow-500/10 rounded text-yellow-400">IaC</span>
+                    </div>
+                </div>
+            </article>
+            <article class="glass-card p-8 scroll-reveal stagger-3 relative overflow-hidden flex flex-col opacity-80">
+                <div class="absolute top-4 right-4 bg-yellow-500/20 text-yellow-500 text-[10px] px-2 py-1 rounded font-bold uppercase tracking-wider z-10">Coming Soon</div>
+                <div class="blur-sm select-none transition-all duration-500 flex flex-col h-full pointer-events-none">
+                    <div class="text-orange-400 text-sm font-mono uppercase mb-3 pr-24"># Observability</div>
+                    <h4 class="text-lg font-bold mb-3">Building Resilient Monitoring Systems</h4>
+                    <p class="text-gray-400 text-sm mb-4 line-clamp-3">OpenTelemetry, distributed tracing, intelligent alerting, and observability-driven development for modern applications.</p>
+                    <div class="flex gap-2 flex-wrap text-[10px] mt-auto">
+                        <span class="px-2 py-1 bg-orange-500/10 rounded text-orange-400">Prometheus</span>
+                        <span class="px-2 py-1 bg-pink-500/10 rounded text-pink-400">Tracing</span>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <!-- TESTIMONIALS & SOCIAL PROOF -->
+    <section class="py-32 px-6 md:px-24">
+        <h3 class="text-[10px] uppercase tracking-[0.5em] text-gray-600 mb-16 font-bold text-center scroll-reveal">// IMPACT_&_RECOGNITION</h3>
+        <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            <div class="glass-card p-8 scroll-reveal stagger-1">
+                <div class="flex items-center gap-2 mb-4">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-emerald-500 to-blue-500 flex items-center justify-center">
+                        <i data-lucide="award" class="text-white text-lg"></i>
+                    </div>
+                    <div>
+                        <h5 class="font-bold text-sm">Technical Excellence</h5>
+                        <p class="text-xs text-gray-500">Open Source Contributor</p>
+                    </div>
+                </div>
+                <p class="text-gray-400 text-sm">Active contributor to Kubernetes ecosystem projects with 500+ GitHub stars across personal repos.</p>
+            </div>
+            <div class="glass-card p-8 scroll-reveal stagger-2">
+                <div class="flex items-center gap-2 mb-4">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
+                        <i data-lucide="users" class="text-white text-lg"></i>
+                    </div>
+                    <div>
+                        <h5 class="font-bold text-sm">Team Leadership</h5>
+                        <p class="text-xs text-gray-500">5+ Engineers Mentored</p>
+                    </div>
+                </div>
+                <p class="text-gray-400 text-sm">Mentored junior and senior engineers, leading technical architecture discussions and knowledge sessions.</p>
+            </div>
+            <div class="glass-card p-8 scroll-reveal stagger-3">
+                <div class="flex items-center gap-2 mb-4">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center">
+                        <i data-lucide="trending-up" class="text-white text-lg"></i>
+                    </div>
+                    <div>
+                        <h5 class="font-bold text-sm">Business Impact</h5>
+                        <p class="text-xs text-gray-500">$2M+ Cost Savings</p>
+                    </div>
+                </div>
+                <p class="text-gray-400 text-sm">Delivered measurable business impact through infrastructure optimization and automation initiatives.</p>
+            </div>
+        </div>
+    </section>
+
     <!-- CONTACT SECTION -->
-    <section id="contact" class="py-32 px-6 md:px-24 bg-[#050505]">
+    <section id="contact" class="bg-[#050505] py-32 px-6 md:px-24 pb-48">
         <div class="max-w-4xl mx-auto">
             <h3 class="text-[10px] uppercase tracking-[0.5em] text-gray-600 mb-16 font-bold text-center scroll-reveal">// ESTABLISH_CONNECTION</h3>
             <div class="grid md:grid-cols-2 gap-12">
@@ -385,7 +546,7 @@
                                 <p class="font-semibold">hetpatidar09@gmail.com</p>
                             </div>
                         </a>
-                        <a href="https://linkedin.com/in/het11" target="_blank" class="flex items-center gap-4 p-4 glass-card rounded-xl hover:border-blue-500/40 transition group">
+                        <a href="https://linkedin.com/in/het11" target="_blank" rel="noopener noreferrer" class="flex items-center gap-4 p-4 glass-card rounded-xl hover:border-blue-500/40 transition group">
                             <div class="p-3 bg-blue-500/10 rounded-lg group-hover:bg-blue-500/20 transition">
                                 <i data-lucide="linkedin" class="text-blue-500"></i>
                             </div>
@@ -394,7 +555,7 @@
                                 <p class="font-semibold">linkedin.com/in/het11</p>
                             </div>
                         </a>
-                        <a href="https://github.com/Het101" target="_blank" class="flex items-center gap-4 p-4 glass-card rounded-xl hover:border-purple-500/40 transition group">
+                        <a href="https://github.com/Het101" target="_blank" rel="noopener noreferrer" class="flex items-center gap-4 p-4 glass-card rounded-xl hover:border-purple-500/40 transition group">
                             <div class="p-3 bg-purple-500/10 rounded-lg group-hover:bg-purple-500/20 transition">
                                 <i data-lucide="github" class="text-purple-500"></i>
                             </div>
@@ -450,8 +611,44 @@
         </div>
     </section>
 
-    <footer class="p-12 text-center border-t border-white/5 font-mono text-[9px] text-gray-700 tracking-[0.8em]">
-        HETOPS // DEVOPS_ENGINEER_II // ALL_SYSTEMS_OPTIMAL
+    </main>
+
+    <!-- FLOATING TERMINAL BUTTON (Deprecated in favor of persistent mini terminal) -->
+    <!-- <button id="floating-term-btn" class="glass-card bg-[#0a0a0a] text-emerald-500 hover:bg-[#1a1a1a] group" aria-label="Open Terminal">
+        <i data-lucide="terminal" class="w-6 h-6 group-hover:scale-110 transition-transform"></i>
+    </button> -->
+
+    <!-- PERSISTENT MINI TERMINAL -->
+    <div id="mini-terminal-wrapper" class="fixed bottom-12 right-6 z-[100] transition-all duration-300 transform translate-y-10 opacity-0 pointer-events-none flex flex-col items-end gap-3">
+        <!-- Expanded Panel -->
+        <div id="mini-term-panel" class="bg-[#0a0a0a] border border-emerald-500/30 rounded-xl w-72 md:w-96 shadow-2xl transition-all duration-300 origin-bottom-right scale-0 opacity-0 pointer-events-none flex flex-col overflow-hidden glass-card">
+            <div id="mini-term-output" class="text-[10px] font-mono p-3 pb-0 max-h-32 overflow-y-auto scrollbar-hide flex flex-col gap-1 hidden"></div>
+            <div class="flex items-center gap-2 p-3 bg-black/40 relative">
+                <i data-lucide="terminal" class="w-4 h-4 text-emerald-500"></i>
+                <span class="text-emerald-500 font-mono text-xs">~$</span>
+                <input type="text" id="mini-term-input" class="bg-transparent border-none outline-none text-white font-mono text-xs flex-1 pr-6" placeholder="Command (e.g. cd ~)" autocomplete="off" spellcheck="false">
+            </div>
+        </div>
+        
+        <!-- Toggle Button -->
+        <button id="mini-term-toggle" class="glass-card bg-[#0a0a0a] border border-emerald-500/50 text-emerald-500 hover:bg-[#1a1a1a] w-12 h-12 rounded-full flex items-center justify-center group shadow-[0_0_15px_rgba(0,255,65,0.3)] hover:shadow-[0_0_25px_rgba(0,255,65,0.5)] transition-all">
+            <i data-lucide="terminal" class="w-5 h-5 group-hover:scale-110 transition-transform"></i>
+        </button>
+    </div>
+
+    <footer class="fixed bottom-0 left-0 w-full bg-[#0a0a0a] border-t border-[#333] z-50 flex justify-between items-center px-4 py-1.5 font-mono text-[10px] text-gray-400 shadow-[0_-5px_20px_rgba(0,0,0,0.5)]">
+        <div class="flex items-center gap-4">
+            <span class="bg-[#00ff41] text-black px-2 py-0.5 font-bold flex items-center gap-1.5 rounded-sm"><i data-lucide="terminal" class="w-3 h-3"></i> NORMAL</span>
+            <span class="hidden sm:inline-block">hetops/portfolio</span>
+            <span class="text-blue-400 flex items-center gap-1.5"><i data-lucide="git-branch" class="w-3 h-3"></i> main</span>
+            <span class="hidden md:flex text-[#ffbd2e] items-center gap-1.5"><i data-lucide="alert-circle" class="w-3 h-3"></i> 0</span>
+        </div>
+        <div class="flex items-center gap-4">
+            <span class="hidden sm:inline-block font-bold" id="footer-time">00:00:00</span>
+            <span class="text-emerald-500 flex items-center gap-1.5"><i data-lucide="check-circle" class="w-3 h-3"></i> ALL_SYSTEMS_OPTIMAL</span>
+            <span class="hidden lg:inline-block">UTF-8</span>
+            <span class="hidden lg:inline-block">Prettier</span>
+        </div>
     </footer>
 
     <script>
@@ -508,11 +705,14 @@
             });
         }
 
-        // NAVBAR SCROLL EFFECT
+        // NAVBAR & MINI TERMINAL SCROLL EFFECT & SCROLL SPY
         let lastScroll = 0;
         window.addEventListener('scroll', () => {
             const navbar = document.getElementById('navbar');
+            const miniTermWrapper = document.getElementById('mini-terminal-wrapper');
             const currentScroll = window.pageYOffset;
+            
+            // Navbar behavior
             if (currentScroll > 100) {
                 navbar.style.padding = '1rem 1.5rem';
                 navbar.style.background = 'rgba(0, 0, 0, 0.95)';
@@ -520,7 +720,37 @@
                 navbar.style.padding = '1.5rem 1.5rem';
                 navbar.style.background = 'rgba(0, 0, 0, 0.5)';
             }
+            
+            // Hide mini-terminal when near the top (hero section has the main terminal)
+            if (currentScroll < 500) {
+                miniTermWrapper.style.opacity = '0';
+                miniTermWrapper.style.transform = 'translateY(20px)';
+                miniTermWrapper.style.pointerEvents = 'none';
+            } else {
+                miniTermWrapper.style.opacity = '1';
+                miniTermWrapper.style.transform = 'translateY(0)';
+                miniTermWrapper.style.pointerEvents = 'all';
+            }
+            
             lastScroll = currentScroll;
+
+            // Scroll Spy
+            const sections = document.querySelectorAll('section[id]');
+            const navLinks = document.querySelectorAll('.nav-link');
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (currentScroll >= (sectionTop - 250)) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
         });
 
         window.addEventListener('DOMContentLoaded', () => {
@@ -532,8 +762,11 @@
             
             // Start clock
             setInterval(() => { 
+                const timeString = new Date().toLocaleTimeString();
                 const clock = document.getElementById('clock');
-                if (clock) clock.innerText = new Date().toLocaleTimeString(); 
+                if (clock) clock.innerText = timeString; 
+                const footerTime = document.getElementById('footer-time');
+                if (footerTime) footerTime.innerText = timeString;
             }, 1000);
             
             // Create particles
@@ -555,12 +788,50 @@
                 }, { threshold: 0.3 });
                 skillObserver.observe(skillSection);
             }
+            
+            // Run Terminal Boot Sequence
+            setTimeout(typeBootSequence, 500);
         });
 
         const input = document.getElementById('terminal-input');
         const output = document.getElementById('output');
         const terminalContent = document.getElementById('terminal-content');
+        
+        const miniInput = document.getElementById('mini-term-input');
+        const miniOutput = document.getElementById('mini-term-output');
+        
         let history = []; let historyIndex = -1;
+
+        async function typeBootSequence() {
+            const bootMessages = [
+                { text: "Loading core kernel modules...", delay: 200 },
+                { text: "Mounting file systems... [OK]", delay: 300 },
+                { text: "Initializing network interfaces... [OK]", delay: 200 },
+                { text: "Establishing secure connection to Techdome...", delay: 400 },
+                { text: "Verifying credentials... [ACCESS_GRANTED: het_patel]", delay: 500, color: "text-[#00ff41]" },
+                { text: "Type 'help' to see available commands.", delay: 300, color: "text-blue-400" },
+                { text: "", delay: 0 }
+            ];
+
+            const cmdLine = document.createElement('p');
+            cmdLine.className = 'text-[#00ff41] font-bold mb-2';
+            cmdLine.innerHTML = '➜  ~ hetops_os --init --session=production';
+            output.appendChild(cmdLine);
+
+            for(let msg of bootMessages) {
+                if(msg.text) {
+                    await new Promise(r => setTimeout(r, msg.delay));
+                    const p = document.createElement('p');
+                    p.className = `${msg.color || 'text-gray-500'}`;
+                    p.innerText = msg.text;
+                    output.appendChild(p);
+                    terminalContent.scrollTop = terminalContent.scrollHeight;
+                } else {
+                    document.getElementById('terminal-input-row').style.display = 'flex';
+                    input.focus();
+                }
+            }
+        }
 
         const commands = {
             help: `<span class="text-white font-bold underline">--- HETOPS_OS COMMAND CENTER ---</span>
@@ -573,30 +844,48 @@
   <span class="exe">sites</span>      List of all live subdomains (dash, status, tools)
   <span class="exe">neofetch</span>   Hardware specifications of the ARM Beast
   <span class="exe">ls -la</span>     Detailed view of virtual filesystem
+  <span class="exe">whoami</span>     Print effective userid
+  <span class="exe">pwd</span>        Print working directory
+  <span class="exe">date</span>       Print system date and time
 
 <span class="text-gray-500">System Utilities:</span>
+  <span class="exe">sudo</span>       Execute a command as superuser
   <span class="exe">clear</span>      Purge terminal history
   <span class="exe">contact</span>    View secure communication channels`,
 
-            ls: `drwxr-xr-x  <span class="dir">projects/</span>
+            ls: `drwxr-xr-x  <span class="dir">exp/</span>
+drwxr-xr-x  <span class="dir">skills/</span>
+drwxr-xr-x  <span class="dir">projects/</span>
+drwxr-xr-x  <span class="dir">case-studies/</span>
 drwxr-xr-x  <span class="dir">infra/</span>
--rw-r--r--  <span class="file">resume_het_patel.pdf</span>
+drwxr-xr-x  <span class="dir">blog/</span>
+drwxr-xr-x  <span class="dir">contact/</span>
+-rw-r--r--  <span class="file">resume_het_pate.pdf</span>
 -rwxr-xr-x  <span class="exe">deploy_beast.sh</span>`,
 
             'ls -la': `total 42KB
-drwxr-xr-x  4 het techdome 4.0K Mar 07 11:15 <span class="dir">.</span>
+drwxr-xr-x 10 het techdome 4.0K Mar 07 11:15 <span class="dir">.</span>
 drwxr-xr-x  2 het techdome 4.0K Mar 07 09:00 <span class="dir">..</span>
 -rw-r--r--  1 het techdome  840 Mar 07 10:45 <span class="file">.env</span>
 drwxr-xr-x  8 het techdome 4.0K Mar 07 11:10 <span class="dir">.git</span>
-drwxr-xr-x  3 het techdome 4.0K Mar 07 09:45 <span class="dir">infra</span>
+drwxr-xr-x  2 het techdome 4.0K Mar 07 11:15 <span class="dir">exp</span>
+drwxr-xr-x  2 het techdome 4.0K Mar 07 11:15 <span class="dir">skills</span>
 drwxr-xr-x  2 het techdome 4.0K Mar 06 20:30 <span class="dir">projects</span>
--rw-r--r--  1 het techdome 250K Mar 07 08:15 <span class="file">resume_het_patel.pdf</span>
+drwxr-xr-x  2 het techdome 4.0K Mar 07 11:15 <span class="dir">case-studies</span>
+drwxr-xr-x  3 het techdome 4.0K Mar 07 09:45 <span class="dir">infra</span>
+drwxr-xr-x  2 het techdome 4.0K Mar 07 11:15 <span class="dir">blog</span>
+drwxr-xr-x  2 het techdome 4.0K Mar 07 11:15 <span class="dir">contact</span>
+-rw-r--r--  1 het techdome 250K Mar 07 08:15 <span class="file">resume_het_pate.pdf</span>
 -rwxr-xr-x  1 het techdome  540 Mar 07 10:20 <span class="exe">deploy_beast.sh</span>`,
 
             about: "Het Patel. Senior-level DevOps Engineer @ Techdome. Master of Multi-Cloud resilience.",
             exp: "Techdome (DevOps II): Aug 2025 - Present\nDatagroker (DevOps): 2023 - 2025",
             edu: "B.Tech Computer Engineering @ Charusat University",
             skills: "Kubernetes, Docker, AWS, Azure, GCP, OCI, Jenkins, Terraform, GitLab CI.",
+            whoami: "visitor",
+            pwd: "/home/visitor",
+            date: "", // Handled dynamically
+            sudo: "Nice try. This incident will be reported.",
             sites: `--- ACTIVE NETWORK NODES ---
 - <a href="https://dash.hetops.dev" class="text-blue-400 underline">dash.hetops.dev</a>   (Control Plane)
 - <a href="https://status.hetops.dev" class="text-blue-400 underline">status.hetops.dev</a> (Health Monitor)
@@ -619,27 +908,102 @@ Status: All systems nominal.`,
             clear: "clear"
         };
 
+        function processCommand(val, outputEl, isMini = false) {
+            const cmd = val.toLowerCase();
+            if (cmd === 'clear') { 
+                outputEl.innerHTML = '';
+                if (isMini) outputEl.classList.add('hidden');
+                return;
+            } 
+            if (val !== "") {
+                if (!isMini) {
+                    history.push(val); 
+                    historyIndex = history.length;
+                }
+                
+                let response = commands[cmd];
+                
+                if (cmd.startsWith('cd ')) {
+                    const dir = cmd.substring(3).trim().replace(/\/$/, "");
+                    const validDirs = ['exp', 'skills', 'projects', 'case-studies', 'infra', 'blog', 'contact'];
+                    if (validDirs.includes(dir)) {
+                        const section = document.getElementById(dir);
+                        if (section) {
+                            section.scrollIntoView({ behavior: 'smooth' });
+                            response = `Navigating to /${dir}...`;
+                        } else {
+                            response = `cd: ${dir}: No such file or directory`;
+                        }
+                    } else if (dir === '..' || dir === '~' || dir === '/') {
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                        response = `Navigating to home...`;
+                    } else {
+                        response = `cd: ${dir}: No such file or directory`;
+                    }
+                } else if (cmd === 'date') {
+                    response = new Date().toString();
+                }
+                
+                if (!response && cmd !== 'clear') response = `zsh: command not found: ${val}`;
+                
+                const div = document.createElement('div');
+                div.className = isMini ? 'mb-1 text-gray-300' : 'mb-3';
+                if (isMini) {
+                    div.innerHTML = `<span class="text-emerald-500">~$</span> ${val}<br><span class="text-gray-400 whitespace-pre-wrap">${response}</span>`;
+                    outputEl.classList.remove('hidden');
+                } else {
+                    div.innerHTML = `<span class="prompt-user">visitor@hetops</span><span class="text-white">:</span><span class="prompt-dir">~</span><span class="text-white">$</span> ${val}<br><span class="text-gray-400 whitespace-pre-wrap">${response}</span>`;
+                }
+                
+                outputEl.appendChild(div);
+                if (isMini) {
+                    outputEl.scrollTop = outputEl.scrollHeight;
+                } else {
+                    terminalContent.scrollTop = terminalContent.scrollHeight;
+                }
+            }
+        }
+
         input.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
-                const val = input.value.trim();
-                const cmd = val.toLowerCase();
-                if (cmd === 'clear') { output.innerHTML = ''; } 
-                else if (val !== "") {
-                    history.push(val); historyIndex = history.length;
-                    const response = commands[cmd] || `zsh: command not found: ${val}`;
-                    const div = document.createElement('div');
-                    div.className = 'mb-3';
-                    div.innerHTML = `<span class="prompt-user">visitor@hetops</span><span class="text-white">:</span><span class="prompt-dir">~</span><span class="text-white">$</span> ${val}<br><span class="text-gray-400 whitespace-pre-wrap">${response}</span>`;
-                    output.appendChild(div);
-                }
+                processCommand(input.value.trim(), output);
                 input.value = '';
-                terminalContent.scrollTop = terminalContent.scrollHeight;
             } else if (e.key === 'ArrowUp' && historyIndex > 0) {
                 historyIndex--; input.value = history[historyIndex];
             } else if (e.key === 'ArrowDown' && historyIndex < history.length - 1) {
                 historyIndex++; input.value = history[historyIndex];
             }
         });
+        
+        miniInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                processCommand(miniInput.value.trim(), miniOutput, true);
+                miniInput.value = '';
+            }
+        });
+        
+        // Toggle Mini Terminal Panel
+        const miniTermToggle = document.getElementById('mini-term-toggle');
+        const miniTermPanel = document.getElementById('mini-term-panel');
+        let isMiniTermExpanded = false;
+
+        miniTermToggle.addEventListener('click', () => {
+            isMiniTermExpanded = !isMiniTermExpanded;
+            if (isMiniTermExpanded) {
+                miniTermPanel.style.transform = 'scale(1)';
+                miniTermPanel.style.opacity = '1';
+                miniTermPanel.style.pointerEvents = 'all';
+                setTimeout(() => miniInput.focus(), 300);
+                miniTermToggle.innerHTML = '<i data-lucide="x" class="w-5 h-5 group-hover:rotate-90 transition-transform"></i>';
+            } else {
+                miniTermPanel.style.transform = 'scale(0)';
+                miniTermPanel.style.opacity = '0';
+                miniTermPanel.style.pointerEvents = 'none';
+                miniTermToggle.innerHTML = '<i data-lucide="terminal" class="w-5 h-5 group-hover:scale-110 transition-transform"></i>';
+            }
+            lucide.createIcons();
+        });
+
         document.querySelector('.terminal-container').addEventListener('click', () => { input.focus(); });
     </script>
 </body>
