@@ -124,6 +124,25 @@
 
         /* SMOOTH SCROLL */
         html { scroll-behavior: smooth; }
+
+        /* MOBILE MENU */
+        .mobile-menu-btn { display: none; background: none; border: 1px solid rgba(255,255,255,0.1); color: #fff; font-size: 24px; cursor: pointer; padding: 6px 10px; border-radius: 8px; transition: all 0.3s; z-index: 60; }
+        .mobile-menu-btn:hover { border-color: #00ff41; color: #00ff41; }
+        @media (max-width: 767px) { .mobile-menu-btn { display: flex; align-items: center; justify-content: center; } }
+
+        .mobile-menu-overlay { position: fixed; top: 0; right: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 55; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+        .mobile-menu-overlay.open { opacity: 1; pointer-events: all; }
+
+        .mobile-menu-panel { position: fixed; top: 0; right: 0; width: 280px; max-width: 85vw; height: 100%; background: #0a0a0a; border-left: 1px solid rgba(255,255,255,0.08); z-index: 56; transform: translateX(100%); transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; flex-direction: column; padding: 24px; box-shadow: -10px 0 40px rgba(0,0,0,0.5); }
+        .mobile-menu-panel.open { transform: translateX(0); }
+
+        .mobile-menu-close { align-self: flex-end; background: none; border: 1px solid rgba(255,255,255,0.1); color: #fff; font-size: 20px; cursor: pointer; padding: 6px 10px; border-radius: 8px; margin-bottom: 32px; transition: all 0.3s; }
+        .mobile-menu-close:hover { border-color: #ff5f56; color: #ff5f56; }
+
+        .mobile-menu-panel .mobile-nav-link { display: block; padding: 14px 0; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.3em; color: #a0a0a0; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.05); transition: all 0.3s; }
+        .mobile-menu-panel .mobile-nav-link:hover, .mobile-menu-panel .mobile-nav-link:focus { color: #00ff41; padding-left: 8px; }
+        .mobile-menu-panel .mobile-nav-cta { display: inline-block; margin-top: 24px; text-align: center; padding: 10px 24px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.3em; color: #00ff41; border: 1px solid rgba(0,255,65,0.3); border-radius: 999px; text-decoration: none; transition: all 0.3s; }
+        .mobile-menu-panel .mobile-nav-cta:hover { background: #00ff41; color: #000; }
     </style>
 </head>
 <body>
@@ -151,7 +170,22 @@
             <a href="#contact" class="nav-link hover:text-pink-400 transition">Contact</a>
             <a href="https://dash.hetops.dev" target="_blank" rel="noopener noreferrer" class="text-emerald-500 px-4 py-2 border border-emerald-500/30 rounded-full hover:bg-emerald-500 hover:text-black transition">Dashboard</a>
         </div>
+        <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Open Menu">☰</button>
     </nav>
+
+    <!-- MOBILE MENU -->
+    <div class="mobile-menu-overlay" id="mobile-menu-overlay"></div>
+    <div class="mobile-menu-panel" id="mobile-menu-panel">
+        <button class="mobile-menu-close" id="mobile-menu-close" aria-label="Close Menu">✕</button>
+        <a href="#exp" class="mobile-nav-link">Experience</a>
+        <a href="#skills" class="mobile-nav-link">Skills</a>
+        <a href="#projects" class="mobile-nav-link">Projects</a>
+        <a href="#case-studies" class="mobile-nav-link">Case Studies</a>
+        <a href="#infra" class="mobile-nav-link">Infrastructure</a>
+        <a href="#blog" class="mobile-nav-link">Blog</a>
+        <a href="#contact" class="mobile-nav-link">Contact</a>
+        <a href="https://dash.hetops.dev" target="_blank" rel="noopener noreferrer" class="mobile-nav-cta">Dashboard</a>
+    </div>
 
     <main>
     <!-- HERO SECTION -->
@@ -792,6 +826,32 @@
                 skillObserver.observe(skillSection);
             }
             
+            // MOBILE MENU TOGGLE
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenuClose = document.getElementById('mobile-menu-close');
+            const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
+            const mobileMenuPanel = document.getElementById('mobile-menu-panel');
+
+            function openMobileMenu() {
+                mobileMenuOverlay.classList.add('open');
+                mobileMenuPanel.classList.add('open');
+                document.body.style.overflow = 'hidden';
+            }
+            function closeMobileMenu() {
+                mobileMenuOverlay.classList.remove('open');
+                mobileMenuPanel.classList.remove('open');
+                document.body.style.overflow = '';
+            }
+
+            mobileMenuBtn.addEventListener('click', openMobileMenu);
+            mobileMenuClose.addEventListener('click', closeMobileMenu);
+            mobileMenuOverlay.addEventListener('click', closeMobileMenu);
+
+            // Close mobile menu when a nav link is clicked
+            document.querySelectorAll('.mobile-nav-link').forEach(link => {
+                link.addEventListener('click', closeMobileMenu);
+            });
+
             // Run Terminal Boot Sequence
             setTimeout(typeBootSequence, 500);
         });
