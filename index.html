@@ -11,6 +11,7 @@
     <title>HET PATEL | DevOps Engineer II</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;600;800&family=Fira+Code:wght@400;500&display=swap');
         
@@ -18,11 +19,19 @@
         body { background-color: var(--bg); color: #fff; font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; overflow-x: hidden; }
         
         /* THE VIBRANT UI */
-        .gradient-text { background: linear-gradient(90deg, #00f260 0%, #0575e6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .gradient-text { background: linear-gradient(90deg, #00f260 0%, #0575e6 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
         .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 24px; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05), 0 10px 30px -10px rgba(0, 0, 0, 0.5); }
         .glass-card:hover { border-color: rgba(0, 242, 96, 0.5); transform: translateY(-8px); box-shadow: inset 0 0 0 1px rgba(0, 242, 96, 0.2), 0 20px 40px rgba(0, 242, 96, 0.15), 0 10px 30px -10px rgba(0, 0, 0, 0.5); }
-        .nav-link.active { color: #00ff41 !important; position: relative; }
-        .nav-link.active::after { content: ''; position: absolute; bottom: -6px; left: 0; width: 100%; height: 2px; background: #00ff41; box-shadow: 0 0 10px #00ff41; }
+        .nav-link { --active-color: #00ff41; }
+        .nav-link[href="#exp"] { --active-color: #60a5fa; }
+        .nav-link[href="#skills"] { --active-color: #c084fc; }
+        .nav-link[href="#projects"] { --active-color: #fbbf24; }
+        .nav-link[href="#case-studies"] { --active-color: #c084fc; }
+        .nav-link[href="#infra"] { --active-color: #34d399; }
+        .nav-link[href="#blog"] { --active-color: #22d3ee; }
+        .nav-link[href="#contact"] { --active-color: #f472b6; }
+        .nav-link.active { color: var(--active-color) !important; position: relative; }
+        .nav-link.active::after { content: ''; position: absolute; bottom: -6px; left: 0; width: 100%; height: 2px; background: var(--active-color); box-shadow: 0 0 10px var(--active-color); }
         
         /* HARDCORE TERMINAL */
         .terminal-container { background: #0a0a0a; border: 1px solid #333; border-radius: 12px; height: 500px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 30px 60px rgba(0,0,0,0.5); }
@@ -78,6 +87,11 @@
             100% { transform: translateY(-100vh) translateX(100px); opacity: 0; }
         }
         
+        /* ACCESSIBILITY FOCUS */
+        a:focus-visible, button:focus-visible { outline: 2px dashed #00ff41; outline-offset: 4px; border-radius: 4px; }
+        .glass-card:focus-visible { border-color: #00ff41; outline: none; box-shadow: 0 0 15px rgba(0,255,65,0.4); }
+        input:focus-visible { outline: none; }
+        
         /* SKILL BAR ANIMATION */
         .skill-bar { height: 8px; background: rgba(255, 255, 255, 0.1); border-radius: 10px; overflow: hidden; position: relative; }
         .skill-progress { height: 100%; background: linear-gradient(90deg, #00f260, #0575e6); border-radius: 10px; width: 0; transition: width 1.5s ease-out; position: relative; animation: none; }
@@ -128,7 +142,7 @@
         /* MOBILE MENU */
         .mobile-menu-btn { display: none; background: none; border: 1px solid rgba(255,255,255,0.1); color: #fff; font-size: 24px; cursor: pointer; padding: 6px 10px; border-radius: 8px; transition: all 0.3s; z-index: 60; }
         .mobile-menu-btn:hover { border-color: #00ff41; color: #00ff41; }
-        @media (max-width: 767px) { .mobile-menu-btn { display: flex; align-items: center; justify-content: center; } }
+        @media (max-width: 1279px) { .mobile-menu-btn { display: flex; align-items: center; justify-content: center; } }
 
         .mobile-menu-overlay { position: fixed; top: 0; right: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 55; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
         .mobile-menu-overlay.open { opacity: 1; pointer-events: all; }
@@ -141,8 +155,8 @@
 
         .mobile-menu-panel .mobile-nav-link { display: block; padding: 14px 0; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.3em; color: #a0a0a0; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.05); transition: all 0.3s; }
         .mobile-menu-panel .mobile-nav-link:hover, .mobile-menu-panel .mobile-nav-link:focus { color: #00ff41; padding-left: 8px; }
-        .mobile-menu-panel .mobile-nav-cta { display: inline-block; margin-top: 24px; text-align: center; padding: 10px 24px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.3em; color: #00ff41; border: 1px solid rgba(0,255,65,0.3); border-radius: 999px; text-decoration: none; transition: all 0.3s; }
-        .mobile-menu-panel .mobile-nav-cta:hover { background: #00ff41; color: #000; }
+        .mobile-menu-panel .mobile-nav-cta { display: inline-block; margin-top: 24px; text-align: center; padding: 10px 24px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.3em; color: #10b981; border: 1px solid rgba(16,185,129,0.3); border-radius: 999px; text-decoration: none; transition: all 0.3s; box-shadow: 0 0 10px rgba(16,185,129,0.1); }
+        .mobile-menu-panel .mobile-nav-cta:hover { background: #10b981; color: #000; box-shadow: 0 0 20px rgba(16,185,129,0.4); }
     </style>
 </head>
 <body>
@@ -156,11 +170,11 @@
 
     <!-- NAVBAR -->
     <nav class="fixed top-0 w-full z-50 p-6 flex justify-between items-center bg-black/50 backdrop-blur-lg border-b border-white/5 transition-all duration-300" id="navbar">
-        <div style="display: flex; align-items: center; justify-content: flex-start;">
+        <a href="#" style="display: flex; align-items: center; justify-content: flex-start; text-decoration: none;">
             <img src="icon.svg" style="width: 140px; height: auto; display: block;" alt="HetOps Logo" />
             <span class="text-gray-500 text-xs ml-2 mt-1" style="font-family: 'Fira Code', monospace; line-height: 16px; font-weight: bold; font-style: italic;">PORTFOLIO</span>
-        </div>
-        <div class="hidden md:flex gap-10 text-[10px] uppercase font-bold tracking-[0.4em] items-center">
+        </a>
+        <div class="hidden xl:flex gap-6 2xl:gap-8 text-[10px] uppercase font-bold tracking-[0.2em] 2xl:tracking-[0.4em] items-center">
             <a href="#exp" class="nav-link hover:text-blue-400 transition">Experience</a>
             <a href="#skills" class="nav-link hover:text-purple-400 transition">Skills</a>
             <a href="#projects" class="nav-link hover:text-amber-400 transition">Projects</a>
@@ -168,7 +182,8 @@
             <a href="#infra" class="nav-link hover:text-emerald-400 transition">Infrastructure</a>
             <a href="#blog" class="nav-link hover:text-cyan-400 transition">Blog</a>
             <a href="#contact" class="nav-link hover:text-pink-400 transition">Contact</a>
-            <a href="https://dash.hetops.dev" target="_blank" rel="noopener noreferrer" class="text-emerald-500 px-4 py-2 border border-emerald-500/30 rounded-full hover:bg-emerald-500 hover:text-black transition">Dashboard</a>
+            <a href="Het_Patel_Resume.pdf" target="_blank" rel="noopener noreferrer" class="nav-link hover:text-white transition">Resume</a>
+            <a href="https://dash.hetops.dev" target="_blank" rel="noopener noreferrer" class="text-emerald-500 px-4 py-2 border border-emerald-500/30 rounded-full hover:bg-emerald-500 hover:text-black transition shadow-[0_0_10px_rgba(16,185,129,0.1)] hover:shadow-[0_0_20px_rgba(16,185,129,0.4)]">Dashboard</a>
         </div>
         <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Open Menu">☰</button>
     </nav>
@@ -184,26 +199,34 @@
         <a href="#infra" class="mobile-nav-link">Infrastructure</a>
         <a href="#blog" class="mobile-nav-link">Blog</a>
         <a href="#contact" class="mobile-nav-link">Contact</a>
+        <a href="Het_Patel_Resume.pdf" target="_blank" rel="noopener noreferrer" class="mobile-nav-link">Resume</a>
         <a href="https://dash.hetops.dev" target="_blank" rel="noopener noreferrer" class="mobile-nav-cta">Dashboard</a>
     </div>
 
     <main>
     <!-- HERO SECTION -->
-    <header class="min-h-screen flex flex-col justify-center px-6 md:px-24 pt-20">
+    <header class="min-h-screen flex flex-col justify-center px-6 md:px-12 lg:px-24 pt-20">
         <div class="grid lg:grid-cols-2 gap-16 items-center">
             <div class="scroll-reveal-left">
                 <h2 class="font-mono text-emerald-500 mb-4 tracking-[0.4em] text-xs uppercase">// DEVOPS_ENGINEER_II</h2>
-                <h1 class="text-7xl md:text-9xl font-black tracking-tighter leading-none mb-8">
+                <h1 class="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-black tracking-tighter leading-none mb-8">
                     HET <br> <span class="gradient-text typing-cursor" id="typed-text">PATEL.</span>
                 </h1>
-                <p class="text-gray-400 text-xl max-w-lg mb-4 leading-relaxed font-light">
+                <p class="text-gray-400 text-lg md:text-xl max-w-lg mb-4 leading-relaxed font-light">
                     Building <span class="text-white font-semibold">automated resilience</span> at Techdome. Mastering multi-cloud orchestration & infrastructure excellence.
                 </p>
                 <p class="text-emerald-500 text-sm font-mono mb-10">→ Kubernetes • Docker • AWS/Azure/GCP • Terraform • CI/CD</p>
-                <div class="flex gap-6">
+                <div class="flex flex-wrap gap-4 md:gap-6 items-center">
                     <a href="https://linkedin.com/in/het11" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn Profile" class="p-4 glass-card rounded-2xl text-emerald-400 hover:scale-110 transition-transform float-animated"><i data-lucide="linkedin"></i></a>
                     <a href="https://github.com/Het101" target="_blank" rel="noopener noreferrer" aria-label="GitHub Profile" class="p-4 glass-card rounded-2xl text-blue-400 hover:scale-110 transition-transform float-animated"><i data-lucide="github"></i></a>
-                    <a href="mailto:hetpatidar09@gmail.com" aria-label="Send Email" class="p-4 glass-card rounded-2xl text-purple-400 hover:scale-110 transition-transform float-animated"><i data-lucide="mail"></i></a>
+                    <button onclick="copyEmail(this)" aria-label="Copy Email" class="p-4 glass-card rounded-2xl text-purple-400 hover:scale-110 transition-transform float-animated relative group">
+                        <i data-lucide="copy"></i>
+                        <span class="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-emerald-500 text-black text-[10px] font-bold py-1 px-2 rounded opacity-0 transition-opacity pointer-events-none whitespace-nowrap">Copied!</span>
+                    </button>
+                    <a href="Het_Patel_Resume.pdf" target="_blank" rel="noopener noreferrer" aria-label="View Resume" class="flex items-center gap-2 px-6 py-4 glass-card rounded-2xl text-white hover:text-emerald-400 hover:border-emerald-400/40 hover:scale-105 transition-all float-animated font-bold text-sm">
+                        <i data-lucide="file-text" class="w-5 h-5"></i>
+                        Resume
+                    </a>
                 </div>
             </div>
 
@@ -236,8 +259,8 @@
 
 
     <!-- EXPERIENCE PIPELINE -->
-    <section id="exp" class="py-32 px-6 md:px-24">
-        <div class="grid lg:grid-cols-2 gap-24">
+    <section id="exp" class="py-32 px-6 md:px-12 lg:px-24 scroll-mt-24">
+        <div class="grid lg:grid-cols-2 gap-12 lg:gap-24">
             <div class="scroll-reveal-left">
                 <h3 class="text-[10px] uppercase tracking-[0.5em] text-gray-600 mb-12 font-bold">// DEPLOYMENT_HISTORY</h3>
                 <div class="space-y-12 ml-4">
@@ -271,7 +294,7 @@
     </section>
 
     <!-- SKILLS SHOWCASE -->
-    <section id="skills" class="bg-[#050505] py-32 px-6 md:px-24">
+    <section id="skills" class="bg-[#050505] py-32 px-6 md:px-12 lg:px-24 scroll-mt-24">
         <h3 class="text-[10px] uppercase tracking-[0.5em] text-gray-600 mb-16 font-bold scroll-reveal">// TECHNICAL_CAPABILITIES</h3>
         <div class="grid lg:grid-cols-2 gap-16 items-stretch">
             <div class="scroll-reveal-left">
@@ -360,13 +383,17 @@
     </section>
 
     <!-- PROJECTS SHOWCASE -->
-    <section id="projects" class="py-32 px-6 md:px-24">
+    <section id="projects" class="py-32 px-6 md:px-12 lg:px-24 scroll-mt-24">
         <h3 class="text-[10px] uppercase tracking-[0.5em] text-gray-600 mb-16 font-bold scroll-reveal">// INFRASTRUCTURE_PROJECTS</h3>
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             <div class="glass-card p-8 project-card scroll-reveal stagger-1">
                 <div class="flex items-center justify-between mb-6">
                     <i data-lucide="server" class="text-emerald-500"></i>
-                    <span class="text-[9px] uppercase tracking-widest text-gray-600 font-mono">Infrastructure</span>
+                    <div class="flex gap-3 items-center">
+                        <span class="text-[9px] uppercase tracking-widest text-gray-600 font-mono">Infrastructure</span>
+                        <button onclick="openArchModal()" class="text-emerald-400 hover:text-white transition" aria-label="View Architecture Diagram"><i data-lucide="git-merge" class="w-4 h-4"></i></button>
+                        <a href="https://github.com/Het101" target="_blank" rel="noopener noreferrer" class="text-gray-500 hover:text-white transition" aria-label="View Source"><i data-lucide="github" class="w-4 h-4"></i></a>
+                    </div>
                 </div>
                 <h4 class="text-xl font-bold mb-3">HetOps Platform</h4>
                 <p class="text-gray-400 text-sm mb-6 leading-relaxed">Self-hosted infrastructure on Oracle ARM (24GB) with Coolify, Traefik, and automated SSL management. Multi-service deployment platform.</p>
@@ -379,7 +406,10 @@
             <div class="glass-card p-8 project-card scroll-reveal stagger-2">
                 <div class="flex items-center justify-between mb-6">
                     <i data-lucide="activity" class="text-blue-500"></i>
-                    <span class="text-[9px] uppercase tracking-widest text-gray-600 font-mono">Monitoring</span>
+                    <div class="flex gap-3 items-center">
+                        <span class="text-[9px] uppercase tracking-widest text-gray-600 font-mono">Monitoring</span>
+                        <a href="https://github.com/Het101" target="_blank" rel="noopener noreferrer" class="text-gray-500 hover:text-white transition" aria-label="View Source"><i data-lucide="github" class="w-4 h-4"></i></a>
+                    </div>
                 </div>
                 <h4 class="text-xl font-bold mb-3">Observability Stack</h4>
                 <p class="text-gray-400 text-sm mb-6 leading-relaxed">Comprehensive monitoring solution with Prometheus, Grafana, and Loki. Real-time alerts and performance dashboards.</p>
@@ -392,7 +422,10 @@
             <div class="glass-card p-8 project-card scroll-reveal stagger-3">
                 <div class="flex items-center justify-between mb-6">
                     <i data-lucide="git-branch" class="text-purple-500"></i>
-                    <span class="text-[9px] uppercase tracking-widest text-gray-600 font-mono">Automation</span>
+                    <div class="flex gap-3 items-center">
+                        <span class="text-[9px] uppercase tracking-widest text-gray-600 font-mono">Automation</span>
+                        <a href="https://github.com/Het101" target="_blank" rel="noopener noreferrer" class="text-gray-500 hover:text-white transition" aria-label="View Source"><i data-lucide="github" class="w-4 h-4"></i></a>
+                    </div>
                 </div>
                 <h4 class="text-xl font-bold mb-3">CI/CD Pipelines</h4>
                 <p class="text-gray-400 text-sm mb-6 leading-relaxed">Automated deployment workflows with GitHub Actions, GitLab CI, and Jenkins. Zero-downtime deployments with rollback capabilities.</p>
@@ -406,7 +439,7 @@
     </section>
 
     <!-- CASE STUDIES / PROJECT DEEP-DIVES -->
-    <section id="case-studies" class="bg-[#050505] py-32 px-6 md:px-24">
+    <section id="case-studies" class="bg-[#050505] py-32 px-6 md:px-12 lg:px-24 scroll-mt-24">
         <h3 class="text-[10px] uppercase tracking-[0.5em] text-gray-600 mb-16 font-bold scroll-reveal">// CASE_STUDIES_&_DEEP_DIVES</h3>
         <div class="grid md:grid-cols-2 gap-12">
             <div class="glass-card p-8 scroll-reveal-left relative overflow-hidden flex flex-col opacity-80">
@@ -455,7 +488,7 @@
     </section>
 
     <!-- SERVICE GRID -->
-    <section id="infra" class="py-32 px-6 md:px-24">
+    <section id="infra" class="py-32 px-6 md:px-12 lg:px-24 scroll-mt-24">
         <h3 class="text-[10px] uppercase tracking-[0.5em] text-gray-600 mb-16 font-bold scroll-reveal">// CLOUD_INFRASTRUCTURE_NODES</h3>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <a href="https://dash.hetops.dev" target="_blank" rel="noopener noreferrer" class="glass-card p-8 h-48 flex flex-col justify-between scroll-reveal stagger-1">
@@ -478,7 +511,7 @@
     </section>
 
     <!-- BLOG / TECHNICAL ARTICLES -->
-    <section id="blog" class="bg-[#050505] py-32 px-6 md:px-24">
+    <section id="blog" class="bg-[#050505] py-32 px-6 md:px-12 lg:px-24 scroll-mt-24">
         <h3 class="text-[10px] uppercase tracking-[0.5em] text-gray-600 mb-16 font-bold scroll-reveal">// TECHNICAL_INSIGHTS_&_BLOG</h3>
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             <a href="https://medium.com/@het101/scaling-kubernetes-at-enterprise-scale-c3a3c9256671" target="_blank" rel="noopener noreferrer" class="glass-card p-8 scroll-reveal stagger-1 hover:scale-105 transition-transform block cursor-pointer">
@@ -521,7 +554,7 @@
     </section>
 
     <!-- TESTIMONIALS & SOCIAL PROOF -->
-    <section class="py-32 px-6 md:px-24">
+    <section class="py-32 px-6 md:px-12 lg:px-24 scroll-mt-24">
         <h3 class="text-[10px] uppercase tracking-[0.5em] text-gray-600 mb-16 font-bold text-center scroll-reveal">// IMPACT_&_RECOGNITION</h3>
         <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             <div class="glass-card p-8 scroll-reveal stagger-1">
@@ -564,7 +597,7 @@
     </section>
 
     <!-- CONTACT SECTION -->
-    <section id="contact" class="bg-[#050505] py-32 px-6 md:px-24 pb-48">
+    <section id="contact" class="bg-[#050505] py-32 px-6 md:px-12 lg:px-24 scroll-mt-24 pb-48">
         <div class="max-w-4xl mx-auto">
             <h3 class="text-[10px] uppercase tracking-[0.5em] text-gray-600 mb-16 font-bold text-center scroll-reveal">// ESTABLISH_CONNECTION</h3>
             <div class="grid md:grid-cols-2 gap-12">
@@ -574,15 +607,16 @@
                         Looking for a DevOps engineer who can streamline your infrastructure, automate deployments, and scale your cloud operations? Let's connect.
                     </p>
                     <div class="space-y-4">
-                        <a href="mailto:hetpatidar09@gmail.com" class="flex items-center gap-4 p-4 glass-card rounded-xl hover:border-emerald-500/40 transition group">
+                        <button onclick="copyEmail(this)" class="flex w-full items-center gap-4 p-4 glass-card rounded-xl hover:border-emerald-500/40 transition group relative text-left">
                             <div class="p-3 bg-emerald-500/10 rounded-lg group-hover:bg-emerald-500/20 transition">
-                                <i data-lucide="mail" class="text-emerald-500"></i>
+                                <i data-lucide="copy" class="text-emerald-500"></i>
                             </div>
                             <div>
-                                <p class="text-xs text-gray-500 uppercase font-mono">Email</p>
+                                <p class="text-xs text-gray-500 uppercase font-mono">Email (Click to Copy)</p>
                                 <p class="font-semibold">hetpatidar09@gmail.com</p>
                             </div>
-                        </a>
+                            <span class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-emerald-500 text-black text-[10px] font-bold py-1 px-2 rounded opacity-0 transition-opacity pointer-events-none">Copied!</span>
+                        </button>
                         <a href="https://linkedin.com/in/het11" target="_blank" rel="noopener noreferrer" class="flex items-center gap-4 p-4 glass-card rounded-xl hover:border-blue-500/40 transition group">
                             <div class="p-3 bg-blue-500/10 rounded-lg group-hover:bg-blue-500/20 transition">
                                 <i data-lucide="linkedin" class="text-blue-500"></i>
@@ -648,6 +682,38 @@
         </div>
     </section>
 
+    <!-- ARCHITECTURE MODAL -->
+    <div id="arch-modal" class="fixed inset-0 z-[200] bg-black/90 backdrop-blur-sm hidden flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
+        <div class="glass-card w-full max-w-4xl max-h-[90vh] overflow-y-auto p-4 md:p-8 relative transform scale-95 transition-transform duration-300" id="arch-modal-content">
+            <button onclick="closeArchModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white bg-white/5 p-2 rounded-lg cursor-pointer z-[210]"><i data-lucide="x"></i></button>
+            <h3 class="text-xl font-bold mb-6 gradient-text uppercase tracking-widest text-center">HetOps Architectures</h3>
+            <div class="bg-white/5 rounded-xl p-4 md:p-6 flex justify-center w-full overflow-x-auto overflow-y-hidden">
+                <div class="mermaid-diagram flex justify-center w-full">
+graph TD
+Client([Client / Browser]) -->|HTTPS| Cloudflare[(Cloudflare DNS/WAF)]
+Cloudflare -->|Proxy| VPS[Oracle Cloud ARM]
+subgraph HetOps[Production Infrastructure]
+VPS --> Traefik{Traefik Proxy}
+Traefik -->|dash| Dash[Dashboard App]
+Traefik -->|tools| Tools[Dev Toolkit]
+Traefik -->|status| Uptime[Uptime Kuma]
+Traefik -->|hub| Coolify[Coolify Multi-Service]
+Coolify --> Postgres[(PostgreSQL)]
+Coolify --> Redis[(Redis Cache)]
+Coolify --> CustomApps[Microservices]
+end
+style Client fill:#000,stroke:#00ff41,stroke-width:2px,color:#fff
+style Cloudflare fill:#f38020,stroke:none,color:#fff
+style VPS fill:#0a0a0a,stroke:#3498db,stroke-width:2px,color:#fff
+style Traefik fill:#1db831,stroke:none,color:#000
+style Dash fill:#0a0a0a,stroke:#00ff41,color:#fff
+style Tools fill:#0a0a0a,stroke:#f1c40f,color:#fff
+style Uptime fill:#0a0a0a,stroke:#e74c3c,color:#fff
+style Coolify fill:#0a0a0a,stroke:#9b59b6,color:#fff
+                </div>
+            </div>
+        </div>
+    </div>
     </main>
 
     <!-- FLOATING TERMINAL BUTTON (Deprecated in favor of persistent mini terminal) -->
@@ -655,23 +721,7 @@
         <i data-lucide="terminal" class="w-6 h-6 group-hover:scale-110 transition-transform"></i>
     </button> -->
 
-    <!-- PERSISTENT MINI TERMINAL -->
-    <div id="mini-terminal-wrapper" class="fixed bottom-12 right-6 z-[100] transition-all duration-300 transform translate-y-10 opacity-0 pointer-events-none flex flex-col items-end gap-3">
-        <!-- Expanded Panel -->
-        <div id="mini-term-panel" class="bg-[#0a0a0a] border border-emerald-500/30 rounded-xl w-72 md:w-96 shadow-2xl transition-all duration-300 origin-bottom-right scale-0 opacity-0 pointer-events-none flex flex-col overflow-hidden glass-card">
-            <div id="mini-term-output" class="text-[10px] font-mono p-3 pb-0 max-h-32 overflow-y-auto scrollbar-hide flex flex-col gap-1 hidden"></div>
-            <div class="flex items-center gap-2 p-3 bg-black/40 relative">
-                <i data-lucide="terminal" class="w-4 h-4 text-emerald-500"></i>
-                <span class="text-emerald-500 font-mono text-xs">~$</span>
-                <input type="text" id="mini-term-input" class="bg-transparent border-none outline-none text-white font-mono text-xs flex-1 pr-6" placeholder="Command (e.g. cd ~)" autocomplete="off" spellcheck="false">
-            </div>
-        </div>
-        
-        <!-- Toggle Button -->
-        <button id="mini-term-toggle" class="glass-card bg-[#0a0a0a] border border-emerald-500/50 text-emerald-500 hover:bg-[#1a1a1a] w-12 h-12 rounded-full flex items-center justify-center group shadow-[0_0_15px_rgba(0,255,65,0.3)] hover:shadow-[0_0_25px_rgba(0,255,65,0.5)] transition-all">
-            <i data-lucide="terminal" class="w-5 h-5 group-hover:scale-110 transition-transform"></i>
-        </button>
-    </div>
+
 
     <footer class="fixed bottom-0 left-0 w-full bg-[#0a0a0a] border-t border-[#333] z-50 flex justify-between items-center px-4 py-1.5 font-mono text-[10px] text-gray-400 shadow-[0_-5px_20px_rgba(0,0,0,0.5)]">
         <div class="flex items-center gap-4">
@@ -689,6 +739,44 @@
     </footer>
 
     <script>
+        function copyEmail(btn) {
+            navigator.clipboard.writeText('hetpatidar09@gmail.com').then(() => {
+                const tooltip = btn.querySelector('span');
+                tooltip.classList.remove('opacity-0', 'pointer-events-none');
+                tooltip.classList.add('opacity-100');
+                setTimeout(() => {
+                    tooltip.classList.remove('opacity-100');
+                    tooltip.classList.add('opacity-0', 'pointer-events-none');
+                }, 2000);
+            });
+        }
+
+        function openArchModal() {
+            const modal = document.getElementById('arch-modal');
+            const content = document.getElementById('arch-modal-content');
+            modal.classList.remove('hidden');
+            void modal.offsetWidth;
+            modal.classList.remove('opacity-0');
+            modal.classList.add('opacity-100');
+            content.classList.remove('scale-95');
+            content.classList.add('scale-100');
+            document.body.style.overflow = 'hidden';
+            if (!window.mermaidInitialized) {
+                mermaid.initialize({ startOnLoad: false, theme: 'dark', themeVariables: { fontFamily: 'Fira Code' } });
+                mermaid.run({ querySelector: '.mermaid-diagram' });
+                window.mermaidInitialized = true;
+            }
+        }
+        function closeArchModal() {
+            const modal = document.getElementById('arch-modal');
+            const content = document.getElementById('arch-modal-content');
+            modal.classList.remove('opacity-100');
+            modal.classList.add('opacity-0');
+            content.classList.remove('scale-100');
+            content.classList.add('scale-95');
+            setTimeout(() => { modal.classList.add('hidden'); document.body.style.overflow = ''; }, 300);
+        }
+
         // ENHANCED REVEAL ENGINE (Repeatable Animations)
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => { 
@@ -746,7 +834,6 @@
         let lastScroll = 0;
         window.addEventListener('scroll', () => {
             const navbar = document.getElementById('navbar');
-            const miniTermWrapper = document.getElementById('mini-terminal-wrapper');
             const currentScroll = window.pageYOffset;
             
             // Navbar behavior
@@ -756,17 +843,6 @@
             } else {
                 navbar.style.padding = '1.5rem 1.5rem';
                 navbar.style.background = 'rgba(0, 0, 0, 0.5)';
-            }
-            
-            // Hide mini-terminal when near the top (hero section has the main terminal)
-            if (currentScroll < 500) {
-                miniTermWrapper.style.opacity = '0';
-                miniTermWrapper.style.transform = 'translateY(20px)';
-                miniTermWrapper.style.pointerEvents = 'none';
-            } else {
-                miniTermWrapper.style.opacity = '1';
-                miniTermWrapper.style.transform = 'translateY(0)';
-                miniTermWrapper.style.pointerEvents = 'all';
             }
             
             lastScroll = currentScroll;
@@ -808,6 +884,66 @@
             
             // Create particles
             createParticles();
+            
+            // Fetch live status from Uptime Kuma
+            async function fetchLiveStatus() {
+                const footerDot = document.querySelector('.pulse-dot');
+                const footerText = document.querySelectorAll('footer .text-emerald-500, #contact .text-emerald-500');
+                try {
+                    const res = await fetch('https://status.hetops.dev/api/status-page/deck');
+                    const data = await res.json();
+                    if(data && data.publicGroupList) {
+                        let allUp = true;
+                        data.publicGroupList.forEach(group => { group.monitorList.forEach(mon => { if(mon.status !== 1) allUp = false; }); });
+                        if(!allUp) {
+                            footerText.forEach(el => {
+                                el.classList.remove('text-emerald-500');
+                                el.classList.add('text-amber-500');
+                                if(el.innerText.includes('OPERATIONAL') || el.innerText.includes('OPTIMAL')) {
+                                    el.innerHTML = '<i data-lucide="alert-triangle" class="w-3 h-3"></i> PARTIAL_OUTAGE';
+                                }
+                            });
+                            if(footerDot) { footerDot.classList.remove('bg-emerald-500'); footerDot.classList.add('bg-amber-500'); }
+                            lucide.createIcons();
+                        }
+                    }
+                } catch(e) { console.warn('Status fetch failed'); }
+            }
+            fetchLiveStatus();
+
+            async function fetchGitHubRepos() {
+                try {
+                    const res = await fetch('https://api.github.com/users/Het101/repos?sort=updated&per_page=2');
+                    const repos = await res.json();
+                    const placeholders = document.querySelectorAll('#blog article.glass-card');
+                    if (repos && repos.length >= 2 && placeholders.length >= 2) {
+                        for(let i=0; i<2; i++) {
+                            const repo = repos[i];
+                            const card = placeholders[i];
+                            card.classList.remove('opacity-80');
+                            const badge = card.querySelector('.bg-yellow-500\\/20');
+                            if(badge) badge.remove();
+                            const contentDiv = card.querySelector('.blur-sm');
+                            if(contentDiv) {
+                                contentDiv.classList.remove('blur-sm', 'pointer-events-none');
+                                contentDiv.innerHTML = `
+                                    <div class="text-white text-sm font-mono uppercase mb-3 pr-8 flex justify-between">
+                                        <span># Open Source</span>
+                                        <a href="${repo.html_url}" target="_blank" class="text-gray-400 hover:text-white"><i data-lucide="github" class="w-4 h-4"></i></a>
+                                    </div>
+                                    <h4 class="text-lg font-bold mb-3">${repo.name}</h4>
+                                    <p class="text-gray-400 text-sm mb-4 line-clamp-3">${repo.description || 'Open source project by Het Patel.'}</p>
+                                    <div class="flex gap-2 flex-wrap text-[10px] mt-auto">
+                                        <span class="px-2 py-1 bg-gray-500/10 rounded text-gray-400">${repo.language || 'Code'}</span>
+                                        <span class="px-2 py-1 bg-yellow-500/10 text-yellow-500 rounded flex items-center gap-1"><i data-lucide="star" class="w-2 h-2"></i> ${repo.stargazers_count}</span>
+                                    </div>`;
+                            }
+                        }
+                        lucide.createIcons();
+                    }
+                } catch(e) { console.warn('GitHub fetch failed'); }
+            }
+            fetchGitHubRepos();
             
             // Add floating and glow animations
             addFloatingAnimations();
@@ -860,8 +996,7 @@
         const output = document.getElementById('output');
         const terminalContent = document.getElementById('terminal-content');
         
-        const miniInput = document.getElementById('mini-term-input');
-        const miniOutput = document.getElementById('mini-term-output');
+
         
         let history = []; let historyIndex = -1;
 
@@ -873,6 +1008,7 @@
                 { text: "Establishing secure connection to Techdome...", delay: 400 },
                 { text: "Verifying credentials... [ACCESS_GRANTED: het_patel]", delay: 500, color: "text-[#00ff41]" },
                 { text: "Type 'help' to see available commands.", delay: 300, color: "text-blue-400" },
+                { text: "Hint: Try typing 'cd projects' to explore.", delay: 600, color: "text-purple-400 font-bold" },
                 { text: "", delay: 0 }
             ];
 
@@ -914,7 +1050,11 @@
 <span class="text-gray-500">System Utilities:</span>
   <span class="exe">sudo</span>       Execute a command as superuser
   <span class="exe">clear</span>      Purge terminal history
-  <span class="exe">contact</span>    View secure communication channels`,
+  <span class="exe">contact</span>    View secure communication channels
+
+<span class="text-gray-500">Hidden / Fun:</span>
+  <span class="exe">ping 8.8.8.8</span> Network latency check
+  <span class="exe">matrix</span>       Enter the matrix`,
 
             ls: `drwxr-xr-x  <span class="dir">exp/</span>
 drwxr-xr-x  <span class="dir">skills/</span>
@@ -986,7 +1126,37 @@ Status: All systems nominal.`,
                 
                 let response = commands[cmd];
                 
-                if (cmd.startsWith('cd ')) {
+                if (cmd === 'ping 8.8.8.8') {
+                    response = "PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.";
+                    let pingCount = 0;
+                    if(isMini) outputEl.classList.remove('hidden');
+                    const pingInt = setInterval(() => {
+                        pingCount++;
+                        const msg = `64 bytes from 8.8.8.8: icmp_seq=${pingCount} ttl=117 time=${Math.floor(Math.random()*15 + 10)} ms`;
+                        const div = document.createElement('div');
+                        div.className = isMini ? 'text-gray-300' : 'text-gray-400 mt-1';
+                        div.innerText = msg;
+                        outputEl.appendChild(div);
+                        if(isMini) outputEl.scrollTop = outputEl.scrollHeight;
+                        else terminalContent.scrollTop = terminalContent.scrollHeight;
+                        if(pingCount >= 4) clearInterval(pingInt);
+                    }, 800);
+                } else if (cmd === 'matrix') {
+                    const m = document.createElement('div');
+                    m.className = 'fixed inset-0 z-[-1] pointer-events-none opacity-20';
+                    m.style.background = 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'100%\' height=\'100%\'%3E%3Ctext y=\'20\' fill=\'%2300ff41\' font-family=\'monospace\'%3E011010101100101010100010101%3C/text%3E%3C/svg%3E") repeat';
+                    m.style.animation = 'float 5s linear infinite';
+                    document.body.appendChild(m);
+                    response = "<span class=\"text-[#00ff41] font-bold\">Wake up, Neo... The Matrix has you.</span>";
+                } else if (cmd.includes('rm -rf /')) {
+                    if (cmd.startsWith('sudo ')) {
+                        response = `<span class="text-red-500 font-bold bg-red-500/20 px-2 py-1">KERNEL PANIC: SYSTEM MELTDOWN IMMINENT</span><br>Erasing root filesystem...`;
+                        document.body.style.animation = 'glow-pulse 0.5s infinite';
+                        setTimeout(() => { document.body.style.display = 'none'; alert('Just kidding. Refresh the page!'); }, 3000);
+                    } else {
+                        response = "<span class=\"text-red-400\">rm: cannot remove '/': Permission denied</span>";
+                    }
+                } else if (cmd.startsWith('cd ')) {
                     const dir = cmd.substring(3).trim().replace(/\/$/, "");
                     const validDirs = ['exp', 'skills', 'projects', 'case-studies', 'infra', 'blog', 'contact'];
                     if (validDirs.includes(dir)) {
@@ -1038,34 +1208,7 @@ Status: All systems nominal.`,
             }
         });
         
-        miniInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                processCommand(miniInput.value.trim(), miniOutput, true);
-                miniInput.value = '';
-            }
-        });
-        
-        // Toggle Mini Terminal Panel
-        const miniTermToggle = document.getElementById('mini-term-toggle');
-        const miniTermPanel = document.getElementById('mini-term-panel');
-        let isMiniTermExpanded = false;
 
-        miniTermToggle.addEventListener('click', () => {
-            isMiniTermExpanded = !isMiniTermExpanded;
-            if (isMiniTermExpanded) {
-                miniTermPanel.style.transform = 'scale(1)';
-                miniTermPanel.style.opacity = '1';
-                miniTermPanel.style.pointerEvents = 'all';
-                setTimeout(() => miniInput.focus(), 300);
-                miniTermToggle.innerHTML = '<i data-lucide="x" class="w-5 h-5 group-hover:rotate-90 transition-transform"></i>';
-            } else {
-                miniTermPanel.style.transform = 'scale(0)';
-                miniTermPanel.style.opacity = '0';
-                miniTermPanel.style.pointerEvents = 'none';
-                miniTermToggle.innerHTML = '<i data-lucide="terminal" class="w-5 h-5 group-hover:scale-110 transition-transform"></i>';
-            }
-            lucide.createIcons();
-        });
 
         document.querySelector('.terminal-container').addEventListener('click', () => { input.focus(); });
     </script>
