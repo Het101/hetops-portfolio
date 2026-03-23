@@ -5,12 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Het Patel - DevOps Engineer II specializing in multi-cloud orchestration, Kubernetes, and CI/CD automation. View my projects and experience.">
     <meta name="keywords" content="DevOps, Kubernetes, AWS, Azure, GCP, Terraform, CI/CD, Het Patel">
+    <meta name="theme-color" content="#020202">
     <meta property="og:title" content="HET PATEL | DevOps Engineer II">
     <meta property="og:description" content="Building automated resilience. Mastering multi-cloud orchestration & infrastructure excellence.">
     <meta property="og:type" content="website">
+    <meta property="og:image" content="icon.svg">
+    <link rel="icon" type="image/svg+xml" href="icon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
     <title>HET PATEL | DevOps Engineer II</title>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Het Patel",
+      "jobTitle": "DevOps Engineer II",
+      "worksFor": { "@type": "Organization", "name": "Techdome" },
+      "url": "https://hetops.dev",
+      "sameAs": [
+        "https://linkedin.com/in/het11",
+        "https://github.com/Het101"
+      ],
+      "knowsAbout": ["Kubernetes", "AWS", "Azure", "GCP", "Terraform", "Docker", "CI/CD", "DevOps"]
+    }
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lucide@0.469.0/dist/umd/lucide.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;600;800&family=Fira+Code:wght@400;500&display=swap');
@@ -89,9 +110,6 @@
             text-align: left;
         }
 
-        /* GLOBAL SMOOTH SCALE */
-        .glass-card { transform: scale(1); }
-        .glass-card:hover { transform: translateY(-5px) scale(1.01); }
         .nav-link { --active-color: #00ff41; }
         .nav-link[href="#exp"] { --active-color: #60a5fa; }
         .nav-link[href="#skills"] { --active-color: #c084fc; }
@@ -114,20 +132,61 @@
         .file { color: #f39c12; }
         .exe { color: #2ecc71; font-weight: bold; }
         
-        /* SCROLL REVEAL (Enhanced & Repeatable) */
-        .scroll-reveal { opacity: 0; transform: translateY(40px); transition: none; }
-        .scroll-reveal.active { opacity: 1; transform: translateY(0); transition: all 1.2s cubic-bezier(0.22, 1, 0.36, 1); }
-        .scroll-reveal-left { opacity: 0; transform: translateX(-60px); transition: none; }
-        .scroll-reveal-left.active { opacity: 1; transform: translateX(0); transition: all 1.2s cubic-bezier(0.22, 1, 0.36, 1); }
-        .scroll-reveal-right { opacity: 0; transform: translateX(60px); transition: none; }
-        .scroll-reveal-right.active { opacity: 1; transform: translateX(0); transition: all 1.2s cubic-bezier(0.22, 1, 0.36, 1); }
-        .scroll-reveal-scale { opacity: 0; transform: scale(0.92); transition: none; }
-        .scroll-reveal-scale.active { opacity: 1; transform: scale(1); transition: all 1.2s cubic-bezier(0.22, 1, 0.36, 1); }
-        .stagger-1 { transition-delay: 0.1s; }
-        .stagger-2 { transition-delay: 0.2s; }
-        .stagger-3 { transition-delay: 0.3s; }
-        .stagger-4 { transition-delay: 0.4s; }
-        
+        /* SCROLL REVEAL — Bidirectional: entrance + exit transitions */
+        /* GPU-accelerated with will-change for buttery smooth transitions */
+        .scroll-reveal { opacity: 0; transform: translateY(30px); will-change: opacity, transform; transition-property: opacity, transform; transition-duration: 0.6s; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); }
+        .scroll-reveal.active { opacity: 1; transform: translateY(0); transition-property: opacity, transform; transition-duration: 1s; transition-delay: 0.15s; transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1); }
+        .scroll-reveal-left { opacity: 0; transform: translateX(-40px); will-change: opacity, transform; transition-property: opacity, transform; transition-duration: 0.6s; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); }
+        .scroll-reveal-left.active { opacity: 1; transform: translateX(0); transition-property: opacity, transform; transition-duration: 1s; transition-delay: 0.15s; transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1); }
+        .scroll-reveal-right { opacity: 0; transform: translateX(40px); will-change: opacity, transform; transition-property: opacity, transform; transition-duration: 0.6s; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); }
+        .scroll-reveal-right.active { opacity: 1; transform: translateX(0); transition-property: opacity, transform; transition-duration: 1s; transition-delay: 0.15s; transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1); }
+        .scroll-reveal-scale { opacity: 0; transform: scale(0.92); will-change: opacity, transform; transition-property: opacity, transform; transition-duration: 0.6s; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); }
+        .scroll-reveal-scale.active { opacity: 1; transform: scale(1); transition-property: opacity, transform; transition-duration: 1s; transition-delay: 0.15s; transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1); }
+
+        /* Stagger delays — added on top of base entrance delay */
+        .stagger-1 { transition-delay: 0.1s !important; }
+        .stagger-1.active { transition-delay: 0.25s !important; }
+        .stagger-2 { transition-delay: 0.1s !important; }
+        .stagger-2.active { transition-delay: 0.35s !important; }
+        .stagger-3 { transition-delay: 0.1s !important; }
+        .stagger-3.active { transition-delay: 0.45s !important; }
+        .stagger-4 { transition-delay: 0.1s !important; }
+        .stagger-4.active { transition-delay: 0.55s !important; }
+        .stagger-5 { transition-delay: 0.1s !important; }
+        .stagger-5.active { transition-delay: 0.65s !important; }
+        .stagger-6 { transition-delay: 0.1s !important; }
+        .stagger-6.active { transition-delay: 0.75s !important; }
+        .stagger-7 { transition-delay: 0.1s !important; }
+        .stagger-7.active { transition-delay: 0.85s !important; }
+        .stagger-8 { transition-delay: 0.1s !important; }
+        .stagger-8.active { transition-delay: 0.95s !important; }
+
+        /* CINEMATIC BLUR REVEAL */
+        .scroll-reveal-blur { opacity: 0; filter: blur(6px); transform: translateY(15px); will-change: opacity, filter, transform; transition-property: opacity, filter, transform; transition-duration: 0.6s; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); }
+        .scroll-reveal-blur.active { opacity: 1; filter: blur(0); transform: translateY(0); transition-property: opacity, filter, transform; transition-duration: 1.2s, 1.4s, 1.2s; transition-delay: 0.15s; transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1); }
+
+        /* 3D PERSPECTIVE ENTRANCE */
+        .scroll-reveal-3d { opacity: 0; transform: perspective(800px) rotateX(4deg) translateY(25px); transform-origin: bottom center; will-change: opacity, transform; transition-property: opacity, transform; transition-duration: 0.6s; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); }
+        .scroll-reveal-3d.active { opacity: 1; transform: perspective(800px) rotateX(0deg) translateY(0); transition-property: opacity, transform; transition-duration: 1.2s; transition-delay: 0.15s; transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1); }
+
+        /* HEADING LINE DRAW */
+        .heading-draw { position: relative; display: inline-block; }
+        .heading-draw::after { content: ''; position: absolute; bottom: -8px; left: 0; width: 0; height: 1px; background: linear-gradient(90deg, #00f260, #0575e6, transparent); transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .heading-draw.active::after { width: 80px; transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.3s; }
+        .heading-draw-center { position: relative; display: inline-block; }
+        .heading-draw-center::after { content: ''; position: absolute; bottom: -8px; left: 50%; width: 0; height: 1px; background: linear-gradient(90deg, transparent, #00f260, #0575e6, transparent); transform: translateX(-50%); transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .heading-draw-center.active::after { width: 80px; transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.3s; }
+
+        /* SECTION DIVIDER */
+        .section-divider { height: 1px; background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.06) 50%, transparent 100%); margin: 0; }
+
+        /* COUNTER ANIMATION */
+        .count-up { display: inline-block; }
+
+        /* CONTACT BREATHING GLOW */
+        .breathe-glow { animation: breathe-glow 4s ease-in-out infinite; }
+        @keyframes breathe-glow { 0%, 100% { text-shadow: 0 0 20px rgba(0,242,96,0); } 50% { text-shadow: 0 0 40px rgba(0,242,96,0.15), 0 0 80px rgba(0,242,96,0.05); } }
+
         /* CONTINUOUS FLOATING ANIMATION */
         .float-animated { animation: floating 3s ease-in-out infinite; }
         @keyframes floating { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-20px); } }
@@ -183,6 +242,34 @@
         a:focus-visible, button:focus-visible { outline: 2px dashed #00ff41; outline-offset: 4px; border-radius: 4px; }
         .glass-card:focus-visible { border-color: #00ff41; outline: none; box-shadow: 0 0 15px rgba(0,255,65,0.4); }
         input:focus-visible { outline: none; }
+
+        /* SKIP TO CONTENT */
+        .skip-to-content { position: absolute; top: -100%; left: 50%; transform: translateX(-50%); background: #00ff41; color: #000; padding: 8px 16px; font-weight: 700; font-size: 12px; z-index: 9999; border-radius: 0 0 8px 8px; transition: top 0.2s; }
+        .skip-to-content:focus { top: 0; }
+
+        /* REDUCED MOTION */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+        }
+
+        /* SCROLL PROGRESS BAR */
+        #scroll-progress { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, #00f260, #0575e6, #a855f7); z-index: 9999; width: 0%; transition: width 0.05s linear; pointer-events: none; box-shadow: 0 0 10px rgba(0, 242, 96, 0.5); }
+
+        /* COMMAND PALETTE */
+        #cmd-palette-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(12px); z-index: 9998; display: none; justify-content: center; align-items: flex-start; padding-top: 20vh; }
+        #cmd-palette-overlay.open { display: flex; }
+        #cmd-palette { background: #0a0a0a; border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; width: 90%; max-width: 520px; overflow: hidden; box-shadow: 0 30px 80px rgba(0,0,0,0.8); animation: palette-in 0.2s ease-out; }
+        @keyframes palette-in { from { opacity: 0; transform: translateY(-20px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        #cmd-palette input { background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.05); color: #fff; width: 100%; padding: 16px 20px; font-family: 'Fira Code', monospace; font-size: 14px; outline: none; }
+        #cmd-palette .results { max-height: 300px; overflow-y: auto; }
+        #cmd-palette .result-item { padding: 12px 20px; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: background 0.15s; color: #a0a0a0; font-size: 13px; }
+        #cmd-palette .result-item:hover, #cmd-palette .result-item.active { background: rgba(0, 242, 96, 0.08); color: #fff; }
+        #cmd-palette .result-item .kbd { font-family: 'Fira Code', monospace; font-size: 10px; padding: 2px 6px; border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; color: #666; margin-left: auto; }
+
+        /* BACK TO TOP BUTTON */
+        #back-to-top { position: fixed; bottom: 40px; right: 24px; width: 44px; height: 44px; border-radius: 50%; background: #0a0a0a; border: 1px solid rgba(255,255,255,0.1); color: #00ff41; display: flex; align-items: center; justify-content: center; z-index: 51; cursor: pointer; opacity: 0; transform: translateY(20px); pointer-events: none; transition: all 0.3s ease; box-shadow: 0 5px 20px rgba(0,0,0,0.5); }
+        #back-to-top.visible { opacity: 1; transform: translateY(0); pointer-events: all; }
+        #back-to-top:hover { border-color: #00ff41; box-shadow: 0 0 20px rgba(0,255,65,0.2); }
         
         /* SKILL BAR ANIMATION */
         .skill-bar { height: 8px; background: rgba(255, 255, 255, 0.1); border-radius: 10px; overflow: hidden; position: relative; }
@@ -230,36 +317,13 @@
             .terminal-container.floating { width: calc(100% - 48px); bottom: 100px; right: 24px; }
         }
 
-        /* SMOOTH SCROLL & PRESENTATION SNAP */
+        /* SMOOTH SCROLL */
         html { scroll-behavior: smooth; }
         @media (min-width: 1024px) {
-            html { scroll-snap-type: y mandatory; scroll-padding-top: 0; }
-            header, section {
-                scroll-snap-align: start;
-                scroll-snap-stop: always;
-            }
-            section {
-                height: 100vh !important;
-                min-height: 100vh !important;
-                padding-top: 100px !important;
-                padding-bottom: 40px !important;
-                overflow: hidden;
-            }
             #contact { 
                 height: auto !important; 
                 min-height: 100vh !important; 
                 overflow: visible; 
-            }
-            section > .grid {
-                flex: 1;
-                min-height: 0;
-            }
-            section > .grid > .glass-card, 
-            section > .grid > a.glass-card, 
-            section > .grid > article.glass-card {
-                min-height: 0 !important;
-                height: 100% !important;
-                overflow: hidden;
             }
         }
 
@@ -284,6 +348,12 @@
     </style>
 </head>
 <body>
+
+    <!-- SKIP TO CONTENT -->
+    <a href="#main-content" class="skip-to-content">Skip to Content</a>
+
+    <!-- SCROLL PROGRESS BAR -->
+    <div id="scroll-progress" aria-hidden="true"></div>
 
     <!-- DYNAMIC BACKGROUND WITH PARTICLES & AURORA -->
     <div class="fixed top-0 left-0 w-full h-full z-[-1] overflow-hidden pointer-events-none">
@@ -326,7 +396,7 @@
         <a href="https://dash.hetops.dev" target="_blank" rel="noopener noreferrer" class="mobile-nav-cta">Dashboard</a>
     </div>
 
-    <main>
+    <main id="main-content">
     <!-- HERO SECTION -->
     <header class="min-h-screen flex flex-col justify-center px-6 md:px-12 lg:px-24 pt-20">
         <div class="grid lg:grid-cols-2 gap-16 items-center relative">
@@ -347,10 +417,14 @@
                 <p class="text-gray-400 text-lg md:text-xl max-w-lg mb-4 leading-relaxed font-light">
                     Building <span class="text-white font-semibold">automated resilience</span> at Techdome. Mastering multi-cloud orchestration & infrastructure excellence.
                 </p>
-                <p class="text-emerald-500 text-sm font-mono mb-10">→ Kubernetes • Docker • AWS/Azure/GCP • Terraform • CI/CD</p>
+                <p class="text-emerald-500 text-sm font-mono mb-4">→ Kubernetes • Docker • AWS/Azure/GCP • Terraform • CI/CD</p>
+                <div class="flex items-center gap-3 mb-10 px-4 py-2 bg-white/[0.02] border border-white/5 rounded-xl w-fit">
+                    <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_#10b981]"></div>
+                    <span class="text-[11px] font-mono text-gray-400">Engineering uptime: <span id="uptime-counter" class="text-emerald-400 font-bold">0d 0h 0m 0s</span></span>
+                </div>
                 <div class="flex flex-wrap gap-4 md:gap-6 items-center">
-                    <a href="https://linkedin.com/in/het11" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn Profile" class="p-4 glass-card rounded-2xl text-emerald-400 hover:scale-110 transition-transform float-animated"><i data-lucide="linkedin"></i></a>
-                    <a href="https://github.com/Het101" target="_blank" rel="noopener noreferrer" aria-label="GitHub Profile" class="p-4 glass-card rounded-2xl text-blue-400 hover:scale-110 transition-transform float-animated"><i data-lucide="github"></i></a>
+                    <a href="https://linkedin.com/in/het11" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn Profile" class="p-4 glass-card rounded-2xl text-emerald-400 hover:scale-110 transition-transform float-animated"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg></a>
+                    <a href="https://github.com/Het101" target="_blank" rel="noopener noreferrer" aria-label="GitHub Profile" class="p-4 glass-card rounded-2xl text-blue-400 hover:scale-110 transition-transform float-animated"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg></a>
                     <button onclick="copyEmail(this)" aria-label="Copy Email" class="p-4 glass-card rounded-2xl text-purple-400 hover:scale-110 transition-transform float-animated relative group">
                         <i data-lucide="copy"></i>
                         <span class="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-emerald-500 text-black text-[10px] font-bold py-1 px-2 rounded opacity-0 transition-opacity pointer-events-none whitespace-nowrap">Copied!</span>
@@ -404,7 +478,7 @@
                 <span class="text-white/10">|</span>
                 <span class="flex items-center gap-2"><i data-lucide="box" class="w-4 h-4 text-purple-500"></i> Kubernetes Admin</span>
                 <span class="text-white/10">|</span>
-                <span class="flex items-center gap-2"><i data-lucide="terminal-square" class="w-4 h-4 text-emerald-400"></i> Terraform Architect</span>
+                <span class="flex items-center gap-2"><i data-lucide="square-terminal" class="w-4 h-4 text-emerald-400"></i> Terraform Architect</span>
                 <span class="text-white/10">|</span>
                 <span class="flex items-center gap-2"><i data-lucide="git-merge" class="w-4 h-4 text-orange-500"></i> Continuous Integration</span>
                 <span class="text-white/10">|</span>
@@ -419,7 +493,7 @@
                 <span class="text-white/10">|</span>
                 <span class="flex items-center gap-2"><i data-lucide="box" class="w-4 h-4 text-purple-500"></i> Kubernetes Admin</span>
                 <span class="text-white/10">|</span>
-                <span class="flex items-center gap-2"><i data-lucide="terminal-square" class="w-4 h-4 text-emerald-400"></i> Terraform Architect</span>
+                <span class="flex items-center gap-2"><i data-lucide="square-terminal" class="w-4 h-4 text-emerald-400"></i> Terraform Architect</span>
                 <span class="text-white/10">|</span>
                 <span class="flex items-center gap-2"><i data-lucide="git-merge" class="w-4 h-4 text-orange-500"></i> Continuous Integration</span>
                 <span class="text-white/10">|</span>
@@ -430,9 +504,9 @@
     </div>
 
     <!-- EXPERIENCE PIPELINE (Bento Grid) -->
-    <section id="exp" class="min-h-[calc(100vh-100px)] flex flex-col justify-center pt-16 pb-16 px-6 md:px-12 lg:px-24 relative">
+    <section id="exp" class="flex flex-col justify-center py-20 px-6 md:px-12 lg:px-24 relative">
         <div class="absolute top-1/2 right-0 w-[600px] h-[600px] bg-blue-500/5 rounded-full blur-[120px] pointer-events-none"></div>
-        <h2 class="text-[10px] uppercase tracking-[0.5em] text-gray-600 mb-16 font-bold scroll-reveal relative z-10">// PROFESSIONAL_TIMELINE</h2>
+        <h2 class="text-[10px] uppercase tracking-[0.5em] text-gray-600 mb-16 font-bold scroll-reveal heading-draw relative z-10">// PROFESSIONAL_TIMELINE</h2>
         
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10">
             <!-- Current Role (Span 2) -->
@@ -441,7 +515,7 @@
                 <div class="flex items-center justify-between mb-8">
                     <div class="flex items-center gap-4">
                         <div class="w-14 h-14 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shadow-[0_0_20px_rgba(16,185,129,0.15)]">
-                            <i data-lucide="terminal-square" class="text-emerald-500 w-7 h-7"></i>
+                            <i data-lucide="square-terminal" class="text-emerald-500 w-7 h-7"></i>
                         </div>
                         <div>
                             <h4 class="text-2xl font-bold">Techdome</h4>
@@ -465,7 +539,7 @@
             </div>
 
             <!-- Past Roles (Span 1) -->
-            <div class="glass-card p-8 scroll-reveal-right flex flex-col justify-between">
+            <div class="glass-card p-8 scroll-reveal-right stagger-1 flex flex-col justify-between">
                 <div>
                     <h4 class="text-[10px] uppercase tracking-widest text-gray-500 font-mono mb-8">Role Archive</h4>
                     <div class="relative pl-6 border-l border-white/10 space-y-6">
@@ -480,7 +554,7 @@
             </div>
 
             <!-- Wide Banner: Education & Foundation (Span 3) -->
-            <div class="glass-card p-6 md:p-8 md:col-span-3 relative overflow-hidden group scroll-reveal flex flex-col md:flex-row md:items-center justify-between gap-8">
+            <div class="glass-card p-6 md:p-8 md:col-span-3 relative overflow-hidden group scroll-reveal stagger-2 flex flex-col md:flex-row md:items-center justify-between gap-8">
                 <div class="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-transparent to-purple-500/5 opacity-50 pointer-events-none group-hover:opacity-100 transition-opacity duration-500"></div>
                 <div class="relative z-10 flex-1 border-l-2 border-blue-500/30 pl-4">
                     <h4 class="text-[9px] uppercase tracking-widest text-blue-400 font-mono mb-2">Foundation Protocol</h4>
@@ -501,16 +575,16 @@
     </section>
 
     <!-- SKILLS SHOWCASE (Bento Grid) -->
-    <section id="skills" class="bg-[#050505] relative min-h-[calc(100vh-100px)] flex flex-col justify-center pt-16 pb-16 px-6 md:px-12 lg:px-24 overflow-hidden">
+    <section id="skills" class="bg-[#050505] relative flex flex-col justify-center py-20 px-6 md:px-12 lg:px-24 overflow-hidden">
         <!-- Optional background glow for the section -->
         <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-emerald-500/5 rounded-full blur-[100px] pointer-events-none"></div>
         
-        <h2 class="text-[10px] uppercase tracking-[0.5em] text-gray-600 mb-16 font-bold scroll-reveal relative z-10">// TECHNICAL_CAPABILITIES</h2>
+        <h2 class="text-[10px] uppercase tracking-[0.5em] text-gray-600 mb-16 font-bold scroll-reveal heading-draw relative z-10">// TECHNICAL_CAPABILITIES</h2>
         
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10">
             
             <!-- Bento 1: Cloud & Orch (Span 2) -->
-            <div class="glass-card p-8 md:col-span-2 relative overflow-hidden flex flex-col justify-between group scroll-reveal-left">
+            <div class="glass-card p-8 md:col-span-2 relative overflow-hidden flex flex-col justify-between group scroll-reveal-scale">
                 <!-- Abstract tech lines -->
                 <div class="absolute -right-20 -top-20 w-64 h-64 border-[1px] border-emerald-500/20 rounded-full group-hover:scale-110 transition-transform duration-700 pointer-events-none"></div>
                 <div class="absolute -right-10 -top-10 w-48 h-48 border-[1px] border-blue-500/20 rounded-full group-hover:scale-90 transition-transform duration-700 pointer-events-none"></div>
@@ -531,7 +605,7 @@
             </div>
 
             <!-- Bento 2: Certifications -->
-            <div class="glass-card p-8 flex flex-col justify-between scroll-reveal-right group relative overflow-hidden">
+            <div class="glass-card p-8 flex flex-col justify-between scroll-reveal-blur stagger-1 group relative overflow-hidden">
                 <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+PHBhdGggZD0iTTAgMGg0MHY0MEgweiIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik0wIDEwaDQwdk0wIDIwaDQwdk0wIDMwaDQwTTEwIDB2NDBNMjAgMHY0ME0zMCAwdjQwIiBzdHJva2U9IiMzMzMiIHN0cm9rZS13aWR0aD0iMSIvPjwvc3ZnPg==')] opacity-[0.05] pointer-events-none"></div>
                 <div class="relative z-10 w-full">
                     <h4 class="text-xs uppercase tracking-widest text-indigo-400 font-mono mb-2 flex items-center justify-between">Credentials <span class="animate-pulse w-2 h-2 bg-yellow-500 rounded-full shadow-[0_0_10px_#eab308]"></span></h4>
@@ -554,7 +628,7 @@
                             <span class="text-yellow-500/70">IN_PROGRESS</span>
                         </div>
                         <div class="flex items-center justify-between text-gray-600 text-[10px] font-mono uppercase pb-1">
-                            <span class="flex items-center gap-2"><i data-lucide="more-horizontal" class="text-gray-600 w-3 h-3"></i> AZ-104</span>
+                            <span class="flex items-center gap-2"><i data-lucide="ellipsis" class="text-gray-600 w-3 h-3"></i> AZ-104</span>
                             <span>QUEUED</span>
                         </div>
                     </div>
@@ -562,7 +636,7 @@
             </div>
 
             <!-- Bento 3: CI/CD Pipeline -->
-            <div class="glass-card p-8 relative overflow-hidden group scroll-reveal-left stagger-1">
+            <div class="glass-card p-8 relative overflow-hidden group scroll-reveal-scale stagger-2">
                 <div class="absolute right-0 top-0 h-full w-24 bg-gradient-to-l from-purple-500/10 to-transparent pointer-events-none"></div>
                 <!-- Simulated Vertical Pipeline -->
                 <div class="absolute right-8 top-1/2 -translate-y-1/2 flex flex-col items-center gap-2 pointer-events-none opacity-30 group-hover:opacity-100 transition-opacity duration-300">
@@ -584,7 +658,7 @@
             </div>
 
             <!-- Bento 4: IaC -->
-            <div class="glass-card p-8 flex flex-col justify-between group scroll-reveal stagger-2">
+            <div class="glass-card p-8 flex flex-col justify-between group scroll-reveal-left stagger-3">
                 <div>
                     <h4 class="text-xs uppercase tracking-widest text-blue-500 font-mono mb-2">Infrastructure</h4>
                     <h3 class="text-xl font-bold mb-2">IaC</h3>
@@ -599,7 +673,7 @@
             </div>
 
             <!-- Bento 5: Observability -->
-            <div class="glass-card p-8 relative overflow-hidden scroll-reveal-right stagger-3 group flex flex-col justify-between">
+            <div class="glass-card p-8 relative overflow-hidden scroll-reveal-right stagger-4 group flex flex-col justify-between">
                 <!-- CSS Waveform -->
                 <div class="absolute bottom-0 left-0 w-full flex items-end justify-between px-8 pb-4 opacity-20 group-hover:opacity-40 transition-opacity duration-500 select-none pointer-events-none">
                     <div class="w-3 bg-amber-500 rounded-t-sm float-animated" style="height: 30px; animation-delay: 0s"></div>
@@ -626,17 +700,17 @@
     </section>
 
     <!-- PROJECTS SHOWCASE (Bento Grid) -->
-    <section id="projects" class="min-h-[calc(100vh-100px)] flex flex-col justify-center pt-16 pb-16 px-6 md:px-12 lg:px-24 relative overflow-hidden">
+    <section id="projects" class="flex flex-col justify-center py-20 px-6 md:px-12 lg:px-24 relative overflow-hidden">
         <!-- Parallax Dot Mesh -->
         <div class="absolute inset-0 bg-[radial-gradient(circle,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:24px_24px] bg-fixed opacity-50 pointer-events-none z-0"></div>
         <div class="absolute bottom-0 right-0 w-[500px] h-[500px] bg-purple-500/5 rounded-full blur-[100px] pointer-events-none z-0"></div>
-        <h2 class="text-[10px] uppercase tracking-[0.5em] text-gray-600 mb-16 font-bold scroll-reveal relative z-10">// INFRASTRUCTURE_PROJECTS</h2>
+        <h2 class="text-[10px] uppercase tracking-[0.5em] text-gray-600 mb-16 font-bold scroll-reveal heading-draw relative z-10">// INFRASTRUCTURE_PROJECTS</h2>
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
             
             <!-- Hero Project (Span 2x2) -->
             <!-- Hero Project (Span 2) -->
-            <div class="glass-card p-6 md:p-8 md:col-span-2 relative overflow-hidden group scroll-reveal-scale flex flex-col justify-between min-h-[180px]">
+            <div class="glass-card p-6 md:p-8 md:col-span-2 relative overflow-hidden group scroll-reveal-3d flex flex-col justify-between min-h-[180px]">
                 <!-- Abstract Architecture Background -->
                 <div class="absolute inset-0 opacity-[0.03] group-hover:opacity-[0.07] transition-opacity duration-700 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+PHBhdGggZD0iTTAgMGg0MHY0MEgweiIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik0wIDEwaDQwdk0wIDIwaDQwdk0wIDMwaDQwTTEwIDB2NDBNMjAgMHY0ME0zMCAwdjQwIiBzdHJva2U9IiMzMzMiIHN0cm9rZS13aWR0aD0iMSIvPjwvc3ZnPg==')] pointer-events-none"></div>
                 <div class="absolute -bottom-10 -right-10 w-48 h-48 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none"></div>
@@ -647,7 +721,7 @@
                     </div>
                     <div class="flex gap-2">
                         <button onclick="openArchModal()" class="w-9 h-9 rounded-full bg-[#0a0a0a] border border-white/10 flex items-center justify-center text-emerald-400 hover:border-emerald-500/50 hover:shadow-[0_0_15px_rgba(16,185,129,0.3)] transition-all" title="View Architecture"><i data-lucide="git-merge" class="w-4 h-4"></i></button>
-                        <a href="https://github.com/Het101" target="_blank" rel="noopener noreferrer" class="w-9 h-9 rounded-full bg-[#0a0a0a] border border-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:border-white/30 transition-all" title="GitHub"><i data-lucide="github" class="w-4 h-4"></i></a>
+                        <a href="https://github.com/Het101" target="_blank" rel="noopener noreferrer" class="w-9 h-9 rounded-full bg-[#0a0a0a] border border-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:border-white/30 transition-all" title="GitHub"><svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg></a>
                     </div>
                 </div>
                 
@@ -665,13 +739,13 @@
             </div>
 
             <!-- Side Card 1 -->
-            <div class="glass-card p-6 md:p-8 relative overflow-hidden group scroll-reveal-right flex flex-col justify-between min-h-[160px]">
+            <div class="glass-card p-6 md:p-8 relative overflow-hidden group scroll-reveal-left stagger-1 flex flex-col justify-between min-h-[160px]">
                 <div class="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 rounded-full blur-2xl pointer-events-none transform translate-x-10 -translate-y-10 group-hover:bg-blue-500/10 transition-colors duration-500"></div>
                 <div class="relative z-10 flex items-center justify-between mb-4">
                     <div class="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-blue-500/10 flex items-center justify-center border border-blue-500/20">
                         <i data-lucide="activity" class="text-blue-500 w-4 h-4 md:w-5 md:h-5"></i>
                     </div>
-                    <a href="https://github.com/Het101" target="_blank" rel="noopener noreferrer" class="text-gray-500 hover:text-white transition-colors"><i data-lucide="github" class="w-4 h-4 md:w-5 md:h-5"></i></a>
+                    <a href="https://github.com/Het101" target="_blank" rel="noopener noreferrer" class="text-gray-500 hover:text-white transition-colors"><svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 md:w-5 md:h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg></a>
                 </div>
                 <div class="relative z-10">
                     <h4 class="text-lg md:text-xl font-bold mb-2 text-gray-200 group-hover:text-blue-400 transition-colors">Observability Stack</h4>
@@ -684,13 +758,13 @@
             </div>
 
             <!-- Side Card 2 -->
-            <div class="glass-card p-6 md:p-8 relative overflow-hidden group scroll-reveal-right stagger-1 flex flex-col justify-between min-h-[160px]">
+            <div class="glass-card p-6 md:p-8 relative overflow-hidden group scroll-reveal-right stagger-2 flex flex-col justify-between min-h-[160px]">
                 <div class="absolute bottom-0 right-0 w-32 h-32 bg-purple-500/5 rounded-full blur-2xl pointer-events-none transform translate-x-10 translate-y-10 group-hover:bg-purple-500/10 transition-colors duration-500"></div>
                 <div class="relative z-10 flex items-center justify-between mb-4">
                     <div class="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-purple-500/10 flex items-center justify-center border border-purple-500/20">
                         <i data-lucide="git-branch" class="text-purple-500 w-4 h-4 md:w-5 md:h-5"></i>
                     </div>
-                    <a href="https://github.com/Het101" target="_blank" rel="noopener noreferrer" class="text-gray-500 hover:text-white transition-colors"><i data-lucide="github" class="w-4 h-4 md:w-5 md:h-5"></i></a>
+                    <a href="https://github.com/Het101" target="_blank" rel="noopener noreferrer" class="text-gray-500 hover:text-white transition-colors"><svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 md:w-5 md:h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg></a>
                 </div>
                 <div class="relative z-10">
                     <h4 class="text-lg md:text-xl font-bold mb-2 text-gray-200 group-hover:text-purple-400 transition-colors">CI/CD Pipelines</h4>
@@ -706,10 +780,10 @@
     </section>
 
     <!-- CASE STUDIES / PROJECT DEEP-DIVES (Compressed Bento) -->
-    <section id="case-studies" class="bg-[#050505] min-h-[calc(100vh-100px)] flex flex-col justify-center pt-16 pb-16 px-6 md:px-12 lg:px-24 relative overflow-hidden">
-        <h2 class="text-[10px] uppercase tracking-[0.5em] text-gray-600 mb-8 font-bold scroll-reveal relative z-10 border-l-2 border-gray-600/30 pl-4">// CASE_STUDIES_&_DEEP_DIVES</h2>
+    <section id="case-studies" class="bg-[#050505] flex flex-col justify-center py-20 px-6 md:px-12 lg:px-24 relative overflow-hidden">
+        <h2 class="text-[10px] uppercase tracking-[0.5em] text-gray-600 mb-8 font-bold scroll-reveal heading-draw relative z-10 border-l-2 border-gray-600/30 pl-4">// CASE_STUDIES_&_DEEP_DIVES</h2>
         
-        <div class="glass-card p-6 md:p-8 scroll-reveal relative overflow-hidden flex flex-col md:flex-row items-start md:items-center justify-between gap-6 group max-w-6xl">
+        <div class="glass-card p-6 md:p-8 scroll-reveal-left relative overflow-hidden flex flex-col md:flex-row items-start md:items-center justify-between gap-6 group max-w-6xl">
             <div class="absolute inset-0 bg-gradient-to-r from-emerald-500/5 to-purple-500/5 opacity-50 pointer-events-none group-hover:opacity-100 transition-opacity duration-700"></div>
             <!-- Abstract Blur -->
             <div class="absolute -left-32 -top-32 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl group-hover:translate-x-[500px] transition-transform duration-[2000ms] pointer-events-none"></div>
@@ -738,12 +812,12 @@
     </section>
 
     <!-- SERVICE GRID (Bento) -->
-    <section id="infra" class="min-h-[calc(100vh-100px)] flex flex-col justify-center pt-16 pb-16 px-6 md:px-12 lg:px-24 relative overflow-hidden">
-        <h2 class="text-[10px] uppercase tracking-[0.5em] text-gray-600 mb-16 font-bold scroll-reveal relative z-10">// CLOUD_INFRASTRUCTURE_NODES</h2>
+    <section id="infra" class="flex flex-col justify-center py-20 px-6 md:px-12 lg:px-24 relative overflow-hidden">
+        <h2 class="text-[10px] uppercase tracking-[0.5em] text-gray-600 mb-16 font-bold scroll-reveal heading-draw relative z-10">// CLOUD_INFRASTRUCTURE_NODES</h2>
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 relative z-10">
             <!-- Hero Dashboard Node (Span 2) -->
-            <a href="https://dash.hetops.dev" target="_blank" rel="noopener noreferrer" class="glass-card p-6 md:col-span-2 flex flex-col justify-between scroll-reveal stagger-1 group relative overflow-hidden min-h-[200px]">
+            <a href="https://dash.hetops.dev" target="_blank" rel="noopener noreferrer" class="glass-card p-6 md:col-span-2 flex flex-col justify-between scroll-reveal-blur stagger-1 group relative overflow-hidden min-h-[200px]">
                 <div class="absolute inset-0 bg-emerald-500/0 group-hover:bg-emerald-500/5 transition-colors duration-500"></div>
                 <!-- Massive geometric background icon -->
                 <i data-lucide="layout-grid" class="absolute -bottom-10 -right-10 w-48 h-48 text-emerald-500/5 group-hover:text-emerald-500/10 group-hover:scale-110 transition-all duration-700 pointer-events-none"></i>
@@ -762,7 +836,7 @@
             </a>
             
             <!-- Reliability Node -->
-            <a href="https://status.hetops.dev/status/deck" target="_blank" rel="noopener noreferrer" class="glass-card p-6 flex flex-col justify-between scroll-reveal stagger-2 group relative overflow-hidden min-h-[140px]">
+            <a href="https://status.hetops.dev/status/deck" target="_blank" rel="noopener noreferrer" class="glass-card p-6 flex flex-col justify-between scroll-reveal-scale stagger-2 group relative overflow-hidden min-h-[140px]">
                 <div class="absolute inset-0 bg-blue-500/0 group-hover:bg-blue-500/5 transition-colors duration-500"></div>
                 <div class="flex items-start justify-between relative z-10">
                     <div class="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center">
@@ -777,7 +851,7 @@
             </a>
 
             <!-- Dev Toolkit Node -->
-            <a href="https://tools.hetops.dev" target="_blank" rel="noopener noreferrer" class="glass-card p-6 flex flex-col justify-between scroll-reveal stagger-3 group relative overflow-hidden min-h-[140px]">
+            <a href="https://tools.hetops.dev" target="_blank" rel="noopener noreferrer" class="glass-card p-6 flex flex-col justify-between scroll-reveal-scale stagger-3 group relative overflow-hidden min-h-[140px]">
                 <div class="absolute inset-0 bg-amber-500/0 group-hover:bg-amber-500/5 transition-colors duration-500"></div>
                 <div class="flex items-start justify-between relative z-10">
                     <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center">
@@ -792,7 +866,7 @@
             </a>
             
             <!-- Coolify Row Node (Span 2 horizontally) -->
-            <a href="https://hub.hetops.dev" target="_blank" rel="noopener noreferrer" class="glass-card p-6 md:col-span-2 flex flex-col md:flex-row items-start md:items-center justify-between scroll-reveal stagger-4 group relative overflow-hidden gap-4 min-h-[120px]">
+            <a href="https://hub.hetops.dev" target="_blank" rel="noopener noreferrer" class="glass-card p-6 md:col-span-2 flex flex-col md:flex-row items-start md:items-center justify-between scroll-reveal-blur stagger-4 group relative overflow-hidden gap-4 min-h-[120px]">
                 <div class="absolute inset-0 bg-purple-500/0 group-hover:bg-purple-500/5 transition-colors duration-500"></div>
                 <div class="absolute -left-16 top-0 w-32 h-32 bg-purple-500/5 rounded-full blur-2xl pointer-events-none"></div>
                 
@@ -814,12 +888,12 @@
     </section>
 
     <!-- BLOG / TECHNICAL ARTICLES (Bento) -->
-    <section id="blog" class="bg-[#050505] min-h-[calc(100vh-100px)] flex flex-col justify-center pt-16 pb-16 px-6 md:px-12 lg:px-24 relative overflow-hidden">
-        <h2 class="text-[10px] uppercase tracking-[0.5em] text-gray-600 mb-16 font-bold scroll-reveal relative z-10">// TECHNICAL_INSIGHTS_&_BLOG</h2>
+    <section id="blog" class="bg-[#050505] flex flex-col justify-center py-20 px-6 md:px-12 lg:px-24 relative overflow-hidden">
+        <h2 class="text-[10px] uppercase tracking-[0.5em] text-gray-600 mb-16 font-bold scroll-reveal heading-draw relative z-10">// TECHNICAL_INSIGHTS_&_BLOG</h2>
         
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 relative z-10">
             <!-- Featured Article (Span 2) -->
-            <a href="https://medium.com/@het101/scaling-kubernetes-at-enterprise-scale-c3a3c9256671" target="_blank" rel="noopener noreferrer" class="glass-card p-6 md:p-8 md:col-span-2 scroll-reveal stagger-1 group relative overflow-hidden flex flex-col justify-between min-h-[220px]">
+            <a href="https://medium.com/@het101/scaling-kubernetes-at-enterprise-scale-c3a3c9256671" target="_blank" rel="noopener noreferrer" class="glass-card p-6 md:p-8 md:col-span-2 scroll-reveal-right stagger-1 group relative overflow-hidden flex flex-col justify-between min-h-[220px]">
                 <div class="absolute right-0 top-0 w-32 h-full bg-gradient-to-l from-cyan-500/10 to-transparent pointer-events-none transition-opacity duration-500 group-hover:opacity-100 opacity-50"></div>
                 
                 <div class="text-cyan-400 text-[10px] font-mono uppercase tracking-widest mb-6 flex justify-between items-center relative z-10 w-full">
@@ -838,7 +912,7 @@
             </a>
             
             <!-- Secondary Draft (Span 1) -->
-            <article class="glass-card p-6 md:p-8 scroll-reveal stagger-2 relative overflow-hidden flex flex-col opacity-80 group min-h-[220px]">
+            <article class="glass-card p-6 md:p-8 scroll-reveal-left stagger-2 relative overflow-hidden flex flex-col opacity-80 group min-h-[220px]">
                 <div class="absolute top-4 right-4 bg-yellow-500/20 text-yellow-500 text-[9px] px-2 py-1 rounded font-bold uppercase tracking-wider z-20">Drafting</div>
                 <div class="blur-md select-none transition-all duration-500 flex flex-col h-full pointer-events-none relative z-10">
                     <div class="text-green-400 text-[9px] font-mono uppercase tracking-widest mb-4 border-l-2 border-green-500 pl-2"># Infrastructure as Code</div>
@@ -851,7 +925,7 @@
             </article>
 
             <!-- Tertiary Draft (Span 3 Wide) -->
-            <article class="glass-card p-6 md:col-span-3 scroll-reveal relative overflow-hidden flex flex-col md:flex-row items-start md:items-center justify-between opacity-80 group gap-4 min-h-[120px]">
+            <article class="glass-card p-6 md:col-span-3 scroll-reveal stagger-3 relative overflow-hidden flex flex-col md:flex-row items-start md:items-center justify-between opacity-80 group gap-4 min-h-[120px]">
                 <div class="absolute top-4 right-4 md:static md:right-auto md:top-auto bg-yellow-500/20 text-yellow-500 text-[9px] px-2 py-1 rounded font-bold uppercase tracking-wider z-20 flex-shrink-0 border border-yellow-500/30">In Review</div>
                 <div class="blur-md select-none transition-all duration-500 flex flex-col md:flex-row md:items-center justify-between h-full pointer-events-none relative z-10 w-full gap-4">
                     <div class="flex-1">
@@ -868,28 +942,28 @@
     </section>
 
     <!-- TESTIMONIALS & SOCIAL PROOF (Bento) -->
-    <section id="impact" class="min-h-[calc(100vh-100px)] flex flex-col justify-center pt-16 pb-16 px-6 md:px-12 lg:px-24 relative overflow-hidden">
-        <h2 class="text-[10px] uppercase tracking-[0.5em] text-gray-600 mb-16 font-bold text-center scroll-reveal relative z-10">// IMPACT_&_RECOGNITION</h2>
+    <section id="impact" class="flex flex-col justify-center py-20 px-6 md:px-12 lg:px-24 relative overflow-hidden">
+        <h2 class="text-[10px] uppercase tracking-[0.5em] text-gray-600 mb-16 font-bold text-center scroll-reveal heading-draw-center relative z-10">// IMPACT_&_RECOGNITION</h2>
         
         <!-- Center-weighted abstract bento -->
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6 relative z-10 max-w-6xl mx-auto">
             
             <!-- Huge numerical metric 1 (Span 2) -->
-            <div class="glass-card p-8 md:col-span-2 scroll-reveal relative overflow-hidden flex flex-col sm:flex-row items-start sm:items-center gap-8 min-h-[180px] group">
+            <div class="glass-card p-8 md:col-span-2 scroll-reveal-scale relative overflow-hidden flex flex-col sm:flex-row items-start sm:items-center gap-8 min-h-[180px] group">
                 <div class="absolute right-0 bottom-0 w-32 h-32 bg-emerald-500/5 rounded-full blur-2xl pointer-events-none group-hover:bg-emerald-500/10 transition-colors duration-500"></div>
                 
                 <div class="w-16 h-16 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-500">
                     <i data-lucide="trending-down" class="text-emerald-500 w-8 h-8"></i>
                 </div>
                 <div class="relative z-10">
-                    <h5 class="font-black text-4xl text-emerald-400 tracking-tighter mb-2 group-hover:text-emerald-300 transition-colors">$2M+</h5>
+                    <h5 class="font-black text-4xl text-emerald-400 tracking-tighter mb-2 group-hover:text-emerald-300 transition-colors"><span class="count-up" data-target="2" data-prefix="$" data-suffix="M+">$0M+</span></h5>
                     <p class="text-[10px] text-gray-500 font-mono uppercase tracking-widest mb-2">Annual Compute Savings</p>
                     <p class="text-gray-400 text-xs leading-relaxed max-w-sm">Aggressively optimized stray global resources and refactored Kubernetes workloads utilizing resilient spot instances algorithms.</p>
                 </div>
             </div>
 
             <!-- Metric 2 -->
-            <div class="glass-card p-8 scroll-reveal flex flex-col justify-between min-h-[180px] group relative overflow-hidden">
+            <div class="glass-card p-8 scroll-reveal-3d stagger-1 flex flex-col justify-between min-h-[180px] group relative overflow-hidden">
                 <div class="absolute right-0 bottom-0 w-32 h-32 bg-blue-500/5 rounded-full blur-2xl pointer-events-none group-hover:bg-blue-500/10 transition-colors duration-500"></div>
                 <div class="flex items-center gap-3 mb-6 relative z-10">
                     <div class="w-10 h-10 rounded-full bg-blue-500/10 border border-blue-500/20 flex items-center justify-center group-hover:rotate-12 transition-transform">
@@ -898,13 +972,13 @@
                     <h5 class="font-bold text-sm uppercase tracking-widest text-gray-500">OSS Auth</h5>
                 </div>
                 <div class="relative z-10">
-                    <h5 class="font-black text-3xl text-gray-200 tracking-tight mb-1 group-hover:text-blue-400 transition-colors">500+</h5>
+                    <h5 class="font-black text-3xl text-gray-200 tracking-tight mb-1 group-hover:text-blue-400 transition-colors"><span class="count-up" data-target="500" data-suffix="+">0</span></h5>
                     <p class="text-[9px] text-gray-500 font-mono uppercase tracking-widest">Star Replicators</p>
                 </div>
             </div>
 
             <!-- Metric 3 -->
-            <div class="glass-card p-8 scroll-reveal flex flex-col justify-between min-h-[180px] group relative overflow-hidden">
+            <div class="glass-card p-8 scroll-reveal-3d stagger-2 flex flex-col justify-between min-h-[180px] group relative overflow-hidden">
                 <div class="absolute right-0 bottom-0 w-32 h-32 bg-pink-500/5 rounded-full blur-2xl pointer-events-none group-hover:bg-pink-500/10 transition-colors duration-500"></div>
                 <div class="flex items-center gap-3 mb-6 relative z-10">
                     <div class="w-10 h-10 rounded-full bg-pink-500/10 border border-pink-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -913,13 +987,13 @@
                     <h5 class="font-bold text-sm uppercase tracking-widest text-gray-500">Leadership</h5>
                 </div>
                 <div class="relative z-10">
-                    <h5 class="font-black text-3xl text-gray-200 tracking-tight mb-1 group-hover:text-pink-400 transition-colors">5+</h5>
+                    <h5 class="font-black text-3xl text-gray-200 tracking-tight mb-1 group-hover:text-pink-400 transition-colors"><span class="count-up" data-target="5" data-suffix="+">0</span></h5>
                     <p class="text-[9px] text-gray-500 font-mono uppercase tracking-widest">Engineers Mentored</p>
                 </div>
             </div>
 
             <!-- Metric 4 -->
-            <div class="glass-card p-8 scroll-reveal flex flex-col justify-between min-h-[180px] group relative overflow-hidden">
+            <div class="glass-card p-8 scroll-reveal-scale stagger-3 flex flex-col justify-between min-h-[180px] group relative overflow-hidden">
                 <div class="absolute right-0 bottom-0 w-32 h-32 bg-yellow-500/5 rounded-full blur-2xl pointer-events-none group-hover:bg-yellow-500/10 transition-colors duration-500"></div>
                 <div class="flex items-center gap-3 mb-6 relative z-10">
                     <div class="w-10 h-10 rounded-full bg-yellow-500/10 border border-yellow-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -928,27 +1002,27 @@
                     <h5 class="font-bold text-sm uppercase tracking-widest text-gray-500">Automation</h5>
                 </div>
                 <div class="relative z-10">
-                    <h5 class="font-black text-3xl text-gray-200 tracking-tight mb-1 group-hover:text-yellow-400 transition-colors">10k+</h5>
+                    <h5 class="font-black text-3xl text-gray-200 tracking-tight mb-1 group-hover:text-yellow-400 transition-colors"><span class="count-up" data-target="10" data-suffix="k+">0</span></h5>
                     <p class="text-[9px] text-gray-500 font-mono uppercase tracking-widest">Automated Deployments</p>
                 </div>
             </div>
 
             <!-- Metric 5 (Span 2) -->
-            <div class="glass-card p-8 md:col-span-2 scroll-reveal relative overflow-hidden flex flex-col sm:flex-row items-start sm:items-center gap-8 min-h-[180px] group">
+            <div class="glass-card p-8 md:col-span-2 scroll-reveal-scale stagger-4 relative overflow-hidden flex flex-col sm:flex-row items-start sm:items-center gap-8 min-h-[180px] group">
                 <div class="absolute right-0 bottom-0 w-32 h-32 bg-orange-500/5 rounded-full blur-2xl pointer-events-none group-hover:bg-orange-500/10 transition-colors duration-500"></div>
                 
                 <div class="w-16 h-16 rounded-full bg-orange-500/10 border border-orange-500/20 flex items-center justify-center flex-shrink-0 group-hover:-rotate-12 transition-transform duration-500">
                     <i data-lucide="clock" class="text-orange-500 w-8 h-8"></i>
                 </div>
                 <div class="relative z-10">
-                    <h5 class="font-black text-4xl text-orange-400 tracking-tighter mb-2 group-hover:text-orange-300 transition-colors"><15m</h5>
+                    <h5 class="font-black text-4xl text-orange-400 tracking-tighter mb-2 group-hover:text-orange-300 transition-colors"><span class="count-up" data-target="15" data-prefix="&lt;" data-suffix="m">0</span></h5>
                     <p class="text-[10px] text-gray-500 font-mono uppercase tracking-widest mb-2">Mean Time To Recovery</p>
                     <p class="text-gray-400 text-xs leading-relaxed max-w-sm">Engineered highly responsive self-healing mechanisms and automated incident escalation pipelines minimizing downtime.</p>
                 </div>
             </div>
 
             <!-- Metric 6 -->
-            <div class="glass-card p-8 scroll-reveal flex flex-col justify-between min-h-[180px] group relative overflow-hidden">
+            <div class="glass-card p-8 scroll-reveal-3d stagger-5 flex flex-col justify-between min-h-[180px] group relative overflow-hidden">
                 <div class="absolute right-0 bottom-0 w-32 h-32 bg-cyan-500/5 rounded-full blur-2xl pointer-events-none group-hover:bg-cyan-500/10 transition-colors duration-500"></div>
                 <div class="flex items-center gap-3 mb-6 relative z-10">
                     <div class="w-10 h-10 rounded-full bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -957,7 +1031,7 @@
                     <h5 class="font-bold text-sm uppercase tracking-widest text-gray-500">Availability</h5>
                 </div>
                 <div class="relative z-10">
-                    <h5 class="font-black text-3xl text-gray-200 tracking-tight mb-1 group-hover:text-cyan-400 transition-colors">99.99%</h5>
+                    <h5 class="font-black text-3xl text-gray-200 tracking-tight mb-1 group-hover:text-cyan-400 transition-colors"><span class="count-up" data-target="99.99" data-suffix="%" data-decimals="2">0</span></h5>
                     <p class="text-[9px] text-gray-500 font-mono uppercase tracking-widest">Global Uptime SLA</p>
                 </div>
             </div>
@@ -966,14 +1040,14 @@
     </section>
 
     <!-- CONTACT SECTION -->
-    <section id="contact" class="min-h-[calc(100vh-100px)] flex flex-col items-center justify-center pt-16 pb-32 px-6 md:px-12 relative overflow-hidden">
+    <section id="contact" class="flex flex-col items-center justify-center py-24 px-6 md:px-12 relative overflow-hidden">
         <!-- Intense ambient glow reflecting the end of the page -->
         <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-96 bg-emerald-500/10 rounded-full blur-[120px] pointer-events-none z-0"></div>
         
-        <h2 class="text-[10px] uppercase tracking-[0.5em] text-gray-600 mb-6 font-bold text-center scroll-reveal relative z-10">// INITIALIZE_HANDSHAKE</h2>
+        <h2 class="text-[10px] uppercase tracking-[0.5em] text-gray-600 mb-6 font-bold text-center scroll-reveal heading-draw-center relative z-10">// INITIALIZE_HANDSHAKE</h2>
         
         <div class="max-w-3xl w-full text-center scroll-reveal relative z-10 mb-16">
-            <h4 class="text-4xl md:text-5xl font-black mb-6 text-white tracking-tight">Ready to Scale?</h4>
+            <h4 class="text-4xl md:text-5xl font-black mb-6 text-white tracking-tight breathe-glow">Ready to Scale?</h4>
             <p class="text-gray-400 text-sm md:text-base leading-relaxed max-w-xl mx-auto">
                 My inbox is always open. Whether you have a question about highly-available infrastructure, want to discuss a potential partnership, or just want to establish a connection, I'll try my best to get back to you!
             </p>
@@ -995,7 +1069,7 @@
             <!-- LinkedIn Node -->
             <a href="https://linkedin.com/in/het11" target="_blank" rel="noopener noreferrer" class="glass-card connection-node text-blue-400 scroll-reveal stagger-2">
                 <div class="icon-box">
-                    <i data-lucide="linkedin" class="w-6 h-6"></i>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
                 </div>
                 <div class="content">
                     <h5 class="font-bold text-gray-200">LinkedIn</h5>
@@ -1006,7 +1080,7 @@
             <!-- GitHub Node -->
             <a href="https://github.com/Het101" target="_blank" rel="noopener noreferrer" class="glass-card connection-node text-purple-400 scroll-reveal stagger-3">
                 <div class="icon-box">
-                    <i data-lucide="github" class="w-6 h-6"></i>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
                 </div>
                 <div class="content">
                     <h5 class="font-bold text-gray-200">GitHub</h5>
@@ -1022,29 +1096,29 @@
             <button onclick="closeArchModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white bg-white/5 p-2 rounded-lg cursor-pointer z-[210]"><i data-lucide="x"></i></button>
             <h3 class="text-xl font-bold mb-6 gradient-text uppercase tracking-widest text-center">HetOps Architectures</h3>
             <div class="bg-white/5 rounded-xl p-4 md:p-6 flex justify-center w-full overflow-x-auto overflow-y-hidden">
-                <div class="mermaid-diagram flex justify-center w-full">
+                <pre class="mermaid" style="min-width: 600px;">
 graph TD
-Client([Client / Browser]) -->|HTTPS| Cloudflare[(Cloudflare DNS/WAF)]
-Cloudflare -->|Proxy| VPS[Oracle Cloud ARM]
-subgraph HetOps[Production Infrastructure]
-VPS --> Traefik{Traefik Proxy}
-Traefik -->|dash| Dash[Dashboard App]
-Traefik -->|tools| Tools[Dev Toolkit]
-Traefik -->|status| Uptime[Uptime Kuma]
-Traefik -->|hub| Coolify[Coolify Multi-Service]
-Coolify --> Postgres[(PostgreSQL)]
-Coolify --> Redis[(Redis Cache)]
-Coolify --> CustomApps[Microservices]
-end
-style Client fill:#000,stroke:#00ff41,stroke-width:2px,color:#fff
-style Cloudflare fill:#f38020,stroke:none,color:#fff
-style VPS fill:#0a0a0a,stroke:#3498db,stroke-width:2px,color:#fff
-style Traefik fill:#1db831,stroke:none,color:#000
-style Dash fill:#0a0a0a,stroke:#00ff41,color:#fff
-style Tools fill:#0a0a0a,stroke:#f1c40f,color:#fff
-style Uptime fill:#0a0a0a,stroke:#e74c3c,color:#fff
-style Coolify fill:#0a0a0a,stroke:#9b59b6,color:#fff
-                </div>
+    Client([Client / Browser]) -->|HTTPS| Cloudflare[(Cloudflare DNS/WAF)]
+    Cloudflare -->|Proxy| VPS[Oracle Cloud ARM]
+    subgraph HetOps[Production Infrastructure]
+        VPS --> Traefik{Traefik Proxy}
+        Traefik -->|dash| Dash[Dashboard App]
+        Traefik -->|tools| Tools[Dev Toolkit]
+        Traefik -->|status| Uptime[Uptime Kuma]
+        Traefik -->|hub| Coolify[Coolify Multi-Service]
+        Coolify --> Postgres[(PostgreSQL)]
+        Coolify --> Redis[(Redis Cache)]
+        Coolify --> CustomApps[Microservices]
+    end
+    style Client fill:#000,stroke:#00ff41,stroke-width:2px,color:#fff
+    style Cloudflare fill:#f38020,stroke:none,color:#fff
+    style VPS fill:#0a0a0a,stroke:#3498db,stroke-width:2px,color:#fff
+    style Traefik fill:#1db831,stroke:none,color:#000
+    style Dash fill:#0a0a0a,stroke:#00ff41,color:#fff
+    style Tools fill:#0a0a0a,stroke:#f1c40f,color:#fff
+    style Uptime fill:#0a0a0a,stroke:#e74c3c,color:#fff
+    style Coolify fill:#0a0a0a,stroke:#9b59b6,color:#fff
+                </pre>
             </div>
         </div>
     </div>
@@ -1057,16 +1131,29 @@ style Coolify fill:#0a0a0a,stroke:#9b59b6,color:#fff
 
 
 
+    <!-- COMMAND PALETTE (Ctrl+K) -->
+    <div id="cmd-palette-overlay">
+        <div id="cmd-palette">
+            <input type="text" id="cmd-palette-input" placeholder="Type a command or search..." autocomplete="off" spellcheck="false">
+            <div class="results" id="cmd-palette-results"></div>
+        </div>
+    </div>
+
+    <!-- BACK TO TOP -->
+    <button id="back-to-top" aria-label="Back to top">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
+    </button>
+
     <footer class="fixed bottom-0 left-0 w-full bg-[#0a0a0a] border-t border-[#333] z-50 flex justify-between items-center px-4 py-1.5 font-mono text-[10px] text-gray-400 shadow-[0_-5px_20px_rgba(0,0,0,0.5)]">
         <div class="flex items-center gap-4">
             <span class="bg-[#00ff41] text-black px-2 py-0.5 font-bold flex items-center gap-1.5 rounded-sm"><i data-lucide="terminal" class="w-3 h-3"></i> NORMAL</span>
             <span class="hidden sm:inline-block">hetops/portfolio</span>
             <span class="text-blue-400 flex items-center gap-1.5"><i data-lucide="git-branch" class="w-3 h-3"></i> main</span>
-            <span class="hidden md:flex text-[#ffbd2e] items-center gap-1.5"><i data-lucide="alert-circle" class="w-3 h-3"></i> 0</span>
+            <span class="hidden md:flex text-[#ffbd2e] items-center gap-1.5"><i data-lucide="circle-alert" class="w-3 h-3"></i> 0</span>
         </div>
         <div class="flex items-center gap-4">
             <span class="hidden sm:inline-block font-bold" id="footer-time">00:00:00</span>
-            <span class="text-emerald-500 flex items-center gap-1.5"><i data-lucide="check-circle" class="w-3 h-3"></i> ALL_SYSTEMS_OPTIMAL</span>
+            <span class="text-emerald-500 flex items-center gap-1.5"><i data-lucide="circle-check" class="w-3 h-3"></i> ALL_SYSTEMS_OPTIMAL</span>
             <span class="hidden lg:inline-block">UTF-8</span>
             <span class="hidden lg:inline-block">Prettier</span>
         </div>
@@ -1097,7 +1184,7 @@ style Coolify fill:#0a0a0a,stroke:#9b59b6,color:#fff
             document.body.style.overflow = 'hidden';
             if (!window.mermaidInitialized) {
                 mermaid.initialize({ startOnLoad: false, theme: 'dark', themeVariables: { fontFamily: 'Fira Code' } });
-                mermaid.run({ querySelector: '.mermaid-diagram' });
+                mermaid.run({ querySelector: '.mermaid' });
                 window.mermaidInitialized = true;
             }
         }
@@ -1191,7 +1278,7 @@ style Coolify fill:#0a0a0a,stroke:#9b59b6,color:#fff
 
         window.addEventListener('DOMContentLoaded', () => {
             // Initialize icons
-            lucide.createIcons();
+            try { lucide.createIcons(); } catch(e) { console.warn('Lucide init failed:', e); }
             
             // Start clock
             setInterval(() => { 
@@ -1220,11 +1307,11 @@ style Coolify fill:#0a0a0a,stroke:#9b59b6,color:#fff
                                 el.classList.remove('text-emerald-500');
                                 el.classList.add('text-amber-500');
                                 if(el.innerText.includes('OPERATIONAL') || el.innerText.includes('OPTIMAL')) {
-                                    el.innerHTML = '<i data-lucide="alert-triangle" class="w-3 h-3"></i> PARTIAL_OUTAGE';
+                                    el.innerHTML = '<i data-lucide="triangle-alert" class="w-3 h-3"></i> PARTIAL_OUTAGE';
                                 }
                             });
                             if(footerDot) { footerDot.classList.remove('bg-emerald-500'); footerDot.classList.add('bg-amber-500'); }
-                            lucide.createIcons();
+                            try { lucide.createIcons(); } catch(e) {}
                         }
                     }
                 } catch(e) { console.warn('Status fetch failed'); }
@@ -1249,7 +1336,7 @@ style Coolify fill:#0a0a0a,stroke:#9b59b6,color:#fff
                                 contentDiv.innerHTML = `
                                     <div class="text-white text-sm font-mono uppercase mb-3 pr-8 flex justify-between">
                                         <span># Open Source</span>
-                                        <a href="${repo.html_url}" target="_blank" class="text-gray-400 hover:text-white"><i data-lucide="github" class="w-4 h-4"></i></a>
+                                        <a href="${repo.html_url}" target="_blank" class="text-gray-400 hover:text-white"><svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg></a>
                                     </div>
                                     <h4 class="text-lg font-bold mb-3">${repo.name}</h4>
                                     <p class="text-gray-400 text-sm mb-4 line-clamp-3">${repo.description || 'Open source project by Het Patel.'}</p>
@@ -1259,7 +1346,7 @@ style Coolify fill:#0a0a0a,stroke:#9b59b6,color:#fff
                                     </div>`;
                             }
                         }
-                        lucide.createIcons();
+                        try { lucide.createIcons(); } catch(e) {}
                     }
                 } catch(e) { console.warn('GitHub fetch failed'); }
             }
@@ -1270,25 +1357,28 @@ style Coolify fill:#0a0a0a,stroke:#9b59b6,color:#fff
             addGlowToElements();
             
             // 3D TILT EFFECT ON GLASS CARDS (Premium Polish)
+            // Only apply tilt on cards that are already visible (have .active class)
+            // Don't set default transform/transition — let CSS scroll-reveal classes handle initial state
             document.querySelectorAll('.glass-card').forEach(card => {
-                // Ignore mobile to prevent jank
                 if(window.innerWidth < 768) return;
                 
-                card.style.transition = 'transform 0.1s ease, border-color 0.4s ease, box-shadow 0.4s ease';
                 card.addEventListener('mousemove', e => {
+                    // Only tilt if card is already revealed
+                    if (!card.classList.contains('active') && (card.classList.contains('scroll-reveal-blur') || card.classList.contains('scroll-reveal-3d') || card.classList.contains('scroll-reveal') || card.classList.contains('scroll-reveal-left') || card.classList.contains('scroll-reveal-right') || card.classList.contains('scroll-reveal-scale'))) return;
                     const rect = card.getBoundingClientRect();
                     const x = e.clientX - rect.left;
                     const y = e.clientY - rect.top;
                     const centerX = rect.width / 2;
                     const centerY = rect.height / 2;
-                    const rotateX = ((y - centerY) / centerY) * -5;
-                    const rotateY = ((x - centerX) / centerX) * 5;
-                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+                    const rotateX = ((y - centerY) / centerY) * -4;
+                    const rotateY = ((x - centerX) / centerX) * 4;
+                    card.style.transition = 'transform 0.1s ease';
+                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.01, 1.01, 1.01)`;
                 });
                 card.addEventListener('mouseleave', () => {
-                    card.style.transition = 'transform 0.5s ease, border-color 0.4s ease, box-shadow 0.4s ease';
-                    card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
-                    setTimeout(() => card.style.transition = 'transform 0.1s ease, border-color 0.4s ease, box-shadow 0.4s ease', 500);
+                    card.style.transition = 'transform 0.5s ease';
+                    card.style.transform = '';
+                    setTimeout(() => { card.style.transition = ''; }, 500);
                 });
             });
 
@@ -1557,15 +1647,21 @@ Status: All systems nominal.`,
                     response = new Date().toString();
                 }
                 
-                if (!response && cmd !== 'clear') response = `zsh: command not found: ${val}`;
+                function sanitize(str) {
+                    const d = document.createElement('div');
+                    d.textContent = str;
+                    return d.innerHTML;
+                }
+                const safeVal = sanitize(val);
+                if (!response && cmd !== 'clear') response = `zsh: command not found: ${safeVal}`;
                 
                 const div = document.createElement('div');
                 div.className = isMini ? 'mb-1 text-gray-300' : 'mb-3';
                 if (isMini) {
-                    div.innerHTML = `<span class="text-emerald-500">~$</span> ${val}<br><span class="text-gray-400 whitespace-pre-wrap">${response}</span>`;
+                    div.innerHTML = `<span class="text-emerald-500">~$</span> ${safeVal}<br><span class="text-gray-400 whitespace-pre-wrap">${response}</span>`;
                     outputEl.classList.remove('hidden');
                 } else {
-                    div.innerHTML = `<span class="prompt-user">visitor@hetops</span><span class="text-white">:</span><span class="prompt-dir">~</span><span class="text-white">$</span> ${val}<br><span class="text-gray-400 whitespace-pre-wrap">${response}</span>`;
+                    div.innerHTML = `<span class="prompt-user">visitor@hetops</span><span class="text-white">:</span><span class="prompt-dir">~</span><span class="text-white">$</span> ${safeVal}<br><span class="text-gray-400 whitespace-pre-wrap">${response}</span>`;
                 }
                 
                 outputEl.appendChild(div);
@@ -1592,7 +1688,7 @@ Status: All systems nominal.`,
 
         document.querySelector('.terminal-container').addEventListener('click', () => { input.focus(); });
 
-        // ENHANCED REVEAL ENGINE (Consolidated)
+        // ENHANCED REVEAL ENGINE — Bidirectional: animate in on enter, animate out on leave
         const scrollObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -1602,40 +1698,189 @@ Status: All systems nominal.`,
                 }
             });
         }, { 
-            threshold: 0.15, 
-            rootMargin: "0px 0px -50px 0px" 
+            threshold: 0.05, 
+            rootMargin: "0px 0px -80px 0px" 
         });
 
-        document.querySelectorAll('.scroll-reveal, .scroll-reveal-left, .scroll-reveal-right, .scroll-reveal-scale').forEach((el) => {
+        document.querySelectorAll('.scroll-reveal, .scroll-reveal-left, .scroll-reveal-right, .scroll-reveal-scale, .scroll-reveal-blur, .scroll-reveal-3d, .heading-draw, .heading-draw-center').forEach((el) => {
             scrollObserver.observe(el);
         });
 
-        // 3D Glass Card Physics Engine
-        const cards = document.querySelectorAll('.glass-card');
-        cards.forEach(card => {
-            card.addEventListener('mousemove', (e) => {
-                if(window.innerWidth < 768) return; 
-                
-                const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                
-                const centerX = rect.width / 2;
-                const centerY = rect.height / 2;
-                
-                // Max rotation bounded to 4 degrees for subtle premium feel
-                const rotateX = ((y - centerY) / centerY) * -4;
-                const rotateY = ((x - centerX) / centerX) * 4;
-                
-                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px)`;
-                card.style.transition = 'transform 0.1s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.4s ease';
-            });
-            
-            card.addEventListener('mouseleave', () => {
-                card.style.transform = '';
-                card.style.transition = '';
-            });
+        // 3D Glass Card Physics Engine (see DOMContentLoaded handler above)
+
+        // ===== SCROLL PROGRESS BAR =====
+        window.addEventListener('scroll', () => {
+            const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+            const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const progress = scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
+            const bar = document.getElementById('scroll-progress');
+            if (bar) bar.style.width = progress + '%';
         });
+
+        // ===== BACK TO TOP BUTTON =====
+        (function() {
+            const btn = document.getElementById('back-to-top');
+            if (!btn) return;
+            window.addEventListener('scroll', () => {
+                if (window.pageYOffset > 600) {
+                    btn.classList.add('visible');
+                } else {
+                    btn.classList.remove('visible');
+                }
+            });
+            btn.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        })();
+
+        // ===== COUNTER COUNT-UP ANIMATION (Replays every visit) =====
+        (function() {
+            const counters = document.querySelectorAll('.count-up');
+            if (!counters.length) return;
+            const counterObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    const el = entry.target;
+                    if (entry.isIntersecting) {
+                        const target = parseFloat(el.dataset.target);
+                        const prefix = el.dataset.prefix || '';
+                        const suffix = el.dataset.suffix || '';
+                        const decimals = parseInt(el.dataset.decimals) || 0;
+                        const duration = 2000;
+                        const startTime = performance.now();
+                        function easeOutExpo(t) { return t === 1 ? 1 : 1 - Math.pow(2, -10 * t); }
+                        function step(now) {
+                            const elapsed = now - startTime;
+                            const progress = Math.min(elapsed / duration, 1);
+                            const easedProgress = easeOutExpo(progress);
+                            const current = easedProgress * target;
+                            el.textContent = prefix + (decimals > 0 ? current.toFixed(decimals) : Math.floor(current)) + suffix;
+                            if (progress < 1) requestAnimationFrame(step);
+                        }
+                        requestAnimationFrame(step);
+                    } else {
+                        // Reset to 0 so it replays on next visit
+                        const prefix = el.dataset.prefix || '';
+                        const suffix = el.dataset.suffix || '';
+                        el.textContent = prefix + '0' + suffix;
+                    }
+                });
+            }, { threshold: 0.5 });
+            counters.forEach(c => counterObserver.observe(c));
+        })();
+
+        // ===== LIVE UPTIME COUNTER =====
+        (function() {
+            // Start date: Aug 1, 2023 (first DevOps role at Datagroker)
+            const startDate = new Date('2023-08-01T00:00:00');
+            const counter = document.getElementById('uptime-counter');
+            if (!counter) return;
+            function update() {
+                const now = new Date();
+                const diff = now - startDate;
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const secs = Math.floor((diff % (1000 * 60)) / 1000);
+                counter.textContent = days + 'd ' + hours + 'h ' + mins + 'm ' + secs + 's';
+            }
+            update();
+            setInterval(update, 1000);
+        })();
+
+        // ===== COMMAND PALETTE (Ctrl+K / Cmd+K) =====
+        (function() {
+            const overlay = document.getElementById('cmd-palette-overlay');
+            const input = document.getElementById('cmd-palette-input');
+            const resultsEl = document.getElementById('cmd-palette-results');
+            if (!overlay || !input || !resultsEl) return;
+
+            const actions = [
+                { label: 'Go to Experience', section: '#exp', icon: '💼', keys: '' },
+                { label: 'Go to Skills', section: '#skills', icon: '⚡', keys: '' },
+                { label: 'Go to Projects', section: '#projects', icon: '🚀', keys: '' },
+                { label: 'Go to Case Studies', section: '#case-studies', icon: '📋', keys: '' },
+                { label: 'Go to Infrastructure', section: '#infra', icon: '🏗️', keys: '' },
+                { label: 'Go to Blog', section: '#blog', icon: '📝', keys: '' },
+                { label: 'Go to Contact', section: '#contact', icon: '📬', keys: '' },
+                { label: 'View Resume', url: 'Het_Patel_Resume.pdf', icon: '📄', keys: '' },
+                { label: 'Open Dashboard', url: 'https://dash.hetops.dev', icon: '📊', keys: '' },
+                { label: 'Copy Email', action: 'copy-email', icon: '📋', keys: '' },
+                { label: 'View Architecture', action: 'arch-modal', icon: '🗺️', keys: '' },
+                { label: 'Back to Top', action: 'top', icon: '⬆️', keys: '' },
+            ];
+
+            let activeIndex = 0;
+            let filtered = [...actions];
+
+            function renderResults(items) {
+                resultsEl.innerHTML = '';
+                items.forEach((item, i) => {
+                    const div = document.createElement('div');
+                    div.className = 'result-item' + (i === activeIndex ? ' active' : '');
+                    div.innerHTML = '<span>' + item.icon + '</span> <span>' + item.label + '</span>' + (item.keys ? '<span class="kbd">' + item.keys + '</span>' : '');
+                    div.addEventListener('click', () => executeAction(item));
+                    div.addEventListener('mouseenter', () => { activeIndex = i; renderResults(items); });
+                    resultsEl.appendChild(div);
+                });
+            }
+
+            function executeAction(item) {
+                closePalette();
+                if (item.section) {
+                    const el = document.querySelector(item.section);
+                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                } else if (item.url) {
+                    window.open(item.url, '_blank', 'noopener,noreferrer');
+                } else if (item.action === 'copy-email') {
+                    navigator.clipboard.writeText('hetpatidar09@gmail.com');
+                } else if (item.action === 'arch-modal') {
+                    openArchModal();
+                } else if (item.action === 'top') {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            }
+
+            function openPalette() {
+                overlay.classList.add('open');
+                input.value = '';
+                activeIndex = 0;
+                filtered = [...actions];
+                renderResults(filtered);
+                setTimeout(() => input.focus(), 50);
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closePalette() {
+                overlay.classList.remove('open');
+                document.body.style.overflow = '';
+            }
+
+            input.addEventListener('input', () => {
+                const q = input.value.toLowerCase();
+                filtered = actions.filter(a => a.label.toLowerCase().includes(q));
+                activeIndex = 0;
+                renderResults(filtered);
+            });
+
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowDown') { e.preventDefault(); activeIndex = Math.min(activeIndex + 1, filtered.length - 1); renderResults(filtered); }
+                else if (e.key === 'ArrowUp') { e.preventDefault(); activeIndex = Math.max(activeIndex - 1, 0); renderResults(filtered); }
+                else if (e.key === 'Enter' && filtered[activeIndex]) { executeAction(filtered[activeIndex]); }
+                else if (e.key === 'Escape') { closePalette(); }
+            });
+
+            overlay.addEventListener('click', (e) => { if (e.target === overlay) closePalette(); });
+
+            document.addEventListener('keydown', (e) => {
+                if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                    e.preventDefault();
+                    openPalette();
+                }
+                if (e.key === 'Escape' && overlay.classList.contains('open')) {
+                    closePalette();
+                }
+            });
+        })();
     </script>
 </body>
 </html>
