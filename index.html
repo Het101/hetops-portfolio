@@ -214,15 +214,53 @@
             0% { opacity: 0; transform: translateY(40px) rotateX(40deg); filter: blur(8px); }
             100% { opacity: 1; transform: translateY(0) rotateX(0deg); filter: blur(0); }
         }
-        .hero-letter:hover { animation: hero-letter-glitch 0.4s ease; color: #00f260; -webkit-text-fill-color: #00f260; }
+        .hero-letter:hover { animation: hero-letter-glitch 0.4s ease forwards; color: #00f260; -webkit-text-fill-color: #00f260; text-shadow: 0 0 30px rgba(0,242,96,0.6), 0 0 60px rgba(0,242,96,0.3); }
         @keyframes hero-letter-glitch {
-            0% { transform: translate(0); }
-            20% { transform: translate(-3px, 2px) skewX(2deg); }
-            40% { transform: translate(3px, -2px) skewX(-2deg); }
-            60% { transform: translate(-2px, -1px); }
-            80% { transform: translate(2px, 1px); }
-            100% { transform: translate(0); }
+            0% { transform: translate(0) scale(1); }
+            15% { transform: translate(-3px, 2px) skewX(4deg) scale(1.05); }
+            30% { transform: translate(4px, -3px) skewX(-4deg) scale(0.98); }
+            45% { transform: translate(-2px, -1px) skewX(2deg); }
+            60% { transform: translate(2px, 1px) skewX(-1deg); }
+            75% { transform: translate(-1px, 0px); }
+            100% { transform: translate(0) scale(1); }
         }
+
+        /* HET letters — persistent glow pulse after entrance */
+        .hero-letter-het { text-shadow: 0 0 20px rgba(255,255,255,0.1); }
+        .hero-letter-het.revealed { animation: hero-letter-in 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards, het-glow-breathe 4s ease-in-out 1s infinite; }
+        @keyframes het-glow-breathe {
+            0%, 100% { text-shadow: 0 0 10px rgba(255,255,255,0.05), 0 0 40px rgba(0,242,96,0.05); }
+            50% { text-shadow: 0 0 20px rgba(255,255,255,0.15), 0 0 60px rgba(0,242,96,0.15), 0 0 100px rgba(0,242,96,0.05); }
+        }
+
+        /* Name container — subtle upward float */
+        .hero-name-container { position: relative; }
+        .hero-name-container::before {
+            content: 'HET PATEL.';
+            position: absolute; top: 0; left: 0;
+            font-size: inherit; font-weight: inherit; letter-spacing: inherit;
+            background: linear-gradient(90deg, #00f260 0%, #0575e6 50%, #a855f7 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+            animation: gradient-flow 3s linear infinite;
+            opacity: 0.03; filter: blur(20px);
+            pointer-events: none; z-index: -1;
+        }
+
+        /* Subtitle text scramble effect */
+        .hero-subtitle { overflow: hidden; }
+        .hero-subtitle .word-reveal { display: inline-block; animation: word-slide-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards; opacity: 0; transform: translateY(100%); }
+        @keyframes word-slide-up { 0% { opacity: 0; transform: translateY(100%); } 100% { opacity: 1; transform: translateY(0); } }
+
+        /* Horizontal beam from name toward orbital rings */
+        .hero-beam { position: absolute; height: 1px; background: linear-gradient(90deg, rgba(0,242,96,0.4), transparent); pointer-events: none; z-index: 0; animation: beam-extend 2s cubic-bezier(0.22, 1, 0.36, 1) 1.2s forwards; width: 0; }
+        @keyframes beam-extend { 0% { width: 0; opacity: 0; } 30% { opacity: 1; } 100% { width: 200px; opacity: 0.3; } }
+
+        /* Tech stack line — typing reveal */
+        .hero-techline { overflow: hidden; white-space: nowrap; border-right: 2px solid #10b981; animation: hero-type 2s steps(50) 1.5s forwards, hero-caret-blink 0.8s step-end 1.5s 5; width: 0; }
+        @keyframes hero-type { 0% { width: 0; } 100% { width: 100%; } }
+        @keyframes hero-caret-blink { 0%, 100% { border-color: #10b981; } 50% { border-color: transparent; } }
+        .hero-techline.typed { border-color: transparent; }
 
         /* HERO ROLE LINE SCAN */
         .hero-role-scan { position: relative; overflow: hidden; }
@@ -482,14 +520,21 @@
 
             <div class="scroll-reveal-left relative z-10">
                 <h2 class="font-mono text-emerald-500 mb-4 tracking-[0.4em] text-xs uppercase hero-role-scan inline-block">// DEVOPS_ENGINEER_II</h2>
-                <h1 class="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-black tracking-tighter leading-none mb-8" style="perspective: 600px;">
-                    <span class="hero-letter" style="animation-delay: 0.1s">H</span><span class="hero-letter" style="animation-delay: 0.18s">E</span><span class="hero-letter" style="animation-delay: 0.26s">T</span> <br>
-                    <span class="gradient-text"><span class="hero-letter" style="animation-delay: 0.4s">P</span><span class="hero-letter" style="animation-delay: 0.48s">A</span><span class="hero-letter" style="animation-delay: 0.56s">T</span><span class="hero-letter" style="animation-delay: 0.64s">E</span><span class="hero-letter" style="animation-delay: 0.72s">L</span><span class="hero-letter typing-cursor" style="animation-delay: 0.8s">.</span></span>
-                </h1>
-                <p class="text-gray-400 text-lg md:text-xl max-w-lg mb-4 leading-relaxed font-light">
-                    Building <span class="text-white font-semibold">automated resilience</span> at Techdome. Mastering multi-cloud orchestration & infrastructure excellence.
+                <div class="hero-name-container">
+                    <h1 class="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-black tracking-tighter leading-none mb-8" style="perspective: 600px;">
+                        <span class="hero-letter hero-letter-het" style="animation-delay: 0.1s">H</span><span class="hero-letter hero-letter-het" style="animation-delay: 0.18s">E</span><span class="hero-letter hero-letter-het" style="animation-delay: 0.26s; margin-left: 0.08em;">T</span> <br>
+                        <span class="gradient-text"><span class="hero-letter" style="animation-delay: 0.4s">P</span><span class="hero-letter" style="animation-delay: 0.48s">A</span><span class="hero-letter" style="animation-delay: 0.56s">T</span><span class="hero-letter" style="animation-delay: 0.64s">E</span><span class="hero-letter" style="animation-delay: 0.72s">L</span><span class="hero-letter typing-cursor" style="animation-delay: 0.8s">.</span></span>
+                    </h1>
+                    <!-- Beam lines extending toward orbital rings -->
+                    <div class="hero-beam hidden lg:block" style="top: 35%; right: -20px;"></div>
+                    <div class="hero-beam hidden lg:block" style="top: 65%; right: -20px; animation-delay: 1.6s; background: linear-gradient(90deg, rgba(5,117,230,0.3), transparent);"></div>
+                </div>
+                <p class="text-gray-400 text-lg md:text-xl max-w-lg mb-4 leading-relaxed font-light hero-subtitle">
+                    <span class="word-reveal" style="animation-delay: 1s">Building </span><span class="word-reveal text-white font-semibold" style="animation-delay: 1.1s">automated resilience </span><span class="word-reveal" style="animation-delay: 1.2s">at Techdome. </span><span class="word-reveal" style="animation-delay: 1.35s">Mastering multi-cloud </span><span class="word-reveal" style="animation-delay: 1.5s">orchestration & </span><span class="word-reveal" style="animation-delay: 1.65s">infrastructure excellence.</span>
                 </p>
-                <p class="text-emerald-500 text-sm font-mono mb-4">→ Kubernetes • Docker • AWS/Azure/GCP • Terraform • CI/CD</p>
+                <div class="overflow-hidden mb-4">
+                    <p class="text-emerald-500 text-sm font-mono hero-techline">→ Kubernetes • Docker • AWS/Azure/GCP • Terraform • CI/CD</p>
+                </div>
                 <div class="flex items-center gap-3 mb-10 px-4 py-2 bg-white/[0.02] border border-white/5 rounded-xl w-fit">
                     <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_#10b981]"></div>
                     <span class="text-[11px] font-mono text-gray-400">Engineering uptime: <span id="uptime-counter" class="text-emerald-400 font-bold">0d 0h 0m 0s</span></span>
@@ -1981,6 +2026,42 @@ Status: All systems nominal.`,
                     closePalette();
                 }
             });
+        })();
+
+        // ===== HERO NAME EFFECTS =====
+        (function() {
+            // Add .revealed to HET letters after entrance animation completes
+            document.querySelectorAll('.hero-letter-het').forEach((el, i) => {
+                const delay = parseFloat(el.style.animationDelay) * 1000 + 800; // delay + anim duration
+                setTimeout(() => el.classList.add('revealed'), delay);
+            });
+
+            // Text scramble on role subtitle
+            const roleEl = document.querySelector('.hero-role-scan');
+
+            // Hide techline caret after typing finishes
+            const techline = document.querySelector('.hero-techline');
+            if (techline) setTimeout(() => techline.classList.add('typed'), 5500);
+            if (roleEl) {
+                const finalText = roleEl.textContent;
+                const chars = '!@#$%^&*()_+-=[]{}|;:,.<>?/~`01';
+                let frame = 0;
+                const totalFrames = 30;
+                function scramble() {
+                    const progress = frame / totalFrames;
+                    const revealedLength = Math.floor(progress * finalText.length);
+                    let display = '';
+                    for (let i = 0; i < finalText.length; i++) {
+                        if (i < revealedLength) display += finalText[i];
+                        else if (finalText[i] === ' ') display += ' ';
+                        else display += chars[Math.floor(Math.random() * chars.length)];
+                    }
+                    roleEl.textContent = display;
+                    frame++;
+                    if (frame <= totalFrames) setTimeout(scramble, 50);
+                }
+                setTimeout(scramble, 400);
+            }
         })();
 
         // ===== CURSOR GLOW EFFECT =====
