@@ -7,5 +7,5 @@ services:
         - GITHUB_TOKEN_HET101=${GITHUB_TOKEN_HET101}
         - GITHUB_TOKEN_HETU29=${GITHUB_TOKEN_HETU29}
     ports:
-      - "8080:80"
+      - "8000:80"
     restart: unless-stopped
