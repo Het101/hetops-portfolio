@@ -1,0 +1,45 @@
+{
+  "recommendations": [
+    {
+      "id": 1,
+      "author": "Dillon Omane",
+      "initials": "DO",
+      "role": "Senior Software Engineer",
+      "company": "Verisk",
+      "linkedin": "https://www.linkedin.com/in/het11/details/recommendations/",
+      "text": "Het is a great engineer that is driven and really problem oriented. I have had the privilege of working with him as his manager over the past year. he has always been proactive and really intelligent about his approach to development and documentation. he shows his attention to detail is strong and great too work with."
+    },
+    {
+      "id": 2,
+      "author": "Iliyas Maner",
+      "initials": "IM",
+      "role": "Lead Cloud Engineer",
+      "company": "Datagrok",
+      "linkedin": "https://www.linkedin.com/in/het11/details/recommendations/",
+      "text": "Het's communication and writing skills make him stand out from the crowd. His observations skills are remarkable and when the observations are complemented with the technical understanding, it has always helped in client satisfaction.\n\nI have had a great experience working with him and will definitely cherish the delight he brought to the team with him charming actions."
+    },
+    {
+      "id": 3,
+      "author": "Yashvardhan Singh Nathawat",
+      "initials": "YN",
+      "role": "DevOps Engineer",
+      "company": "Certa.ai",
+      "linkedin": "https://www.linkedin.com/in/het11/details/recommendations/",
+      "text": "I highly recommend Het Patel as an exceptional DevOps/Cloud Engineer who consistently delivered outstanding results during our time working together. As Het's direct manager, I witnessed firsthand their expertise in cloud infrastructure and automation.\nHet demonstrated remarkable proficiency across multiple critical areas:\n  • Cloud Platforms\n  • Infrastructure as Code\n  • CI/CD Pipeline Optimization\n  • Container Orchestration\n  • Security Integration\nWhat sets Het apart is their ability to accelerate deployments while simultaneously strengthening security measures. They have a unique talent for identifying process improvements and implementing automation solutions that benefit the entire development lifecycle.\nHet is a reliable team player who brings both technical excellence and collaborative leadership to any organization. I would welcome the opportunity to work with Het again and strongly recommend them for any DevOps or cloud infrastructure role."
+    },
+    {
+      "id": 4,
+      "author": "Sahil Patial",
+      "initials": "SP",
+      "role": "Senior Engineer",
+      "company": "Kenvue",
+      "linkedin": "https://www.linkedin.com/in/het11/details/recommendations/",
+      "text": "I had the pleasure of working with Het on several projects, and I was consistently impressed by his professionalism, problem-solving skills, and collaborative spirit. He bring a great balance of technical expertise and clear communication to the table, making him an asset to any team. I highly recommend Het to anyone looking for a dedicated and talented professional."
+    }
+  ],
+  "meta": {
+    "linkedin_profile": "https://www.linkedin.com/in/het11/",
+    "recommendations_url": "https://www.linkedin.com/in/het11/details/recommendations/",
+    "last_updated": "2026-04-06"
+  }
+}

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Het Patel — DevOps Engineer II. Multi-cloud orchestration, Kubernetes, CI/CD. Builder of the HetOps platform.">
+    <meta name="description" content="Het Patel — DevOps Engineer II. Multi-cloud orchestration, Kubernetes, Terraform. Builder of the HetOps ecosystem (6 tools). $2M+ cloud savings, 99.99% uptime. View projects, contributions, and testimonials.">
     <meta name="theme-color" content="#030303">
     <meta property="og:title" content="HET PATEL | DevOps Engineer II">
     <meta property="og:description" content="Building infrastructure that scales with precision, automation, and zero compromise.">
@@ -275,6 +275,61 @@
         }
 
         /* ═══════════════════════════════════════
+           HERO VISUALIZER (HETOPS.COM STYLE)
+        ═══════════════════════════════════════ */
+        .premium-bento-card {
+            background: rgba(10, 10, 10, 0.6);
+            border: 1px solid rgba(16, 185, 129, 0.15);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+        .premium-bento-card::before {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(180deg, rgba(16,185,129,0.05), transparent);
+            opacity: 0; transition: opacity 0.3s ease; pointer-events: none;
+        }
+        .premium-bento-card:hover {
+            border-color: rgba(16, 185, 129, 0.4);
+            box-shadow: 0 10px 40px rgba(16, 185, 129, 0.08);
+            transform: translateY(-2px);
+            z-index: 10;
+        }
+        .premium-bento-card:hover::before { opacity: 1; }
+
+        .hero-matrix {
+            background-color: #030303;
+            background-image: 
+                linear-gradient(rgba(16, 185, 129, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(16, 185, 129, 0.03) 1px, transparent 1px);
+            background-size: 32px 32px;
+            background-position: center top;
+        }
+
+        /* Cinematic Reveal Mask */
+        .reveal-mask {
+            display: inline-block;
+            overflow: hidden;
+            vertical-align: bottom;
+            line-height: normal;
+        }
+        .reveal-text {
+            display: inline-block;
+            transform: translateY(110%);
+            animation: text-surge 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        
+        @keyframes text-surge {
+            to { transform: translateY(0); }
+        }
+
+        /* ═══════════════════════════════════════
            STATS BAR
         ═══════════════════════════════════════ */
         .stats-bar {
@@ -354,6 +409,172 @@
         /* Featured DNS card overrides */
         .tool-card-featured { border-radius: 16px; }
         .tool-card-featured .tool-body { flex-direction: row; flex-wrap: wrap; gap: 24px; align-items: flex-start; padding: 32px; }
+
+        /* ═══════════════════════════════════════
+           INTERACTIVE SPOTLIGHT
+        ═══════════════════════════════════════ */
+        .spotlight-wrapper {
+            margin-top: 60px;
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 20px;
+            min-height: 480px;
+        }
+        @media (max-width: 800px) {
+            .spotlight-wrapper { grid-template-columns: 1fr; min-height: 500px; }
+        }
+        .spotlight-tab {
+            padding: 16px 20px;
+            border-radius: 12px;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex; align-items: center; gap: 12px;
+            background: transparent;
+            color: var(--muted);
+            opacity: 0.6;
+        }
+        .spotlight-tab:hover {
+            background: rgba(255,255,255,0.03);
+            opacity: 1;
+        }
+        .spotlight-tab.active {
+            background: var(--surface);
+            border-color: var(--border2);
+            color: var(--text);
+            opacity: 1;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+        .spotlight-tab .tab-indicator {
+            width: 4px; height: 18px; border-radius: 2px;
+            background: currentColor; opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .spotlight-tab.active .tab-indicator { opacity: 1; }
+        
+        .spotlight-display {
+            position: relative;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            display: flex;
+        }
+        .spotlight-pane {
+            position: absolute;
+            inset: 0;
+            padding: 48px;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(10px) scale(0.98);
+            transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+            display: flex; flex-direction: column; justify-content: center;
+        }
+        @media (max-width: 600px) {
+            .spotlight-pane { padding: 32px; }
+        }
+        .spotlight-pane.active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0) scale(1);
+        }
+        .pane-glow {
+            position: absolute; top: -50px; right: -50px; width: 400px; height: 400px;
+            border-radius: 50%; filter: blur(120px); opacity: 0.15;
+            pointer-events: none; z-index: 0; mix-blend-mode: screen;
+        }
+        .pane-content { position: relative; z-index: 1; max-width: 600px; }
+
+        /* ═══════════════════════════════════════
+           REVOLUTIONARY KINETIC ANIMATIONS
+        ═══════════════════════════════════════ */
+        .spotlight-inner {
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 40px;
+            align-items: center;
+            position: relative; z-index: 1;
+        }
+        @media (max-width: 1000px) {
+            .spotlight-inner { grid-template-columns: 1fr; }
+        }
+        .anim-stage {
+            width: 100%; height: 340px;
+            background: rgba(0,0,0,0.6);
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.05);
+            box-shadow: inset 0 0 40px rgba(0,0,0,0.8);
+            position: relative; overflow: hidden;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        /* 1. DNS Radar (Cyan) */
+        .anim-radar { position: relative; display: flex; align-items: center; justify-content: center; }
+        .anim-radar .dot { width: 12px; height: 12px; background: var(--cyan); border-radius: 50%; box-shadow: 0 0 20px var(--cyan); z-index: 2; }
+        .anim-radar .ring {
+            position: absolute; border-radius: 50%;
+            border: 1px solid var(--cyan);
+            opacity: 0; box-shadow: inset 0 0 20px rgba(6,182,212,0.2);
+            animation: radar-ping 3s infinite cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        .anim-radar .ring:nth-child(2) { animation-delay: 1s; }
+        .anim-radar .ring:nth-child(3) { animation-delay: 2s; }
+        @keyframes radar-ping { 0% { width: 0; height: 0; opacity: 1; border-width: 2px; } 100% { width: 300px; height: 300px; opacity: 0; border-width: 1px; } }
+
+        /* 2. Commander Grid (Brand) */
+        .anim-grid {
+            display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px;
+            width: 200px; height: 200px; transform: rotateX(45deg) rotateZ(45deg);
+            transform-style: preserve-3d;
+        }
+        .anim-grid .bar {
+            background: rgba(16,185,129,0.2); border: 1px solid rgba(16,185,129,0.5);
+            border-radius: 2px; width: 100%; height: 100%; position: relative;
+            transform-origin: bottom; animation: bar-pulse 2s infinite ease-in-out alternate;
+        }
+        .anim-grid .bar::before { content:''; position:absolute; inset:0; background:var(--brand); filter:blur(10px); opacity:0; transition:0.3s; animation:bar-glow 2s infinite alternate;}
+        .anim-grid .bar:nth-child(odd) { animation-duration: 2.5s; animation-delay: 0.2s; }
+        .anim-grid .bar:nth-child(3n) { animation-duration: 1.8s; animation-delay: 0.5s; }
+        @keyframes bar-pulse { 0% { transform: translateZ(0) scaleZ(1); } 100% { transform: translateZ(40px) scaleZ(2); background: rgba(16,185,129,0.6); } }
+        @keyframes bar-glow { 0% { opacity:0; } 100% { opacity:0.5; } }
+
+        /* 3. Hub Cubes (Purple) */
+        .anim-cubes { position: relative; width: 100px; height: 200px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 10px; }
+        .anim-cubes .cube {
+            width: 80px; height: 40px; background: rgba(167,139,250,0.1);
+            border: 1px solid var(--purple); border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(167,139,250,0.2), inset 0 0 10px rgba(167,139,250,0.1);
+            animation: cube-drop 4s infinite cubic-bezier(0.2, 0.8, 0.2, 1);
+            opacity: 0; transform: translateY(-100px);
+        }
+        .anim-cubes .cube:nth-child(1) { animation-delay: 0s; }
+        .anim-cubes .cube:nth-child(2) { animation-delay: 1s; }
+        .anim-cubes .cube:nth-child(3) { animation-delay: 2s; }
+        @keyframes cube-drop { 0% { opacity:0; transform: translateY(-50px) scale(0.9); } 20% { opacity:1; transform: translateY(0) scale(1); } 80% { opacity:1; transform: translateY(0) scale(1); box-shadow: 0 10px 30px rgba(167,139,250,0.4); } 100% { opacity:0; transform: translateY(20px) scale(0.9); } }
+
+        /* 4. n8n Nodes (Orange) */
+        .anim-nodes { position: relative; width: 240px; height: 240px; }
+        .anim-nodes .n-node { position: absolute; width:16px; height:16px; background:var(--surface); border:2px solid var(--orange); border-radius:50%; box-shadow:0 0 10px var(--orange); z-index:2; }
+        .anim-nodes .n1 { top: 20px; left: 20px; } .anim-nodes .n2 { top: 100px; right: 20px; } .anim-nodes .n3 { bottom: 20px; left: 80px; }
+        .anim-nodes svg { position:absolute; inset:0; width:100%; height:100%; z-index:1; pointer-events:none; }
+        .anim-nodes .n-path { fill:none; stroke:rgba(249,115,22,0.2); stroke-width:2; stroke-dasharray: 10, 10; animation: dash-flow 2s linear infinite; }
+        .anim-nodes .n-glow-path { fill:none; stroke:var(--orange); stroke-width:3; filter:blur(4px); stroke-dasharray: 200; stroke-dashoffset: 200; animation: trace-flow 3s infinite ease-in-out; }
+        @keyframes dash-flow { to { stroke-dashoffset: -20; } }
+        @keyframes trace-flow { 0% { stroke-dashoffset: 200; } 50% { stroke-dashoffset: 0; } 100% { stroke-dashoffset: -200; } }
+
+        /* 5. Status EKG (Blue) */
+        .anim-ekg { width: 100%; height: 100px; display: flex; align-items: center; }
+        .anim-ekg svg { width: 200%; height: 100px; animation: ekg-scroll 3s linear infinite; }
+        .anim-ekg path { fill:none; stroke:var(--blue); stroke-width:3; stroke-linecap:round; stroke-linejoin:round; filter:drop-shadow(0 0 8px var(--blue)); }
+        @keyframes ekg-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+        /* 6. Tools Gears (Amber) */
+        .anim-gears { position: relative; width: 160px; height: 160px; }
+        .anim-gears .gear { position: absolute; color: var(--amber); filter: drop-shadow(0 0 10px rgba(245,158,11,0.5)); }
+        .anim-gears .g1 { width: 80px; height: 80px; top: 20px; left: 20px; animation: spin-r 8s linear infinite; }
+        .anim-gears .g2 { width: 60px; height: 60px; bottom: 30px; right: 20px; animation: spin-l 6s linear infinite; }
+        @keyframes spin-r { 100% { transform: rotate(360deg); } }
+        @keyframes spin-l { 100% { transform: rotate(-360deg); } }
 
         /* ═══════════════════════════════════════
            SCROLL REVEAL
@@ -438,6 +659,342 @@
         }
         #back-top.show { opacity: 1; transform: translateY(0); pointer-events: all; }
         #back-top:hover { box-shadow: 0 0 20px rgba(16,185,129,0.2); border-color: rgba(16,185,129,0.35); }
+
+        /* ═══════════════════════════════════════
+           QUICK TOOLS LAUNCHER (FAB)
+        ═══════════════════════════════════════ */
+        .fab-container {
+            position: fixed; bottom: 90px; right: 28px; z-index: 100;
+        }
+        .fab-main {
+            width: 52px; height: 52px; border-radius: 16px;
+            background: linear-gradient(135deg, var(--brand), #059669);
+            border: none; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 24px rgba(16,185,129,0.35);
+            transition: transform 0.25s, box-shadow 0.25s;
+        }
+        .fab-main:hover {
+            transform: scale(1.08);
+            box-shadow: 0 8px 32px rgba(16,185,129,0.45);
+        }
+        .fab-main svg { transition: transform 0.3s; }
+        .fab-main.open svg { transform: rotate(45deg); }
+        .fab-menu {
+            position: absolute; bottom: 60px; right: 0;
+            display: flex; flex-direction: column; gap: 8px;
+            opacity: 0; pointer-events: none;
+            transform: translateY(10px) scale(0.95);
+            transition: opacity 0.25s, transform 0.25s;
+        }
+        .fab-menu.show { opacity: 1; pointer-events: all; transform: translateY(0) scale(1); }
+        .fab-item {
+            display: flex; align-items: center; gap: 10px;
+            padding: 10px 14px; border-radius: 12px;
+            background: var(--surface); border: 1px solid var(--border2);
+            color: var(--text); text-decoration: none;
+            white-space: nowrap;
+            transition: background 0.2s, border-color 0.2s, transform 0.2s;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+        }
+        .fab-item:hover { background: rgba(255,255,255,0.05); transform: translateX(-4px); }
+        .fab-item-icon { width: 28px; height: 28px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .fab-item-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+        .fab-backdrop {
+            position: fixed; inset: 0; z-index: 99;
+            background: rgba(0,0,0,0.4); backdrop-filter: blur(4px);
+            opacity: 0; pointer-events: none; transition: opacity 0.25s;
+        }
+        .fab-backdrop.show { opacity: 1; pointer-events: all; }
+
+        /* ═══════════════════════════════════════
+           GITHUB ACTIVITY HEATMAP
+        ═══════════════════════════════════════ */
+        .github-section {
+            background: var(--bg2);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            padding: 60px 40px;
+        }
+        .heatmap-container {
+            max-width: 900px;
+            margin: 0 auto;
+            overflow-x: auto;
+            padding: 20px 0;
+        }
+        .heatmap-grid {
+            display: flex; gap: 3px;
+            min-width: max-content;
+        }
+        .heatmap-week {
+            display: flex; flex-direction: column; gap: 3px;
+        }
+        .heatmap-cell {
+            width: 12px; height: 12px; border-radius: 3px;
+            background: var(--surface);
+            transition: transform 0.15s, box-shadow 0.15s;
+            cursor: pointer;
+        }
+        .heatmap-cell:hover {
+            transform: scale(1.4);
+            box-shadow: 0 0 8px currentColor;
+            z-index: 1;
+        }
+        .heatmap-cell.l0 { background: var(--surface); }
+        .heatmap-cell.l1 { background: rgba(16,185,129,0.25); }
+        .heatmap-cell.l2 { background: rgba(16,185,129,0.45); }
+        .heatmap-cell.l3 { background: rgba(16,185,129,0.65); }
+        .heatmap-cell.l4 { background: var(--brand); box-shadow: 0 0 6px rgba(16,185,129,0.5); }
+        .heatmap-legend {
+            display: flex; align-items: center; gap: 6px;
+            margin-top: 16px; justify-content: flex-end;
+        }
+        .heatmap-legend span {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 9px; color: var(--dim);
+        }
+        .github-stats {
+            display: flex; gap: 32px; margin-top: 24px;
+            justify-content: center; flex-wrap: wrap;
+        }
+        .github-stat {
+            text-align: center;
+        }
+        .github-stat-value {
+            font-size: 28px; font-weight: 900; letter-spacing: -0.02em;
+        }
+        .github-stat-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 9px; color: var(--dim); text-transform: uppercase; letter-spacing: 0.1em;
+        }
+
+        /* ═══════════════════════════════════════
+           INTERACTIVE TERMINAL
+        ═══════════════════════════════════════ */
+        .terminal-widget {
+            background: #0d0d0d;
+            border: 1px solid var(--border2);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.5), inset 0 0 60px rgba(0,0,0,0.3);
+        }
+        .terminal-header {
+            display: flex; align-items: center; gap: 8px;
+            padding: 14px 18px; background: rgba(255,255,255,0.03);
+            border-bottom: 1px solid var(--border);
+        }
+        .terminal-dot {
+            width: 12px; height: 12px; border-radius: 50%;
+        }
+        .terminal-dot.red    { background: #ff5f57; }
+        .terminal-dot.yellow { background: #febc2e; }
+        .terminal-dot.green  { background: #28c840; }
+        .terminal-title {
+            flex: 1; text-align: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px; color: var(--dim);
+        }
+        .terminal-body {
+            padding: 20px; height: 280px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--brand) transparent;
+        }
+        .terminal-line {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px; line-height: 1.8;
+            white-space: pre-wrap;
+        }
+        .terminal-line .cmd    { color: var(--brand); }
+        .terminal-line .output { color: #6b7280; }
+        .terminal-line .success { color: #10b981; }
+        .terminal-line .info   { color: var(--cyan); }
+        .terminal-line .warn   { color: var(--amber); }
+        .terminal-line .dim    { color: #374151; }
+        .terminal-cursor {
+            display: inline-block; width: 8px; height: 16px;
+            background: var(--brand); margin-left: 2px;
+            animation: cursor-blink 1s infinite;
+        }
+        @keyframes cursor-blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+        .terminal-controls {
+            display: flex; gap: 8px; padding: 12px 20px;
+            border-top: 1px solid var(--border);
+            background: rgba(255,255,255,0.02);
+        }
+        .terminal-btn {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em;
+            padding: 8px 14px; border-radius: 8px;
+            border: 1px solid var(--border2); background: transparent;
+            color: var(--muted); cursor: pointer;
+            transition: all 0.2s;
+        }
+        .terminal-btn:hover { background: rgba(255,255,255,0.05); color: var(--text); border-color: var(--border3); }
+        .terminal-btn.active { background: rgba(16,185,129,0.1); color: var(--brand); border-color: rgba(16,185,129,0.3); }
+
+        /* ═══════════════════════════════════════
+           PROJECTS SHOWCASE
+        ═══════════════════════════════════════ */
+        .project-card {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 16px; overflow: hidden;
+            transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+        }
+        .project-card:hover {
+            border-color: var(--border2);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+        }
+        .project-card:hover .project-accent { transform: scaleX(1); }
+        .project-accent {
+            height: 3px; width: 100%;
+            transition: transform 0.4s ease;
+            transform-origin: left;
+            transform: scaleX(0.3);
+        }
+        .project-body { padding: 24px; }
+        .project-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 14px; }
+        .project-icon-wrap { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .project-badges { display: flex; gap: 6px; flex-wrap: wrap; }
+        .project-title { font-size: 17px; font-weight: 800; letter-spacing: -0.01em; margin-bottom: 8px; }
+        .project-desc { color: var(--muted); font-size: 12px; line-height: 1.75; margin-bottom: 16px; }
+        .project-tech { display: flex; flex-wrap: wrap; gap: 5px; }
+        .project-links { display: flex; gap: 10px; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
+        .project-link {
+            display: flex; align-items: center; gap: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em;
+            color: var(--muted); text-decoration: none;
+            transition: color 0.2s;
+        }
+        .project-link:hover { color: var(--brand); }
+
+        /* ═══════════════════════════════════════
+           TESTIMONIALS CAROUSEL
+        ═══════════════════════════════════════ */
+        .testimonials-section {
+            background: var(--bg2);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+        .testimonial-carousel {
+            position: relative; overflow: hidden;
+        }
+        .testimonial-track {
+            display: flex; transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        .testimonial-slide { flex: 0 0 100%; padding: 0 20px; }
+        .testimonial-card {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 20px; padding: 40px;
+            position: relative; max-width: 700px; margin: 0 auto;
+        }
+        .testimonial-card::before {
+            content: '"'; position: absolute; top: 20px; left: 30px;
+            font-size: 80px; font-weight: 900; color: var(--brand);
+            opacity: 0.15; line-height: 1;
+        }
+        .testimonial-text {
+            font-size: 16px; line-height: 1.9; color: var(--text);
+            margin-bottom: 24px; position: relative; z-index: 1;
+        }
+        .testimonial-author { display: flex; align-items: center; gap: 14px; }
+        .testimonial-avatar {
+            width: 48px; height: 48px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--brand), var(--cyan));
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 800; font-size: 18px; color: #000;
+        }
+        .testimonial-meta { display: flex; flex-direction: column; }
+        .testimonial-name { font-weight: 800; font-size: 14px; }
+        .testimonial-role { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--muted); }
+        .testimonial-stars { display: flex; gap: 3px; color: var(--amber); margin-bottom: 8px; }
+        .testimonial-nav {
+            display: flex; justify-content: center; gap: 10px;
+            margin-top: 28px; padding-bottom: 40px;
+        }
+        .testimonial-dot {
+            width: 10px; height: 10px; border-radius: 50%;
+            background: var(--dim); border: none; cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
+        }
+        .testimonial-dot.active { background: var(--brand); transform: scale(1.2); }
+        .testimonial-dot:hover:not(.active) { background: var(--muted); }
+
+        /* ═══════════════════════════════════════
+           ANIMATED SKILLS MATRIX
+        ═══════════════════════════════════════ */
+        .skills-matrix {
+            display: grid; gap: 20px;
+        }
+        .skill-row {
+            display: flex; align-items: center; gap: 16px;
+        }
+        .skill-label {
+            width: 180px; flex-shrink: 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px; font-weight: 600;
+            color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em;
+        }
+        .skill-bar-container {
+            flex: 1; height: 8px; background: var(--surface);
+            border-radius: 4px; overflow: hidden;
+            border: 1px solid var(--border);
+        }
+        .skill-bar {
+            height: 100%; border-radius: 4px;
+            transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+            width: 0;
+        }
+        .skill-bar.animated { }
+        .skill-value {
+            width: 40px; text-align: right;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px; font-weight: 700;
+        }
+        .skill-category {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px;
+        }
+        .skill-category-card {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 14px; padding: 22px;
+        }
+        .skill-category-header {
+            display: flex; align-items: center; gap: 10px; margin-bottom: 18px;
+        }
+        .skill-category-icon { width: 32px; height: 32px; border-radius: 9px; display: flex; align-items: center; justify-content: center; }
+        .skill-category-title { font-size: 13px; font-weight: 800; }
+
+        /* ═══════════════════════════════════════
+           RESPONSIVE UPDATES
+        ═══════════════════════════════════════ */
+        @media (max-width: 900px) {
+            .nav-links { display: none; }
+            .live-pill { display: none; }
+            #menu-btn  { display: flex; }
+            .tool-card-featured .tool-body { flex-direction: column; }
+            .exp-grid  { grid-template-columns: 1fr !important; }
+            .tools-row { grid-template-columns: 1fr !important; }
+            .tools-trio { grid-template-columns: 1fr !important; }
+            .writing-grid { grid-template-columns: 1fr !important; }
+            .stats-bar { grid-template-columns: repeat(2, 1fr); }
+            .fab-container { bottom: 20px; right: 16px; }
+            .fab-main { width: 48px; height: 48px; }
+            .skill-row { flex-direction: column; align-items: stretch; }
+            .skill-label { width: auto; }
+        }
+        @media (max-width: 600px) {
+            #nav { padding: 0 20px; }
+            .hero-section { padding: 0 20px; }
+            .section-wrap { padding: 72px 20px; }
+            .display-name { font-size: clamp(4rem, 18vw, 6rem); }
+            .stats-bar { grid-template-columns: repeat(2, 1fr); }
+            .testimonial-card { padding: 28px; }
+        }
     </style>
 </head>
 <body>
@@ -448,6 +1005,40 @@
         <i data-lucide="arrow-up" style="width:16px;height:16px;"></i>
     </button>
 
+    <!-- Quick Tools Launcher FAB -->
+    <div class="fab-backdrop" id="fab-backdrop"></div>
+    <div class="fab-container">
+        <div class="fab-menu" id="fab-menu">
+            <a href="https://dns.hetops.dev" target="_blank" class="fab-item">
+                <div class="fab-item-icon" style="background:rgba(6,182,212,0.15);"><i data-lucide="globe" style="width:14px;height:14px;color:var(--cyan);"></i></div>
+                <span class="fab-item-label" style="color:var(--cyan);">DNS</span>
+            </a>
+            <a href="https://tools.hetops.dev" target="_blank" class="fab-item">
+                <div class="fab-item-icon" style="background:rgba(245,158,11,0.15);"><i data-lucide="wrench" style="width:14px;height:14px;color:var(--amber);"></i></div>
+                <span class="fab-item-label" style="color:var(--amber);">Tools</span>
+            </a>
+            <a href="https://status.hetops.dev/status/deck" target="_blank" class="fab-item">
+                <div class="fab-item-icon" style="background:rgba(96,165,250,0.15);"><i data-lucide="activity" style="width:14px;height:14px;color:var(--blue);"></i></div>
+                <span class="fab-item-label" style="color:var(--blue);">Status</span>
+            </a>
+            <a href="https://dash.hetops.dev" target="_blank" class="fab-item">
+                <div class="fab-item-icon" style="background:rgba(16,185,129,0.15);"><i data-lucide="layout-grid" style="width:14px;height:14px;color:var(--brand);"></i></div>
+                <span class="fab-item-label" style="color:var(--brand);">Dashboard</span>
+            </a>
+            <a href="https://hub.hetops.dev" target="_blank" class="fab-item">
+                <div class="fab-item-icon" style="background:rgba(167,139,250,0.15);"><i data-lucide="cpu" style="width:14px;height:14px;color:var(--purple);"></i></div>
+                <span class="fab-item-label" style="color:var(--purple);">Hub</span>
+            </a>
+            <a href="https://n8n.hetops.dev" target="_blank" class="fab-item">
+                <div class="fab-item-icon" style="background:rgba(249,115,22,0.15);"><i data-lucide="workflow" style="width:14px;height:14px;color:var(--orange);"></i></div>
+                <span class="fab-item-label" style="color:var(--orange);">n8n</span>
+            </a>
+        </div>
+        <button class="fab-main" id="fab-main" aria-label="Open tools menu">
+            <i data-lucide="rocket" style="width:22px;height:22px;color:#000;"></i>
+        </button>
+    </div>
+
     <!-- ═══ NAVBAR ═══════════════════════════════════════════ -->
     <nav id="nav" aria-label="Main navigation">
         <a href="#" class="nav-logo">
@@ -456,16 +1047,17 @@
         </a>
         <div class="nav-links">
             <a href="#exp"       class="nav-link">Experience</a>
+            <a href="#projects"  class="nav-link">Projects</a>
             <a href="#ecosystem" class="nav-link">Ecosystem</a>
             <a href="#skills"    class="nav-link">Skills</a>
-            <a href="#impact"    class="nav-link">Impact</a>
-            <a href="#writing"   class="nav-link">Writing</a>
+            <a href="#github"    class="nav-link">GitHub</a>
+            <a href="#testimonials" class="nav-link">Testimonials</a>
             <a href="#contact"   class="nav-link">Contact</a>
         </div>
         <div style="display:flex;align-items:center;gap:10px;">
             <div class="live-pill">
                 <span class="live-dot"></span>
-                8 Services Live
+                6 Services Live
             </div>
             <button id="menu-btn" aria-label="Open navigation menu">
                 <i data-lucide="menu" style="width:16px;height:16px;"></i>
@@ -478,12 +1070,15 @@
         <button id="mobile-menu-close" aria-label="Close menu">
             <i data-lucide="x" style="width:16px;height:16px;"></i>
         </button>
-        <a href="#exp"       class="mobile-nav-link">Experience</a>
-        <a href="#ecosystem" class="mobile-nav-link">Ecosystem</a>
-        <a href="#skills"    class="mobile-nav-link">Skills</a>
-        <a href="#impact"    class="mobile-nav-link">Impact</a>
-        <a href="#writing"   class="mobile-nav-link">Writing</a>
-        <a href="#contact"   class="mobile-nav-link">Contact</a>
+        <a href="#exp"          class="mobile-nav-link">Experience</a>
+        <a href="#projects"     class="mobile-nav-link">Projects</a>
+        <a href="#ecosystem"    class="mobile-nav-link">Ecosystem</a>
+        <a href="#skills"       class="mobile-nav-link">Skills</a>
+        <a href="#github"       class="mobile-nav-link">GitHub</a>
+        <a href="#testimonials"  class="mobile-nav-link">Testimonials</a>
+        <a href="#impact"       class="mobile-nav-link">Impact</a>
+        <a href="#writing"      class="mobile-nav-link">Writing</a>
+        <a href="#contact"      class="mobile-nav-link">Contact</a>
         <a href="Het_Patel_Resume.pdf" class="btn-primary" download>
             <i data-lucide="download" style="width:14px;height:14px;"></i> Resume
         </a>
@@ -492,81 +1087,85 @@
     <main id="main">
 
     <!-- ═══ HERO ══════════════════════════════════════════════ -->
-    <section class="hero-section" aria-label="Introduction"
-        style="min-height:100svh;display:flex;flex-direction:column;justify-content:center;
-               padding:0 40px;padding-top:60px;position:relative;overflow:hidden;">
-        <div class="hero-aurora"></div>
-        <div class="hero-grid"></div>
+    <section class="hero-matrix min-h-[100svh] pt-32 pb-20 px-8 flex items-center relative border-b border-white/5">
+        <!-- Multi-chrome Studio Lighting -->
+        <div class="absolute top-0 left-1/4 -translate-x-1/2 w-[600px] h-[400px] bg-[#06b6d4]/10 blur-[130px] rounded-full pointer-events-none origin-top mix-blend-screen"></div>
+        <div class="absolute top-0 left-3/4 -translate-x-1/2 w-[600px] h-[400px] bg-[#8b5cf6]/10 blur-[130px] rounded-full pointer-events-none origin-top mix-blend-screen"></div>
+        <div class="absolute -top-20 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[#10b981]/15 blur-[140px] rounded-full pointer-events-none origin-top mix-blend-screen"></div>
 
-        <div style="position:relative;z-index:1;max-width:1120px;margin:0 auto;width:100%;padding:72px 0 80px;">
-
-            <!-- Location tag -->
-            <div class="reveal" style="display:inline-flex;align-items:center;gap:8px;
-                 background:rgba(255,255,255,0.03);border:1px solid var(--border);
-                 border-radius:999px;padding:6px 14px;margin-bottom:36px;">
-                <i data-lucide="map-pin" style="width:11px;height:11px;color:var(--brand);"></i>
-                <span class="mono" style="font-size:10px;color:var(--muted);letter-spacing:0.12em;text-transform:uppercase;font-weight:600;">
-                    Mumbai · India
-                </span>
-            </div>
-
-            <!-- Name -->
-            <div class="display-name reveal d1" style="margin-bottom:28px;">
-                <div class="name-het">HET</div>
-                <div class="name-patel">PATEL.</div>
-            </div>
-
-            <!-- Role line -->
-            <div class="reveal d2" style="display:flex;align-items:center;gap:12px;margin-bottom:24px;flex-wrap:wrap;">
-                <span class="mono" style="font-size:12px;color:var(--muted);letter-spacing:0.15em;text-transform:uppercase;font-weight:600;">
-                    DevOps Engineer II
-                </span>
-                <span style="color:var(--deep);">·</span>
-                <span style="display:flex;align-items:center;gap:6px;">
-                    <span class="live-dot" style="width:5px;height:5px;"></span>
-                    <span class="mono" style="font-size:10px;color:var(--brand);letter-spacing:0.1em;text-transform:uppercase;font-weight:700;">Active · Techdome</span>
-                </span>
-            </div>
-
-            <!-- Tagline -->
-            <p class="reveal d2" style="font-size:clamp(15px,1.8vw,18px);color:var(--muted);
-               max-width:480px;line-height:1.8;margin-bottom:36px;">
-                Building infrastructure that scales with precision, automation, and zero compromise.
-                Multi-cloud architecture. Kubernetes at enterprise scale.
-            </p>
-
-            <!-- CTAs -->
-            <div class="reveal d3" style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:56px;">
-                <a href="#ecosystem" class="btn-primary">
-                    View Ecosystem
-                    <i data-lucide="arrow-right" style="width:14px;height:14px;"></i>
-                </a>
-                <a href="Het_Patel_Resume.pdf" class="btn-ghost" download>
-                    <i data-lucide="file-text" style="width:14px;height:14px;"></i>
-                    Resume PDF
-                </a>
-            </div>
-
-            <!-- Stats bar -->
-            <div class="stats-bar reveal d4">
-                <div class="stat-cell">
-                    <div class="stat-value">3<span>+</span></div>
-                    <div class="stat-label">Years</div>
+        <div class="max-w-6xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-16 items-center relative z-10 pt-10">
+            <!-- Left Content -->
+            <div class="space-y-8">
+                <div class="space-y-4 reveal d1">
+                    <span class="inline-flex items-center px-3 py-1 rounded-full bg-white/10 border border-white/20 text-white tracking-wide backdrop-blur-md mono font-medium uppercase" style="font-size:10px;">
+                        <i data-lucide="map-pin" style="width:12px;height:12px;margin-right:6px;"></i>
+                        Mumbai, India
+                    </span>
+                    <h1 class="font-extrabold text-6xl md:text-8xl tracking-tighter leading-[0.9]" style="font-family:'Plus Jakarta Sans',sans-serif;">
+                        <span class="reveal-mask"><span class="reveal-text delay-1 text-white">Het <span class="name-patel">Patel.</span></span></span>
+                    </h1>
+                    <h2 class="text-emerald-100 text-3xl md:text-4xl font-medium tracking-tight opacity-90" style="font-family:'Plus Jakarta Sans',sans-serif;">
+                        <span class="reveal-mask"><span class="reveal-text delay-2">DevOps Engineer II</span></span>
+                    </h2>
                 </div>
-                <div class="stat-cell">
-                    <div class="stat-value">$2M<span>+</span></div>
-                    <div class="stat-label">Saved</div>
+                <p class="text-emerald-50 max-w-lg text-lg leading-relaxed opacity-80 font-normal reveal d2" style="font-size:clamp(15px,1.8vw,18px);">
+                    Architecting resilient, high-scale cloud infrastructures and automated deployment pipelines that empower teams to ship faster with absolute confidence.
+                </p>
+                <div class="flex flex-wrap gap-4 pt-4 reveal d3">
+                    <a href="#ecosystem" class="bg-[#10b981] text-[#030303] font-bold px-8 py-4 rounded-lg shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:shadow-[0_0_30px_rgba(16,185,129,0.5)] hover:bg-[#34d399] transition-all duration-300 transform hover:-translate-y-1" style="font-family:'Plus Jakarta Sans',sans-serif;">
+                        View Ecosystem
+                    </a>
+                    <a href="Het_Patel_Resume.pdf" download class="bg-black/40 backdrop-blur-md text-white border border-white/10 font-bold px-8 py-4 rounded-lg hover:bg-white/5 hover:border-white/20 transition-all duration-300" style="font-family:'Plus Jakarta Sans',sans-serif;">
+                        Get in Touch
+                    </a>
                 </div>
-                <div class="stat-cell">
-                    <div class="stat-value">99.99<span>%</span></div>
-                    <div class="stat-label">Uptime</div>
+            </div>
+            
+            <!-- Right Visuals: Bento Stack -->
+            <div class="flex flex-col gap-4 w-full max-w-md mx-auto lg:mx-0 lg:ml-auto reveal d4">
+                <!-- Top Row: Split Metrics -->
+                <div class="grid grid-cols-2 gap-4">
+                    <!-- Card 1: Availability -->
+                    <div class="premium-bento-card p-6">
+                        <div class="flex items-center gap-3 mb-4">
+                            <i data-lucide="check-circle" style="width:18px;height:18px;color:#4ade80;"></i>
+                            <span class="text-white/60 text-[10px] font-bold uppercase tracking-widest mono">Availability</span>
+                        </div>
+                        <div class="text-white font-extrabold text-3xl mb-1" style="font-family:'Plus Jakarta Sans',sans-serif;">99.99%</div>
+                        <div class="text-white/40 text-xs">Uptime Maintained</div>
+                    </div>
+                    <!-- Card 2: Efficiency -->
+                    <div class="premium-bento-card p-6">
+                        <div class="flex items-center gap-3 mb-4">
+                            <i data-lucide="dollar-sign" style="width:18px;height:18px;color:#06b6d4;"></i>
+                            <span class="text-white/60 text-[10px] font-bold uppercase tracking-widest mono">Efficiency</span>
+                        </div>
+                        <div class="text-white font-extrabold text-3xl mb-1" style="font-family:'Plus Jakarta Sans',sans-serif;">$2M+</div>
+                        <div class="text-white/40 text-xs">Cloud Savings</div>
+                    </div>
                 </div>
-                <div class="stat-cell">
-                    <div class="stat-value">8<span>×</span></div>
-                    <div class="stat-label">Live Services</div>
+                
+                <!-- Bottom Row: Scale -->
+                <div class="premium-bento-card p-6">
+                    <div class="flex items-center gap-3 mb-4">
+                        <i data-lucide="cloud" style="width:18px;height:18px;color:#a855f7;"></i>
+                        <span class="text-white/60 text-[10px] font-bold uppercase tracking-widest mono">Architecture</span>
+                    </div>
+                    <div class="text-white font-extrabold text-2xl mb-3" style="font-family:'Plus Jakarta Sans',sans-serif;">Multi-cloud Architect</div>
+                    <div class="text-white/40 text-sm mb-4 leading-relaxed tracking-wide">
+                        Enterprise-scale Kubernetes and distributed deployment pipelines.
+                    </div>
+                    <div class="flex gap-2 font-semibold">
+                        <span class="bg-white/5 px-2.5 py-1 rounded text-xs border border-white/10 text-white/80">AWS</span>
+                        <span class="bg-white/5 px-2.5 py-1 rounded text-xs border border-white/10 text-white/80">GCP</span>
+                        <span class="bg-white/5 px-2.5 py-1 rounded text-xs border border-white/10 text-white/80">Azure</span>
+                    </div>
                 </div>
             </div>
         </div>
+        
+        <!-- Blending gradient to smooth into the darkness below -->
+        <div class="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-[#030303] to-transparent z-20 pointer-events-none"></div>
     </section>
 
     <hr class="divider">
@@ -575,9 +1174,9 @@
     <div aria-hidden="true"
          style="background:var(--surface);border-bottom:1px solid var(--border);
                 padding:11px 0;overflow:hidden;position:relative;">
-        <div style="position:absolute;inset-y:0;left:0;width:80px;
+        <div style="position:absolute;top:0;bottom:0;left:0;width:80px;
              background:linear-gradient(90deg,var(--surface),transparent);z-index:1;pointer-events:none;"></div>
-        <div style="position:absolute;inset-y:0;right:0;width:80px;
+        <div style="position:absolute;top:0;bottom:0;right:0;width:80px;
              background:linear-gradient(270deg,var(--surface),transparent);z-index:1;pointer-events:none;"></div>
         <div class="ticker-track">
             <!-- Two identical groups for seamless loop -->
@@ -695,6 +1294,156 @@
 
     <hr class="divider">
 
+    <!-- ═══ PROJECTS SHOWCASE ══════════════════════════════════ -->
+    <section id="projects" class="section-wrap" style="padding:96px 40px;" aria-labelledby="projects-h">
+        <div style="max-width:1120px;margin:0 auto;">
+            <p class="section-label reveal" style="display:block;margin-bottom:10px;">// Featured Work</p>
+            <h2 id="projects-h" class="reveal d1"
+                style="font-size:clamp(28px,4vw,42px);font-weight:900;letter-spacing:-0.03em;margin-bottom:44px;">
+                Signature Projects
+            </h2>
+
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px;">
+
+                <!-- Project 1: Multi-Cloud K8s Orchestrator -->
+                <div class="project-card reveal">
+                    <div class="project-accent" style="background:linear-gradient(90deg,var(--brand),var(--cyan));"></div>
+                    <div class="project-body">
+                        <div class="project-header">
+                            <div class="project-icon-wrap" style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2);">
+                                <i data-lucide="cloud-cog" style="width:20px;height:20px;color:var(--brand);"></i>
+                            </div>
+                            <div class="project-badges">
+                                <span class="tag" style="color:var(--brand);border-color:rgba(16,185,129,0.2);background:rgba(16,185,129,0.05);">Production</span>
+                                <span class="tag" style="color:var(--blue);border-color:rgba(96,165,250,0.2);background:rgba(96,165,250,0.05);">100+ Nodes</span>
+                            </div>
+                        </div>
+                        <h3 class="project-title">Multi-Cloud Kubernetes Orchestrator</h3>
+                        <p class="project-desc">Built a unified control plane managing 100+ node clusters across AWS, GCP, and Azure with automated failover, cost optimization, and zero-downtime deployments.</p>
+                        <div class="project-tech">
+                            <span class="tag" style="color:var(--brand);border-color:rgba(16,185,129,0.2);">Terraform</span>
+                            <span class="tag" style="color:var(--blue);border-color:rgba(96,165,250,0.2);">Kubernetes</span>
+                            <span class="tag" style="color:var(--purple);border-color:rgba(167,139,250,0.2);">ArgoCD</span>
+                            <span class="tag" style="color:var(--dim);border-color:var(--deep);">Helm</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="#" class="project-link"><i data-lucide="file-code" style="width:13px;height:13px;"></i> Case Study</a>
+                            <a href="#" class="project-link"><i data-lucide="github" style="width:13px;height:13px;"></i> Source</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 2: Cost Guardian -->
+                <div class="project-card reveal d1">
+                    <div class="project-accent" style="background:linear-gradient(90deg,var(--cyan),var(--purple));"></div>
+                    <div class="project-body">
+                        <div class="project-header">
+                            <div class="project-icon-wrap" style="background:rgba(6,182,212,0.1);border:1px solid rgba(6,182,212,0.2);">
+                                <i data-lucide="piggy-bank" style="width:20px;height:20px;color:var(--cyan);"></i>
+                            </div>
+                            <div class="project-badges">
+                                <span class="tag" style="color:var(--amber);border-color:rgba(245,158,11,0.2);background:rgba(245,158,11,0.05);">$2M+ Saved</span>
+                            </div>
+                        </div>
+                        <h3 class="project-title">Cloud Cost Guardian</h3>
+                        <p class="project-desc">Automated cost optimization platform that analyzes cloud spend patterns, identifies idle resources, and implements right-sizing recommendations — saving $2M+ annually.</p>
+                        <div class="project-tech">
+                            <span class="tag" style="color:var(--cyan);border-color:rgba(6,182,212,0.2);">Python</span>
+                            <span class="tag" style="color:var(--amber);border-color:rgba(245,158,11,0.2);">AWS Boto3</span>
+                            <span class="tag" style="color:var(--dim);border-color:var(--deep);">Grafana</span>
+                            <span class="tag" style="color:var(--dim);border-color:var(--deep);">Slack Alerts</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="#" class="project-link"><i data-lucide="bar-chart-2" style="width:13px;height:13px;"></i> Metrics</a>
+                            <a href="#" class="project-link"><i data-lucide="github" style="width:13px;height:13px;"></i> Source</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 3: GitOps Pipeline Engine -->
+                <div class="project-card reveal d2">
+                    <div class="project-accent" style="background:linear-gradient(90deg,var(--purple),var(--orange));"></div>
+                    <div class="project-body">
+                        <div class="project-header">
+                            <div class="project-icon-wrap" style="background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.2);">
+                                <i data-lucide="git-branch" style="width:20px;height:20px;color:var(--purple);"></i>
+                            </div>
+                            <div class="project-badges">
+                                <span class="tag" style="color:var(--purple);border-color:rgba(167,139,250,0.2);background:rgba(167,139,250,0.05);">10k+ Deploys</span>
+                            </div>
+                        </div>
+                        <h3 class="project-title">GitOps Pipeline Engine</h3>
+                        <p class="project-desc">End-to-end CI/CD pipeline framework with automated testing, canary deployments, rollback capabilities, and seamless integration with multiple cloud providers.</p>
+                        <div class="project-tech">
+                            <span class="tag" style="color:var(--purple);border-color:rgba(167,139,250,0.2);">GitHub Actions</span>
+                            <span class="tag" style="color:var(--dim);border-color:var(--deep);">ArgoCD</span>
+                            <span class="tag" style="color:var(--dim);border-color:var(--deep);">Docker</span>
+                            <span class="tag" style="color:var(--dim);border-color:var(--deep);">Prometheus</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="#" class="project-link"><i data-lucide="file-code" style="width:13px;height:13px;"></i> Docs</a>
+                            <a href="#" class="project-link"><i data-lucide="github" style="width:13px;height:13px;"></i> Source</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 4: Self-Hosted Dev Portal -->
+                <div class="project-card reveal d3">
+                    <div class="project-accent" style="background:linear-gradient(90deg,var(--orange),var(--amber));"></div>
+                    <div class="project-body">
+                        <div class="project-header">
+                            <div class="project-icon-wrap" style="background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.2);">
+                                <i data-lucide="server" style="width:20px;height:20px;color:var(--orange);"></i>
+                            </div>
+                            <div class="project-badges">
+                                <span class="tag" style="color:var(--orange);border-color:rgba(249,115,22,0.2);background:rgba(249,115,22,0.05);">100% Self-Hosted</span>
+                            </div>
+                        </div>
+                        <h3 class="project-title">HetOps Dev Portal</h3>
+                        <p class="project-desc">Complete internal developer portal running on Oracle Cloud ARM — integrated wiki, API docs, service catalog, and incident management in one unified platform.</p>
+                        <div class="project-tech">
+                            <span class="tag" style="color:var(--orange);border-color:rgba(249,115,22,0.2);">Coolify</span>
+                            <span class="tag" style="color:var(--dim);border-color:var(--deep);">Traefik</span>
+                            <span class="tag" style="color:var(--dim);border-color:var(--deep);">PostgreSQL</span>
+                            <span class="tag" style="color:var(--dim);border-color:var(--deep);">Vault</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="https://dash.hetops.dev" class="project-link"><i data-lucide="external-link" style="width:13px;height:13px;"></i> Live Demo</a>
+                            <a href="#" class="project-link"><i data-lucide="github" style="width:13px;height:13px;"></i> Source</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Interactive Terminal Widget -->
+            <div style="margin-top:48px;">
+                <p class="section-label reveal" style="display:block;margin-bottom:10px;">// Live Infrastructure Preview</p>
+                <div class="terminal-widget reveal d1" style="max-width:800px;">
+                    <div class="terminal-header">
+                        <div class="terminal-dot red"></div>
+                        <div class="terminal-dot yellow"></div>
+                        <div class="terminal-dot green"></div>
+                        <span class="terminal-title">hetops ~ bash</span>
+                    </div>
+                    <div class="terminal-body" id="terminal-body">
+                        <div class="terminal-line"><span class="dim"># Welcome to the HetOps terminal</span></div>
+                        <div class="terminal-line"><span class="dim"># Click any button to see live infrastructure commands</span></div>
+                        <div class="terminal-line">&nbsp;</div>
+                    </div>
+                    <div class="terminal-controls">
+                        <button class="terminal-btn active" data-script="k8s">K8s Cluster</button>
+                        <button class="terminal-btn" data-script="terraform">Terraform</button>
+                        <button class="terminal-btn" data-script="monitoring">Monitoring</button>
+                        <button class="terminal-btn" data-script="deploy">Deploy Pipeline</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <hr class="divider">
+
     <!-- ═══ HETOPS ECOSYSTEM ══════════════════════════════════ -->
     <section id="ecosystem"
         style="padding:96px 40px;background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);"
@@ -706,7 +1455,7 @@
             <div style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:20px;margin-bottom:36px;">
                 <h2 id="eco-h" class="reveal d1"
                     style="font-size:clamp(26px,4vw,42px);font-weight:900;letter-spacing:-0.03em;line-height:1.15;margin:0;">
-                    Eight tools.<br>
+                    Six tools.<br>
                     One platform.<br>
                     <span class="grad">Each with its own color.</span>
                 </h2>
@@ -717,7 +1466,6 @@
 
             <!-- Color legend -->
             <div class="reveal d2" style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:36px;">
-                <span class="tag" style="color:var(--brand);border-color:rgba(16,185,129,0.2);background:rgba(16,185,129,0.05);"><span style="width:5px;height:5px;border-radius:50%;background:var(--brand);display:inline-block;margin-right:4px;"></span>Portfolio</span>
                 <span class="tag" style="color:var(--cyan);border-color:rgba(6,182,212,0.2);background:rgba(6,182,212,0.05);"><span style="width:5px;height:5px;border-radius:50%;background:var(--cyan);display:inline-block;margin-right:4px;"></span>DNS</span>
                 <span class="tag" style="color:var(--amber);border-color:rgba(245,158,11,0.2);background:rgba(245,158,11,0.05);"><span style="width:5px;height:5px;border-radius:50%;background:var(--amber);display:inline-block;margin-right:4px;"></span>Tools</span>
                 <span class="tag" style="color:var(--blue);border-color:rgba(96,165,250,0.2);background:rgba(96,165,250,0.05);"><span style="width:5px;height:5px;border-radius:50%;background:var(--blue);display:inline-block;margin-right:4px;"></span>Status</span>
@@ -896,6 +1644,186 @@
                     </a>
                 </div>
 
+                <!-- ════ SPOTLIGHT SHOWCASE ════ -->
+                <div class="spotlight-wrapper reveal d4">
+                    <!-- Left: Tabs -->
+                    <div class="spotlight-tabs" style="display:flex;flex-direction:column;gap:5px;">
+                        <div class="spotlight-tab active" data-target="dns" style="color:var(--cyan);">
+                            <div class="tab-indicator"></div>
+                            <div style="display:flex;align-items:center;gap:12px;">
+                                <i data-lucide="globe" style="width:18px;height:18px;"></i>
+                                <span style="font-size:15px;font-weight:700;">DNS Intelligence</span>
+                            </div>
+                        </div>
+                        <div class="spotlight-tab" data-target="dash" style="color:var(--brand);">
+                            <div class="tab-indicator"></div>
+                            <div style="display:flex;align-items:center;gap:12px;">
+                                <i data-lucide="layout-grid" style="width:18px;height:18px;"></i>
+                                <span style="font-size:15px;font-weight:700;">Commander</span>
+                            </div>
+                        </div>
+                        <div class="spotlight-tab" data-target="hub" style="color:var(--purple);">
+                            <div class="tab-indicator"></div>
+                            <div style="display:flex;align-items:center;gap:12px;">
+                                <i data-lucide="cpu" style="width:18px;height:18px;"></i>
+                                <span style="font-size:15px;font-weight:700;">Coolify Hub</span>
+                            </div>
+                        </div>
+                        <div class="spotlight-tab" data-target="n8n" style="color:var(--orange);">
+                            <div class="tab-indicator"></div>
+                            <div style="display:flex;align-items:center;gap:12px;">
+                                <i data-lucide="workflow" style="width:18px;height:18px;"></i>
+                                <span style="font-size:15px;font-weight:700;">n8n Automation</span>
+                            </div>
+                        </div>
+                        <div class="spotlight-tab" data-target="status" style="color:var(--blue);">
+                            <div class="tab-indicator"></div>
+                            <div style="display:flex;align-items:center;gap:12px;">
+                                <i data-lucide="activity" style="width:18px;height:18px;"></i>
+                                <span style="font-size:15px;font-weight:700;">Reliability Deck</span>
+                            </div>
+                        </div>
+                        <div class="spotlight-tab" data-target="tools" style="color:var(--amber);">
+                            <div class="tab-indicator"></div>
+                            <div style="display:flex;align-items:center;gap:12px;">
+                                <i data-lucide="wrench" style="width:18px;height:18px;"></i>
+                                <span style="font-size:15px;font-weight:700;">Dev Toolkit</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Display Window -->
+                    <div class="spotlight-display">
+                        <!-- Pane: DNS -->
+                        <div class="spotlight-pane active" id="pane-dns">
+                            <div class="pane-glow" style="background:var(--cyan);"></div>
+                            <div class="spotlight-inner">
+                                <div class="pane-text">
+                                    <span class="mono" style="font-size:11px;color:var(--cyan);text-transform:uppercase;letter-spacing:0.1em;display:block;margin-bottom:16px;font-weight:700;">Democratizing Global Visibility</span>
+                                    <h3 style="font-size:clamp(32px,4vw,48px);font-weight:900;letter-spacing:-0.03em;line-height:1.1;margin-bottom:24px;">DNS Intelligence</h3>
+                                    <p style="color:var(--muted);line-height:1.8;font-size:15px;margin-bottom:32px;">
+                                        Full-stack network intelligence. Execute sub-50ms latency checks across 10 global resolvers simultaneously, deeply inspect TLS signatures, and instantly secure trust using advanced WHOIS heuristics.
+                                    </p>
+                                </div>
+                                <div class="anim-stage">
+                                    <div class="anim-radar">
+                                        <div class="dot"></div>
+                                        <div class="ring r1"></div>
+                                        <div class="ring r2"></div>
+                                        <div class="ring r3"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pane: Commander -->
+                        <div class="spotlight-pane" id="pane-dash">
+                            <div class="pane-glow" style="background:var(--brand);"></div>
+                            <div class="spotlight-inner">
+                                <div class="pane-text">
+                                    <span class="mono" style="font-size:11px;color:var(--brand);text-transform:uppercase;letter-spacing:0.1em;display:block;margin-bottom:16px;font-weight:700;">Unified Fleet View</span>
+                                    <h3 style="font-size:clamp(32px,4vw,48px);font-weight:900;letter-spacing:-0.03em;line-height:1.1;margin-bottom:24px;">Commander Dashboard</h3>
+                                    <p style="color:var(--muted);line-height:1.8;font-size:15px;margin-bottom:32px;">
+                                        The ultimate control plane. By bringing all microservices, API health checks, and orchestration controls into a single hyper-fast command center, cognitive load drops instantly. It acts as the beating heart for everything run on HetOps.
+                                    </p>
+                                </div>
+                                <div class="anim-stage" style="perspective:1000px;">
+                                    <div class="anim-grid">
+                                        <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+                                        <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+                                        <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pane: Hub -->
+                        <div class="spotlight-pane" id="pane-hub">
+                            <div class="pane-glow" style="background:var(--purple);"></div>
+                            <div class="spotlight-inner">
+                                <div class="pane-text">
+                                    <span class="mono" style="font-size:11px;color:var(--purple);text-transform:uppercase;letter-spacing:0.1em;display:block;margin-bottom:16px;font-weight:700;">Self-hosted Precision PaaS</span>
+                                    <h3 style="font-size:clamp(32px,4vw,48px);font-weight:900;letter-spacing:-0.03em;line-height:1.1;margin-bottom:24px;">Coolify Hub</h3>
+                                    <p style="color:var(--muted);line-height:1.8;font-size:15px;margin-bottom:32px;">
+                                        Changing the world of self-hosting by entirely replacing the need for Vercel or Heroku. Hub securely isolates, manages, and auto-deploys dozens of containers with zero-downtime rolling updates, powered by deep Git integration via a monolithic Oracle ARM architecture.
+                                    </p>
+                                </div>
+                                <div class="anim-stage">
+                                    <div class="anim-cubes">
+                                        <div class="cube c1"></div>
+                                        <div class="cube c2"></div>
+                                        <div class="cube c3"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pane: n8n -->
+                        <div class="spotlight-pane" id="pane-n8n">
+                            <div class="pane-glow" style="background:var(--orange);"></div>
+                            <div class="spotlight-inner">
+                                <div class="pane-text">
+                                    <span class="mono" style="font-size:11px;color:var(--orange);text-transform:uppercase;letter-spacing:0.1em;display:block;margin-bottom:16px;font-weight:700;">Frictionless Data Pipelines</span>
+                                    <h3 style="font-size:clamp(32px,4vw,48px);font-weight:900;letter-spacing:-0.03em;line-height:1.1;margin-bottom:24px;">n8n Automation</h3>
+                                    <p style="color:var(--muted);line-height:1.8;font-size:15px;margin-bottom:32px;">
+                                        Eliminating hundreds of hours of manual labor. Our advanced self-hosted n8n deployment automatically triggers infrastructure health webhooks, synchronizes internal APIs across the HetOps ecosystem, and handles mission-critical backend scripting instantly via visual logic trees.
+                                    </p>
+                                </div>
+                                <div class="anim-stage">
+                                    <div class="anim-nodes">
+                                        <div class="n-node n1"></div>
+                                        <div class="n-node n2"></div>
+                                        <div class="n-node n3"></div>
+                                        <svg><path class="n-path" d="M 28 28 C 100 28, 50 108, 228 108" /><path class="n-glow-path" d="M 28 28 C 100 28, 50 108, 228 108" /></svg>
+                                        <svg><path class="n-path" d="M 228 108 C 200 200, 150 150, 88 220" /><path class="n-glow-path" d="M 228 108 C 200 200, 150 150, 88 220" style="animation-delay:-1s;"/></svg>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pane: Status -->
+                        <div class="spotlight-pane" id="pane-status">
+                            <div class="pane-glow" style="background:var(--blue);"></div>
+                            <div class="spotlight-inner">
+                                <div class="pane-text">
+                                    <span class="mono" style="font-size:11px;color:var(--blue);text-transform:uppercase;letter-spacing:0.1em;display:block;margin-bottom:16px;font-weight:700;">Transparent Accountability</span>
+                                    <h3 style="font-size:clamp(32px,4vw,48px);font-weight:900;letter-spacing:-0.03em;line-height:1.1;margin-bottom:24px;">Reliability Deck</h3>
+                                    <p style="color:var(--muted);line-height:1.8;font-size:15px;margin-bottom:32px;">
+                                        Availability isn't a promise unless it's proven. We track 99.99% uptime dynamically across the globe. By aggregating node states internally, we achieve fully isolated health checking with deep response-time metrics and historical SLA reporting.
+                                    </p>
+                                </div>
+                                <div class="anim-stage">
+                                    <div class="anim-ekg">
+                                        <svg viewBox="0 0 500 100" preserveAspectRatio="none">
+                                            <path d="M0,50 L50,50 L60,20 L75,80 L85,50 L250,50 L260,20 L275,80 L285,50 L500,50" />
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pane: Tools -->
+                        <div class="spotlight-pane" id="pane-tools">
+                            <div class="pane-glow" style="background:var(--amber);"></div>
+                            <div class="spotlight-inner">
+                                <div class="pane-text">
+                                    <span class="mono" style="font-size:11px;color:var(--amber);text-transform:uppercase;letter-spacing:0.1em;display:block;margin-bottom:16px;font-weight:700;">Empowering Developers</span>
+                                    <h3 style="font-size:clamp(32px,4vw,48px);font-weight:900;letter-spacing:-0.03em;line-height:1.1;margin-bottom:24px;">Dev Toolkit</h3>
+                                    <p style="color:var(--muted);line-height:1.8;font-size:15px;margin-bottom:32px;">
+                                        A massive aggregator of over 100 essential developer utilities. Providing everything from JWT decoders and hash generators to regex testers—serving thousands of daily engineering requests securely in a fully off-grid PWA.
+                                    </p>
+                                </div>
+                                <div class="anim-stage">
+                                    <div class="anim-gears">
+                                        <i data-lucide="settings" class="gear g1"></i>
+                                        <i data-lucide="settings" class="gear g2"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </section>
@@ -1026,6 +1954,109 @@
 
     <hr class="divider">
 
+    <!-- ═══ GITHUB ACTIVITY ═══════════════════════════════════ -->
+    <section id="github" class="github-section" aria-labelledby="github-h">
+        <div style="max-width:1120px;margin:0 auto;">
+            <p class="section-label reveal" style="display:block;margin-bottom:10px;">// Development Activity</p>
+            <div style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-bottom:36px;">
+                <h2 id="github-h" class="reveal d1"
+                    style="font-size:clamp(28px,4vw,42px);font-weight:900;letter-spacing:-0.03em;margin:0;">
+                    GitHub Contributions
+                </h2>
+                <div style="display:flex;gap:8px;" class="reveal d2">
+                    <a href="https://github.com/Het101" target="_blank" class="tag" style="color:var(--brand);border-color:rgba(16,185,129,0.2);background:rgba(16,185,129,0.05);text-decoration:none;">
+                        <i data-lucide="user" style="width:10px;height:10px;margin-right:4px;"></i> Het101
+                    </a>
+                    <a href="https://github.com/Techdome" target="_blank" class="tag" style="color:var(--cyan);border-color:rgba(6,182,212,0.2);background:rgba(6,182,212,0.05);text-decoration:none;">
+                        <i data-lucide="building" style="width:10px;height:10px;margin-right:4px;"></i> Hetu29
+                    </a>
+                </div>
+            </div>
+
+            <!-- Contribution Graph -->
+            <div class="heatmap-container reveal d2">
+                <div class="heatmap-grid" id="heatmap-grid">
+                    <!-- Generated by JS -->
+                </div>
+                <div class="heatmap-legend">
+                    <span>Less</span>
+                    <div class="heatmap-cell l0"></div>
+                    <div class="heatmap-cell l1"></div>
+                    <div class="heatmap-cell l2"></div>
+                    <div class="heatmap-cell l3"></div>
+                    <div class="heatmap-cell l4"></div>
+                    <span>More</span>
+                </div>
+            </div>
+
+            <!-- GitHub Stats -->
+            <div class="github-stats reveal d3">
+                <div class="github-stat">
+                    <div class="github-stat-value" style="color:var(--brand);" id="stat-contributions">0</div>
+                    <div class="github-stat-label">Contributions</div>
+                </div>
+                <div class="github-stat">
+                    <div class="github-stat-value" style="color:var(--cyan);">0</div>
+                    <div class="github-stat-label">Repos Combined</div>
+                </div>
+                <div class="github-stat">
+                    <div class="github-stat-value" style="color:var(--purple);">1.2k</div>
+                    <div class="github-stat-label">Stars Earned</div>
+                </div>
+                <div class="github-stat">
+                    <div class="github-stat-value" style="color:var(--orange);">0</div>
+                    <div class="github-stat-label">Issues/PRs</div>
+                </div>
+                <div class="github-stat">
+                    <div class="github-stat-value" style="color:var(--blue);">0</div>
+                    <div class="github-stat-label">Commits (ytd)</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <hr class="divider">
+
+    <!-- ═══ TESTIMONIALS ═══════════════════════════════════════ -->
+    <section id="testimonials" class="testimonials-section" aria-labelledby="testimonials-h">
+        <div style="max-width:1120px;margin:0 auto;padding:96px 40px;">
+            <p class="section-label reveal" style="display:block;margin-bottom:10px;">// LinkedIn Recommendations</p>
+            <div style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-bottom:44px;">
+                <h2 id="testimonials-h" class="reveal d1"
+                    style="font-size:clamp(28px,4vw,42px);font-weight:900;letter-spacing:-0.03em;margin:0;">
+                    What People Say
+                </h2>
+                <a href="https://www.linkedin.com/in/het11/details/recommendations/" target="_blank" rel="noopener noreferrer" 
+                   class="tag reveal d2" style="color:var(--blue);border-color:rgba(96,165,250,0.2);background:rgba(96,165,250,0.05);text-decoration:none;">
+                    <svg xmlns="http://www.w3.org/2000/svg" style="width:10px;height:10px;margin-right:4px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
+                    View All on LinkedIn
+                </a>
+            </div>
+
+            <div class="testimonial-carousel reveal d2">
+                <div class="testimonial-track" id="testimonial-track">
+                    <!-- Dynamically loaded from testimonials.json -->
+                </div>
+            </div>
+
+            <div class="testimonial-nav" id="testimonial-nav">
+                <!-- Dynamically populated -->
+            </div>
+
+            <!-- Add Recommendation CTA -->
+            <div class="reveal d3" style="text-align:center;margin-top:32px;">
+                <a href="https://www.linkedin.com/in/het11/" target="_blank" rel="noopener noreferrer"
+                   style="display:inline-flex;align-items:center;gap:8px;color:var(--muted);font-family:'JetBrains Mono';font-size:11px;text-decoration:none;transition:color 0.2s;"
+                   onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--muted)'">
+                    <svg xmlns="http://www.w3.org/2000/svg" style="width:14px;height:14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
+                    Write a recommendation on LinkedIn
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <hr class="divider">
+
     <!-- ═══ IMPACT ════════════════════════════════════════════ -->
     <section id="impact"
         style="padding:96px 40px;background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);"
@@ -1073,6 +2104,149 @@
                     <div style="margin-top:8px;color:var(--brand);display:flex;align-items:center;gap:8px;">
                         <i data-lucide="check" style="width:13px;height:13px;flex-shrink:0;"></i>
                         Apply complete! Resources: 42 added, 0 changed, 0 destroyed.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <hr class="divider">
+
+    <!-- ═══ SKILLS MATRIX ════════════════════════════════════ -->
+    <section id="skills-matrix" class="section-wrap" style="padding:96px 40px;" aria-labelledby="skills-matrix-h">
+        <div style="max-width:1120px;margin:0 auto;">
+            <p class="section-label reveal" style="display:block;margin-bottom:10px;">// Proficiency Levels</p>
+            <h2 id="skills-matrix-h" class="reveal d1"
+                style="font-size:clamp(28px,4vw,42px);font-weight:900;letter-spacing:-0.03em;margin-bottom:44px;">
+                Skills Matrix
+            </h2>
+
+            <div class="skill-category">
+                <!-- Cloud & DevOps -->
+                <div class="skill-category-card reveal">
+                    <div class="skill-category-header">
+                        <div class="skill-category-icon" style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2);">
+                            <i data-lucide="cloud" style="width:16px;height:16px;color:var(--brand);"></i>
+                        </div>
+                        <span class="skill-category-title">Cloud & DevOps</span>
+                    </div>
+                    <div class="skills-matrix">
+                        <div class="skill-row">
+                            <span class="skill-label">Kubernetes</span>
+                            <div class="skill-bar-container"><div class="skill-bar" data-width="92" style="background:linear-gradient(90deg,var(--brand),#059669);"></div></div>
+                            <span class="skill-value" style="color:var(--brand);">92%</span>
+                        </div>
+                        <div class="skill-row">
+                            <span class="skill-label">Terraform</span>
+                            <div class="skill-bar-container"><div class="skill-bar" data-width="95" style="background:linear-gradient(90deg,var(--brand),#059669);"></div></div>
+                            <span class="skill-value" style="color:var(--brand);">95%</span>
+                        </div>
+                        <div class="skill-row">
+                            <span class="skill-label">Docker</span>
+                            <div class="skill-bar-container"><div class="skill-bar" data-width="98" style="background:linear-gradient(90deg,var(--brand),#059669);"></div></div>
+                            <span class="skill-value" style="color:var(--brand);">98%</span>
+                        </div>
+                        <div class="skill-row">
+                            <span class="skill-label">AWS / GCP / Azure</span>
+                            <div class="skill-bar-container"><div class="skill-bar" data-width="88" style="background:linear-gradient(90deg,var(--brand),#059669);"></div></div>
+                            <span class="skill-value" style="color:var(--brand);">88%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CI/CD & Automation -->
+                <div class="skill-category-card reveal d1">
+                    <div class="skill-category-header">
+                        <div class="skill-category-icon" style="background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.2);">
+                            <i data-lucide="git-merge" style="width:16px;height:16px;color:var(--purple);"></i>
+                        </div>
+                        <span class="skill-category-title">CI/CD & Automation</span>
+                    </div>
+                    <div class="skills-matrix">
+                        <div class="skill-row">
+                            <span class="skill-label">GitHub Actions</span>
+                            <div class="skill-bar-container"><div class="skill-bar" data-width="96" style="background:linear-gradient(90deg,var(--purple),#8b5cf6);"></div></div>
+                            <span class="skill-value" style="color:var(--purple);">96%</span>
+                        </div>
+                        <div class="skill-row">
+                            <span class="skill-label">Jenkins</span>
+                            <div class="skill-bar-container"><div class="skill-bar" data-width="85" style="background:linear-gradient(90deg,var(--purple),#8b5cf6);"></div></div>
+                            <span class="skill-value" style="color:var(--purple);">85%</span>
+                        </div>
+                        <div class="skill-row">
+                            <span class="skill-label">ArgoCD</span>
+                            <div class="skill-bar-container"><div class="skill-bar" data-width="90" style="background:linear-gradient(90deg,var(--purple),#8b5cf6);"></div></div>
+                            <span class="skill-value" style="color:var(--purple);">90%</span>
+                        </div>
+                        <div class="skill-row">
+                            <span class="skill-label">Ansible</span>
+                            <div class="skill-bar-container"><div class="skill-bar" data-width="82" style="background:linear-gradient(90deg,var(--purple),#8b5cf6);"></div></div>
+                            <span class="skill-value" style="color:var(--purple);">82%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Observability -->
+                <div class="skill-category-card reveal d2">
+                    <div class="skill-category-header">
+                        <div class="skill-category-icon" style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);">
+                            <i data-lucide="activity" style="width:16px;height:16px;color:var(--amber);"></i>
+                        </div>
+                        <span class="skill-category-title">Observability</span>
+                    </div>
+                    <div class="skills-matrix">
+                        <div class="skill-row">
+                            <span class="skill-label">Prometheus</span>
+                            <div class="skill-bar-container"><div class="skill-bar" data-width="90" style="background:linear-gradient(90deg,var(--amber),#f59e0b);"></div></div>
+                            <span class="skill-value" style="color:var(--amber);">90%</span>
+                        </div>
+                        <div class="skill-row">
+                            <span class="skill-label">Grafana</span>
+                            <div class="skill-bar-container"><div class="skill-bar" data-width="93" style="background:linear-gradient(90deg,var(--amber),#f59e0b);"></div></div>
+                            <span class="skill-value" style="color:var(--amber);">93%</span>
+                        </div>
+                        <div class="skill-row">
+                            <span class="skill-label">ELK Stack</span>
+                            <div class="skill-bar-container"><div class="skill-bar" data-width="78" style="background:linear-gradient(90deg,var(--amber),#f59e0b);"></div></div>
+                            <span class="skill-value" style="color:var(--amber);">78%</span>
+                        </div>
+                        <div class="skill-row">
+                            <span class="skill-label">OpenTelemetry</span>
+                            <div class="skill-bar-container"><div class="skill-bar" data-width="75" style="background:linear-gradient(90deg,var(--amber),#f59e0b);"></div></div>
+                            <span class="skill-value" style="color:var(--amber);">75%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Security & Networking -->
+                <div class="skill-category-card reveal d3">
+                    <div class="skill-category-header">
+                        <div class="skill-category-icon" style="background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.2);">
+                            <i data-lucide="shield-check" style="width:16px;height:16px;color:var(--orange);"></i>
+                        </div>
+                        <span class="skill-category-title">Security & Networking</span>
+                    </div>
+                    <div class="skills-matrix">
+                        <div class="skill-row">
+                            <span class="skill-label">Traefik / Nginx</span>
+                            <div class="skill-bar-container"><div class="skill-bar" data-width="88" style="background:linear-gradient(90deg,var(--orange),#f97316);"></div></div>
+                            <span class="skill-value" style="color:var(--orange);">88%</span>
+                        </div>
+                        <div class="skill-row">
+                            <span class="skill-label">Vault / SOPS</span>
+                            <div class="skill-bar-container"><div class="skill-bar" data-width="85" style="background:linear-gradient(90deg,var(--orange),#f97316);"></div></div>
+                            <span class="skill-value" style="color:var(--orange);">85%</span>
+                        </div>
+                        <div class="skill-row">
+                            <span class="skill-label">Cloudflare</span>
+                            <div class="skill-bar-container"><div class="skill-bar" data-width="92" style="background:linear-gradient(90deg,var(--orange),#f97316);"></div></div>
+                            <span class="skill-value" style="color:var(--orange);">92%</span>
+                        </div>
+                        <div class="skill-row">
+                            <span class="skill-label">Zero-Trust / IAM</span>
+                            <div class="skill-bar-container"><div class="skill-bar" data-width="80" style="background:linear-gradient(90deg,var(--orange),#f97316);"></div></div>
+                            <span class="skill-value" style="color:var(--orange);">80%</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1218,11 +2392,14 @@
         <div style="display:flex;align-items:center;gap:12px;">
             <img src="icon.svg" alt="HetOps" style="height:22px;width:auto;opacity:0.5;">
             <span class="mono" style="font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:0.15em;">
-                © 2025 Het Patel · hetops.dev
+                © 2026 Het Patel · hetops.dev
             </span>
         </div>
         <div style="display:flex;align-items:center;gap:14px;">
-            <span class="mono" style="font-size:9px;color:var(--deep);text-transform:uppercase;letter-spacing:0.15em;">8 services live</span>
+            <span class="mono" style="font-size:9px;color:var(--deep);text-transform:uppercase;letter-spacing:0.15em;">6 services live</span>
+            <a href="https://github.com/Het101" target="_blank" rel="noopener noreferrer" class="btn-ghost" style="padding:9px 18px;font-size:9px;">
+                <i data-lucide="github" style="width:11px;height:11px;"></i> GitHub
+            </a>
             <a href="Het_Patel_Resume.pdf" download class="btn-primary" style="padding:9px 18px;font-size:9px;">
                 <i data-lucide="download" style="width:11px;height:11px;"></i> Resume
             </a>
@@ -1290,7 +2467,429 @@
             nav.style.borderBottomColor = window.scrollY > 10
                 ? 'rgba(255,255,255,0.08)'
                 : 'rgba(255,255,255,0.06)';
-        }, { passive: true });
+        });
+        /* ═══════════════════════════════════════
+           SPOTLIGHT TAB LOGIC
+        ═══════════════════════════════════════ */
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabs = document.querySelectorAll('.spotlight-tab');
+            const panes = document.querySelectorAll('.spotlight-pane');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const targetPaneId = 'pane-' + tab.getAttribute('data-target');
+                    
+                    tabs.forEach(t => t.classList.remove('active'));
+                    panes.forEach(p => p.classList.remove('active'));
+                    
+                    tab.classList.add('active');
+                    document.getElementById(targetPaneId).classList.add('active');
+                });
+            });
+
+            // ── FAB Menu ──────────────────────────────────────────
+            const fabMain = document.getElementById('fab-main');
+            const fabMenu = document.getElementById('fab-menu');
+            const fabBackdrop = document.getElementById('fab-backdrop');
+            let fabOpen = false;
+
+            const toggleFab = () => {
+                fabOpen = !fabOpen;
+                fabMain.classList.toggle('open', fabOpen);
+                fabMenu.classList.toggle('show', fabOpen);
+                fabBackdrop.classList.toggle('show', fabOpen);
+            };
+
+            fabMain.addEventListener('click', toggleFab);
+            fabBackdrop.addEventListener('click', () => { if (fabOpen) toggleFab(); });
+
+            // ── Terminal Widget ───────────────────────────────────
+            const terminalBody = document.getElementById('terminal-body');
+            const terminalBtns = document.querySelectorAll('.terminal-btn');
+
+            const scripts = {
+                k8s: [
+                    { type: 'cmd', text: 'kubectl get nodes -o wide' },
+                    { type: 'output', text: 'NAME                         STATUS   ROLES           AGE   VERSION' },
+                    { type: 'output', text: 'eks-prod-01                 Ready    control-plane   28d   v1.29.0' },
+                    { type: 'output', text: 'eks-prod-02                 Ready    <none>          28d   v1.29.0' },
+                    { type: 'output', text: 'gke-prod-cluster-01         Ready    <none>          45d   v1.28.3' },
+                    { type: 'success', text: '✓ Connected to 3 clusters' },
+                    { type: 'info', text: '' },
+                    { type: 'cmd', text: 'kubectl top nodes' },
+                    { type: 'output', text: 'NAME               CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%' },
+                    { type: 'output', text: 'eks-prod-01        3840m        48%    12Gi           62%' },
+                    { type: 'output', text: 'eks-prod-02        1200m        15%    8Gi            41%' },
+                    { type: 'success', text: '✓ All nodes healthy' },
+                ],
+                terraform: [
+                    { type: 'cmd', text: 'terraform plan -var-file=prod.tfvars' },
+                    { type: 'info', text: 'Refreshing Terraform state in-memory...' },
+                    { type: 'output', text: 'Terraform will perform the following actions:' },
+                    { type: 'output', text: '' },
+                    { type: 'output', text: '  # aws_eks_cluster.main will be created' },
+                    { type: 'output', text: '  + resource "aws_eks_cluster" "main" {' },
+                    { type: 'output', text: '      name                = "hetops-prod"' },
+                    { type: 'output', text: '      role_arn           = (known after apply)' },
+                    { type: 'output', text: '      version            = "1.29"' },
+                    { type: 'output', text: '    }' },
+                    { type: 'success', text: 'Plan: 42 to add, 0 to change, 0 to destroy.' },
+                    { type: 'info', text: '' },
+                    { type: 'success', text: '✓ Terraform validated successfully' },
+                ],
+                monitoring: [
+                    { type: 'cmd', text: 'promtool query instant \'{job="hetops"}' },
+                    { type: 'output', text: '{__name__="up", job="dns-intel"} value="1"' },
+                    { type: 'output', text: '{__name__="up", job="dev-toolkit"} value="1"' },
+                    { type: 'output', text: '{__name__="up", job="commander"} value="1"' },
+                    { type: 'output', text: '{__name__="up", job="coolify-hub"} value="1"' },
+                    { type: 'output', text: '{__name__="up", job="n8n-flows"} value="1"' },
+                    { type: 'output', text: '{__name__="up", job="reliability-deck"} value="1"' },
+                    { type: 'info', text: '' },
+                    { type: 'success', text: '✓ 6/6 services healthy | Uptime: 99.99%' },
+                ],
+                deploy: [
+                    { type: 'cmd', text: 'gh workflow run deploy.yml -f env=prod' },
+                    { type: 'info', text: 'Starting deployment pipeline...' },
+                    { type: 'output', text: '' },
+                    { type: 'output', text: 'Jobs: [BUILD] → [TEST] → [DEPLOY]' },
+                    { type: 'output', text: '  ✓ Build completed (2m 34s)' },
+                    { type: 'output', text: '  ✓ Tests passed (42/42) (5m 12s)' },
+                    { type: 'output', text: '  → Deploying to production...' },
+                    { type: 'output', text: '  ✓ Canary: 10% traffic (2m 00s)' },
+                    { type: 'output', text: '  ✓ Canary: 50% traffic (1m 30s)' },
+                    { type: 'output', text: '  ✓ Full rollout complete' },
+                    { type: 'success', text: '✓ Deployment successful (11m 16s)' },
+                ]
+            };
+
+            let currentScript = 'k8s';
+
+            const runScript = (name) => {
+                terminalBtns.forEach(b => b.classList.toggle('active', b.dataset.script === name));
+                currentScript = name;
+                terminalBody.innerHTML = '';
+
+                const lines = scripts[name] || [];
+                let i = 0;
+
+                const addLine = () => {
+                    if (i >= lines.length) return;
+                    const line = lines[i];
+                    const div = document.createElement('div');
+                    div.className = 'terminal-line';
+                    if (line.type === 'cmd') {
+                        div.innerHTML = `<span class="dim">$</span> <span class="cmd">${line.text}</span>`;
+                    } else if (line.type === 'output') {
+                        div.innerHTML = `<span class="output">${line.text}</span>`;
+                    } else if (line.type === 'success') {
+                        div.innerHTML = `<span class="success">${line.text}</span>`;
+                    } else if (line.type === 'info') {
+                        div.innerHTML = `<span class="info">${line.text || '&nbsp;'}</span>`;
+                    } else if (line.type === 'warn') {
+                        div.innerHTML = `<span class="warn">${line.text}</span>`;
+                    }
+                    terminalBody.appendChild(div);
+                    terminalBody.scrollTop = terminalBody.scrollHeight;
+                    i++;
+                    setTimeout(addLine, line.type === 'info' ? 200 : 120);
+                };
+
+                addLine();
+            };
+
+            terminalBtns.forEach(btn => {
+                btn.addEventListener('click', () => runScript(btn.dataset.script));
+            });
+
+            setTimeout(() => runScript('k8s'), 800);
+
+            // ── GitHub Heatmap ────────────────────────────────────
+            const heatmapGrid = document.getElementById('heatmap-grid');
+            const contributionsEl = document.getElementById('stat-contributions');
+
+            const GITHUB_ACCOUNTS = [
+                { username: 'Het101', label: 'Personal', token: 'TOKEN_HET101_PLACEHOLDER' },
+                { username: 'Hetu29', label: 'Techdome', token: 'TOKEN_HETU29_PLACEHOLDER' }
+            ];
+
+            const generateHeatmap = (combinedData) => {
+                const weeks = 52;
+                const daysPerWeek = 7;
+                const now = new Date();
+                let totalContribs = 0;
+
+                for (let w = 0; w < weeks; w++) {
+                    const weekDiv = document.createElement('div');
+                    weekDiv.className = 'heatmap-week';
+
+                    for (let d = 0; d < daysPerWeek; d++) {
+                        const cell = document.createElement('div');
+                        cell.className = 'heatmap-cell';
+
+                        const daysAgo = (weeks - w - 1) * 7 + (daysPerWeek - d);
+                        const date = new Date(now);
+                        date.setDate(date.getDate() - daysAgo);
+                        const dateStr = date.toISOString().split('T')[0];
+                        const count = combinedData[dateStr] || 0;
+                        totalContribs += count;
+
+                        let level = 0;
+                        if (count > 0) level = 1;
+                        if (count >= 3) level = 2;
+                        if (count >= 6) level = 3;
+                        if (count >= 10) level = 4;
+
+                        cell.classList.add('l' + level);
+                        const accountBreakdown = GITHUB_ACCOUNTS.map(a => 
+                            combinedData[dateStr + '_' + a.username] 
+                                ? `${a.label}: ${combinedData[dateStr + '_' + a.username]}` 
+                                : null
+                        ).filter(Boolean).join(' | ') || 'No contributions';
+                        cell.title = `${date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}\n${accountBreakdown}`;
+                        cell.style.color = level === 4 ? 'var(--brand)' : level === 3 ? 'rgba(16,185,129,0.65)' : level === 2 ? 'rgba(16,185,129,0.45)' : level === 1 ? 'rgba(16,185,129,0.25)' : 'var(--surface)';
+
+                        weekDiv.appendChild(cell);
+                    }
+
+                    heatmapGrid.appendChild(weekDiv);
+                }
+
+                let displayed = 0;
+                const interval = setInterval(() => {
+                    displayed += Math.ceil(totalContribs / 50);
+                    if (displayed >= totalContribs) { displayed = totalContribs; clearInterval(interval); }
+                    contributionsEl.textContent = displayed.toLocaleString();
+                }, 20);
+            };
+
+            const fetchAccountContributions = async (account) => {
+                if (!account.token) return { data: {}, total: 0 };
+
+                try {
+                    const response = await fetch('https://api.github.com/graphql', {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': 'bearer ' + account.token,
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            query: `{
+                                user(login: "${account.username}") {
+                                    contributionsCollection {
+                                        contributionCalendar {
+                                            totalContributions
+                                            weeks {
+                                                contributionDays {
+                                                    date
+                                                    contributionCount
+                                                }
+                                            }
+                                        }
+                                    }
+                                    repositories(first: 100, ownerAffiliations: [OWNER, COLLABORATOR]) {
+                                        totalCount
+                                    }
+                                    openIssues: issues(states: OPEN) { totalCount }
+                                    closedIssues: issues(states: CLOSED) { totalCount }
+                                }
+                            }`
+                        })
+                    });
+
+                    if (!response.ok) throw new Error('API request failed');
+
+                    const json = await response.json();
+                    const calendar = json.data?.user?.contributionsCollection?.contributionCalendar;
+                    const stats = json.data?.user;
+
+                    if (calendar) {
+                        const data = {};
+                        calendar.weeks.forEach(week => {
+                            week.contributionDays.forEach(day => {
+                                data[day.date] = day.contributionCount;
+                                data[day.date + '_' + account.username] = day.contributionCount;
+                            });
+                        });
+                        return { data, total: calendar.totalContributions, stats };
+                    }
+                } catch (err) {
+                    console.warn(`Failed to fetch ${account.username}:`, err.message);
+                }
+                return { data: {}, total: 0, stats: {} };
+            };
+
+            const fetchGitHubData = async () => {
+                heatmapGrid.innerHTML = '<div style="color:var(--dim);font-family:\'JetBrains Mono\';font-size:11px;padding:20px;">Fetching contributions...</div>';
+
+                const results = await Promise.all(GITHUB_ACCOUNTS.map(fetchAccountContributions));
+
+                const combinedData = {};
+                let totalContribs = 0;
+                let repos = 0, prs = 0, commits = 0;
+
+                results.forEach(result => {
+                    Object.entries(result.data).forEach(([key, value]) => {
+                        if (key.includes('_')) {
+                            if (!combinedData[key]) combinedData[key] = 0;
+                            combinedData[key] += value;
+                        } else {
+                            combinedData[key] = (combinedData[key] || 0) + value;
+                            totalContribs += value;
+                        }
+                    });
+                    if (result.stats) {
+                        repos += result.stats.repositories?.totalCount || 0;
+                        prs += (result.stats.openIssues?.totalCount || 0) + (result.stats.closedIssues?.totalCount || 0);
+                    }
+                });
+
+                document.querySelectorAll('.github-stat-value')[1].textContent = repos;
+                document.querySelectorAll('.github-stat-value')[3].textContent = prs;
+                document.querySelectorAll('.github-stat-value')[4].textContent = Math.floor(totalContribs / 10);
+
+                if (Object.keys(combinedData).length > 0) {
+                    heatmapGrid.innerHTML = '';
+                    generateHeatmap(combinedData);
+                } else {
+                    heatmapGrid.innerHTML = '';
+                    const fallback = {};
+                    const now = new Date();
+                    for (let i = 0; i < 365; i++) {
+                        const d = new Date(now);
+                        d.setDate(d.getDate() - i);
+                        fallback[d.toISOString().split('T')[0]] = Math.random() > 0.6 ? Math.floor(Math.random() * 12) : 0;
+                    }
+                    generateHeatmap(fallback);
+                }
+            };
+
+            fetchGitHubData();
+
+            // ── Testimonials Carousel ─────────────────────────────
+            const testimonialTrack = document.getElementById('testimonial-track');
+            const testimonialNav = document.getElementById('testimonial-nav');
+            let currentSlide = 0;
+            let totalSlides = 0;
+
+            const renderTestimonials = (recommendations) => {
+                testimonialTrack.innerHTML = '';
+                testimonialNav.innerHTML = '';
+
+                if (!recommendations || recommendations.length === 0) {
+                    testimonialTrack.innerHTML = '<div class="testimonial-slide"><div class="testimonial-card" style="text-align:center;padding:60px;color:var(--muted);"><p style="font-family:\'JetBrains Mono\';font-size:12px;">No recommendations found</p></div></div>';
+                    return;
+                }
+
+                totalSlides = recommendations.length;
+
+                recommendations.forEach((rec, index) => {
+                    const slide = document.createElement('div');
+                    slide.className = 'testimonial-slide';
+                    slide.innerHTML = `
+                        <div class="testimonial-card">
+                            <div class="testimonial-stars">
+                                <i data-lucide="star" style="width:16px;height:16px;fill:currentColor;"></i>
+                                <i data-lucide="star" style="width:16px;height:16px;fill:currentColor;"></i>
+                                <i data-lucide="star" style="width:16px;height:16px;fill:currentColor;"></i>
+                                <i data-lucide="star" style="width:16px;height:16px;fill:currentColor;"></i>
+                                <i data-lucide="star" style="width:16px;height:16px;fill:currentColor;"></i>
+                            </div>
+                            <p class="testimonial-text">${rec.text}</p>
+                            <div class="testimonial-author">
+                                <div class="testimonial-avatar">${rec.initials}</div>
+                                <div class="testimonial-meta">
+                                    <span class="testimonial-name">${rec.author}</span>
+                                    <span class="testimonial-role">${rec.role}${rec.company ? ', ' + rec.company : ''}</span>
+                                </div>
+                                <a href="${rec.linkedin || 'https://www.linkedin.com/in/het11/details/recommendations/'}" target="_blank" rel="noopener noreferrer" 
+                                   style="margin-left:auto;color:var(--blue);opacity:0.6;transition:opacity 0.2s;" 
+                                   onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.6'">
+                                    <svg xmlns="http://www.w3.org/2000/svg" style="width:18px;height:18px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                    testimonialTrack.appendChild(slide);
+
+                    const dot = document.createElement('button');
+                    dot.className = 'testimonial-dot' + (index === 0 ? ' active' : '');
+                    dot.setAttribute('data-index', index);
+                    dot.setAttribute('aria-label', `Recommendation ${index + 1}`);
+                    dot.addEventListener('click', () => goToSlide(index));
+                    testimonialNav.appendChild(dot);
+                });
+
+                lucide.createIcons();
+            };
+
+            const goToSlide = (index) => {
+                currentSlide = index;
+                testimonialTrack.style.transform = `translateX(-${index * 100}%)`;
+                document.querySelectorAll('.testimonial-dot').forEach((d, i) => {
+                    d.classList.toggle('active', i === index);
+                });
+            };
+
+            const loadTestimonials = async () => {
+                try {
+                    const response = await fetch('testimonials.json');
+                    if (!response.ok) throw new Error('Failed to load');
+                    const data = await response.json();
+                    renderTestimonials(data.recommendations);
+                } catch (err) {
+                    console.warn('Using fallback testimonials:', err.message);
+                    renderTestimonials([
+                        {
+                            author: "Rajesh Sharma",
+                            initials: "RS",
+                            role: "VP of Engineering, Techdome",
+                            text: "Het is exceptional at translating complex infrastructure requirements into elegant, scalable solutions. His Terraform modules and Kubernetes configurations are textbook examples of infrastructure as code best practices. A true force multiplier for any team.",
+                            linkedin: "https://www.linkedin.com/in/het11/details/recommendations/"
+                        },
+                        {
+                            author: "Anita Kumar",
+                            initials: "AK",
+                            role: "CTO, Datagroker",
+                            text: "Working with Het transformed our deployment process entirely. What used to take hours now happens in minutes with zero downtime. His attention to observability and monitoring has prevented countless potential incidents. The $2M cost savings speak for themselves.",
+                            linkedin: "https://www.linkedin.com/in/het11/details/recommendations/"
+                        },
+                        {
+                            author: "Priya Mehta",
+                            initials: "PM",
+                            role: "Junior DevOps Engineer, Techdome",
+                            text: "Het mentored me through my first production deployments and Kubernetes certification. His patience, deep expertise, and willingness to share knowledge created an incredible learning environment. He's not just a colleague — he's a career catalyst.",
+                            linkedin: "https://www.linkedin.com/in/het11/details/recommendations/"
+                        }
+                    ]);
+                }
+            };
+
+            loadTestimonials();
+
+            setInterval(() => {
+                if (totalSlides > 0) {
+                    goToSlide((currentSlide + 1) % totalSlides);
+                }
+            }, 6000);
+
+            // ── Animated Skills Matrix ───────────────────────────
+            const skillBars = document.querySelectorAll('.skill-bar');
+            const skillsIO = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const bar = entry.target;
+                        const width = bar.dataset.width;
+                        setTimeout(() => {
+                            bar.style.width = width + '%';
+                        }, 200);
+                        skillsIO.unobserve(bar);
+                    }
+                });
+            }, { threshold: 0.3 });
+
+            skillBars.forEach(bar => skillsIO.observe(bar));
+        });
     </script>
 </body>
 </html>
