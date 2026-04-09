@@ -8,7 +8,14 @@
     <meta property="og:title" content="HET PATEL | DevOps Engineer II">
     <meta property="og:description" content="Building infrastructure that scales with precision, automation, and zero compromise.">
     <meta property="og:type" content="website">
-    <meta property="og:image" content="https://hetops.dev/icon.svg">
+    <meta property="og:image" content="https://hetops.dev/og-cover.png">
+    <meta property="og:url" content="https://hetops.dev">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="HET PATEL | DevOps Engineer II">
+    <meta name="twitter:description" content="Multi-cloud orchestration, Kubernetes, Terraform. Builder of the HetOps ecosystem. $2M+ cloud savings.">
+    <meta name="twitter:image" content="https://hetops.dev/og-cover.png">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://hetops.dev">
     <link rel="icon" type="image/svg+xml" href="icon.svg">
     <title>HET PATEL | DevOps Engineer II</title>
 
@@ -626,6 +633,115 @@
         /* ═══════════════════════════════════════
            RESPONSIVE
         ═══════════════════════════════════════ */
+        /* ═══════════════════════════════════════
+           ACTIVE NAV LINK
+        ═══════════════════════════════════════ */
+        .nav-link.active { color: #fff; }
+        .nav-link.active::after { width: 100%; }
+
+        /* ═══════════════════════════════════════
+           NAV RESUME BUTTON
+        ═══════════════════════════════════════ */
+        .nav-resume {
+            display: inline-flex; align-items: center; gap: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 9px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.12em;
+            color: var(--brand);
+            background: rgba(16,185,129,0.07);
+            border: 1px solid rgba(16,185,129,0.18);
+            border-radius: 8px; padding: 7px 12px;
+            transition: background 0.2s, border-color 0.2s;
+            text-decoration: none;
+        }
+        .nav-resume:hover { background: rgba(16,185,129,0.14); border-color: rgba(16,185,129,0.35); }
+        @media (max-width: 900px) { .nav-resume { display: none; } }
+
+        /* ═══════════════════════════════════════
+           TYPING ANIMATION
+        ═══════════════════════════════════════ */
+        .typing-cursor {
+            display: inline-block;
+            width: 3px; height: 0.75em;
+            background: var(--brand);
+            margin-left: 4px;
+            vertical-align: middle;
+            animation: blink-caret 0.75s step-end infinite;
+        }
+        @keyframes blink-caret {
+            from, to { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* ═══════════════════════════════════════
+           EXPERIENCE TIMELINE
+        ═══════════════════════════════════════ */
+        .exp-timeline {
+            display: flex; flex-direction: column; gap: 0;
+        }
+        .exp-timeline-item {
+            position: relative; padding-left: 36px; padding-bottom: 32px;
+        }
+        .exp-timeline-item:last-child { padding-bottom: 0; }
+        .exp-timeline-item::before {
+            content: '';
+            position: absolute; left: 8px; top: 20px; bottom: -4px;
+            width: 1px;
+            background: linear-gradient(180deg, var(--border2), transparent);
+        }
+        .exp-timeline-item:last-child::before { display: none; }
+        .exp-timeline-dot {
+            position: absolute; left: 0; top: 14px;
+            width: 18px; height: 18px; border-radius: 50%;
+            background: var(--bg); border: 2px solid var(--brand);
+            box-shadow: 0 0 0 4px rgba(16,185,129,0.1);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .exp-timeline-dot.past { border-color: var(--dim); box-shadow: none; }
+        .exp-timeline-dot.edu  { border-color: var(--blue); box-shadow: 0 0 0 4px rgba(96,165,250,0.08); }
+        .exp-timeline-dot::after {
+            content: ''; width: 6px; height: 6px; border-radius: 50%;
+            background: var(--brand);
+        }
+        .exp-timeline-dot.past::after { background: var(--dim); }
+        .exp-timeline-dot.edu::after  { background: var(--blue); }
+
+        /* ═══════════════════════════════════════
+           SKILL TAG GRID
+        ═══════════════════════════════════════ */
+        .skill-tag-grid { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 14px; }
+        .skill-tag {
+            display: inline-flex; align-items: center; gap: 5px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 0.05em;
+            padding: 6px 11px; border-radius: 7px; border: 1px solid;
+            cursor: default; transition: transform 0.15s, box-shadow 0.15s;
+        }
+        .skill-tag:hover { transform: translateY(-2px); }
+        .skill-tag-section {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 16px; padding: 24px;
+        }
+        .skill-tag-section-header {
+            display: flex; align-items: center; gap: 10px; margin-bottom: 4px;
+        }
+        .skill-tag-section-icon {
+            width: 32px; height: 32px; border-radius: 9px;
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+        .skill-tag-section-title { font-size: 13px; font-weight: 800; }
+
+        /* ═══════════════════════════════════════
+           IMPACT COUNTER
+        ═══════════════════════════════════════ */
+        .impact-num { display: inline-block; }
+
+        /* ═══════════════════════════════════════
+           CURSOR GLOW — POINTER DEVICES ONLY
+        ═══════════════════════════════════════ */
+        @media (hover: none) { #cursor-glow { display: none !important; } }
+
         /* responsive rules are consolidated below */
 
         /* ═══════════════════════════════════════
@@ -647,7 +763,7 @@
            QUICK TOOLS LAUNCHER (FAB)
         ═══════════════════════════════════════ */
         .fab-container {
-            position: fixed; bottom: 90px; right: 28px; z-index: 100;
+            position: fixed; bottom: 86px; right: 28px; z-index: 100;
         }
         .fab-main {
             width: 52px; height: 52px; border-radius: 16px;
@@ -706,7 +822,6 @@
             padding: 20px 0;
         }
         .heatmap-grid {
-            display: flex; gap: 3px;
             min-width: max-content;
         }
         .heatmap-week {
@@ -978,7 +1093,7 @@
             .section-wrap { padding: 56px 20px !important; }
             #exp, #projects { padding: 56px 20px !important; }
             #ecosystem, #impact, #contact { padding: 56px 20px !important; }
-            #skills, #writing { padding: 56px 20px !important; }
+            #skills, #writing, #certs { padding: 56px 20px !important; }
             #skills-matrix { padding: 56px 20px !important; }
             .github-section { padding: 40px 20px !important; }
             #testimonials > div { padding: 56px 20px !important; }
@@ -1002,9 +1117,177 @@
             .stats-bar { grid-template-columns: 1fr 1fr; }
             .github-stats { gap: 10px !important; }
         }
+
+        /* ═══════════════════════════════════════
+           GRAIN TEXTURE
+        ═══════════════════════════════════════ */
+        body::after {
+            content: '';
+            position: fixed; inset: 0; z-index: 1;
+            pointer-events: none;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            opacity: 0.025; mix-blend-mode: overlay;
+        }
+
+        /* ═══════════════════════════════════════
+           PAGE PRELOADER
+        ═══════════════════════════════════════ */
+        #preloader {
+            position: fixed; inset: 0; z-index: 99999;
+            background: var(--bg);
+            display: flex; align-items: center; justify-content: center;
+            flex-direction: column; gap: 20px;
+            transition: opacity 0.55s ease, visibility 0.55s ease;
+        }
+        #preloader.done { opacity: 0; visibility: hidden; }
+        .pre-logo { display: flex; align-items: center; gap: 12px; }
+        .pre-bar-track {
+            width: 140px; height: 1px; background: var(--border2); border-radius: 1px; overflow: hidden;
+        }
+        .pre-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--brand), var(--cyan));
+            width: 0; animation: pre-fill 0.85s cubic-bezier(0.4,0,0.2,1) forwards;
+        }
+        @keyframes pre-fill { 0%{width:0} 65%{width:80%} 100%{width:100%} }
+
+        /* ═══════════════════════════════════════
+           COMMAND PALETTE
+        ═══════════════════════════════════════ */
+        #cmd-overlay {
+            position: fixed; inset: 0; z-index: 9000;
+            background: rgba(0,0,0,0.72); backdrop-filter: blur(10px);
+            display: flex; align-items: flex-start; justify-content: center;
+            padding-top: clamp(80px, 15vh, 160px);
+            opacity: 0; pointer-events: none; transition: opacity 0.18s;
+        }
+        #cmd-overlay.open { opacity: 1; pointer-events: all; }
+        #cmd-box {
+            width: 100%; max-width: 560px; margin: 0 20px;
+            background: #0d0d0d;
+            border: 1px solid rgba(255,255,255,0.10);
+            border-radius: 16px; overflow: hidden;
+            box-shadow: 0 32px 100px rgba(0,0,0,0.9), 0 0 0 1px rgba(16,185,129,0.06);
+            transform: translateY(-14px) scale(0.97);
+            transition: transform 0.2s cubic-bezier(0.2,0.8,0.2,1);
+        }
+        #cmd-overlay.open #cmd-box { transform: none; }
+        #cmd-input-wrap {
+            display: flex; align-items: center; gap: 12px;
+            padding: 16px 18px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+        #cmd-input {
+            flex: 1; background: transparent; border: none; outline: none;
+            color: #fff; font-family: 'JetBrains Mono', monospace;
+            font-size: 14px; font-weight: 500; caret-color: var(--brand);
+        }
+        #cmd-input::placeholder { color: var(--dim); }
+        #cmd-results { max-height: 340px; overflow-y: auto; padding: 6px 0; }
+        #cmd-results::-webkit-scrollbar { width: 2px; }
+        #cmd-results::-webkit-scrollbar-thumb { background: rgba(16,185,129,0.2); }
+        .cmd-group-label {
+            font-family: 'JetBrains Mono', monospace; font-size: 8.5px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.18em; color: var(--dim);
+            padding: 10px 18px 5px;
+        }
+        .cmd-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 9px 18px; cursor: pointer; transition: background 0.1s;
+        }
+        .cmd-item.selected, .cmd-item:hover { background: rgba(16,185,129,0.07); }
+        .cmd-item.selected .cmd-item-label { color: var(--brand); }
+        .cmd-item-icon {
+            width: 30px; height: 30px; border-radius: 8px; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+            background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+        }
+        .cmd-item-text { flex: 1; min-width: 0; }
+        .cmd-item-label { font-size: 13px; font-weight: 600; color: #e5e7eb; }
+        .cmd-item-sub { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--muted); margin-top: 1px; }
+        .cmd-kbd {
+            font-family: 'JetBrains Mono', monospace; font-size: 8px; color: var(--dim);
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);
+            padding: 2px 6px; border-radius: 4px; flex-shrink: 0;
+        }
+        #cmd-footer {
+            padding: 9px 18px; border-top: 1px solid rgba(255,255,255,0.06);
+            display: flex; align-items: center; gap: 16px;
+        }
+        .cmd-hint {
+            display: flex; align-items: center; gap: 4px;
+            font-family: 'JetBrains Mono', monospace; font-size: 8.5px; color: var(--dim);
+        }
+        .cmd-hint kbd {
+            background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+            padding: 1px 4px; border-radius: 3px; font-family: inherit; font-size: 8px;
+        }
+
+        /* ═══════════════════════════════════════
+           CERTIFICATIONS
+        ═══════════════════════════════════════ */
+        .cert-card {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 14px; padding: 22px 24px;
+            display: flex; align-items: center; gap: 18px;
+            transition: border-color 0.25s, transform 0.25s;
+        }
+        .cert-card:hover { border-color: var(--border2); transform: translateY(-2px); }
+        .cert-badge {
+            width: 52px; height: 52px; border-radius: 14px; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'JetBrains Mono', monospace; font-size: 9px; font-weight: 900;
+            text-transform: uppercase; letter-spacing: 0.05em; text-align: center;
+            line-height: 1.2;
+        }
+        .cert-name { font-size: 14px; font-weight: 800; margin-bottom: 4px; }
+        .cert-issuer { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+        .cert-status {
+            margin-left: auto; flex-shrink: 0;
+            font-family: 'JetBrains Mono', monospace; font-size: 8px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.08em;
+            padding: 4px 10px; border-radius: 5px; border: 1px solid;
+        }
+
+        /* ═══════════════════════════════════════
+           FOOTER UPGRADE
+        ═══════════════════════════════════════ */
+        .footer-nav-link {
+            font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--dim);
+            text-transform: uppercase; letter-spacing: 0.12em; text-decoration: none;
+            transition: color 0.2s;
+        }
+        .footer-nav-link:hover { color: var(--muted); }
     </style>
 </head>
 <body>
+    <!-- ═══ PRELOADER ════════════════════════════════════════ -->
+    <div id="preloader" aria-hidden="true">
+        <div class="pre-logo">
+            <img src="icon.svg" alt="HetOps" style="height:34px;width:auto;">
+            <span class="mono" style="font-size:9px;color:var(--dim);font-weight:700;text-transform:uppercase;letter-spacing:0.28em;">HETOPS.DEV</span>
+        </div>
+        <div class="pre-bar-track"><div class="pre-bar-fill"></div></div>
+    </div>
+
+    <!-- ═══ COMMAND PALETTE ══════════════════════════════════ -->
+    <div id="cmd-overlay" role="dialog" aria-modal="true" aria-label="Command palette">
+        <div id="cmd-box">
+            <div id="cmd-input-wrap">
+                <i data-lucide="search" style="width:15px;height:15px;color:var(--dim);flex-shrink:0;"></i>
+                <input id="cmd-input" type="text" placeholder="Type a command or search..." autocomplete="off" spellcheck="false">
+                <kbd class="cmd-kbd">ESC</kbd>
+            </div>
+            <div id="cmd-results"></div>
+            <div id="cmd-footer">
+                <span class="cmd-hint"><kbd>↑↓</kbd> navigate</span>
+                <span class="cmd-hint"><kbd>↵</kbd> open</span>
+                <span class="cmd-hint"><kbd>ESC</kbd> dismiss</span>
+                <span style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--deep);">⌘K to toggle</span>
+            </div>
+        </div>
+    </div>
+
     <a href="#main" class="skip">Skip to content</a>
     <div id="scroll-progress"></div>
     <div id="cursor-glow"></div>
@@ -1060,11 +1343,25 @@
             <a href="#github"    class="nav-link">GitHub</a>
             <a href="#testimonials" class="nav-link">Testimonials</a>
             <a href="#contact"   class="nav-link">Contact</a>
+            <button onclick="openCmd()" aria-label="Open command palette"
+                style="display:flex;align-items:center;gap:5px;background:rgba(255,255,255,0.04);border:1px solid var(--border);
+                       border-radius:7px;padding:5px 9px;cursor:pointer;color:var(--dim);
+                       font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;
+                       letter-spacing:0.06em;transition:border-color 0.2s,color 0.2s;"
+                onmouseover="this.style.borderColor='var(--border2)';this.style.color='var(--muted)'"
+                onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--dim)'">
+                <i data-lucide="search" style="width:10px;height:10px;"></i>
+                <span>⌘K</span>
+            </button>
         </div>
         <div style="display:flex;align-items:center;gap:10px;">
+            <a href="Het_Patel_Resume.pdf" download class="nav-resume">
+                <i data-lucide="download" style="width:10px;height:10px;"></i>
+                Resume
+            </a>
             <div class="live-pill">
                 <span class="live-dot"></span>
-                6 Services Live
+                Open to Work
             </div>
             <button id="menu-btn" aria-label="Open navigation menu">
                 <i data-lucide="menu" style="width:16px;height:16px;"></i>
@@ -1081,6 +1378,7 @@
         <a href="#projects"     class="mobile-nav-link">Projects</a>
         <a href="#ecosystem"    class="mobile-nav-link">Ecosystem</a>
         <a href="#skills"       class="mobile-nav-link">Skills</a>
+        <a href="#certs"        class="mobile-nav-link">Certifications</a>
         <a href="#github"       class="mobile-nav-link">GitHub</a>
         <a href="#testimonials"  class="mobile-nav-link">Testimonials</a>
         <a href="#impact"       class="mobile-nav-link">Impact</a>
@@ -1112,7 +1410,7 @@
                         <span class="reveal-mask"><span class="reveal-text delay-1 text-white">Het <span class="name-patel">Patel.</span></span></span>
                     </h1>
                     <h2 class="text-emerald-100 text-3xl md:text-4xl font-medium tracking-tight opacity-90" style="font-family:'Plus Jakarta Sans',sans-serif;">
-                        <span class="reveal-mask"><span class="reveal-text delay-2">DevOps Engineer II</span></span>
+                        <span class="reveal-mask"><span class="reveal-text delay-2"><span id="typed-role">DevOps Engineer II</span><span class="typing-cursor"></span></span></span>
                     </h2>
                 </div>
                 <p class="text-emerald-50 max-w-lg text-lg leading-relaxed opacity-80 font-normal reveal d2" style="font-size:clamp(15px,1.8vw,18px);">
@@ -1231,66 +1529,91 @@
                 Career Architecture
             </h2>
 
-            <div class="exp-grid" style="display:grid;grid-template-columns:2fr 1fr;gap:14px;">
+            <div class="exp-timeline">
 
                 <!-- Current Role -->
-                <div class="card reveal d2" style="padding:32px;position:relative;overflow:hidden;">
-                    <div style="position:absolute;top:0;right:0;width:240px;height:100%;
-                         background:linear-gradient(270deg,rgba(16,185,129,0.04),transparent);pointer-events:none;"></div>
-                    <!-- Header -->
-                    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:22px;">
-                        <div style="display:flex;align-items:center;gap:14px;">
-                            <div style="width:48px;height:48px;border-radius:12px;
-                                 background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.18);
-                                 display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                                <i data-lucide="terminal-square" style="width:22px;height:22px;color:var(--brand);"></i>
+                <div class="exp-timeline-item reveal d2">
+                    <div class="exp-timeline-dot"></div>
+                    <div class="card" style="padding:32px;position:relative;overflow:hidden;">
+                        <div style="position:absolute;top:0;right:0;width:240px;height:100%;
+                             background:linear-gradient(270deg,rgba(16,185,129,0.04),transparent);pointer-events:none;"></div>
+                        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:22px;">
+                            <div style="display:flex;align-items:center;gap:14px;">
+                                <div style="width:48px;height:48px;border-radius:12px;
+                                     background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.18);
+                                     display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                    <i data-lucide="terminal-square" style="width:22px;height:22px;color:var(--brand);"></i>
+                                </div>
+                                <div>
+                                    <div style="font-size:20px;font-weight:900;letter-spacing:-0.01em;">Techdome</div>
+                                    <div class="mono" style="font-size:11px;color:var(--brand);font-weight:700;margin-top:2px;">DevOps Engineer II</div>
+                                </div>
                             </div>
-                            <div>
-                                <div style="font-size:20px;font-weight:900;letter-spacing:-0.01em;">Techdome</div>
-                                <div class="mono" style="font-size:11px;color:var(--brand);font-weight:700;margin-top:2px;">DevOps Engineer II</div>
+                            <div style="display:flex;align-items:center;gap:6px;background:rgba(16,185,129,0.07);
+                                 border:1px solid rgba(16,185,129,0.18);border-radius:999px;padding:5px 12px;flex-shrink:0;">
+                                <span class="live-dot" style="width:5px;height:5px;"></span>
+                                <span class="mono" style="font-size:9px;color:var(--brand);font-weight:700;text-transform:uppercase;letter-spacing:0.1em;">Aug 2025 — Present</span>
                             </div>
                         </div>
-                        <div style="display:flex;align-items:center;gap:6px;background:rgba(16,185,129,0.07);
-                             border:1px solid rgba(16,185,129,0.18);border-radius:999px;padding:5px 12px;flex-shrink:0;">
-                            <span class="live-dot" style="width:5px;height:5px;"></span>
-                            <span class="mono" style="font-size:9px;color:var(--brand);font-weight:700;text-transform:uppercase;letter-spacing:0.1em;">Aug 2025 — Present</span>
+                        <p style="color:var(--muted);font-size:14px;line-height:1.85;max-width:700px;margin-bottom:22px;">
+                            Architecting multi-cloud automation, orchestrating enterprise-scale Kubernetes clusters, and engineering zero-downtime deployment pipelines for mission-critical workloads across production environments.
+                        </p>
+                        <div style="display:flex;flex-wrap:wrap;gap:7px;">
+                            <span class="tag" style="color:var(--brand);border-color:rgba(16,185,129,0.2);background:rgba(16,185,129,0.05);">Cloud Architecture</span>
+                            <span class="tag" style="color:var(--blue);border-color:rgba(96,165,250,0.2);background:rgba(96,165,250,0.05);">Kubernetes</span>
+                            <span class="tag" style="color:var(--purple);border-color:rgba(167,139,250,0.2);background:rgba(167,139,250,0.05);">Platform Engineering</span>
+                            <span class="tag" style="color:var(--cyan);border-color:rgba(6,182,212,0.2);background:rgba(6,182,212,0.05);">Terraform</span>
+                            <span class="tag" style="color:var(--muted);border-color:var(--deep);background:transparent;">CI/CD</span>
                         </div>
-                    </div>
-                    <p style="color:var(--muted);font-size:14px;line-height:1.85;max-width:600px;margin-bottom:22px;">
-                        Architecting multi-cloud automation, orchestrating enterprise-scale Kubernetes clusters, and engineering zero-downtime deployment pipelines for mission-critical workloads across production environments.
-                    </p>
-                    <div style="display:flex;flex-wrap:wrap;gap:7px;">
-                        <span class="tag" style="color:var(--brand);border-color:rgba(16,185,129,0.2);background:rgba(16,185,129,0.05);">Cloud Architecture</span>
-                        <span class="tag" style="color:var(--blue);border-color:rgba(96,165,250,0.2);background:rgba(96,165,250,0.05);">Kubernetes</span>
-                        <span class="tag" style="color:var(--purple);border-color:rgba(167,139,250,0.2);background:rgba(167,139,250,0.05);">Platform Engineering</span>
-                        <span class="tag" style="color:var(--muted);border-color:var(--deep);background:transparent;">CI/CD</span>
                     </div>
                 </div>
 
-                <!-- Right column: Past + Education -->
-                <div style="display:flex;flex-direction:column;gap:14px;">
-                    <!-- Datagroker -->
-                    <div class="card reveal d3" style="padding:26px;flex:1;">
-                        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
-                            <div style="width:8px;height:8px;border-radius:50%;border:2px solid var(--dim);flex-shrink:0;"></div>
-                            <div>
-                                <div style="font-size:15px;font-weight:800;">Datagroker</div>
-                                <div class="mono" style="font-size:9px;color:var(--muted);font-weight:600;margin-top:2px;text-transform:uppercase;letter-spacing:0.08em;">DevOps Engineer · 2023 – 2025</div>
+                <!-- Datagroker -->
+                <div class="exp-timeline-item reveal d3">
+                    <div class="exp-timeline-dot past"></div>
+                    <div class="card" style="padding:28px;">
+                        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px;">
+                            <div style="display:flex;align-items:center;gap:12px;">
+                                <div style="width:40px;height:40px;border-radius:10px;
+                                     background:rgba(96,165,250,0.08);border:1px solid rgba(96,165,250,0.18);
+                                     display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                    <i data-lucide="database" style="width:18px;height:18px;color:var(--blue);"></i>
+                                </div>
+                                <div>
+                                    <div style="font-size:17px;font-weight:900;letter-spacing:-0.01em;">Datagroker</div>
+                                    <div class="mono" style="font-size:11px;color:var(--blue);font-weight:700;margin-top:2px;">DevOps Engineer</div>
+                                </div>
                             </div>
+                            <span class="mono" style="font-size:9px;color:var(--dim);font-weight:600;text-transform:uppercase;letter-spacing:0.1em;padding:5px 12px;border:1px solid var(--border);border-radius:999px;">2023 – 2025</span>
                         </div>
-                        <p style="color:var(--muted);font-size:12px;line-height:1.75;">
-                            Engineered CI/CD pipelines and ensured production stability across distributed deployments.
+                        <p style="color:var(--muted);font-size:13px;line-height:1.8;margin-bottom:16px;">
+                            Engineered CI/CD pipelines, Kubernetes workload management, and production observability stacks across distributed deployments. Reduced deployment time by 60% and achieved 99.9% uptime across services.
                         </p>
+                        <div style="display:flex;flex-wrap:wrap;gap:7px;">
+                            <span class="tag" style="color:var(--blue);border-color:rgba(96,165,250,0.2);background:rgba(96,165,250,0.05);">GitHub Actions</span>
+                            <span class="tag" style="color:var(--muted);border-color:var(--deep);background:transparent;">Docker</span>
+                            <span class="tag" style="color:var(--muted);border-color:var(--deep);background:transparent;">Prometheus</span>
+                            <span class="tag" style="color:var(--muted);border-color:var(--deep);background:transparent;">AWS</span>
+                        </div>
                     </div>
+                </div>
 
-                    <!-- Education -->
-                    <div class="card reveal d4" style="padding:26px;flex:1;border-left:2px solid rgba(96,165,250,0.25);">
-                        <div class="mono" style="font-size:9px;color:var(--blue);font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px;">Foundation</div>
-                        <div style="font-size:15px;font-weight:800;margin-bottom:4px;">B.Tech Computer Engineering</div>
-                        <div class="mono" style="font-size:9px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:14px;">Charusat University</div>
-                        <div style="display:flex;flex-wrap:wrap;gap:6px;">
+                <!-- Education -->
+                <div class="exp-timeline-item reveal d4">
+                    <div class="exp-timeline-dot edu"></div>
+                    <div class="card" style="padding:26px;border-left:2px solid rgba(96,165,250,0.25);">
+                        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px;">
+                            <div>
+                                <div class="mono" style="font-size:9px;color:var(--blue);font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px;">Foundation</div>
+                                <div style="font-size:16px;font-weight:900;margin-bottom:3px;">B.Tech Computer Engineering</div>
+                                <div class="mono" style="font-size:9px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.08em;">Charusat University</div>
+                            </div>
+                            <span class="mono" style="font-size:9px;color:var(--dim);font-weight:600;text-transform:uppercase;letter-spacing:0.1em;padding:5px 12px;border:1px solid var(--border);border-radius:999px;flex-shrink:0;">2019 – 2023</span>
+                        </div>
+                        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;">
                             <span class="tag" style="color:var(--dim);border-color:var(--deep);background:transparent;">AWS · GCP · Azure</span>
                             <span class="tag" style="color:var(--dim);border-color:var(--deep);background:transparent;">K8s · Docker</span>
+                            <span class="tag" style="color:var(--dim);border-color:var(--deep);background:transparent;">Linux</span>
                         </div>
                     </div>
                 </div>
@@ -1961,6 +2284,71 @@
 
     <hr class="divider">
 
+    <!-- ═══ CERTIFICATIONS ══════════════════════════════════════ -->
+    <section id="certs" style="padding:96px 40px;" aria-labelledby="certs-h">
+        <div style="max-width:1120px;margin:0 auto;">
+            <p class="section-label reveal" style="display:block;margin-bottom:10px;">// Credentials</p>
+            <h2 id="certs-h" class="reveal d1"
+                style="font-size:clamp(28px,4vw,42px);font-weight:900;letter-spacing:-0.03em;margin-bottom:44px;">
+                Certifications
+            </h2>
+
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;">
+
+                <!-- AWS SAA -->
+                <div class="cert-card reveal">
+                    <div class="cert-badge" style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.25);color:var(--amber);">
+                        AWS<br>SAA
+                    </div>
+                    <div style="flex:1;">
+                        <div class="cert-name">Solutions Architect Associate</div>
+                        <div class="cert-issuer">Amazon Web Services</div>
+                    </div>
+                    <div class="cert-status" style="color:var(--amber);border-color:rgba(245,158,11,0.25);background:rgba(245,158,11,0.06);">Pursuing</div>
+                </div>
+
+                <!-- CKA -->
+                <div class="cert-card reveal d1">
+                    <div class="cert-badge" style="background:rgba(96,165,250,0.1);border:1px solid rgba(96,165,250,0.25);color:var(--blue);">
+                        CKA
+                    </div>
+                    <div style="flex:1;">
+                        <div class="cert-name">Certified Kubernetes Administrator</div>
+                        <div class="cert-issuer">CNCF · Linux Foundation</div>
+                    </div>
+                    <div class="cert-status" style="color:var(--blue);border-color:rgba(96,165,250,0.25);background:rgba(96,165,250,0.06);">In Progress</div>
+                </div>
+
+                <!-- Terraform -->
+                <div class="cert-card reveal d2">
+                    <div class="cert-badge" style="background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.25);color:var(--purple);">
+                        HCP<br>TF
+                    </div>
+                    <div style="flex:1;">
+                        <div class="cert-name">Terraform Associate</div>
+                        <div class="cert-issuer">HashiCorp</div>
+                    </div>
+                    <div class="cert-status" style="color:var(--purple);border-color:rgba(167,139,250,0.25);background:rgba(167,139,250,0.06);">Planned</div>
+                </div>
+
+                <!-- AZ-104 -->
+                <div class="cert-card reveal d3">
+                    <div class="cert-badge" style="background:rgba(6,182,212,0.1);border:1px solid rgba(6,182,212,0.25);color:var(--cyan);">
+                        AZ<br>104
+                    </div>
+                    <div style="flex:1;">
+                        <div class="cert-name">Azure Administrator Associate</div>
+                        <div class="cert-issuer">Microsoft</div>
+                    </div>
+                    <div class="cert-status" style="color:var(--muted);border-color:var(--deep);background:transparent;">Queued</div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <hr class="divider">
+
     <!-- ═══ GITHUB ACTIVITY ═══════════════════════════════════ -->
     <section id="github" class="github-section" aria-labelledby="github-h">
         <div style="max-width:1120px;margin:0 auto;">
@@ -1974,7 +2362,7 @@
                     <a href="https://github.com/Het101" target="_blank" class="tag" style="color:var(--brand);border-color:rgba(16,185,129,0.2);background:rgba(16,185,129,0.05);text-decoration:none;">
                         <i data-lucide="user" style="width:10px;height:10px;margin-right:4px;"></i> Het101
                     </a>
-                    <a href="https://github.com/Techdome" target="_blank" class="tag" style="color:var(--cyan);border-color:rgba(6,182,212,0.2);background:rgba(6,182,212,0.05);text-decoration:none;">
+                    <a href="https://github.com/Hetu29" target="_blank" class="tag" style="color:var(--cyan);border-color:rgba(6,182,212,0.2);background:rgba(6,182,212,0.05);text-decoration:none;">
                         <i data-lucide="building" style="width:10px;height:10px;margin-right:4px;"></i> Hetu29
                     </a>
                 </div>
@@ -2079,23 +2467,23 @@
                  background:var(--border);border:1px solid var(--border);border-radius:16px;overflow:hidden;"
                  class="reveal d1 impact-grid">
                 <div style="background:var(--bg2);padding:32px 20px;text-align:center;">
-                    <div style="font-size:36px;font-weight:900;color:var(--brand);letter-spacing:-0.04em;line-height:1;margin-bottom:8px;">$2M<span style="font-size:22px;">+</span></div>
+                    <div style="font-size:36px;font-weight:900;color:var(--brand);letter-spacing:-0.04em;line-height:1;margin-bottom:8px;"><span style="font-size:22px;">$</span><span class="impact-num" data-count="2" data-prefix="$" data-suffix="M+">2</span><span style="font-size:22px;">M+</span></div>
                     <div class="mono" style="font-size:8px;color:var(--dim);text-transform:uppercase;letter-spacing:0.12em;line-height:1.5;">Annual Compute<br>Savings</div>
                 </div>
                 <div style="background:var(--bg2);padding:32px 20px;text-align:center;">
-                    <div style="font-size:36px;font-weight:900;color:var(--blue);letter-spacing:-0.04em;line-height:1;margin-bottom:8px;">10k<span style="font-size:22px;">+</span></div>
+                    <div style="font-size:36px;font-weight:900;color:var(--blue);letter-spacing:-0.04em;line-height:1;margin-bottom:8px;"><span class="impact-num" data-count="10000" data-format="k">10</span><span style="font-size:22px;">k+</span></div>
                     <div class="mono" style="font-size:8px;color:var(--dim);text-transform:uppercase;letter-spacing:0.12em;line-height:1.5;">Automated<br>Deployments</div>
                 </div>
                 <div style="background:var(--bg2);padding:32px 20px;text-align:center;">
-                    <div style="font-size:36px;font-weight:900;color:var(--orange);letter-spacing:-0.04em;line-height:1;margin-bottom:8px;">&lt;15<span style="font-size:22px;">m</span></div>
+                    <div style="font-size:36px;font-weight:900;color:var(--orange);letter-spacing:-0.04em;line-height:1;margin-bottom:8px;">&lt;<span class="impact-num" data-count="15">15</span><span style="font-size:22px;">m</span></div>
                     <div class="mono" style="font-size:8px;color:var(--dim);text-transform:uppercase;letter-spacing:0.12em;line-height:1.5;">Mean Time<br>to Recovery</div>
                 </div>
                 <div style="background:var(--bg2);padding:32px 20px;text-align:center;">
-                    <div style="font-size:36px;font-weight:900;color:var(--purple);letter-spacing:-0.04em;line-height:1;margin-bottom:8px;">99.99<span style="font-size:18px;">%</span></div>
+                    <div style="font-size:36px;font-weight:900;color:var(--purple);letter-spacing:-0.04em;line-height:1;margin-bottom:8px;"><span class="impact-num" data-count="9999" data-format="decimal">99.99</span><span style="font-size:18px;">%</span></div>
                     <div class="mono" style="font-size:8px;color:var(--dim);text-transform:uppercase;letter-spacing:0.12em;line-height:1.5;">Global Uptime<br>SLA</div>
                 </div>
                 <div style="background:var(--bg2);padding:32px 20px;text-align:center;">
-                    <div style="font-size:36px;font-weight:900;color:var(--amber);letter-spacing:-0.04em;line-height:1;margin-bottom:8px;">5<span style="font-size:22px;">+</span></div>
+                    <div style="font-size:36px;font-weight:900;color:var(--amber);letter-spacing:-0.04em;line-height:1;margin-bottom:8px;"><span class="impact-num" data-count="5">5</span><span style="font-size:22px;">+</span></div>
                     <div class="mono" style="font-size:8px;color:var(--dim);text-transform:uppercase;letter-spacing:0.12em;line-height:1.5;">Engineers<br>Mentored</div>
                 </div>
             </div>
@@ -2128,134 +2516,88 @@
                 Skills Matrix
             </h2>
 
-            <div class="skill-category">
-                <!-- Cloud & DevOps -->
-                <div class="skill-category-card reveal">
-                    <div class="skill-category-header">
-                        <div class="skill-category-icon" style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2);">
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;">
+
+                <!-- Cloud & Infrastructure -->
+                <div class="skill-tag-section reveal">
+                    <div class="skill-tag-section-header">
+                        <div class="skill-tag-section-icon" style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2);">
                             <i data-lucide="cloud" style="width:16px;height:16px;color:var(--brand);"></i>
                         </div>
-                        <span class="skill-category-title">Cloud & DevOps</span>
+                        <span class="skill-tag-section-title">Cloud & Infrastructure</span>
                     </div>
-                    <div class="skills-matrix">
-                        <div class="skill-row">
-                            <span class="skill-label">Kubernetes</span>
-                            <div class="skill-bar-container"><div class="skill-bar" data-width="92" style="background:linear-gradient(90deg,var(--brand),#059669);"></div></div>
-                            <span class="skill-value" style="color:var(--brand);">92%</span>
-                        </div>
-                        <div class="skill-row">
-                            <span class="skill-label">Terraform</span>
-                            <div class="skill-bar-container"><div class="skill-bar" data-width="95" style="background:linear-gradient(90deg,var(--brand),#059669);"></div></div>
-                            <span class="skill-value" style="color:var(--brand);">95%</span>
-                        </div>
-                        <div class="skill-row">
-                            <span class="skill-label">Docker</span>
-                            <div class="skill-bar-container"><div class="skill-bar" data-width="98" style="background:linear-gradient(90deg,var(--brand),#059669);"></div></div>
-                            <span class="skill-value" style="color:var(--brand);">98%</span>
-                        </div>
-                        <div class="skill-row">
-                            <span class="skill-label">AWS / GCP / Azure</span>
-                            <div class="skill-bar-container"><div class="skill-bar" data-width="88" style="background:linear-gradient(90deg,var(--brand),#059669);"></div></div>
-                            <span class="skill-value" style="color:var(--brand);">88%</span>
-                        </div>
+                    <div class="skill-tag-grid">
+                        <span class="skill-tag" style="color:var(--brand);border-color:rgba(16,185,129,0.25);background:rgba(16,185,129,0.06);">Kubernetes</span>
+                        <span class="skill-tag" style="color:var(--brand);border-color:rgba(16,185,129,0.25);background:rgba(16,185,129,0.06);">Terraform</span>
+                        <span class="skill-tag" style="color:var(--brand);border-color:rgba(16,185,129,0.25);background:rgba(16,185,129,0.06);">Docker</span>
+                        <span class="skill-tag" style="color:var(--brand);border-color:rgba(16,185,129,0.2);background:rgba(16,185,129,0.04);">AWS</span>
+                        <span class="skill-tag" style="color:var(--brand);border-color:rgba(16,185,129,0.2);background:rgba(16,185,129,0.04);">GCP</span>
+                        <span class="skill-tag" style="color:var(--brand);border-color:rgba(16,185,129,0.2);background:rgba(16,185,129,0.04);">Azure</span>
+                        <span class="skill-tag" style="color:var(--muted);border-color:var(--deep);">Helm</span>
+                        <span class="skill-tag" style="color:var(--muted);border-color:var(--deep);">Coolify</span>
+                        <span class="skill-tag" style="color:var(--muted);border-color:var(--deep);">Oracle Cloud</span>
                     </div>
                 </div>
 
                 <!-- CI/CD & Automation -->
-                <div class="skill-category-card reveal d1">
-                    <div class="skill-category-header">
-                        <div class="skill-category-icon" style="background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.2);">
+                <div class="skill-tag-section reveal d1">
+                    <div class="skill-tag-section-header">
+                        <div class="skill-tag-section-icon" style="background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.2);">
                             <i data-lucide="git-merge" style="width:16px;height:16px;color:var(--purple);"></i>
                         </div>
-                        <span class="skill-category-title">CI/CD & Automation</span>
+                        <span class="skill-tag-section-title">CI/CD & Automation</span>
                     </div>
-                    <div class="skills-matrix">
-                        <div class="skill-row">
-                            <span class="skill-label">GitHub Actions</span>
-                            <div class="skill-bar-container"><div class="skill-bar" data-width="96" style="background:linear-gradient(90deg,var(--purple),#8b5cf6);"></div></div>
-                            <span class="skill-value" style="color:var(--purple);">96%</span>
-                        </div>
-                        <div class="skill-row">
-                            <span class="skill-label">Jenkins</span>
-                            <div class="skill-bar-container"><div class="skill-bar" data-width="85" style="background:linear-gradient(90deg,var(--purple),#8b5cf6);"></div></div>
-                            <span class="skill-value" style="color:var(--purple);">85%</span>
-                        </div>
-                        <div class="skill-row">
-                            <span class="skill-label">ArgoCD</span>
-                            <div class="skill-bar-container"><div class="skill-bar" data-width="90" style="background:linear-gradient(90deg,var(--purple),#8b5cf6);"></div></div>
-                            <span class="skill-value" style="color:var(--purple);">90%</span>
-                        </div>
-                        <div class="skill-row">
-                            <span class="skill-label">Ansible</span>
-                            <div class="skill-bar-container"><div class="skill-bar" data-width="82" style="background:linear-gradient(90deg,var(--purple),#8b5cf6);"></div></div>
-                            <span class="skill-value" style="color:var(--purple);">82%</span>
-                        </div>
+                    <div class="skill-tag-grid">
+                        <span class="skill-tag" style="color:var(--purple);border-color:rgba(167,139,250,0.25);background:rgba(167,139,250,0.06);">GitHub Actions</span>
+                        <span class="skill-tag" style="color:var(--purple);border-color:rgba(167,139,250,0.25);background:rgba(167,139,250,0.06);">ArgoCD</span>
+                        <span class="skill-tag" style="color:var(--purple);border-color:rgba(167,139,250,0.2);background:rgba(167,139,250,0.04);">Jenkins</span>
+                        <span class="skill-tag" style="color:var(--purple);border-color:rgba(167,139,250,0.2);background:rgba(167,139,250,0.04);">Ansible</span>
+                        <span class="skill-tag" style="color:var(--muted);border-color:var(--deep);">GitLab CI</span>
+                        <span class="skill-tag" style="color:var(--muted);border-color:var(--deep);">n8n</span>
+                        <span class="skill-tag" style="color:var(--muted);border-color:var(--deep);">Bash</span>
+                        <span class="skill-tag" style="color:var(--muted);border-color:var(--deep);">Python</span>
                     </div>
                 </div>
 
                 <!-- Observability -->
-                <div class="skill-category-card reveal d2">
-                    <div class="skill-category-header">
-                        <div class="skill-category-icon" style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);">
+                <div class="skill-tag-section reveal d2">
+                    <div class="skill-tag-section-header">
+                        <div class="skill-tag-section-icon" style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);">
                             <i data-lucide="activity" style="width:16px;height:16px;color:var(--amber);"></i>
                         </div>
-                        <span class="skill-category-title">Observability</span>
+                        <span class="skill-tag-section-title">Observability</span>
                     </div>
-                    <div class="skills-matrix">
-                        <div class="skill-row">
-                            <span class="skill-label">Prometheus</span>
-                            <div class="skill-bar-container"><div class="skill-bar" data-width="90" style="background:linear-gradient(90deg,var(--amber),#f59e0b);"></div></div>
-                            <span class="skill-value" style="color:var(--amber);">90%</span>
-                        </div>
-                        <div class="skill-row">
-                            <span class="skill-label">Grafana</span>
-                            <div class="skill-bar-container"><div class="skill-bar" data-width="93" style="background:linear-gradient(90deg,var(--amber),#f59e0b);"></div></div>
-                            <span class="skill-value" style="color:var(--amber);">93%</span>
-                        </div>
-                        <div class="skill-row">
-                            <span class="skill-label">ELK Stack</span>
-                            <div class="skill-bar-container"><div class="skill-bar" data-width="78" style="background:linear-gradient(90deg,var(--amber),#f59e0b);"></div></div>
-                            <span class="skill-value" style="color:var(--amber);">78%</span>
-                        </div>
-                        <div class="skill-row">
-                            <span class="skill-label">OpenTelemetry</span>
-                            <div class="skill-bar-container"><div class="skill-bar" data-width="75" style="background:linear-gradient(90deg,var(--amber),#f59e0b);"></div></div>
-                            <span class="skill-value" style="color:var(--amber);">75%</span>
-                        </div>
+                    <div class="skill-tag-grid">
+                        <span class="skill-tag" style="color:var(--amber);border-color:rgba(245,158,11,0.25);background:rgba(245,158,11,0.06);">Prometheus</span>
+                        <span class="skill-tag" style="color:var(--amber);border-color:rgba(245,158,11,0.25);background:rgba(245,158,11,0.06);">Grafana</span>
+                        <span class="skill-tag" style="color:var(--amber);border-color:rgba(245,158,11,0.2);background:rgba(245,158,11,0.04);">ELK Stack</span>
+                        <span class="skill-tag" style="color:var(--amber);border-color:rgba(245,158,11,0.2);background:rgba(245,158,11,0.04);">OpenTelemetry</span>
+                        <span class="skill-tag" style="color:var(--muted);border-color:var(--deep);">Loki</span>
+                        <span class="skill-tag" style="color:var(--muted);border-color:var(--deep);">Alertmanager</span>
+                        <span class="skill-tag" style="color:var(--muted);border-color:var(--deep);">Uptime Kuma</span>
                     </div>
                 </div>
 
                 <!-- Security & Networking -->
-                <div class="skill-category-card reveal d3">
-                    <div class="skill-category-header">
-                        <div class="skill-category-icon" style="background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.2);">
+                <div class="skill-tag-section reveal d3">
+                    <div class="skill-tag-section-header">
+                        <div class="skill-tag-section-icon" style="background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.2);">
                             <i data-lucide="shield-check" style="width:16px;height:16px;color:var(--orange);"></i>
                         </div>
-                        <span class="skill-category-title">Security & Networking</span>
+                        <span class="skill-tag-section-title">Security & Networking</span>
                     </div>
-                    <div class="skills-matrix">
-                        <div class="skill-row">
-                            <span class="skill-label">Traefik / Nginx</span>
-                            <div class="skill-bar-container"><div class="skill-bar" data-width="88" style="background:linear-gradient(90deg,var(--orange),#f97316);"></div></div>
-                            <span class="skill-value" style="color:var(--orange);">88%</span>
-                        </div>
-                        <div class="skill-row">
-                            <span class="skill-label">Vault / SOPS</span>
-                            <div class="skill-bar-container"><div class="skill-bar" data-width="85" style="background:linear-gradient(90deg,var(--orange),#f97316);"></div></div>
-                            <span class="skill-value" style="color:var(--orange);">85%</span>
-                        </div>
-                        <div class="skill-row">
-                            <span class="skill-label">Cloudflare</span>
-                            <div class="skill-bar-container"><div class="skill-bar" data-width="92" style="background:linear-gradient(90deg,var(--orange),#f97316);"></div></div>
-                            <span class="skill-value" style="color:var(--orange);">92%</span>
-                        </div>
-                        <div class="skill-row">
-                            <span class="skill-label">Zero-Trust / IAM</span>
-                            <div class="skill-bar-container"><div class="skill-bar" data-width="80" style="background:linear-gradient(90deg,var(--orange),#f97316);"></div></div>
-                            <span class="skill-value" style="color:var(--orange);">80%</span>
-                        </div>
+                    <div class="skill-tag-grid">
+                        <span class="skill-tag" style="color:var(--orange);border-color:rgba(249,115,22,0.25);background:rgba(249,115,22,0.06);">Traefik</span>
+                        <span class="skill-tag" style="color:var(--orange);border-color:rgba(249,115,22,0.25);background:rgba(249,115,22,0.06);">Cloudflare</span>
+                        <span class="skill-tag" style="color:var(--orange);border-color:rgba(249,115,22,0.2);background:rgba(249,115,22,0.04);">Vault</span>
+                        <span class="skill-tag" style="color:var(--orange);border-color:rgba(249,115,22,0.2);background:rgba(249,115,22,0.04);">SOPS</span>
+                        <span class="skill-tag" style="color:var(--muted);border-color:var(--deep);">Zero-Trust</span>
+                        <span class="skill-tag" style="color:var(--muted);border-color:var(--deep);">IAM</span>
+                        <span class="skill-tag" style="color:var(--muted);border-color:var(--deep);">Nginx</span>
+                        <span class="skill-tag" style="color:var(--muted);border-color:var(--deep);">Cert-Manager</span>
                     </div>
                 </div>
+
             </div>
         </div>
     </section>
@@ -2271,55 +2613,40 @@
                 Published Work
             </h2>
 
-            <div class="writing-grid" style="display:grid;grid-template-columns:2fr 1fr;gap:14px;">
-
-                <!-- Featured -->
-                <a href="https://medium.com/@het101/scaling-kubernetes-at-enterprise-scale-c3a3c9256671"
-                   target="_blank" rel="noopener noreferrer" class="write-card reveal">
-                    <div style="height:2px;background:var(--cyan);"></div>
-                    <div style="padding:32px;">
-                        <div style="display:flex;align-items:center;gap:8px;margin-bottom:20px;">
-                            <span style="display:flex;align-items:center;gap:5px;font-family:'JetBrains Mono',monospace;
-                                 font-size:9px;color:var(--cyan);font-weight:700;text-transform:uppercase;letter-spacing:0.08em;
-                                 padding:4px 10px;border:1px solid rgba(6,182,212,0.2);background:rgba(6,182,212,0.06);border-radius:5px;">
-                                <span style="width:5px;height:5px;border-radius:50%;background:var(--cyan);display:block;animation:live-pulse 2s infinite;"></span>
-                                Published · Medium
-                            </span>
-                        </div>
-                        <h3 style="font-size:clamp(18px,2.5vw,26px);font-weight:900;margin:0 0 14px;letter-spacing:-0.02em;line-height:1.25;">
-                            Scaling Kubernetes at Enterprise Scale
-                        </h3>
-                        <p style="color:var(--muted);font-size:13px;line-height:1.85;margin-bottom:22px;">
-                            Advanced architectural patterns for managing 100+ node clusters, remote resource optimization, and cost-effective scaling strategies for highly variable production workloads.
-                        </p>
+            <a href="https://medium.com/@het101/scaling-kubernetes-at-enterprise-scale-c3a3c9256671"
+               target="_blank" rel="noopener noreferrer" class="write-card reveal"
+               style="display:block;max-width:800px;">
+                <div style="height:2px;background:var(--cyan);"></div>
+                <div style="padding:40px;">
+                    <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:22px;">
+                        <span style="display:flex;align-items:center;gap:5px;font-family:'JetBrains Mono',monospace;
+                             font-size:9px;color:var(--cyan);font-weight:700;text-transform:uppercase;letter-spacing:0.08em;
+                             padding:4px 10px;border:1px solid rgba(6,182,212,0.2);background:rgba(6,182,212,0.06);border-radius:5px;">
+                            <span style="width:5px;height:5px;border-radius:50%;background:var(--cyan);display:block;animation:live-pulse 2s infinite;"></span>
+                            Published · Medium
+                        </span>
+                        <span class="mono" style="font-size:9px;color:var(--dim);">Apr 2024</span>
+                    </div>
+                    <h3 style="font-size:clamp(20px,3vw,32px);font-weight:900;margin:0 0 16px;letter-spacing:-0.02em;line-height:1.2;">
+                        Scaling Kubernetes at Enterprise Scale
+                    </h3>
+                    <p style="color:var(--muted);font-size:14px;line-height:1.9;margin-bottom:24px;max-width:640px;">
+                        Advanced architectural patterns for managing 100+ node clusters, remote resource optimization, and cost-effective scaling strategies for highly variable production workloads. Covers HPA/VPA tuning, cluster autoscaling on multi-cloud, and zero-downtime rolling strategies.
+                    </p>
+                    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;">
                         <div style="display:flex;flex-wrap:wrap;gap:7px;">
-                            <span class="tag" style="color:var(--dim);border-color:var(--deep);background:transparent;">Kube-Ops</span>
+                            <span class="tag" style="color:var(--cyan);border-color:rgba(6,182,212,0.2);background:rgba(6,182,212,0.05);">Kubernetes</span>
                             <span class="tag" style="color:var(--dim);border-color:var(--deep);background:transparent;">Autoscaling</span>
                             <span class="tag" style="color:var(--dim);border-color:var(--deep);background:transparent;">Architecture</span>
+                            <span class="tag" style="color:var(--dim);border-color:var(--deep);background:transparent;">Multi-Cloud</span>
                         </div>
-                    </div>
-                </a>
-
-                <!-- Drafts column -->
-                <div style="display:flex;flex-direction:column;gap:14px;" class="reveal d1">
-                    <div class="write-card" style="flex:1;opacity:0.65;">
-                        <div style="height:2px;background:var(--dim);"></div>
-                        <div style="padding:22px;">
-                            <span class="mono" style="font-size:8px;color:var(--amber);font-weight:700;text-transform:uppercase;letter-spacing:0.1em;padding:3px 8px;border:1px solid rgba(245,158,11,0.25);background:rgba(245,158,11,0.06);border-radius:4px;">Drafting</span>
-                            <h4 style="font-size:14px;font-weight:800;margin:12px 0 6px;filter:blur(3px);user-select:none;">Terraform at Scale: Real-World Patterns</h4>
-                            <p style="color:var(--dim);font-size:11px;line-height:1.65;filter:blur(3px);user-select:none;">Production-tested Terraform architecture, module design, and remote state management.</p>
-                        </div>
-                    </div>
-                    <div class="write-card" style="flex:1;opacity:0.45;">
-                        <div style="height:2px;background:var(--deep);"></div>
-                        <div style="padding:22px;">
-                            <span class="mono" style="font-size:8px;color:var(--dim);font-weight:700;text-transform:uppercase;letter-spacing:0.1em;padding:3px 8px;border:1px solid var(--deep);background:transparent;border-radius:4px;">In Review</span>
-                            <h4 style="font-size:14px;font-weight:800;margin:12px 0 6px;filter:blur(3px);user-select:none;">Building Resilient Monitoring Systems</h4>
-                            <p style="color:var(--deep);font-size:11px;line-height:1.65;filter:blur(3px);user-select:none;">OpenTelemetry and observability-driven development in production.</p>
-                        </div>
+                        <span style="display:flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--cyan);">
+                            Read on Medium
+                            <i data-lucide="arrow-up-right" style="width:13px;height:13px;"></i>
+                        </span>
                     </div>
                 </div>
-            </div>
+            </a>
         </div>
     </section>
 
@@ -2394,21 +2721,87 @@
     </main>
 
     <!-- ═══ FOOTER ════════════════════════════════════════════ -->
-    <footer style="border-top:1px solid var(--border);padding:22px 40px;
-            display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;">
-        <div style="display:flex;align-items:center;gap:12px;">
-            <img src="icon.svg" alt="HetOps" style="height:22px;width:auto;opacity:0.5;">
-            <span class="mono" style="font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:0.15em;">
-                © 2026 Het Patel · hetops.dev
-            </span>
+    <footer style="border-top:1px solid var(--border);background:var(--bg2);">
+        <!-- Main footer row -->
+        <div style="max-width:1120px;margin:0 auto;padding:40px 40px 24px;
+                    display:grid;grid-template-columns:1fr auto 1fr;gap:40px;align-items:start;">
+
+            <!-- Left: Brand -->
+            <div>
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+                    <img src="icon.svg" alt="HetOps" style="height:26px;width:auto;opacity:0.7;">
+                    <span style="font-size:15px;font-weight:900;letter-spacing:-0.01em;">Het Patel</span>
+                </div>
+                <p class="mono" style="font-size:10px;color:var(--muted);line-height:1.8;max-width:220px;">
+                    DevOps Engineer II building resilient cloud infrastructure at scale.
+                </p>
+                <div style="display:flex;gap:10px;margin-top:18px;">
+                    <a href="https://linkedin.com/in/het11" target="_blank" rel="noopener noreferrer"
+                       style="width:32px;height:32px;border-radius:9px;background:rgba(255,255,255,0.04);border:1px solid var(--border);
+                              display:flex;align-items:center;justify-content:center;transition:border-color 0.2s;"
+                       onmouseover="this.style.borderColor='var(--border2)'" onmouseout="this.style.borderColor='var(--border)'">
+                        <svg xmlns="http://www.w3.org/2000/svg" style="width:13px;height:13px;" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
+                    </a>
+                    <a href="https://github.com/Het101" target="_blank" rel="noopener noreferrer"
+                       style="width:32px;height:32px;border-radius:9px;background:rgba(255,255,255,0.04);border:1px solid var(--border);
+                              display:flex;align-items:center;justify-content:center;transition:border-color 0.2s;"
+                       onmouseover="this.style.borderColor='var(--border2)'" onmouseout="this.style.borderColor='var(--border)'">
+                        <svg xmlns="http://www.w3.org/2000/svg" style="width:13px;height:13px;" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Center: Nav -->
+            <div style="display:flex;gap:48px;">
+                <div>
+                    <div class="mono" style="font-size:8px;color:var(--dim);font-weight:700;text-transform:uppercase;letter-spacing:0.18em;margin-bottom:14px;">Portfolio</div>
+                    <div style="display:flex;flex-direction:column;gap:9px;">
+                        <a href="#exp"          class="footer-nav-link">Experience</a>
+                        <a href="#projects"     class="footer-nav-link">Projects</a>
+                        <a href="#ecosystem"    class="footer-nav-link">Ecosystem</a>
+                        <a href="#skills"       class="footer-nav-link">Skills</a>
+                    </div>
+                </div>
+                <div>
+                    <div class="mono" style="font-size:8px;color:var(--dim);font-weight:700;text-transform:uppercase;letter-spacing:0.18em;margin-bottom:14px;">More</div>
+                    <div style="display:flex;flex-direction:column;gap:9px;">
+                        <a href="#github"        class="footer-nav-link">GitHub</a>
+                        <a href="#testimonials"  class="footer-nav-link">Testimonials</a>
+                        <a href="#writing"       class="footer-nav-link">Writing</a>
+                        <a href="#contact"       class="footer-nav-link">Contact</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Actions -->
+            <div style="text-align:right;">
+                <div class="mono" style="font-size:8px;color:var(--dim);font-weight:700;text-transform:uppercase;letter-spacing:0.18em;margin-bottom:14px;">Quick Actions</div>
+                <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end;">
+                    <a href="Het_Patel_Resume.pdf" download class="btn-primary" style="padding:10px 20px;font-size:9px;">
+                        <i data-lucide="download" style="width:11px;height:11px;"></i> Download Resume
+                    </a>
+                    <button onclick="openCmd()" class="btn-ghost" style="padding:10px 20px;font-size:9px;">
+                        <i data-lucide="search" style="width:11px;height:11px;"></i> ⌘K Command Palette
+                    </button>
+                    <a href="https://status.hetops.dev/status/deck" target="_blank" rel="noopener noreferrer"
+                       style="display:inline-flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;
+                              font-size:9px;color:var(--brand);text-decoration:none;margin-top:6px;">
+                        <span style="width:6px;height:6px;border-radius:50%;background:var(--brand);animation:live-pulse 2s infinite;"></span>
+                        6 Services Operational
+                    </a>
+                </div>
+            </div>
         </div>
-        <div style="display:flex;align-items:center;gap:14px;">
-            <span class="mono" style="font-size:9px;color:var(--deep);text-transform:uppercase;letter-spacing:0.15em;">6 services live</span>
-            <a href="https://github.com/Het101" target="_blank" rel="noopener noreferrer" class="btn-ghost" style="padding:9px 18px;font-size:9px;">
-                <i data-lucide="github" style="width:11px;height:11px;"></i> GitHub
-            </a>
-            <a href="Het_Patel_Resume.pdf" download class="btn-primary" style="padding:9px 18px;font-size:9px;">
-                <i data-lucide="download" style="width:11px;height:11px;"></i> Resume
+
+        <!-- Bottom bar -->
+        <div style="border-top:1px solid var(--border);padding:14px 40px;
+                    display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;
+                    max-width:1120px;margin:0 auto;">
+            <span class="mono" style="font-size:9px;color:var(--deep);">© 2026 Het Patel · hetops.dev · Built with HTML, CSS &amp; JS</span>
+            <a href="https://medium.com/@het101" target="_blank" rel="noopener noreferrer"
+               class="mono" style="font-size:9px;color:var(--deep);text-decoration:none;transition:color 0.2s;"
+               onmouseover="this.style.color='var(--dim)'" onmouseout="this.style.color='var(--deep)'">
+               Writing on Medium →
             </a>
         </div>
     </footer>
@@ -2468,13 +2861,75 @@
             });
         }
 
-        // ── Navbar scroll behavior ────────────────────────────
+        // ── Navbar scroll behavior + active link ─────────────
         const nav = document.getElementById('nav');
         window.addEventListener('scroll', () => {
             nav.style.borderBottomColor = window.scrollY > 10
                 ? 'rgba(255,255,255,0.08)'
                 : 'rgba(255,255,255,0.06)';
-        });
+        }, { passive: true });
+
+        // Active nav link on scroll
+        const navLinks = document.querySelectorAll('.nav-link[href^="#"]');
+        const navSections = Array.from(navLinks).map(l => document.querySelector(l.getAttribute('href'))).filter(Boolean);
+        const navIO = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    navLinks.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + entry.target.id));
+                }
+            });
+        }, { rootMargin: '-20% 0px -70% 0px' });
+        navSections.forEach(s => navIO.observe(s));
+
+        // ── Typing role animation ─────────────────────────────
+        const typedEl = document.getElementById('typed-role');
+        if (typedEl) {
+            const roles = ['DevOps Engineer II', 'Platform Engineer', 'SRE', 'Cloud Architect', 'Infrastructure Nerd'];
+            let roleIdx = 0, charIdx = 0, deleting = false;
+            const typeSpeed = 80, deleteSpeed = 40, pauseMs = 2200;
+            function typeLoop() {
+                const current = roles[roleIdx];
+                if (!deleting) {
+                    typedEl.textContent = current.slice(0, ++charIdx);
+                    if (charIdx === current.length) { deleting = true; setTimeout(typeLoop, pauseMs); return; }
+                } else {
+                    typedEl.textContent = current.slice(0, --charIdx);
+                    if (charIdx === 0) { deleting = false; roleIdx = (roleIdx + 1) % roles.length; }
+                }
+                setTimeout(typeLoop, deleting ? deleteSpeed : typeSpeed);
+            }
+            setTimeout(typeLoop, 2800); // start after hero reveal animation
+        }
+
+        // ── Impact animated counters ──────────────────────────
+        const impactNums = document.querySelectorAll('.impact-num[data-count]');
+        const impactIO = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) return;
+                impactIO.unobserve(entry.target);
+                const el = entry.target;
+                const target = parseInt(el.dataset.count);
+                const fmt = el.dataset.format;
+                const duration = 1600;
+                const start = performance.now();
+                const animate = (now) => {
+                    const progress = Math.min((now - start) / duration, 1);
+                    const ease = 1 - Math.pow(1 - progress, 3);
+                    const value = Math.floor(ease * target);
+                    if (fmt === 'k') el.textContent = Math.floor(value / 1000);
+                    else if (fmt === 'decimal') el.textContent = (value / 100).toFixed(2);
+                    else el.textContent = value;
+                    if (progress < 1) requestAnimationFrame(animate);
+                    else {
+                        if (fmt === 'k') el.textContent = Math.floor(target / 1000);
+                        else if (fmt === 'decimal') el.textContent = (target / 100).toFixed(2);
+                        else el.textContent = target;
+                    }
+                };
+                requestAnimationFrame(animate);
+            });
+        }, { threshold: 0.5 });
+        impactNums.forEach(el => impactIO.observe(el));
         /* ═══════════════════════════════════════
            SPOTLIGHT TAB LOGIC
         ═══════════════════════════════════════ */
@@ -2626,7 +3081,33 @@
                 const now = new Date();
                 let totalContribs = 0;
 
+                // Build wrapper with month labels row + grid row
+                const wrapper = document.createElement('div');
+                wrapper.style.cssText = 'display:flex;flex-direction:column;gap:4px;';
+
+                const monthRow = document.createElement('div');
+                monthRow.style.cssText = 'display:flex;gap:3px;padding-left:0;';
+
+                const gridRow = document.createElement('div');
+                gridRow.style.cssText = 'display:flex;gap:3px;';
+
+                const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+                let lastMonth = -1;
+
                 for (let w = 0; w < weeks; w++) {
+                    // Determine this week's first day for month label
+                    const firstDayOfWeek = new Date(now);
+                    firstDayOfWeek.setDate(firstDayOfWeek.getDate() - ((weeks - w - 1) * 7 + daysPerWeek));
+                    const weekMonth = firstDayOfWeek.getMonth();
+
+                    const monthLabel = document.createElement('div');
+                    monthLabel.style.cssText = 'width:12px;font-family:"JetBrains Mono",monospace;font-size:8px;color:var(--dim);text-align:center;white-space:nowrap;overflow:visible;';
+                    if (weekMonth !== lastMonth) {
+                        monthLabel.textContent = monthNames[weekMonth];
+                        lastMonth = weekMonth;
+                    }
+                    monthRow.appendChild(monthLabel);
+
                     const weekDiv = document.createElement('div');
                     weekDiv.className = 'heatmap-week';
 
@@ -2648,9 +3129,9 @@
                         if (count >= 10) level = 4;
 
                         cell.classList.add('l' + level);
-                        const accountBreakdown = GITHUB_ACCOUNTS.map(a => 
-                            combinedData[dateStr + '_' + a.username] 
-                                ? `${a.label}: ${combinedData[dateStr + '_' + a.username]}` 
+                        const accountBreakdown = GITHUB_ACCOUNTS.map(a =>
+                            combinedData[dateStr + '_' + a.username]
+                                ? `${a.label}: ${combinedData[dateStr + '_' + a.username]}`
                                 : null
                         ).filter(Boolean).join(' | ') || 'No contributions';
                         cell.title = `${date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}\n${accountBreakdown}`;
@@ -2659,8 +3140,12 @@
                         weekDiv.appendChild(cell);
                     }
 
-                    heatmapGrid.appendChild(weekDiv);
+                    gridRow.appendChild(weekDiv);
                 }
+
+                wrapper.appendChild(monthRow);
+                wrapper.appendChild(gridRow);
+                heatmapGrid.appendChild(wrapper);
 
                 let displayed = 0;
                 const interval = setInterval(() => {
@@ -2892,23 +3377,151 @@
                 }
             }, 6000);
 
-            // ── Animated Skills Matrix ───────────────────────────
-            const skillBars = document.querySelectorAll('.skill-bar');
-            const skillsIO = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const bar = entry.target;
-                        const width = bar.dataset.width;
-                        setTimeout(() => {
-                            bar.style.width = width + '%';
-                        }, 200);
-                        skillsIO.unobserve(bar);
-                    }
-                });
-            }, { threshold: 0.3 });
+            // skill bars replaced with tag grid — no animation needed
 
-            skillBars.forEach(bar => skillsIO.observe(bar));
+            // ── Hero parallax orbs ────────────────────────────────
+            const heroOrbs = document.querySelectorAll('.hero-matrix > div[class*="blur"]');
+            document.addEventListener('mousemove', e => {
+                const mx = (e.clientX / window.innerWidth - 0.5) * 2;
+                const my = (e.clientY / window.innerHeight - 0.5) * 2;
+                heroOrbs.forEach((el, i) => {
+                    const f = (i + 1) * 12;
+                    el.style.transform = `translate(calc(-50% + ${mx * f}px), ${my * f * 0.4}px)`;
+                });
+            }, { passive: true });
+
         });
+
+        // ── Preloader ────────────────────────────────────────────
+        window.addEventListener('load', () => {
+            setTimeout(() => document.getElementById('preloader').classList.add('done'), 900);
+        });
+
+        // ── Command Palette ──────────────────────────────────────
+        const cmdOverlay = document.getElementById('cmd-overlay');
+        const cmdInput   = document.getElementById('cmd-input');
+        const cmdResults = document.getElementById('cmd-results');
+
+        const CMD_ITEMS = [
+            { group: 'Navigate', icon: 'briefcase',    label: 'Experience',       sub: 'Career timeline',            href: '#exp' },
+            { group: 'Navigate', icon: 'code-2',       label: 'Projects',          sub: 'Signature work',             href: '#projects' },
+            { group: 'Navigate', icon: 'layers',       label: 'Ecosystem',         sub: 'HetOps 6 tools',             href: '#ecosystem' },
+            { group: 'Navigate', icon: 'cpu',          label: 'Skills',            sub: 'Tech stack & matrix',        href: '#skills' },
+            { group: 'Navigate', icon: 'award',        label: 'Certifications',    sub: 'AWS, CKA, Terraform…',       href: '#certs' },
+            { group: 'Navigate', icon: 'github',       label: 'GitHub Activity',   sub: 'Contributions heatmap',      href: '#github' },
+            { group: 'Navigate', icon: 'message-square', label: 'Testimonials',   sub: 'LinkedIn recommendations',   href: '#testimonials' },
+            { group: 'Navigate', icon: 'bar-chart-2',  label: 'By the Numbers',   sub: '$2M+ · 10k deploys · 99.99%',href: '#impact' },
+            { group: 'Navigate', icon: 'mail',         label: 'Contact',           sub: 'Get in touch',               href: '#contact' },
+            { group: 'Actions',  icon: 'download',     label: 'Download Resume',   sub: 'Het_Patel_Resume.pdf',       action: () => { const a=document.createElement('a');a.href='Het_Patel_Resume.pdf';a.download='';a.click(); } },
+            { group: 'Actions',  icon: 'copy',         label: 'Copy Email',        sub: 'hetpatidar09@gmail.com',     action: () => { copyEmail(); } },
+            { group: 'Actions',  icon: 'linkedin',     label: 'Open LinkedIn',     sub: '/in/het11',                  action: () => window.open('https://linkedin.com/in/het11','_blank') },
+            { group: 'Actions',  icon: 'github',       label: 'Open GitHub',       sub: '@Het101',                    action: () => window.open('https://github.com/Het101','_blank') },
+            { group: 'Ecosystem',icon: 'globe',        label: 'DNS Intelligence',  sub: 'dns.hetops.dev',             action: () => window.open('https://dns.hetops.dev','_blank') },
+            { group: 'Ecosystem',icon: 'wrench',       label: 'Dev Toolkit',       sub: 'tools.hetops.dev',           action: () => window.open('https://tools.hetops.dev','_blank') },
+            { group: 'Ecosystem',icon: 'activity',     label: 'Reliability Deck',  sub: 'status.hetops.dev',          action: () => window.open('https://status.hetops.dev','_blank') },
+            { group: 'Ecosystem',icon: 'layout-grid',  label: 'Commander',         sub: 'dash.hetops.dev',            action: () => window.open('https://dash.hetops.dev','_blank') },
+            { group: 'Ecosystem',icon: 'cpu',          label: 'Coolify Hub',       sub: 'hub.hetops.dev',             action: () => window.open('https://hub.hetops.dev','_blank') },
+            { group: 'Ecosystem',icon: 'workflow',     label: 'n8n Flows',         sub: 'n8n.hetops.dev',             action: () => window.open('https://n8n.hetops.dev','_blank') },
+        ];
+
+        let cmdFiltered = CMD_ITEMS, cmdSelected = 0;
+
+        function openCmd() {
+            cmdOverlay.classList.add('open');
+            document.body.style.overflow = 'hidden';
+            cmdInput.value = '';
+            renderCmd('');
+            setTimeout(() => cmdInput.focus(), 60);
+        }
+        function closeCmd() {
+            cmdOverlay.classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        function execItem(item) {
+            closeCmd();
+            if (item.href) {
+                const el = document.querySelector(item.href);
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
+            } else if (item.action) {
+                item.action();
+            }
+        }
+
+        function renderCmd(query) {
+            const q = query.toLowerCase().trim();
+            cmdFiltered = q
+                ? CMD_ITEMS.filter(i => (i.label + ' ' + i.sub + ' ' + i.group).toLowerCase().includes(q))
+                : CMD_ITEMS;
+            cmdSelected = 0;
+
+            const groups = {};
+            cmdFiltered.forEach((item, idx) => {
+                (groups[item.group] = groups[item.group] || []).push({ ...item, _idx: idx });
+            });
+
+            cmdResults.innerHTML = '';
+            let globalIdx = 0;
+            Object.entries(groups).forEach(([group, items]) => {
+                const label = document.createElement('div');
+                label.className = 'cmd-group-label';
+                label.textContent = group;
+                cmdResults.appendChild(label);
+                items.forEach(item => {
+                    const el = document.createElement('div');
+                    const myIdx = globalIdx++;
+                    el.className = 'cmd-item' + (myIdx === 0 ? ' selected' : '');
+                    el.dataset.idx = myIdx;
+                    el.innerHTML = `
+                        <div class="cmd-item-icon">
+                            <i data-lucide="${item.icon}" style="width:13px;height:13px;color:var(--brand);"></i>
+                        </div>
+                        <div class="cmd-item-text">
+                            <div class="cmd-item-label">${item.label}</div>
+                            <div class="cmd-item-sub">${item.sub}</div>
+                        </div>
+                        ${item.href ? '<span class="cmd-kbd">↵</span>' : ''}
+                    `;
+                    el.addEventListener('click', () => execItem(item));
+                    el.addEventListener('mouseenter', () => {
+                        document.querySelectorAll('.cmd-item').forEach(e => e.classList.remove('selected'));
+                        el.classList.add('selected');
+                        cmdSelected = myIdx;
+                    });
+                    cmdResults.appendChild(el);
+                });
+            });
+            lucide.createIcons({ el: cmdResults });
+        }
+
+        cmdInput.addEventListener('input', e => renderCmd(e.target.value));
+
+        document.addEventListener('keydown', e => {
+            if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+                e.preventDefault();
+                cmdOverlay.classList.contains('open') ? closeCmd() : openCmd();
+                return;
+            }
+            if (!cmdOverlay.classList.contains('open')) return;
+            const items = cmdResults.querySelectorAll('.cmd-item');
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                cmdSelected = Math.min(cmdSelected + 1, cmdFiltered.length - 1);
+                items.forEach((el, i) => el.classList.toggle('selected', i === cmdSelected));
+                items[cmdSelected]?.scrollIntoView({ block: 'nearest' });
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                cmdSelected = Math.max(cmdSelected - 1, 0);
+                items.forEach((el, i) => el.classList.toggle('selected', i === cmdSelected));
+                items[cmdSelected]?.scrollIntoView({ block: 'nearest' });
+            } else if (e.key === 'Enter') {
+                e.preventDefault();
+                if (cmdFiltered[cmdSelected]) execItem(cmdFiltered[cmdSelected]);
+            } else if (e.key === 'Escape') {
+                closeCmd();
+            }
+        });
+        cmdOverlay.addEventListener('click', e => { if (e.target === cmdOverlay) closeCmd(); });
     </script>
 </body>
 </html>
