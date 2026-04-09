@@ -626,24 +626,7 @@
         /* ═══════════════════════════════════════
            RESPONSIVE
         ═══════════════════════════════════════ */
-        @media (max-width: 900px) {
-            .nav-links { display: none; }
-            .live-pill { display: none; }
-            #menu-btn  { display: flex; }
-            .tool-card-featured .tool-body { flex-direction: column; }
-            .exp-grid  { grid-template-columns: 1fr !important; }
-            .tools-row { grid-template-columns: 1fr !important; }
-            .tools-trio { grid-template-columns: 1fr !important; }
-            .writing-grid { grid-template-columns: 1fr !important; }
-            .stats-bar { grid-template-columns: repeat(2, 1fr); }
-        }
-        @media (max-width: 600px) {
-            #nav { padding: 0 20px; }
-            .hero-section { padding: 0 20px; }
-            .section-wrap { padding: 72px 20px; }
-            .display-name { font-size: clamp(4rem, 18vw, 6rem); }
-            .stats-bar { grid-template-columns: repeat(2, 1fr); }
-        }
+        /* responsive rules are consolidated below */
 
         /* ═══════════════════════════════════════
            BACK TO TOP
@@ -986,14 +969,38 @@
             .fab-main { width: 48px; height: 48px; }
             .skill-row { flex-direction: column; align-items: stretch; }
             .skill-label { width: auto; }
+            .impact-grid { grid-template-columns: repeat(3, 1fr) !important; }
+            .spotlight-pane { padding: 32px; }
         }
         @media (max-width: 600px) {
             #nav { padding: 0 20px; }
             .hero-section { padding: 0 20px; }
-            .section-wrap { padding: 72px 20px; }
+            .section-wrap { padding: 56px 20px !important; }
+            #exp, #projects { padding: 56px 20px !important; }
+            #ecosystem, #impact, #contact { padding: 56px 20px !important; }
+            #skills, #writing { padding: 56px 20px !important; }
+            #skills-matrix { padding: 56px 20px !important; }
+            .github-section { padding: 40px 20px !important; }
+            #testimonials > div { padding: 56px 20px !important; }
             .display-name { font-size: clamp(4rem, 18vw, 6rem); }
             .stats-bar { grid-template-columns: repeat(2, 1fr); }
-            .testimonial-card { padding: 28px; }
+            .testimonial-card { padding: 24px; }
+            .testimonial-text { font-size: 14px; }
+            .impact-grid { grid-template-columns: repeat(2, 1fr) !important; }
+            .terminal-controls { flex-wrap: wrap; gap: 6px; }
+            .terminal-btn { font-size: 8px; padding: 7px 10px; }
+            .heatmap-cell { width: 9px !important; height: 9px !important; }
+            .github-stats { gap: 14px !important; }
+            .github-stat-value { font-size: 22px !important; }
+            .github-stat-label { font-size: 8px !important; }
+            .spotlight-wrapper { margin-top: 32px; }
+            .spotlight-pane { padding: 24px; }
+            .premium-bento-card { padding: 18px !important; }
+        }
+        @media (max-width: 420px) {
+            .impact-grid { grid-template-columns: repeat(2, 1fr) !important; }
+            .stats-bar { grid-template-columns: 1fr 1fr; }
+            .github-stats { gap: 10px !important; }
         }
     </style>
 </head>
@@ -1115,7 +1122,7 @@
                     <a href="#ecosystem" class="bg-[#10b981] text-[#030303] font-bold px-8 py-4 rounded-lg shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:shadow-[0_0_30px_rgba(16,185,129,0.5)] hover:bg-[#34d399] transition-all duration-300 transform hover:-translate-y-1" style="font-family:'Plus Jakarta Sans',sans-serif;">
                         View Ecosystem
                     </a>
-                    <a href="Het_Patel_Resume.pdf" download class="bg-black/40 backdrop-blur-md text-white border border-white/10 font-bold px-8 py-4 rounded-lg hover:bg-white/5 hover:border-white/20 transition-all duration-300" style="font-family:'Plus Jakarta Sans',sans-serif;">
+                    <a href="#contact" class="bg-black/40 backdrop-blur-md text-white border border-white/10 font-bold px-8 py-4 rounded-lg hover:bg-white/5 hover:border-white/20 transition-all duration-300" style="font-family:'Plus Jakarta Sans',sans-serif;">
                         Get in Touch
                     </a>
                 </div>
@@ -2005,7 +2012,7 @@
                 </div>
                 <div class="github-stat">
                     <div class="github-stat-value" style="color:var(--orange);">0</div>
-                    <div class="github-stat-label">Issues/PRs</div>
+                    <div class="github-stat-label">Pull Requests</div>
                 </div>
                 <div class="github-stat">
                     <div class="github-stat-value" style="color:var(--blue);">0</div>
@@ -2070,7 +2077,7 @@
 
             <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:1px;
                  background:var(--border);border:1px solid var(--border);border-radius:16px;overflow:hidden;"
-                 class="reveal d1">
+                 class="reveal d1 impact-grid">
                 <div style="background:var(--bg2);padding:32px 20px;text-align:center;">
                     <div style="font-size:36px;font-weight:900;color:var(--brand);letter-spacing:-0.04em;line-height:1;margin-bottom:8px;">$2M<span style="font-size:22px;">+</span></div>
                     <div class="mono" style="font-size:8px;color:var(--dim);text-transform:uppercase;letter-spacing:0.12em;line-height:1.5;">Annual Compute<br>Savings</div>
@@ -2677,6 +2684,7 @@
                             query: `{
                                 user(login: "${account.username}") {
                                     contributionsCollection {
+                                        totalCommitContributions
                                         contributionCalendar {
                                             totalContributions
                                             weeks {
@@ -2689,9 +2697,9 @@
                                     }
                                     repositories(first: 100, ownerAffiliations: [OWNER, COLLABORATOR]) {
                                         totalCount
+                                        nodes { stargazerCount }
                                     }
-                                    openIssues: issues(states: OPEN) { totalCount }
-                                    closedIssues: issues(states: CLOSED) { totalCount }
+                                    pullRequests { totalCount }
                                 }
                             }`
                         })
@@ -2711,7 +2719,14 @@
                                 data[day.date + '_' + account.username] = day.contributionCount;
                             });
                         });
-                        return { data, total: calendar.totalContributions, stats };
+                        return {
+                            data,
+                            total: calendar.totalContributions,
+                            commits: stats?.contributionsCollection?.totalCommitContributions || 0,
+                            stars: stats?.repositories?.nodes?.reduce((s, r) => s + (r.stargazerCount || 0), 0) || 0,
+                            prs: stats?.pullRequests?.totalCount || 0,
+                            stats
+                        };
                     }
                 } catch (err) {
                     console.warn(`Failed to fetch ${account.username}:`, err.message);
@@ -2726,7 +2741,7 @@
 
                 const combinedData = {};
                 let totalContribs = 0;
-                let repos = 0, prs = 0, commits = 0;
+                let repos = 0, prs = 0, commits = 0, stars = 0;
 
                 results.forEach(result => {
                     Object.entries(result.data).forEach(([key, value]) => {
@@ -2740,13 +2755,17 @@
                     });
                     if (result.stats) {
                         repos += result.stats.repositories?.totalCount || 0;
-                        prs += (result.stats.openIssues?.totalCount || 0) + (result.stats.closedIssues?.totalCount || 0);
                     }
+                    commits += result.commits || 0;
+                    stars += result.stars || 0;
+                    prs += result.prs || 0;
                 });
 
-                document.querySelectorAll('.github-stat-value')[1].textContent = repos;
-                document.querySelectorAll('.github-stat-value')[3].textContent = prs;
-                document.querySelectorAll('.github-stat-value')[4].textContent = Math.floor(totalContribs / 10);
+                const statValues = document.querySelectorAll('.github-stat-value');
+                statValues[1].textContent = repos;
+                statValues[2].textContent = stars >= 1000 ? (stars / 1000).toFixed(1) + 'k' : stars;
+                statValues[3].textContent = prs;
+                statValues[4].textContent = commits;
 
                 if (Object.keys(combinedData).length > 0) {
                     heatmapGrid.innerHTML = '';
