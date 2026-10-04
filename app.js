@@ -118,7 +118,7 @@ const ACTIONS = [
   { group: 'Projects', img: '/assets/brand/dns-icon.svg', label: 'DNS Intelligence', hint: 'dns.hetops.dev', run: open('https://dns.hetops.dev') },
   { group: 'Projects', img: '/assets/brand/tools-icon.webp', label: 'Dev Toolkit', hint: 'tools.hetops.dev', run: open('https://tools.hetops.dev') },
   { group: 'Projects', img: '/assets/brand/status-icon.webp', label: 'Status page', hint: 'status.hetops.dev', run: open('https://status.hetops.dev') },
-  { group: 'Actions', icon: 'ph-copy', label: 'Copy email address', run: () => copyEmail('hetpatidar09@gmail.com') },
+  { group: 'Actions', icon: 'ph-copy', label: 'Copy email address', run: () => copyEmail('patel.x.het@gmail.com') },
   { group: 'Actions', icon: 'ph-file-pdf', label: 'Open résumé (PDF)', run: open('/Het_Patel_Resume.pdf') },
   { group: 'Actions', icon: 'ph-moon', label: 'Switch light / dark theme', run: flipTheme },
   { group: 'Actions', icon: 'ph-linkedin-logo', label: 'LinkedIn', run: open('https://www.linkedin.com/in/het11/') },
