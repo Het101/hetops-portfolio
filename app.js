@@ -3,8 +3,8 @@
 
 // ── Analytics (Umami, self-hosted, cookieless) ──────────────────
 // Set both after deploying Umami on Coolify (see DOCKER_SETUP.md); until then nothing loads.
-const UMAMI_SRC = '';
-const UMAMI_WEBSITE_ID = '';
+const UMAMI_SRC = 'https://analytics.hetops.dev/script.js';
+const UMAMI_WEBSITE_ID = '3b6004b2-abef-471c-a807-fdacd7981321';
 if (UMAMI_SRC && UMAMI_WEBSITE_ID) {
   const s = document.createElement('script');
   s.defer = true; s.src = UMAMI_SRC; s.dataset.websiteId = UMAMI_WEBSITE_ID; s.dataset.domains = 'hetops.dev';
