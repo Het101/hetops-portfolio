@@ -1,48 +1,26 @@
 # HetOps Portfolio - Docker Setup
 
-## Quick Start
+Static site served by nginx. No environment variables or tokens are needed.
+
+## Run locally
 
 ```bash
-# Copy environment file
-cp .env.example .env
-
-# Edit with your tokens
-nano .env
-
-# Build and run
-docker-compose up -d
-```
-
-## Coolify Deployment
-
-1. **In Coolify Dashboard:**
-   - Create new deployment
-   - Set **Build Pack** to `Dockerfile`
-   - Set **Port** to `8080:80`
-
-2. **Add Environment Variables:**
-   | Key | Value |
-   |-----|-------|
-   | `GITHUB_TOKEN_HET101` | Your Het101 token |
-   | `GITHUB_TOKEN_HETU29` | Your Hetu29 token |
-
-3. **Deploy!**
-
-## Local Development
-
-```bash
-# Without tokens (uses demo data)
 docker-compose up --build
-
-# With tokens
-GITHUB_TOKEN_HET101=ghp_xxx GITHUB_TOKEN_HETU29=ghp_xxx docker-compose up --build
 ```
 
-## GitHub Token Setup
+## Coolify deployment
 
-1. Go to https://github.com/settings/tokens
-2. Generate new token (classic)
-3. Select scopes: `repo`, `read:user`
-4. Copy the token
+1. Create a deployment with **Build Pack** set to `Dockerfile`.
+2. Set **Port** to `8080:80`.
+3. Deploy.
 
-**Note:** Tokens are only used at build time and embedded into the static HTML. They are NOT exposed at runtime.
+If `GITHUB_TOKEN_HET101` or `GITHUB_TOKEN_HETU29` are still set in Coolify, delete them. They are no longer used.
+
+## GitHub stats
+
+The GitHub section loads public data in the visitor's browser, without a token:
+
+- contributions: `github-contributions-api.jogruber.de` (public profile data)
+- repositories, stars, pull requests, commits: the public GitHub REST API
+
+Never put a token in this site. Anything in the HTML, including values substituted at build time, can be read by every visitor.

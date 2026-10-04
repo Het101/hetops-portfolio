@@ -1635,6 +1635,40 @@
 
             <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px;">
 
+                <!-- Threadvault -->
+                <div class="project-card reveal">
+                    <div class="project-accent" style="background:var(--brand);"></div>
+                    <div class="project-body">
+                        <div class="project-header">
+                            <div class="project-icon-wrap" style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2);">
+                                <i data-lucide="archive" style="width:20px;height:20px;color:var(--brand);"></i>
+                            </div>
+                            <div class="project-badges"><span class="tag" style="color:var(--brand);border-color:rgba(16,185,129,0.2);background:rgba(16,185,129,0.05);">Open source</span><span class="tag" style="color:var(--brand);border-color:rgba(16,185,129,0.2);background:rgba(16,185,129,0.05);">npm</span></div>
+                        </div>
+                        <h3 class="project-title">Threadvault</h3>
+                        <p class="project-desc">CLI that mirrors Azure Communication Services and Twilio chat into your own Postgres, then migrates, replays and verifies it. Built after a 7,200-thread production migration went wrong.</p>
+                        <div class="project-tech"><span class="tag" style="color:var(--dim);border-color:var(--deep);">TypeScript</span><span class="tag" style="color:var(--dim);border-color:var(--deep);">Node.js</span><span class="tag" style="color:var(--dim);border-color:var(--deep);">PostgreSQL</span><span class="tag" style="color:var(--dim);border-color:var(--deep);">Azure</span></div>
+                        <div class="project-links"><a href="https://het101.github.io/threadvault/" class="project-link" target="_blank" rel="noopener"><i data-lucide="book-open" style="width:13px;height:13px;"></i> Docs</a><a href="https://github.com/Het101/threadvault" class="project-link" target="_blank" rel="noopener"><i data-lucide="github" style="width:13px;height:13px;"></i> Source</a><a href="https://github.com/Het101/threadvault/blob/main/docs/postmortem-acs-chat-migration.md" class="project-link" target="_blank" rel="noopener"><i data-lucide="file-text" style="width:13px;height:13px;"></i> Post-mortem</a></div>
+                    </div>
+                </div>
+
+                <!-- DNS Intelligence -->
+                <div class="project-card reveal d1">
+                    <div class="project-accent" style="background:var(--brand);"></div>
+                    <div class="project-body">
+                        <div class="project-header">
+                            <div class="project-icon-wrap" style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2);">
+                                <i data-lucide="globe" style="width:20px;height:20px;color:var(--brand);"></i>
+                            </div>
+                            <div class="project-badges"><span class="tag" style="color:var(--brand);border-color:rgba(16,185,129,0.2);background:rgba(16,185,129,0.05);">Live</span><span class="tag" style="color:var(--brand);border-color:rgba(16,185,129,0.2);background:rgba(16,185,129,0.05);">26 checks</span></div>
+                        </div>
+                        <h3 class="project-title">DNS Intelligence</h3>
+                        <p class="project-desc">Domain scanner covering DNS, TLS grading, security headers, DNSSEC, email authentication, propagation and reputation, with monitoring, alerts and a public API.</p>
+                        <div class="project-tech"><span class="tag" style="color:var(--dim);border-color:var(--deep);">Node.js</span><span class="tag" style="color:var(--dim);border-color:var(--deep);">Express</span><span class="tag" style="color:var(--dim);border-color:var(--deep);">SQLite</span><span class="tag" style="color:var(--dim);border-color:var(--deep);">DNS over HTTPS</span></div>
+                        <div class="project-links"><a href="https://dns.hetops.dev" class="project-link" target="_blank" rel="noopener"><i data-lucide="external-link" style="width:13px;height:13px;"></i> Live</a><a href="https://github.com/Het101/hetops-dns" class="project-link" target="_blank" rel="noopener"><i data-lucide="github" style="width:13px;height:13px;"></i> Source</a></div>
+                    </div>
+                </div>
+
                 <!-- Project 1: Multi-Cloud K8s Orchestrator -->
                 <div class="project-card reveal">
                     <div class="project-accent" style="background:linear-gradient(90deg,var(--brand),var(--cyan));"></div>
@@ -1657,8 +1691,7 @@
                             <span class="tag" style="color:var(--dim);border-color:var(--deep);">Helm</span>
                         </div>
                         <div class="project-links">
-                            <a href="#" class="project-link"><i data-lucide="file-code" style="width:13px;height:13px;"></i> Case Study</a>
-                            <a href="#" class="project-link"><i data-lucide="github" style="width:13px;height:13px;"></i> Source</a>
+                            <span class="project-link" style="cursor:default;opacity:.7;"><i data-lucide="lock" style="width:13px;height:13px;"></i> Built at work, code is private</span>
                         </div>
                     </div>
                 </div>
@@ -1684,8 +1717,7 @@
                             <span class="tag" style="color:var(--dim);border-color:var(--deep);">Slack Alerts</span>
                         </div>
                         <div class="project-links">
-                            <a href="#" class="project-link"><i data-lucide="bar-chart-2" style="width:13px;height:13px;"></i> Metrics</a>
-                            <a href="#" class="project-link"><i data-lucide="github" style="width:13px;height:13px;"></i> Source</a>
+                            <span class="project-link" style="cursor:default;opacity:.7;"><i data-lucide="lock" style="width:13px;height:13px;"></i> Built at work, code is private</span>
                         </div>
                     </div>
                 </div>
@@ -1711,8 +1743,7 @@
                             <span class="tag" style="color:var(--dim);border-color:var(--deep);">Prometheus</span>
                         </div>
                         <div class="project-links">
-                            <a href="#" class="project-link"><i data-lucide="file-code" style="width:13px;height:13px;"></i> Docs</a>
-                            <a href="#" class="project-link"><i data-lucide="github" style="width:13px;height:13px;"></i> Source</a>
+                            <span class="project-link" style="cursor:default;opacity:.7;"><i data-lucide="lock" style="width:13px;height:13px;"></i> Built at work, code is private</span>
                         </div>
                     </div>
                 </div>
@@ -1739,7 +1770,6 @@
                         </div>
                         <div class="project-links">
                             <a href="https://dash.hetops.dev" class="project-link"><i data-lucide="external-link" style="width:13px;height:13px;"></i> Live Demo</a>
-                            <a href="#" class="project-link"><i data-lucide="github" style="width:13px;height:13px;"></i> Source</a>
                         </div>
                     </div>
                 </div>
@@ -1748,7 +1778,7 @@
 
             <!-- Interactive Terminal Widget -->
             <div style="margin-top:48px;">
-                <p class="section-label reveal" style="display:block;margin-bottom:10px;">// Live Infrastructure Preview</p>
+                <p class="section-label reveal" style="display:block;margin-bottom:10px;">// Infrastructure demo</p>
                 <div class="terminal-widget reveal d1" style="max-width:800px;">
                     <div class="terminal-header">
                         <div class="terminal-dot red"></div>
@@ -2256,26 +2286,6 @@
                     </div>
                 </div>
 
-                <!-- Certifications -->
-                <div class="card reveal d6" style="padding:26px;border-left:2px solid rgba(245,158,11,0.22);">
-                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
-                        <div style="font-size:14px;font-weight:800;">Certifications</div>
-                        <span class="mono" style="font-size:8px;color:var(--amber);font-weight:700;text-transform:uppercase;letter-spacing:0.1em;padding:3px 8px;border:1px solid rgba(245,158,11,0.25);background:rgba(245,158,11,0.06);border-radius:4px;">Preparing</span>
-                    </div>
-                    <div style="display:flex;flex-direction:column;gap:9px;">
-                        <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:8px;border-bottom:1px solid var(--deep);">
-                            <span class="mono" style="font-size:10px;color:var(--dim);">AWS SAA</span>
-                            <span class="mono" style="font-size:9px;color:var(--amber);">In Progress</span>
-                        </div>
-                        <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:8px;border-bottom:1px solid var(--deep);">
-                            <span class="mono" style="font-size:10px;color:var(--dim);">CKA</span>
-                            <span class="mono" style="font-size:9px;color:var(--amber);">In Progress</span>
-                        </div>
-                        <div style="display:flex;justify-content:space-between;align-items:center;">
-                            <span class="mono" style="font-size:10px;color:var(--dim);">AZ-104</span>
-                            <span class="mono" style="font-size:9px;color:var(--deep);">Queued</span>
-                        </div>
-                    </div>
                 </div>
 
             </div>
@@ -2395,7 +2405,7 @@
                     <div class="github-stat-label">Repos Combined</div>
                 </div>
                 <div class="github-stat">
-                    <div class="github-stat-value" style="color:var(--purple);">1.2k</div>
+                    <div class="github-stat-value" style="color:var(--purple);">0</div>
                     <div class="github-stat-label">Stars Earned</div>
                 </div>
                 <div class="github-stat">
@@ -2490,7 +2500,7 @@
 
             <!-- IaC snippet -->
             <div class="card reveal d3" style="margin-top:14px;padding:28px;border-left:2px solid rgba(16,185,129,0.25);overflow:hidden;">
-                <div class="mono" style="font-size:9px;color:var(--brand);font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:16px;">// Live IaC Output</div>
+                <div class="mono" style="font-size:9px;color:var(--brand);font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:16px;">// Example IaC output</div>
                 <div style="font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.9;color:#4b5563;">
                     <div><span style="color:#60a5fa;">terraform apply</span> <span style="color:#374151;">-auto-approve</span></div>
                     <div style="margin-top:4px;color:#374151;">aws_vpc.main: Creating...</div>
@@ -3071,8 +3081,8 @@
             const contributionsEl = document.getElementById('stat-contributions');
 
             const GITHUB_ACCOUNTS = [
-                { username: 'Het101', label: 'Personal', token: 'TOKEN_HET101_PLACEHOLDER' },
-                { username: 'Hetu29', label: 'Techdome', token: 'TOKEN_HETU29_PLACEHOLDER' }
+                { username: 'Het101', label: 'Personal' },
+                { username: 'Hetu29', label: 'Techdome' }
             ];
 
             const generateHeatmap = (combinedData) => {
@@ -3155,68 +3165,32 @@
                 }, 20);
             };
 
+            // Public, unauthenticated sources only: a token in page source is readable by every visitor.
+            // ponytail: contributions come from a third-party public API (github-contributions-api.jogruber.de);
+            // move to a server-side job with a token in env if it ever goes away.
+            const getJSON = (url) => fetch(url).then(r => r.ok ? r.json() : null).catch(() => null);
             const fetchAccountContributions = async (account) => {
-                if (!account.token) return { data: {}, total: 0 };
-
-                try {
-                    const response = await fetch('https://api.github.com/graphql', {
-                        method: 'POST',
-                        headers: {
-                            'Authorization': 'bearer ' + account.token,
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            query: `{
-                                user(login: "${account.username}") {
-                                    contributionsCollection {
-                                        totalCommitContributions
-                                        contributionCalendar {
-                                            totalContributions
-                                            weeks {
-                                                contributionDays {
-                                                    date
-                                                    contributionCount
-                                                }
-                                            }
-                                        }
-                                    }
-                                    repositories(first: 100, ownerAffiliations: [OWNER, COLLABORATOR]) {
-                                        totalCount
-                                        nodes { stargazerCount }
-                                    }
-                                    pullRequests { totalCount }
-                                }
-                            }`
-                        })
-                    });
-
-                    if (!response.ok) throw new Error('API request failed');
-
-                    const json = await response.json();
-                    const calendar = json.data?.user?.contributionsCollection?.contributionCalendar;
-                    const stats = json.data?.user;
-
-                    if (calendar) {
-                        const data = {};
-                        calendar.weeks.forEach(week => {
-                            week.contributionDays.forEach(day => {
-                                data[day.date] = day.contributionCount;
-                                data[day.date + '_' + account.username] = day.contributionCount;
-                            });
-                        });
-                        return {
-                            data,
-                            total: calendar.totalContributions,
-                            commits: stats?.contributionsCollection?.totalCommitContributions || 0,
-                            stars: stats?.repositories?.nodes?.reduce((s, r) => s + (r.stargazerCount || 0), 0) || 0,
-                            prs: stats?.pullRequests?.totalCount || 0,
-                            stats
-                        };
-                    }
-                } catch (err) {
-                    console.warn(`Failed to fetch ${account.username}:`, err.message);
-                }
-                return { data: {}, total: 0, stats: {} };
+                const u = account.username, year = new Date().getFullYear();
+                const [cal, repoList, prSearch, commitSearch] = await Promise.all([
+                    getJSON(`https://github-contributions-api.jogruber.de/v4/${u}?y=last`),
+                    getJSON(`https://api.github.com/users/${u}/repos?per_page=100&type=owner`),
+                    getJSON(`https://api.github.com/search/issues?q=author:${u}+type:pr`),
+                    getJSON(`https://api.github.com/search/commits?q=author:${u}+committer-date:>=${year}-01-01`),
+                ]);
+                const data = {};
+                (cal?.contributions || []).forEach(day => {
+                    data[day.date] = day.count;
+                    data[day.date + '_' + u] = day.count;
+                });
+                const repos = Array.isArray(repoList) ? repoList : [];
+                return {
+                    data,
+                    total: cal?.total?.lastYear || 0,
+                    commits: commitSearch?.total_count || 0,
+                    stars: repos.reduce((s, r) => s + (r.stargazers_count || 0), 0),
+                    prs: prSearch?.total_count || 0,
+                    stats: { repositories: { totalCount: repos.length } },
+                };
             };
 
             const fetchGitHubData = async () => {
@@ -3256,15 +3230,7 @@
                     heatmapGrid.innerHTML = '';
                     generateHeatmap(combinedData);
                 } else {
-                    heatmapGrid.innerHTML = '';
-                    const fallback = {};
-                    const now = new Date();
-                    for (let i = 0; i < 365; i++) {
-                        const d = new Date(now);
-                        d.setDate(d.getDate() - i);
-                        fallback[d.toISOString().split('T')[0]] = Math.random() > 0.6 ? Math.floor(Math.random() * 12) : 0;
-                    }
-                    generateHeatmap(fallback);
+                    heatmapGrid.innerHTML = '<div style="color:var(--dim);font-size:12px;padding:20px;">Contribution data is unavailable right now.</div>';
                 }
             };
 
