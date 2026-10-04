@@ -1,6 +1,7 @@
 FROM nginx:alpine
 
-COPY index.html styles.css app.js icon.svg robots.txt sitemap.xml Het_Patel_Resume.pdf /usr/share/nginx/html/
+COPY index.html styles.css app.js robots.txt sitemap.xml Het_Patel_Resume.pdf \
+     favicon.ico favicon.svg apple-touch-icon.png icon-192.png icon-512.png site.webmanifest /usr/share/nginx/html/
 COPY assets /usr/share/nginx/html/assets
 
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \

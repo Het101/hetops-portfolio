@@ -3,7 +3,6 @@
 :root {
   --sans: 'Geist', ui-sans-serif, system-ui, sans-serif;
   --mono: 'Geist Mono', ui-monospace, monospace;
-  --wordmark: 'Plus Jakarta Sans', var(--sans);
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
   --r: 14px;          /* cards and images */
   --r-ctl: 10px;      /* buttons */
@@ -63,10 +62,12 @@ code { font-family: var(--mono); font-size: 0.88em; padding: 1px 6px; border-rad
 .skip { position: absolute; left: -999px; top: 8px; padding: 8px 12px; background: var(--accent); color: var(--accent-ink); border-radius: 8px; z-index: 100; }
 .skip:focus { left: 8px; }
 
-/* Wordmark: kept from the existing brand */
-.wordmark { font-family: var(--wordmark); font-weight: 900; font-style: italic; font-size: 20px; letter-spacing: -0.5px; line-height: 1; }
-.wordmark .ops { color: var(--accent); }
-.wordmark-sm { font-size: 16px; }
+/* Brand lockup: the connected-H symbol + "HetOps" */
+.brand { display: inline-flex; align-items: center; gap: 10px; }
+.brand-mark { height: 22px; width: auto; flex-shrink: 0; }
+.brand-name { font-weight: 700; font-size: 19px; letter-spacing: -0.035em; color: var(--text); }
+.brand-sm .brand-mark { height: 17px; }
+.brand-sm .brand-name { font-size: 15px; }
 
 /* ── Nav ─────────────────────────────────────────────── */
 .nav {
