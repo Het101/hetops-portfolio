@@ -8,7 +8,7 @@
   --r: 16px;
   --r-ctl: 10px;
   --wrap: 1200px;
-  --nav-h: 68px;
+  --nav-h: 72px;
   /* z-index scale */
   --z-nav: 50; --z-sheet: 60; --z-toast: 80;
 }
@@ -113,17 +113,25 @@ kbd { font-family: var(--mono); font-size: 11px; padding: 2px 6px; border-radius
 #themeToggle i { transition: transform 0.4s var(--ease); }
 
 /* ── Navigation ──────────────────────────────────────── */
-.nav {
-  position: sticky; top: 0; z-index: var(--z-nav);
-  background: var(--glass);
-  backdrop-filter: blur(16px) saturate(150%); -webkit-backdrop-filter: blur(16px) saturate(150%);
-  border-bottom: 1px solid transparent; transition: border-color 0.3s, transform 0.4s var(--ease);
+/* A floating glass bar. It never hides or changes size, so the page under it never jumps;
+   scrolling only firms it up (border, shadow) and fills the progress line. */
+.nav { position: sticky; top: 0; z-index: var(--z-nav); padding-top: 12px; pointer-events: none; }
+.nav-inner {
+  position: relative; pointer-events: auto;
+  display: flex; align-items: center; gap: 20px; height: 60px;
+  max-width: calc(var(--wrap) - 32px); width: calc(100% - 32px); margin: 0 auto; padding: 0 10px 0 18px;
+  border-radius: 18px; border: 1px solid transparent; background: transparent;
+  transition: background-color 0.4s var(--ease), border-color 0.4s var(--ease), box-shadow 0.4s var(--ease);
 }
-.nav.scrolled { border-bottom-color: var(--line); }
-.nav.hidden { transform: translateY(-100%); }
-.nav-progress { position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; }
-.nav-progress span { display: block; height: 100%; background: linear-gradient(90deg, var(--accent), #6ee7b7); transform-origin: left; transform: scaleX(0); }
-.nav-inner { display: flex; align-items: center; gap: 20px; height: var(--nav-h); }
+.nav.scrolled .nav-inner {
+  background: var(--glass); border-color: var(--line-strong);
+  backdrop-filter: blur(18px) saturate(160%); -webkit-backdrop-filter: blur(18px) saturate(160%);
+  box-shadow: 0 1px 0 rgba(255,255,255,0.05) inset, 0 24px 60px -28px rgba(0,0,0,0.75);
+}
+[data-theme="light"] .nav.scrolled .nav-inner { box-shadow: 0 24px 50px -30px rgba(10,30,22,0.35); }
+.nav-progress { position: absolute; left: 18px; right: 18px; bottom: -1px; height: 2px; border-radius: 2px; overflow: hidden; opacity: 0; transition: opacity 0.4s; }
+.nav.scrolled .nav-progress { opacity: 1; }
+.nav-progress span { display: block; height: 100%; border-radius: 2px; background: linear-gradient(90deg, var(--accent), #6ee7b7); transform-origin: left; transform: scaleX(0); box-shadow: 0 0 12px rgba(16,185,129,0.6); }
 .nav-pill {
   position: relative; display: flex; gap: 2px; margin: 0 auto; padding: 4px;
   border: 1px solid var(--line); border-radius: 999px; background: var(--surface);

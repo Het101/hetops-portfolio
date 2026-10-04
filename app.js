@@ -16,7 +16,7 @@ const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const finePointer = matchMedia('(pointer: fine)').matches;
-const NAV_H = 68;
+const NAV_H = 72;
 
 // ── Smooth scroll + GSAP ────────────────────────────────────────
 const hasGsap = !!(window.gsap && window.ScrollTrigger) && !reduce;
@@ -81,14 +81,17 @@ const spy = new IntersectionObserver((entries) => {
   for (const e of entries) if (e.isIntersecting) setActive(e.target.id);
 }, { rootMargin: '-45% 0px -50% 0px' });
 sectionIds.forEach((id) => { const el = document.getElementById(id); if (el) spy.observe(el); });
-new IntersectionObserver(([e]) => { nav.classList.toggle('scrolled', !e.isIntersecting); if (e.isIntersecting) setActive(null); })
-  .observe($('#top'));
+// The bar firms up after the first few pixels of scroll. Position-based (a sentinel at the
+// very top), so it is stable at any scroll speed.
+const sentinel = Object.assign(document.createElement('div'), { ariaHidden: 'true' });
+sentinel.style.cssText = 'position:absolute;top:0;left:0;width:1px;height:12px;pointer-events:none';
+document.body.prepend(sentinel);
+new IntersectionObserver(([e]) => nav.classList.toggle('scrolled', !e.isIntersecting)).observe(sentinel);
+new IntersectionObserver(([e]) => { if (e.isIntersecting) setActive(null); }, { rootMargin: '0px 0px -60% 0px' }).observe($('#top'));
 addEventListener('resize', () => moveIndicator($('.nav-pill a.active')));
 
 if (hasGsap) {
   gsap.to('.nav-progress span', { scaleX: 1, ease: 'none', scrollTrigger: { start: 0, end: 'max', scrub: 0.3 } });
-  // Hide the nav while reading downwards fast; bring it back on any upward scroll.
-  ScrollTrigger.create({ start: 300, end: 'max', onUpdate: (self) => nav.classList.toggle('hidden', self.direction === 1 && self.getVelocity() > 900) });
 }
 
 // ── Mobile menu ─────────────────────────────────────────────────
