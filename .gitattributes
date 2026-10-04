@@ -1,0 +1,11 @@
+# LF everywhere: the hooks and the files nginx serves run on Linux, and a CRLF
+# shebang is "/bin/sh^M: not found".
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.pdf binary

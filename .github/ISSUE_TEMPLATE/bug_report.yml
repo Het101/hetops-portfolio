@@ -1,0 +1,39 @@
+name: Something looks broken on hetops.dev
+description: A section that renders wrong, a dead link, an animation that misbehaves.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time. This is for the site itself. A bug in one of the
+        tools it links to belongs in that tool's own repo (see the links on the
+        previous page), and a security problem belongs in a private advisory, never here.
+  - type: input
+    id: where
+    attributes:
+      label: Page and section
+      placeholder: hetops.dev, the "Work" section / the command palette / the contact links
+    validations: { required: true }
+  - type: input
+    id: browser
+    attributes:
+      label: Browser and device
+      placeholder: Safari 18 on iPhone 15, Firefox 131 on Windows 11, ...
+    validations: { required: true }
+  - type: textarea
+    id: saw
+    attributes:
+      label: What you saw
+      description: And what you expected instead, if it is not obvious.
+    validations: { required: true }
+  - type: checkboxes
+    id: motion
+    attributes:
+      label: Motion settings
+      options:
+        - label: My system has "reduce motion" turned on
+  - type: textarea
+    id: screenshot
+    attributes:
+      label: Screenshot
+      description: Drag an image in, if you have one.

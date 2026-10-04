@@ -1,0 +1,82 @@
+#!/bin/sh
+# hetops-portfolio pre-commit. Wired up once per clone with
+#   git config core.hooksPath .githooks
+# Run `git commit --no-verify` to skip, but CI runs the same checks, so
+# skipping only moves the failure later.
+set -e
+
+fail() {
+  echo ""
+  echo "pre-commit: $1" >&2
+  echo ""
+  exit 1
+}
+
+staged=$(git diff --cached --name-only --diff-filter=ACM)
+[ -z "$staged" ] && exit 0
+
+# --- 1. Secrets must never enter the history ----------------------------------
+# This repo is public and served as-is. A commit is the last cheap place to
+# catch a credential; after a push it is too late.
+
+# .env and .env.<anything>, except templates that are meant to be committed.
+if echo "$staged" | grep -E '(^|/)\.env($|\.)' | grep -qvE '\.env\.(example|sample|template|dist)$'; then
+  fail "refusing to commit a .env file. Use .env.example with placeholders."
+fi
+
+added=$(git diff --cached --unified=0 -- $(echo "$staged" | tr '\n' ' ') 2>/dev/null | grep '^+' || true)
+
+# Match on the SHAPE of a real secret, not on an allowlist of placeholders. A
+# check that cries wolf is a check people learn to bypass. The Umami website ID
+# in app.js is public by design and deliberately not matched.
+if echo "$added" | grep -qE -e '-----BEGIN [A-Z ]*PRIVATE KEY-----'; then
+  fail "a private key looks like it is being committed."
+fi
+if echo "$added" | grep -qE 'AKIA[0-9A-Z]{16}'; then
+  fail "an AWS access key looks like it is being committed."
+fi
+if echo "$added" | grep -qE 'npm_[A-Za-z0-9]{36}'; then
+  fail "an npm token looks like it is being committed."
+fi
+
+# --- 2. Commits have to be signed ---------------------------------------------
+# main rejects unsigned commits, so without this the news arrives at merge time,
+# after CI has run. A pre-commit hook cannot inspect a signature that does not
+# exist yet, so it checks that signing is configured; pre-push checks the
+# commits themselves, including the ones rebases produce.
+
+if [ "$(git config --get commit.gpgsign)" != "true" ]; then
+  fail "commit signing is off, and main requires signed commits.
+    git config commit.gpgsign true
+    git config rebase.gpgsign true
+  No key yet? SSH signing is the shortest route:
+    git config gpg.format ssh
+    git config user.signingkey ~/.ssh/id_ed25519.pub
+  then add that public key to https://github.com/settings/keys a second time,
+  as a signing key."
+fi
+
+if [ -z "$(git config --get user.signingkey)" ] && [ "$(git config --get gpg.format)" != "ssh" ]; then
+  fail "commit.gpgsign is on but user.signingkey is unset, so the commit will fail to sign."
+fi
+
+# A rebase that is not told to sign strips the signatures off everything it
+# rewrites, which is how a signed branch becomes an unsigned one on the way to a
+# pull request.
+if [ "$(git config --get rebase.gpgsign)" != "true" ]; then
+  echo "pre-commit: note — rebase.gpgsign is not set, so a rebase will unsign these commits." >&2
+  echo "            git config rebase.gpgsign true" >&2
+fi
+
+# --- 3. The script has to parse -----------------------------------------------
+# A syntax error in app.js fails nothing at deploy time; the page just loads
+# with every animation and the command palette dead.
+if echo "$staged" | grep -qx 'app.js'; then
+  if command -v node > /dev/null 2>&1; then
+    node --check app.js || fail "app.js has a syntax error."
+  else
+    echo "pre-commit: note — node is not installed, skipping the app.js syntax check (CI still runs it)." >&2
+  fi
+fi
+
+exit 0

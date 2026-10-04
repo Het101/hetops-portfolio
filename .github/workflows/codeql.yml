@@ -1,0 +1,42 @@
+name: codeql
+
+# app.js is the only code here, but it is the code every visitor runs: it
+# builds DOM from data and wires up the command palette and the copy button.
+# CodeQL reads it for DOM XSS and similar, so a careless innerHTML is flagged
+# before it ships rather than after.
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    # Weekly, so a newly-disclosed pattern is found without waiting for a commit.
+    - cron: "17 4 * * 1"
+
+# Read-only floor. The one job that needs to write does so below, scoped to
+# itself, so a step added later cannot quietly inherit write.
+permissions:
+  contents: read
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      actions: read
+      contents: read
+    steps:
+      # First step on purpose, so it sees every step after it. Audit mode
+      # records network destinations without blocking.
+      - uses: step-security/harden-runner@e14015d583714f6e62063499dc959a02595150a1 # v2.21.1
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - uses: github/codeql-action/init@2892aa5e19bbd11bc0cff5427e3b750a04d9e3c2 # v4
+        with:
+          languages: javascript-typescript
+          queries: security-and-quality
+      - uses: github/codeql-action/analyze@2892aa5e19bbd11bc0cff5427e3b750a04d9e3c2 # v4

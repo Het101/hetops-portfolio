@@ -1,0 +1,24 @@
+version: 2
+updates:
+  # The only dependencies this repo pins are the actions in its workflows and
+  # the nginx base image. The CDN scripts in index.html are version-pinned by
+  # URL and bumped by hand, since a bump there needs eyes on the page anyway.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    # Wait before proposing a brand-new version. Most malicious releases are
+    # yanked within a couple of days of publication, and a week is long enough
+    # that a compromised release is usually gone before it reaches a PR here.
+    cooldown:
+      default-days: 7
+    commit-message:
+      prefix: "ci"
+  - package-ecosystem: docker
+    directory: /
+    schedule:
+      interval: monthly
+    cooldown:
+      default-days: 7
+    commit-message:
+      prefix: "build"
