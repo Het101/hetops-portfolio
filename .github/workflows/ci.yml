@@ -1,0 +1,182 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Least privilege by default. A job that needs more asks for it explicitly.
+permissions:
+  contents: read
+
+jobs:
+  site:
+    runs-on: ubuntu-latest
+    steps:
+      # First step on purpose, so it sees every step after it. Watches what
+      # this job talks to over the network: everything else here checks code
+      # before it runs, and this is the only thing that notices something
+      # misbehaving while it runs. Audit mode records destinations without
+      # blocking, which is what an allowlist for block mode has to be built from.
+      - uses: step-security/harden-runner@e14015d583714f6e62063499dc959a02595150a1 # v2.21.1
+        with:
+          egress-policy: audit
+
+      # Actions are pinned to commit SHAs, not tags. A tag is mutable: whoever
+      # controls the action's repo can repoint v7 at new code, and it runs here
+      # with our token. The trailing comment is the human-readable version.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      # There is no build step, so nothing else would notice a renamed image or
+      # a typo in a path: the page just ships with a broken icon. Every
+      # root-relative path in the HTML, the script and the manifest, plus the
+      # absolute hetops.dev ones in the meta tags, has to be a file in the repo.
+      # The list is kept for the container step, which asks nginx for each one.
+      - name: every local link points at a real file
+        run: |
+          node - > "$RUNNER_TEMP/paths" <<'JS'
+          const fs = require('fs');
+          const seen = new Set();
+          for (const file of ['index.html', 'app.js', 'site.webmanifest']) {
+            const text = fs.readFileSync(file, 'utf8');
+            // A whole quoted string, so a regex literal like /x"/g is not a path.
+            const re = /(["'])(?:https:\/\/hetops\.dev)?(\/[A-Za-z0-9_][^"'?#\s]*)(?:[?#][^"'\s]*)?\1/g;
+            for (const m of text.matchAll(re)) seen.add(m[2]);
+          }
+          const missing = [...seen].filter(p => !fs.existsSync('.' + p));
+          for (const p of missing) console.error(`::error::${p} is linked but does not exist`);
+          if (missing.length) process.exit(1);
+          if (seen.size === 0) { console.error('::error::found no local paths at all; the pattern is broken'); process.exit(1); }
+          console.log([...seen].join('\n'));
+          JS
+          echo "$(wc -l < "$RUNNER_TEMP/paths") local paths, all present"
+
+      # A syntax error in app.js does not fail anything at deploy time. The page
+      # loads, every animation and the command palette are simply dead.
+      - name: app.js parses
+        run: node --check app.js
+
+      # The Dockerfile copies files by name, so a new file that the HTML links
+      # to can exist in the repo and still be missing from the image. Build the
+      # image Coolify will build, serve it, and ask it for the page and for
+      # every path the link check found.
+      - name: the image builds and serves the site
+        run: |
+          set -e
+          docker build -t portfolio .
+          docker run -d --name portfolio -p 8080:80 portfolio
+          trap 'docker rm -f portfolio > /dev/null' EXIT
+          for _ in $(seq 1 20); do
+            curl -fs -o /dev/null http://localhost:8080/ && break
+            sleep 1
+          done
+          code=$(curl -s -o page.html -w '%{http_code}' http://localhost:8080/)
+          if [ "$code" != "200" ]; then
+            echo "::error::GET / returned $code"
+            exit 1
+          fi
+          grep -q '<title>Het Patel' page.html || { echo "::error::served page has no site title"; exit 1; }
+          while read -r p; do
+            code=$(curl -s -o /dev/null -w '%{http_code}' "http://localhost:8080$p")
+            if [ "$code" != "200" ]; then
+              echo "::error::$p is in the repo but the image returns $code (missing from the Dockerfile COPY?)"
+              exit 1
+            fi
+          done < "$RUNNER_TEMP/paths"
+          echo "image serves the page and every local path"
+
+  hygiene:
+    runs-on: ubuntu-latest
+    steps:
+      # First step on purpose, so it sees every step after it. Audit mode
+      # records network destinations without blocking.
+      - uses: step-security/harden-runner@e14015d583714f6e62063499dc959a02595150a1 # v2.21.1
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      # Static analysis for the workflows themselves. CI is the most privileged
+      # code in the repo and the part nothing else reviews. zizmor catches
+      # template injection, tokens left in .git/config, cache poisoning and
+      # unpinned actions. Pinned, for the same reason everything else here is.
+      - name: audit the workflows
+        run: pipx run zizmor==1.30.1 --persona=regular .github/
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+      # The pre-commit hook can be bypassed with --no-verify. This cannot.
+      # The Umami website ID in app.js is public by design (every visitor's
+      # browser sends it) and is deliberately not matched here.
+      - name: scan the tree for committed secrets
+        run: |
+          set -e
+          if git grep -nE -e '-----BEGIN [A-Z ]*PRIVATE KEY-----'; then
+            echo "::error::a private key is present in the tree"
+            exit 1
+          fi
+          if git grep -nE 'AKIA[0-9A-Z]{16}'; then
+            echo "::error::an AWS access key is present in the tree"
+            exit 1
+          fi
+          if git grep -nE 'npm_[A-Za-z0-9]{36}'; then
+            echo "::error::an npm token is present in the tree"
+            exit 1
+          fi
+          if git ls-files | grep -E '(^|/)\.env($|\.)' | grep -vE '\.env\.(example|sample|template|dist)$'; then
+            echo "::error::a .env file is committed"
+            exit 1
+          fi
+          echo "no secrets found in the tree"
+
+      - name: commit messages are conventional and unattributed
+        # Through env, never interpolated into the script body. A ${{ }} inside
+        # run is substituted before the shell sees it, so anything attacker-
+        # controlled becomes shell code. It is a SHA here, but the habit is what
+        # keeps the next one from being a branch name.
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          set -e
+          base="$BASE_SHA"
+          if [ -z "$base" ]; then base="HEAD~1"; fi
+          for sha in $(git log --format='%H' "$base..HEAD"); do
+            git log -1 --format='%B' "$sha" > /tmp/msg
+            .githooks/commit-msg /tmp/msg
+          done
+          echo "commit messages ok"
+
+      - name: commits must be signed
+        # main rejects unsigned commits, but the rejection arrives at merge time
+        # with no explanation of the cause. The usual cause is a rebase that was
+        # not told to sign — including GitHub's own "Update branch" button, which
+        # rebases server-side and cannot sign as you.
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          set -e
+          if [ -z "$PR" ]; then
+            echo "not a pull request; nothing to check"
+            exit 0
+          fi
+          unsigned=$(gh api "repos/$GITHUB_REPOSITORY/pulls/$PR/commits" \
+            --jq '.[] | select(.commit.verification.verified == false) | .sha[0:8] + "  " + (.commit.message | split("\n")[0])')
+          if [ -n "$unsigned" ]; then
+            echo "::error::unsigned commits in this pull request"
+            echo "$unsigned"
+            echo ""
+            echo "Sign them with:"
+            echo "  git rebase --exec 'git commit --amend --no-edit -S' origin/main"
+            echo "  git push --force-with-lease"
+            echo ""
+            echo "Do not use GitHub's 'Update branch' button: it rebases on the"
+            echo "server and strips signatures. Rebase locally instead."
+            exit 1
+          fi
+          echo "all commits signed"
