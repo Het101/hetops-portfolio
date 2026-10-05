@@ -74,40 +74,21 @@
 
   <main id="main">
 
-    <!-- Hero: the eye wakes up and shows what it watches -->
+    <!-- Hero: a 3D eye wakes up; Het's tools and results orbit it -->
     <section class="hero" id="top" data-section="hero">
-      <div class="eye-wrap" id="eyeWrap">
-        <div class="eye" id="eye">
-          <div class="iris" id="iris">
-            <canvas class="iris-canvas" id="irisCanvas" aria-hidden="true"></canvas>
-            <div class="pupil" aria-hidden="true"><span class="glint"></span></div>
-            <ul class="orbit" id="orbit" aria-label="Tools I built and run"></ul>
-          </div>
-        </div>
-        <div class="world" id="world">
-          <svg class="veins" id="veins" aria-hidden="true"></svg>
-          <ul class="world-list" aria-label="Results">
-            <li style="--x: 29%; --y: 30%"><b>$2M+</b><span>a year saved by cloud cost automation</span></li>
-            <li style="--x: 26%; --y: 50%"><b>10k+</b><span>canary deployments, automated rollback</span></li>
-            <li style="--x: 29%; --y: 70%"><b>100+</b><span>node clusters on AWS, GCP and Azure</span></li>
-            <li class="r" style="--x: 71%; --y: 30%"><b>62 → 0</b><span>code-scanning alerts on DNS Intelligence</span></li>
-            <li class="r" style="--x: 74%; --y: 50%"><b>7,200</b><span>chat threads repaired after a bad migration</span></li>
-            <li class="r" style="--x: 71%; --y: 70%" data-live-hide hidden><b data-live="npmAll"></b><span>npm installs last month</span></li>
-          </ul>
-        </div>
-        <svg class="lids" id="lids" aria-hidden="true"><path class="lid lid-up"/><path class="lid lid-low"/><path class="lashes"/></svg>
-      </div>
-      <p class="eye-caption" id="eyeCaption" aria-live="polite">Six tools I built and run. Pick one.</p>
-
-      <div class="hero-text">
+      <div class="hero-copy">
         <h1>I turn production incidents into <em>tools</em>.</h1>
-        <div class="hero-side">
-          <p class="lede">Het Patel, DevOps Engineer II at Techdome, Mumbai. Multi-cloud Kubernetes at work, open-source tools for everyone else.</p>
-          <div class="ctas">
-            <a class="btn btn-gold" href="mailto:patel.x.het@gmail.com" data-umami-event="email-click" data-umami-event-from="hero"><i class="ph ph-envelope-simple" aria-hidden="true"></i>Email me</a>
-            <a class="btn btn-line" href="/Het_Patel_Resume.pdf" target="_blank" rel="noopener" data-umami-event="resume-download" data-umami-event-from="hero"><i class="ph ph-file-text" aria-hidden="true"></i>Résumé (PDF)</a>
-          </div>
+        <p class="lede">Het Patel, DevOps Engineer II at Techdome, Mumbai. Multi-cloud Kubernetes at work, open-source tools for everyone else.</p>
+        <div class="ctas">
+          <a class="btn btn-gold" href="mailto:patel.x.het@gmail.com" data-umami-event="email-click" data-umami-event-from="hero"><i class="ph ph-envelope-simple" aria-hidden="true"></i>Email me</a>
+          <a class="btn btn-line" href="/Het_Patel_Resume.pdf" target="_blank" rel="noopener" data-umami-event="resume-download" data-umami-event-from="hero"><i class="ph ph-file-text" aria-hidden="true"></i>Résumé (PDF)</a>
         </div>
+        <p class="eye-caption" id="eyeCaption" aria-live="polite">The eye watches what I run. Point at a tool on its inner orbit.</p>
+      </div>
+      <div class="eye-stage" id="eyeStage">
+        <div class="eye-fallback" aria-hidden="true"><span></span></div>
+        <canvas class="eye-canvas" id="eyeCanvas" aria-hidden="true"></canvas>
+        <ul class="orbits" id="orbits" aria-label="My tools, results and stack"></ul>
       </div>
     </section>
 
@@ -173,8 +154,8 @@
             <div class="panel" data-panel="2">
               <div class="diff">
                 <div class="del"><span>-</span>author: system</div>
-                <div class="add"><span>+</span>author: metadata.originalSenderUserId</div>
-                <div class="add"><span>+</span>participants: restored from extract</div>
+                <div class="add"><span>+</span>author: original sender</div>
+                <div class="add"><span>+</span>participants: restored</div>
               </div>
               <span class="big-lbl">history preserved, authors restored</span>
             </div>
@@ -397,5 +378,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
   <script src="/app.js" defer></script>
+  <script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/" } }</script>
+  <script type="module" src="/eye3d.js"></script>
 </body>
 </html>
