@@ -228,7 +228,9 @@ if (renderer) {
   // ── Pointer: the eye follows the pointer, or the tool you point at ─
   const aim = { x: 0, y: 0 }, look = { x: 0, y: 0 };
   // Docked in the corner it watches the whole page, so the range is the viewport.
+  let lastMove = 0;
   if (!reduce) addEventListener('pointermove', (e) => {
+    lastMove = performance.now();
     const r = body.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
     const rx = docked ? innerWidth * 0.45 : r.width * 0.6, ry = docked ? innerHeight * 0.45 : r.height * 0.6;
     aim.x = Math.max(-1, Math.min(1, (e.clientX - cx) / rx));
@@ -310,6 +312,21 @@ if (renderer) {
     start();
   }
   new IntersectionObserver(([e]) => { setDock(e.intersectionRatio < 0.3 && e.boundingClientRect.top < 0); }, { threshold: [0, 0.3, 0.6] }).observe(stage);
+  // Something new came into focus: if the visitor isn't steering with the pointer,
+  // glance at it, and blink when a new section arrives.
+  let lastBlink = 0;
+  window.addEventListener('eye:glance', (ev) => {
+    if (!docked || reduce) return;
+    const now = performance.now();
+    if (now - lastMove > 1800) {
+      const t = ev.detail.getBoundingClientRect(), r = body.getBoundingClientRect();
+      aim.x = Math.max(-1, Math.min(1, (t.left + t.width / 2 - (r.left + r.width / 2)) / (innerWidth * 0.45)));
+      aim.y = Math.max(-1, Math.min(1, (t.top + t.height / 2 - (r.top + r.height / 2)) / (innerHeight * 0.45)));
+    }
+    if (ev.detail.tagName === 'H2' && now - lastBlink > 2500 && !tweens.length) {
+      lastBlink = now; tween(0.02, 0.08, easeIn).then(() => tween(1, 0.2, easeOut));
+    }
+  });
   // The contact section has its own eye; the watcher steps aside there.
   const contact = document.getElementById('contact');
   if (contact) new IntersectionObserver(([e]) => { body.classList.toggle('resting', e.isIntersecting); }, { threshold: 0.2 }).observe(contact);

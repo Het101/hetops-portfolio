@@ -471,6 +471,14 @@ h3 { font-size: 24px; font-stretch: 108%; }
   .footer { flex-wrap: wrap; }
 }
 
+/* Focus grammar: blur to sharp; screenshots open through a round aperture. */
+.pre-focus { filter: blur(9px); opacity: 0.25; transform: scale(0.985); transition: filter 0.9s var(--ease), opacity 0.9s var(--ease), transform 0.9s var(--ease); }
+.pre-focus.focused { filter: none; opacity: 1; transform: none; }
+.chart li.pre-focus.focused { transition-duration: 0.7s; }
+.pre-aperture { clip-path: circle(0% at 50% 50%); transition: clip-path 1.2s cubic-bezier(0.65, 0, 0.2, 1); }
+.pre-aperture.apertured { clip-path: circle(75% at 50% 50%); }
+.stage.pre-aperture.apertured, .ring.pre-aperture.apertured { clip-path: circle(50% at 50% 50%); }
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation: none !important; transition-duration: 0.01ms !important; }
