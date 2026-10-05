@@ -88,7 +88,7 @@
 
   function finish() {
     if (done) return; done = true;
-    root.classList.remove('intro');
+    root.classList.remove('intro'); root.classList.add('intro-landed');
     overlay.remove();
     window.dispatchEvent(new Event('intro:done'));
   }

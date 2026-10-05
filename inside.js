@@ -102,6 +102,33 @@ if (!renderer) {
   tGeo.setAttribute('position', new THREE.BufferAttribute(tPos, 3)); tGeo.setAttribute('color', new THREE.BufferAttribute(tCol, 3));
   scene.add(new THREE.Points(tGeo, new THREE.PointsMaterial({ size: 0.2, vertexColors: true, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending })));
 
+  // ── Dust: faint motes along the whole route so the flight never feels empty ─
+  {
+    const n = small ? 900 : 2000, pos = new Float32Array(n * 3), col = new Float32Array(n * 3);
+    for (let i = 0; i < n; i++) {
+      pos.set([(rnd() - 0.5) * 70, (rnd() - 0.5) * 40, 8 - rnd() * 300], i * 3);
+      const c = rnd() < 0.5 ? GOLD : MOSS, f = 0.15 + rnd() * 0.35; col.set([c.r * f, c.g * f, c.b * f], i * 3);
+    }
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.BufferAttribute(pos, 3)); g.setAttribute('color', new THREE.BufferAttribute(col, 3));
+    scene.add(new THREE.Points(g, new THREE.PointsMaterial({ size: 0.12, vertexColors: true, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending })));
+  }
+
+  // ── Labels in the scene: cloud names over the clusters, stage names over the gates ─
+  const label = (text, color, x, y, z, h = 1.1) => {
+    const c = document.createElement('canvas'), g = c.getContext('2d'), font = '600 64px Archivo, system-ui, sans-serif';
+    g.font = font; const w = Math.ceil(g.measureText(text).width) + 48; c.width = w; c.height = 96;
+    g.font = font; g.fillStyle = 'rgba(8,9,10,0.75)'; g.beginPath(); g.roundRect(0, 8, w, 80, 40); g.fill();
+    g.fillStyle = color; g.textBaseline = 'middle'; g.fillText(text, 24, 50);
+    const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace;
+    const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: t, transparent: true, depthWrite: false }));
+    s.scale.set(h * (w / 96), h, 1); s.position.set(x, y, z); scene.add(s); return s;
+  };
+  document.fonts.ready.then(() => {
+    clusters.forEach((c) => label(c.name, '#efe9dd', c.g.position.x, c.g.position.y + 2.4, c.g.position.z));
+    ['test', 'hygiene', 'analyze', 'stage', 'approve'].forEach((n, k) => label(n, '#74d3ab', gatesX[k], 2.6, PZ, 0.8));
+  });
+
   // ── Camera path ──────────────────────────────────────────────
   const camPath = new THREE.CatmullRomCurve3([
     [0, 0, 16], [0, 0, 4], [0, 0.5, -30], [0, 1, -58], [12, 9, -82], [-14, 7, -108], [-26, 4, -140], [0, 5, -140], [26, 4, -142],
@@ -128,6 +155,15 @@ if (!renderer) {
   const band = (p, a, b) => Math.min(1, Math.max(0, (p - a) / (b - a)));
   const fmt = (n) => '$' + (n >= 1e6 ? (n / 1e6).toFixed(n >= 1.995e6 ? 0 : 2) + 'M' : Math.round(n / 1000) + 'k');
   const tmpC = new THREE.Color();
+  // Pointer parallax: the camera leans a little toward the pointer for depth.
+  const lean = { x: 0, y: 0, tx: 0, ty: 0 };
+  if (matchMedia('(pointer: fine)').matches) addEventListener('pointermove', (e) => { lean.tx = (e.clientX / innerWidth - 0.5) * 2; lean.ty = (e.clientY / innerHeight - 0.5) * 2; }, { passive: true });
+  // Journey rail: five stops, current one lit, each one a jump.
+  const rail = [...section.querySelectorAll('.inside-rail button')];
+  rail.forEach((b) => b.addEventListener('click', () => {
+    const span = section.offsetHeight - innerHeight;
+    scrollTo({ top: section.offsetTop + span * +b.dataset.p, behavior: 'smooth' });
+  }));
 
   function frame(now) {
     const dt = Math.min(0.05, (now - last) / 1000); last = now; clock += dt;
@@ -135,6 +171,8 @@ if (!renderer) {
     shown += (progress - shown) * Math.min(1, dt * 6);
     const p = shown;
     camera.position.copy(camPath.getPointAt(p));
+    lean.x += (lean.tx - lean.x) * Math.min(1, dt * 3); lean.y += (lean.ty - lean.y) * Math.min(1, dt * 3);
+    camera.position.x += lean.x * 0.9; camera.position.y -= lean.y * 0.6;
     camera.lookAt(lookPath.getPointAt(Math.min(1, p + 0.01)));
     key.position.copy(camera.position).add(new THREE.Vector3(0, 3, -4));
     iris.rotation.z = clock * 0.05; iris.material.opacity = 1 - band(p, 0.02, 0.07);
@@ -177,6 +215,9 @@ if (!renderer) {
     tGeo.attributes.position.needsUpdate = true; tGeo.attributes.color.needsUpdate = true;
 
     caps.forEach((c) => { const a = +c.dataset.from, b = +c.dataset.to; c.classList.toggle('on', p >= a && p <= b); });
+    let cur = 0; rail.forEach((b, k) => { if (p >= +b.dataset.p - 0.05) cur = k; });
+    rail.forEach((b, k) => b.classList.toggle('on', k === cur));
+    section.style.setProperty('--journey', p.toFixed(4));
     renderer.render(scene, camera);
     if (running) requestAnimationFrame(frame);
   }

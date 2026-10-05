@@ -79,7 +79,7 @@
   const wait = (ms) => new Promise((r) => setTimeout(r, ms));
   let running = false, started = 0;
   const begin = (title) => { running = true; started = performance.now(); btns.forEach((b) => { b.disabled = true; }); log(title, 'alert'); };
-  const end = (msg) => { log(msg, 'ok'); running = false; btns.forEach((b) => { b.disabled = false; }); window.umami && window.umami.track('chaos-resolved'); };
+  const end = (msg) => { log(msg, 'ok'); running = false; btns.forEach((b) => { b.disabled = false; b.classList.remove('running'); }); window.umami && window.umami.track('chaos-resolved'); };
 
   const SCENARIOS = {
     async pod() {
@@ -121,6 +121,6 @@
       end(`Bad release stopped in ${((performance.now() - started) / 1000).toFixed(1)}s, before 25% of traffic saw it.`);
     },
   };
-  btns.forEach((b) => b.addEventListener('click', () => { if (!running) { SCENARIOS[b.dataset.break](); window.umami && window.umami.track('chaos-' + b.dataset.break); } }));
+  btns.forEach((b) => b.addEventListener('click', () => { if (!running) { SCENARIOS[b.dataset.break](); b.classList.add('running'); window.umami && window.umami.track('chaos-' + b.dataset.break); } }));
   log('All systems normal. Pick something to break.', 'ok');
 })();
