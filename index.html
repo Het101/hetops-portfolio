@@ -1,13 +1,12 @@
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Het Patel: DevOps engineer building tools from production incidents</title>
-  <meta name="description" content="Het Patel, DevOps Engineer II in Mumbai. Multi-cloud Kubernetes at work; open-source tools like Threadvault and DNS Intelligence for everyone else.">
+  <meta name="description" content="Het Patel, DevOps Engineer II in Mumbai. Multi-cloud Kubernetes at work; open-source tools like Threadvault, DNS Intelligence and Retirement Radar for everyone else.">
   <link rel="canonical" href="https://hetops.dev/">
-  <meta name="theme-color" content="#0b0c0e" media="(prefers-color-scheme: dark)">
-  <meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#08090a">
   <link rel="icon" href="/favicon.ico" sizes="48x48">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -16,7 +15,7 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://hetops.dev/">
   <meta property="og:title" content="Het Patel: I turn production incidents into tools">
-  <meta property="og:description" content="DevOps Engineer II in Mumbai. Threadvault, DNS Intelligence, and multi-cloud Kubernetes.">
+  <meta property="og:description" content="DevOps Engineer II in Mumbai. Threadvault, DNS Intelligence, Retirement Radar and multi-cloud Kubernetes.">
   <meta property="og:image" content="https://hetops.dev/assets/og.png?v=2">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -26,45 +25,31 @@
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"Person","name":"Het Patel","url":"https://hetops.dev/","jobTitle":"DevOps Engineer II","worksFor":{"@type":"Organization","name":"Techdome"},"address":{"@type":"PostalAddress","addressLocality":"Mumbai","addressCountry":"IN"},"alumniOf":"CHARUSAT University","sameAs":["https://github.com/Het101","https://www.linkedin.com/in/het11/","https://medium.com/@het101"]}
   </script>
-  <script>
-    try { var t = localStorage.getItem('theme'); if (t) document.documentElement.dataset.theme = t;
-      else if (matchMedia('(prefers-color-scheme: light)').matches) document.documentElement.dataset.theme = 'light'; } catch (e) {}
-  </script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
   <link rel="stylesheet" href="/styles.css">
-  <link rel="preload" as="image" href="/assets/img/dns-report.webp?v=2">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
 
-  <!-- ── Navigation ───────────────────────────────────────── -->
   <header class="nav" id="nav">
-    <div class="nav-inner">
-      <div class="nav-progress" aria-hidden="true"><span></span></div>
-      <a class="brand" href="#top" aria-label="HetOps, back to top"><svg class="brand-mark" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="10 22 80 56" fill="#10b981"><rect x="10" y="22" width="24" height="56" rx="5"/><rect x="66" y="22" width="24" height="56" rx="5"/><rect x="33" y="46" width="34" height="8"/><circle cx="50" cy="50" r="11"/></svg><span class="brand-name">HetOps</span></a>
-      <nav class="nav-pill" aria-label="Sections">
-        <span class="nav-indicator" aria-hidden="true"></span>
-        <a href="#experience" data-nav="experience">Experience</a>
-        <a href="#work" data-nav="work">Work</a>
-        <a href="#how-i-ship" data-nav="how-i-ship">How I ship</a>
-        <a href="#contact" data-nav="contact">Contact</a>
-      </nav>
-      <div class="nav-actions">
-        <a class="nav-cv" href="/Het_Patel_Resume.pdf" target="_blank" rel="noopener" data-umami-event="resume-download" data-umami-event-from="nav"><i class="ph ph-file-text" aria-hidden="true"></i>Résumé</a>
-        <button class="kbd-btn" id="paletteBtn" type="button" aria-label="Open quick navigation" data-umami-event="palette-open" data-umami-event-from="nav">
-          <i class="ph ph-magnifying-glass" aria-hidden="true"></i><span>Jump to</span><kbd>Ctrl K</kbd>
-        </button>
-        <button class="icon-btn" id="themeToggle" type="button" aria-label="Switch colour theme"><i class="ph ph-sun" aria-hidden="true"></i></button>
-        <button class="icon-btn menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="menu"><i class="ph ph-list" aria-hidden="true"></i></button>
-      </div>
+    <a class="brand" href="#top" aria-label="HetOps, back to top"><svg class="brand-mark" aria-hidden="true" viewBox="10 22 80 56"><rect x="10" y="22" width="24" height="56" rx="5"/><rect x="66" y="22" width="24" height="56" rx="5"/><rect x="33" y="46" width="34" height="8"/><circle cx="50" cy="50" r="11"/></svg><span>HetOps</span></a>
+    <nav class="nav-links" aria-label="Sections">
+      <a href="#experience" data-nav="experience">Experience</a>
+      <a href="#work" data-nav="work">Work</a>
+      <a href="#how-i-ship" data-nav="how-i-ship">How I ship</a>
+      <a href="#contact" data-nav="contact">Contact</a>
+    </nav>
+    <div class="nav-actions">
+      <button class="nav-btn" id="paletteBtn" type="button" aria-label="Open quick navigation" data-umami-event="palette-open" data-umami-event-from="nav"><i class="ph ph-magnifying-glass" aria-hidden="true"></i><kbd>Ctrl K</kbd></button>
+      <a class="nav-cv" href="/Het_Patel_Resume.pdf" target="_blank" rel="noopener" data-umami-event="resume-download" data-umami-event-from="nav">Résumé</a>
+      <button class="nav-btn menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="menu"><i class="ph ph-list" aria-hidden="true"></i></button>
     </div>
   </header>
 
-  <!-- Mobile menu -->
   <div class="sheet" id="menu" hidden>
     <nav aria-label="Menu">
       <a href="#experience">Experience</a>
@@ -73,10 +58,9 @@
       <a href="#writing">Writing</a>
       <a href="#contact">Contact</a>
     </nav>
-    <a class="btn btn-ghost" href="/Het_Patel_Resume.pdf" target="_blank" rel="noopener" data-umami-event="resume-download" data-umami-event-from="menu">Résumé (PDF)</a>
+    <a class="btn btn-line" href="/Het_Patel_Resume.pdf" target="_blank" rel="noopener" data-umami-event="resume-download" data-umami-event-from="menu">Résumé (PDF)</a>
   </div>
 
-  <!-- Command palette -->
   <dialog class="palette" id="palette" aria-label="Quick navigation">
     <div class="palette-box">
       <div class="palette-search">
@@ -90,209 +74,246 @@
 
   <main id="main">
 
-    <!-- ── Hero ─────────────────────────────────────────────── -->
-    <section class="hero wrap" id="top" data-section="hero">
-      <div class="hero-copy">
-        <h1 class="split">I turn production incidents into <em>tools</em>.</h1>
-        <p class="lede">Het Patel, DevOps Engineer II at Techdome, Mumbai. Multi-cloud Kubernetes at work, open-source tools for everyone else.</p>
-        <div class="hero-ctas">
-          <a class="btn btn-primary" href="mailto:patel.x.het@gmail.com" data-umami-event="email-click" data-umami-event-from="hero"><i class="ph ph-envelope-simple" aria-hidden="true"></i>Email me</a>
-          <a class="btn btn-ghost" href="/Het_Patel_Resume.pdf" target="_blank" rel="noopener" data-umami-event="resume-download" data-umami-event-from="hero"><i class="ph ph-file-text" aria-hidden="true"></i>Résumé (PDF)</a>
+    <!-- Hero: the eye wakes up and shows what it watches -->
+    <section class="hero" id="top" data-section="hero">
+      <div class="eye-wrap" id="eyeWrap">
+        <div class="eye" id="eye">
+          <div class="iris" id="iris">
+            <canvas class="iris-canvas" id="irisCanvas" aria-hidden="true"></canvas>
+            <div class="pupil" aria-hidden="true"><span class="glint"></span></div>
+            <ul class="orbit" id="orbit" aria-label="Tools I built and run"></ul>
+          </div>
         </div>
-        <ul class="creds" aria-label="Highlights">
-          <li><b>$2M+</b> a year saved through cloud cost automation</li>
-          <li><b>10k+</b> canary deployments with automated rollback</li>
-          <li><b>100+</b> node clusters across AWS, GCP and Azure</li>
-        </ul>
+        <div class="world" id="world">
+          <svg class="veins" id="veins" aria-hidden="true"></svg>
+          <ul class="world-list" aria-label="Results">
+            <li style="--x: 29%; --y: 30%"><b>$2M+</b><span>a year saved by cloud cost automation</span></li>
+            <li style="--x: 26%; --y: 50%"><b>10k+</b><span>canary deployments, automated rollback</span></li>
+            <li style="--x: 29%; --y: 70%"><b>100+</b><span>node clusters on AWS, GCP and Azure</span></li>
+            <li class="r" style="--x: 71%; --y: 30%"><b>62 → 0</b><span>code-scanning alerts on DNS Intelligence</span></li>
+            <li class="r" style="--x: 74%; --y: 50%"><b>7,200</b><span>chat threads repaired after a bad migration</span></li>
+            <li class="r" style="--x: 71%; --y: 70%" data-live-hide hidden><b data-live="npmAll"></b><span>npm installs last month</span></li>
+          </ul>
+        </div>
+        <svg class="lids" id="lids" aria-hidden="true"><path class="lid lid-up"/><path class="lid lid-low"/><path class="lashes"/></svg>
       </div>
-      <div class="hero-visual" id="tilt" aria-hidden="true">
-        <div class="tilt-stage">
-          <figure class="shot shot-back"><img src="/assets/img/dns-report.webp?v=2" width="1600" height="1075" alt="" fetchpriority="high"></figure>
-          <figure class="shot shot-front"><img src="/assets/img/doctor-output.webp" width="1400" height="806" alt=""></figure>
-          <div class="chip chip-a"><img src="/assets/brand/dns-icon.svg" alt="" width="20" height="20">26 checks per scan</div>
-          <div class="chip chip-b" data-live-hide hidden><img src="/assets/brand/threadvault-icon.webp" alt="" width="20" height="20"><span data-live="npm"></span>&nbsp;installs last month</div>
+      <p class="eye-caption" id="eyeCaption" aria-live="polite">Six tools I built and run. Pick one.</p>
+
+      <div class="hero-text">
+        <h1>I turn production incidents into <em>tools</em>.</h1>
+        <div class="hero-side">
+          <p class="lede">Het Patel, DevOps Engineer II at Techdome, Mumbai. Multi-cloud Kubernetes at work, open-source tools for everyone else.</p>
+          <div class="ctas">
+            <a class="btn btn-gold" href="mailto:patel.x.het@gmail.com" data-umami-event="email-click" data-umami-event-from="hero"><i class="ph ph-envelope-simple" aria-hidden="true"></i>Email me</a>
+            <a class="btn btn-line" href="/Het_Patel_Resume.pdf" target="_blank" rel="noopener" data-umami-event="resume-download" data-umami-event-from="hero"><i class="ph ph-file-text" aria-hidden="true"></i>Résumé (PDF)</a>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- ── Proof ────────────────────────────────────────────── -->
-    <section class="proof" aria-label="Numbers" data-section="proof">
-      <div class="proof-item"><span class="proof-num"><span data-count="3">3</span> yrs</span><span class="proof-lbl">running production infrastructure</span></div>
-      <div class="proof-item"><span class="proof-num" data-count="4">4</span><span class="proof-lbl">tools shipped from real problems</span></div>
-      <div class="proof-item" data-live-hide hidden><span class="proof-num" data-live="contributions"></span><span class="proof-lbl">GitHub contributions, last 12 months</span></div>
-      <div class="proof-item" data-live-hide hidden><span class="proof-num" data-live="npmAll"></span><span class="proof-lbl">npm installs last month</span></div>
-    </section>
-
-    <!-- ── Experience ───────────────────────────────────────── -->
+    <!-- Experience as an eye chart: the closer you look, the finer the print -->
     <section class="exp wrap" id="experience" data-section="experience">
-      <header class="section-head"><h2 class="h2">Experience</h2><p class="sub">Three years keeping production running, and the tools that came out of it.</p></header>
-      <div class="timeline">
-        <span class="timeline-fill" aria-hidden="true"></span>
-        <ol>
-          <li>
-            <span class="when">Aug 2025 to now</span>
-            <div class="tl-body">
-              <h3>DevOps Engineer II <span class="at">Techdome</span></h3>
-              <p>Multi-cloud Kubernetes, cloud cost automation and GitOps delivery for production workloads.</p>
-            </div>
-          </li>
-          <li>
-            <span class="when">2023 to 2025</span>
-            <div class="tl-body">
-              <h3>DevOps Engineer <span class="at">Datagrok</span></h3>
-              <p>CI/CD pipelines, Kubernetes workloads and observability. Cut deployment time by 60% and kept services at 99.9% uptime.</p>
-            </div>
-          </li>
-          <li>
-            <span class="when">2019 to 2023</span>
-            <div class="tl-body">
-              <h3>B.Tech, Computer Engineering <span class="at">CHARUSAT University</span></h3>
-              <p>Currently working toward AWS Solutions Architect Associate and CKA.</p>
-            </div>
-          </li>
-        </ol>
-      </div>
-      <div class="dayjob">
-        <p class="dayjob-h">Day to day, at Techdome and before that at Datagrok <span>code is private</span></p>
-        <dl class="work-list">
-          <div><dt><i class="ph ph-cloud" aria-hidden="true"></i>Multi-cloud Kubernetes</dt><dd>One control plane for 100+ node clusters across AWS, GCP and Azure, with automated failover.</dd></div>
-          <div><dt><i class="ph ph-coins" aria-hidden="true"></i>Cloud cost automation</dt><dd>Finds idle resources and right-sizes the rest. Saved over $2M a year.</dd></div>
-          <div><dt><i class="ph ph-git-branch" aria-hidden="true"></i>GitOps delivery</dt><dd>Canary deploys with automated rollback, used for 10k+ deployments.</dd></div>
-        </dl>
-        <p class="stackline"><b>Works with</b> Kubernetes, Terraform, Helm, Argo CD, GitHub Actions, Prometheus, Grafana, Ansible, Vault, Traefik, Cloudflare, OpenTelemetry and n8n, on AWS, GCP, Azure and Oracle Cloud, in Python, TypeScript and Bash.</p>
-      </div>
+      <header class="head">
+        <h2>Read the chart</h2>
+        <p class="sub">Three years of keeping production running. The closer you look, the finer the print.</p>
+      </header>
+      <ol class="chart">
+        <li style="--s: 1"><span class="acuity">20/200</span><span class="row">$2M SAVED</span><span class="fine">a year, by finding idle cloud resources and right-sizing the rest</span></li>
+        <li style="--s: 0.74"><span class="acuity">20/100</span><span class="row">10K DEPLOYS</span><span class="fine">canary releases with automated rollback, through GitOps</span></li>
+        <li style="--s: 0.56"><span class="acuity">20/70</span><span class="row">100+ NODES · 3 CLOUDS</span><span class="fine">one control plane across AWS, GCP and Azure, with automated failover</span></li>
+        <li style="--s: 0.43"><span class="acuity">20/50</span><span class="row">60% FASTER DEPLOYS · 99.9% UPTIME</span><span class="fine">CI/CD, Kubernetes workloads and observability at Datagrok</span></li>
+        <li style="--s: 0.33"><span class="acuity">20/40</span><span class="row">62 → 0 OPEN SECURITY ALERTS</span><span class="fine">one triage pass on DNS Intelligence, every dismissal written down</span></li>
+        <li style="--s: 0.25"><span class="acuity">20/20</span><span class="row">7,200 THREADS · HISTORY KEPT · AUTHORS RESTORED</span><span class="fine">the chat migration that became Threadvault</span></li>
+      </ol>
+      <ol class="roles">
+        <li><span class="when">Aug 2025 to now</span><h3>DevOps Engineer II <span>Techdome</span></h3><p>Multi-cloud Kubernetes, cloud cost automation and GitOps delivery for production workloads.</p></li>
+        <li><span class="when">2023 to 2025</span><h3>DevOps Engineer <span>Datagrok</span></h3><p>CI/CD pipelines, Kubernetes workloads and observability. Cut deployment time by 60% and kept services at 99.9% uptime.</p></li>
+        <li><span class="when">2019 to 2023</span><h3>B.Tech, Computer Engineering <span>CHARUSAT University</span></h3><p>Currently working toward AWS Solutions Architect Associate and CKA.</p></li>
+      </ol>
+      <p class="stackline"><b>Works with</b> Kubernetes, Terraform, Helm, Argo CD, GitHub Actions, Prometheus, Grafana, Ansible, Vault, Traefik, Cloudflare, OpenTelemetry and n8n, on AWS, GCP, Azure and Oracle Cloud, in Python, TypeScript and Bash.</p>
     </section>
 
-    <!-- ── Story: incident to tool ──────────────────────────── -->
-    <section class="story wrap" id="work" data-section="story">
-      <header class="section-head">
-        <p class="eyebrow">Work · every tool starts as a problem</p>
-        <h2 class="h2"><span class="case-n">01</span>From a bad week to Threadvault</h2>
-        <p class="sub">A chat migration broke 7,200 threads. The repair became an open-source CLI.</p>
+    <!-- Work: each tool under the lens -->
+    <section class="work wrap" id="work" data-section="work">
+      <header class="head">
+        <h2>Under the lens</h2>
+        <p class="sub">Every tool here started as a real problem. Look closely; the screenshots are the real thing.</p>
       </header>
-      <div class="story-grid">
-        <ol class="story-steps">
-          <li class="step" data-step="0">
-            <span class="step-n">01</span>
-            <h3>The move</h3>
-            <p>A resource move replayed 7,200 Azure Communication Services chat threads onto a new resource, with participants turned off.</p>
-          </li>
-          <li class="step" data-step="1">
-            <span class="step-n">02</span>
-            <h3>The damage</h3>
-            <p>7,022 messages showed the wrong author, and every thread rejected replies with <code>CommunicationError Forbidden</code>.</p>
-          </li>
-          <li class="step" data-step="2">
-            <span class="step-n">03</span>
-            <h3>The repair</h3>
-            <p>Both defects were fixable only because the extract had kept each message's original sender and every participant list.</p>
-          </li>
-          <li class="step" data-step="3">
-            <span class="step-n">04</span>
-            <h3>The tool</h3>
-            <p>I wrote the post-mortem, then turned the repair into Threadvault: an open-source CLI that finds these failures before a migration does.</p>
-            <div class="links">
-              <a href="https://github.com/Het101/threadvault" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="threadvault-source">Source <i class="ph ph-arrow-up-right"></i></a>
-              <a href="https://github.com/Het101/threadvault/blob/main/docs/postmortem-acs-chat-migration.md" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="threadvault-postmortem">Post-mortem <i class="ph ph-arrow-up-right"></i></a>
+
+      <article class="story" id="story" data-section="story">
+        <div class="story-intro">
+          <img class="p-icon" src="/assets/brand/threadvault-icon.webp" width="56" height="56" alt="">
+          <h3>Threadvault</h3>
+          <p class="problem">A chat migration broke 7,200 threads. The repair became an open-source CLI.</p>
+        </div>
+        <div class="story-grid">
+          <ol class="story-steps">
+            <li class="step" data-step="0"><h4>The move</h4><p>A resource move replayed 7,200 Azure Communication Services chat threads onto a new resource, with participants turned off.</p></li>
+            <li class="step" data-step="1"><h4>The damage</h4><p>7,022 messages showed the wrong author, and every thread rejected replies with <code>CommunicationError Forbidden</code>.</p></li>
+            <li class="step" data-step="2"><h4>The repair</h4><p>Both defects were fixable only because the extract had kept each message's original sender and every participant list.</p></li>
+            <li class="step" data-step="3"><h4>The tool</h4><p>I wrote the post-mortem, then turned the repair into Threadvault: an open-source CLI that finds these failures before a migration does.</p>
+              <div class="links">
+                <a href="https://github.com/Het101/threadvault" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="threadvault-source">Source <i class="ph ph-arrow-up-right"></i></a>
+                <a href="https://github.com/Het101/threadvault/blob/main/docs/postmortem-acs-chat-migration.md" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="threadvault-postmortem">Post-mortem <i class="ph ph-arrow-up-right"></i></a>
+              </div>
+            </li>
+          </ol>
+          <div class="stage" aria-hidden="true">
+            <svg class="stage-ring" viewBox="0 0 100 100"><circle cx="50" cy="50" r="48"/><circle class="stage-prog" id="stageProg" cx="50" cy="50" r="48" pathLength="100"/></svg>
+            <div class="panel is-active" data-panel="0">
+              <span class="big">7,200</span><span class="big-lbl">threads replayed</span>
+              <div class="flow"><span class="fnode">Old resource</span><span class="wire"><i></i></span><span class="fnode">New resource</span></div>
+              <span class="tag warn">participants: off</span>
             </div>
-          </li>
-        </ol>
-        <div class="story-stage" aria-hidden="true">
-          <div class="stage-rail"><span></span></div>
-          <div class="stage-panel is-active" data-panel="0">
-            <span class="big-num">7,200</span>
-            <span class="big-lbl">threads replayed</span>
-            <div class="flow">
-              <span class="node">Old resource</span><span class="wire"><i></i></span><span class="node">New resource</span>
+            <div class="panel" data-panel="1">
+              <span class="big warn">7,022</span><span class="big-lbl">messages with the wrong author</span>
+              <code class="err-line">CommunicationError Forbidden</code>
+              <span class="tag err">every thread, on reply</span>
             </div>
-            <span class="tag tag-warn">participants: off</span>
-          </div>
-          <div class="stage-panel" data-panel="1">
-            <span class="big-num warn">7,022</span>
-            <span class="big-lbl">messages with the wrong author</span>
-            <code class="err-line">CommunicationError Forbidden</code>
-            <span class="tag tag-err">every thread, on reply</span>
-          </div>
-          <div class="stage-panel" data-panel="2">
-            <div class="diff">
-              <div class="diff-row del"><span>-</span>author: system</div>
-              <div class="diff-row add"><span>+</span>author: metadata.originalSenderUserId</div>
-              <div class="diff-row add"><span>+</span>participants: restored from extract</div>
+            <div class="panel" data-panel="2">
+              <div class="diff">
+                <div class="del"><span>-</span>author: system</div>
+                <div class="add"><span>+</span>author: metadata.originalSenderUserId</div>
+                <div class="add"><span>+</span>participants: restored from extract</div>
+              </div>
+              <span class="big-lbl">history preserved, authors restored</span>
             </div>
-            <span class="big-lbl">history preserved, authors restored</span>
+            <div class="panel" data-panel="3">
+              <figure class="stage-shot"><img src="/assets/img/doctor-output.webp" width="1400" height="806" loading="lazy" alt=""></figure>
+              <p class="stage-foot"><b>Threadvault</b><span data-live-hide hidden><span data-live="npm"></span> npm installs last month</span></p>
+            </div>
           </div>
-          <div class="stage-panel" data-panel="3">
-            <figure class="stage-shot"><img src="/assets/img/doctor-output.webp" width="1400" height="806" loading="lazy" alt=""></figure>
-            <div class="stage-foot"><img src="/assets/brand/threadvault-icon.webp" alt="" width="28" height="28"><b>Threadvault</b><span data-live-hide hidden><span data-live="npm"></span> npm installs last month</span></div>
+        </div>
+      </article>
+
+      <article class="case" style="--tint: 63,182,211">
+        <div class="case-text">
+          <img class="p-icon" src="/assets/brand/dns-icon.svg" width="56" height="56" alt="">
+          <h3>DNS Intelligence</h3>
+          <p class="problem">An SPF record that needs more than 10 DNS lookups fails, and nested includes hide the real count.</p>
+          <p>A domain scanner with 26 checks across DNS, TLS, security headers, DNSSEC, email authentication and reputation. It counts SPF lookups through every nested include, the way mail servers do.</p>
+          <p>Free for one domain. Pro and Team plans, from $5 a month, add monitoring, alerts on certificate, SPF, DMARC, MX and nameserver changes, and automatic DMARC report collection.</p>
+          <div class="links">
+            <a href="https://dns.hetops.dev" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="dns-live">Try it <i class="ph ph-arrow-up-right"></i></a>
+            <a href="https://dns.hetops.dev/spf-checker" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="dns-spf-checker">SPF checker <i class="ph ph-arrow-up-right"></i></a>
+            <a href="https://github.com/Het101/hetops-dns" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="dns-source">Source <i class="ph ph-arrow-up-right"></i></a>
+          </div>
+        </div>
+        <figure class="lens"><img src="/assets/img/dns-report.webp?v=2" width="1600" height="1075" loading="lazy" alt="DNS Intelligence report for github.com: health score 87, grade A."></figure>
+      </article>
+
+      <article class="case flip" style="--tint: 229,72,77">
+        <div class="case-text">
+          <img class="p-icon" src="/assets/brand/radar-icon.webp" width="56" height="56" alt="">
+          <h3>Retirement Radar</h3>
+          <p class="problem">AWS bills automatically for running old versions. EKS extended support alone is about $365 a month per cluster.</p>
+          <p>A read-only CLI that scans every region for EKS, RDS, ElastiCache, OpenSearch, MSK and Lambda versions at or near end of support, with the AWS source for every date.<span data-live-hide hidden> <span data-live="npmRadar"></span> npm installs last month.</span></p>
+          <p class="cmd"><code>npx retirement-radar scan</code></p>
+          <div class="links">
+            <a href="https://github.com/Het101/retirement-radar" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="radar-source">Source <i class="ph ph-arrow-up-right"></i></a>
+            <a href="https://www.npmjs.com/package/retirement-radar" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="radar-npm">npm <i class="ph ph-arrow-up-right"></i></a>
+          </div>
+        </div>
+        <figure class="lens zoom"><img src="/assets/img/radar-output.webp" width="1600" height="1050" loading="lazy" alt="Retirement Radar output: resources marked retired, on paid extended support, soon or upcoming, with dates and the monthly EKS extended support cost."></figure>
+      </article>
+
+      <article class="case" style="--tint: 74,120,230">
+        <div class="case-text">
+          <img class="p-icon" src="/assets/brand/tallybank-icon.svg" width="56" height="56" alt="">
+          <h3>Tallybank</h3>
+          <p class="problem">A guessed ledger misstates the books, and the error surfaces months later inside Tally.</p>
+          <p>Turns HDFC bank statements into Tally ERP 9 vouchers for five family books. Every run must tie to the bank's own totals, and it never guesses. Private; Python and FastAPI.</p>
+        </div>
+        <div class="rule" aria-label="How Tallybank decides a ledger">
+          <p class="rule-title">The candidate-set rule</p>
+          <div class="rule-row"><span class="rule-k">1 ledger fits</span><i class="rule-wire"></i><span class="rule-v ok">post it</span></div>
+          <div class="rule-row"><span class="rule-k">0 fit</span><i class="rule-wire"></i><span class="rule-v">default or Suspense</span></div>
+          <div class="rule-row"><span class="rule-k">2 or more fit</span><i class="rule-wire"></i><span class="rule-v err">block the whole run</span></div>
+        </div>
+      </article>
+    </section>
+
+    <!-- Live check -->
+    <section class="check wrap" id="check" data-section="check">
+      <div class="check-grid">
+        <div class="check-copy">
+          <h2>Point it at your domain</h2>
+          <p class="sub">This runs the real DNS Intelligence API: SPF lookups counted through every include, the DMARC policy, and how long the certificate has left.</p>
+          <form class="check-form" id="checkForm" novalidate>
+            <label for="checkInput">Domain</label>
+            <div class="check-row">
+              <input id="checkInput" name="domain" inputmode="url" autocomplete="off" spellcheck="false" placeholder="yourcompany.com" aria-describedby="checkHelp checkErr">
+              <button class="btn btn-gold" id="checkGo" type="submit"><i class="ph ph-eye" aria-hidden="true"></i>Check</button>
+            </div>
+            <p class="check-help" id="checkHelp">Public DNS and TLS only. Nothing is stored.</p>
+            <p class="check-err" id="checkErr" role="alert" hidden></p>
+          </form>
+          <div class="check-try"><span>Try</span>
+            <button type="button" data-try="github.com">github.com</button>
+            <button type="button" data-try="stripe.com">stripe.com</button>
+            <button type="button" data-try="hetops.dev">hetops.dev</button>
+          </div>
+        </div>
+        <div class="check-panel" id="checkPanel" aria-live="polite">
+          <div class="check-state check-empty" data-state="empty">
+            <span class="scope" aria-hidden="true"><i></i></span>
+            <p>SPF, DMARC and certificate results appear here.</p>
+          </div>
+          <div class="check-state check-loading" data-state="loading" hidden>
+            <span class="scope scanning" aria-hidden="true"><i></i></span>
+            <p>Looking at the domain…</p>
+          </div>
+          <div class="check-state check-result" data-state="result" hidden>
+            <p class="check-domain" id="checkDomain"></p>
+            <div class="tiles">
+              <div class="tile" id="tileSpf"><span class="tile-k">SPF lookups</span><span class="tile-v"></span><span class="tile-n"></span><span class="tile-bar"><i></i></span></div>
+              <div class="tile" id="tileDmarc"><span class="tile-k">DMARC policy</span><span class="tile-v"></span><span class="tile-n"></span></div>
+              <div class="tile" id="tileTls"><span class="tile-k">Certificate</span><span class="tile-v"></span><span class="tile-n"></span></div>
+            </div>
+            <a class="check-full" id="checkFull" href="https://dns.hetops.dev" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="check-full-report">Full report: 26 checks <i class="ph ph-arrow-up-right" aria-hidden="true"></i></a>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ── Work: sticky stack ───────────────────────────────── -->
-    <section class="work wrap" id="tools" data-section="work">
-      <div class="stack">
-        <article class="stack-card" style="--tint: 8,145,178">
-          <div class="stack-body">
-            <img class="p-icon" src="/assets/brand/dns-icon.svg" width="48" height="48" alt="">
-            <p class="kicker"><span class="case-n">02</span>Live at dns.hetops.dev</p>
-            <h3>DNS Intelligence</h3>
-            <p class="problem"><b>The problem</b> An SPF record that needs more than 10 DNS lookups fails, and nested includes hide the real count.</p>
-            <p>A domain scanner with 26 checks across DNS, TLS, security headers, DNSSEC, email authentication and reputation. It counts SPF lookups through every nested include, the way mail servers do.</p>
-            <p>Free for one domain. Pro and Team plans, from $5 a month, add monitoring, alerts on certificate, SPF, DMARC, MX and nameserver changes, and automatic DMARC report collection.</p>
-            <div class="links">
-              <a href="https://dns.hetops.dev" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="dns-live">Try it <i class="ph ph-arrow-up-right"></i></a>
-              <a href="https://dns.hetops.dev/spf-checker" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="dns-spf-checker">SPF checker <i class="ph ph-arrow-up-right"></i></a>
-              <a href="https://github.com/Het101/hetops-dns" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="dns-source">Source <i class="ph ph-arrow-up-right"></i></a>
-            </div>
-          </div>
-          <a class="stack-media" href="https://dns.hetops.dev" target="_blank" rel="noopener" tabindex="-1" data-umami-event="project-link" data-umami-event-project="dns-screenshot">
-            <img src="/assets/img/dns-report.webp?v=2" width="1600" height="1075" loading="lazy" alt="DNS Intelligence report for github.com: health score 87, grade A.">
-          </a>
-        </article>
-
-        <article class="stack-card" style="--tint: 229,72,77">
-          <div class="stack-body">
-            <img class="p-icon" src="/assets/brand/radar-icon.webp" width="48" height="48" alt="">
-            <p class="kicker"><span class="case-n">03</span>Open source on npm<span data-live-hide hidden> · <span data-live="npmRadar"></span> installs last month</span></p>
-            <h3>Retirement Radar</h3>
-            <p class="problem"><b>The problem</b> AWS bills automatically for running old versions. EKS extended support alone is about $365 a month per cluster.</p>
-            <p>A read-only CLI that scans every region for EKS, RDS, ElastiCache, OpenSearch, MSK and Lambda versions at or near end of support, with the AWS source for every date.</p>
-            <p class="cmd"><code>npx retirement-radar scan</code></p>
-            <div class="links">
-              <a href="https://github.com/Het101/retirement-radar" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="radar-source">Source <i class="ph ph-arrow-up-right"></i></a>
-              <a href="https://www.npmjs.com/package/retirement-radar" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="radar-npm">npm <i class="ph ph-arrow-up-right"></i></a>
-            </div>
-          </div>
-          <a class="stack-media" href="https://github.com/Het101/retirement-radar" target="_blank" rel="noopener" tabindex="-1" data-umami-event="project-link" data-umami-event-project="radar-screenshot">
-            <img src="/assets/img/radar-output.webp" width="1600" height="1050" loading="lazy" alt="Retirement Radar output: resources marked retired, on paid extended support, soon or upcoming, with dates and the monthly EKS extended support cost.">
-          </a>
-        </article>
-
-        <article class="stack-card" style="--tint: 36,89,212">
-          <div class="stack-body">
-            <img class="p-icon" src="/assets/brand/tallybank-icon.svg" width="48" height="48" alt="">
-            <p class="kicker"><span class="case-n">04</span>Private · Python, FastAPI</p>
-            <h3>Tallybank</h3>
-            <p class="problem"><b>The problem</b> A guessed ledger misstates the books, and the error surfaces months later inside Tally.</p>
-            <p>Turns HDFC bank statements into Tally ERP 9 vouchers for five family books. Every run must tie to the bank's own totals, and it never guesses.</p>
-          </div>
-          <div class="rule" aria-label="How Tallybank decides a ledger">
-            <p class="rule-title">The candidate-set rule</p>
-            <div class="rule-row"><span class="rule-k">1 ledger fits</span><i class="rule-wire"></i><span class="rule-v ok">post it</span></div>
-            <div class="rule-row"><span class="rule-k">0 fit</span><i class="rule-wire"></i><span class="rule-v">default or Suspense</span></div>
-            <div class="rule-row"><span class="rule-k">2 or more fit</span><i class="rule-wire"></i><span class="rule-v err">block the whole run</span></div>
-          </div>
-        </article>
-
+    <!-- How I ship: the release ring -->
+    <section class="ship wrap" id="how-i-ship" data-section="how-i-ship">
+      <header class="head">
+        <h2>How I ship</h2>
+        <p class="sub">The same bar for side projects as for production. Nothing reaches main until the ring closes, and nothing reaches npm until I approve it with 2FA.</p>
+      </header>
+      <div class="ship-grid">
+        <div class="ring" aria-hidden="true">
+          <svg viewBox="0 0 400 400"><circle class="ring-track" cx="200" cy="200" r="170"/><circle class="ring-prog" id="ringProg" cx="200" cy="200" r="170" pathLength="100"/></svg>
+          <span class="ring-core">main</span>
+        </div>
+        <ol class="pipe" id="pipe" aria-label="Release pipeline">
+          <li data-s="ok"><b>test</b><span>Node 20, 22 and 24, plus a real run of the built artifact</span></li>
+          <li data-s="ok"><b>hygiene</b><span>workflow audit, secret scan, signed and conventional commits</span></li>
+          <li data-s="ok"><b>analyze</b><span>CodeQL security and quality queries</span></li>
+          <li data-s="ok"><b>stage</b><span>npm publish staged from CI, with provenance</span></li>
+          <li data-s="ok"><b>approve</b><span>a human, with a second factor</span></li>
+        </ol>
+      </div>
+      <div class="ship-notes">
+        <div><h3>Signed, protected main</h3><p>Signed commits, linear history, required checks and no force-push on every repository.</p>
+          <ul class="commits">
+            <li><i class="ph ph-seal-check" aria-label="Signed"></i>feat(spf): count DNS lookups through nested includes</li>
+            <li><i class="ph ph-seal-check" aria-label="Signed"></i>fix(security): block IPv4-mapped IPv6 in every written form</li>
+            <li><i class="ph ph-seal-check" aria-label="Signed"></i>fix(auth): never build sign-in links from request headers</li>
+          </ul>
+        </div>
+        <div><h3>Careful dependencies</h3><p>Dependabot waits 7 days before proposing a release, every Action is pinned to a commit, and new dependencies are reviewed for advisories and licences.</p></div>
+        <div><h3>Least privilege</h3><p>Read-only by design where possible, enforced by tests. Credentials hashed at rest. Releases need no stored token.</p>
+          <a class="more" href="https://github.com/Het101/retirement-radar/blob/main/SECURITY.md" target="_blank" rel="noopener" data-umami-event="outbound" data-umami-event-target="security-md">Read a SECURITY.md <i class="ph ph-arrow-up-right"></i></a></div>
       </div>
     </section>
 
-    <!-- ── Testimonials ─────────────────────────────────────── -->
-    <section class="wrap section" data-section="testimonials" aria-labelledby="words-h">
-      <h2 class="h2" id="words-h">From people I've worked with</h2>
+    <!-- Testimonials -->
+    <section class="words wrap" data-section="testimonials" aria-labelledby="words-h">
+      <h2 id="words-h">From people I've worked with</h2>
       <div class="quotes">
-        <figure class="quote quote-lead">
+        <figure class="quote lead">
           <blockquote>“What sets Het apart is their ability to accelerate deployments while simultaneously strengthening security measures.”</blockquote>
           <figcaption><b>Yashvardhan Singh Nathawat</b> DevOps Engineer, Certa.ai</figcaption>
         </figure>
@@ -308,152 +329,48 @@
       <a class="more" href="https://www.linkedin.com/in/het11/details/recommendations/" target="_blank" rel="noopener" data-umami-event="outbound" data-umami-event-target="linkedin-recommendations">All recommendations on LinkedIn <i class="ph ph-arrow-up-right"></i></a>
     </section>
 
-    <!-- ── Live check ─────────────────────────────────────────── -->
-    <section class="check wrap section" id="check" data-section="check">
-      <div class="check-grid">
-        <div class="check-copy">
-          <p class="eyebrow">Live, not a screenshot</p>
-          <h2 class="h2">Check a domain right here</h2>
-          <p class="sub">This runs the real DNS Intelligence API: SPF lookups counted through every include, the DMARC policy, and how long the certificate has left.</p>
-          <form class="check-form" id="checkForm" novalidate>
-            <label for="checkInput">Domain</label>
-            <div class="check-row">
-              <input id="checkInput" name="domain" inputmode="url" autocomplete="off" spellcheck="false" placeholder="yourcompany.com" aria-describedby="checkHelp checkErr">
-              <button class="btn btn-primary" id="checkGo" type="submit"><i class="ph ph-magnifying-glass" aria-hidden="true"></i>Check</button>
-            </div>
-            <p class="check-help" id="checkHelp">Public DNS and TLS only. Nothing is stored.</p>
-            <p class="check-err" id="checkErr" role="alert" hidden></p>
-          </form>
-          <div class="check-try" aria-label="Examples">
-            <span>Try</span>
-            <button type="button" data-try="github.com">github.com</button>
-            <button type="button" data-try="stripe.com">stripe.com</button>
-            <button type="button" data-try="hetops.dev">hetops.dev</button>
-          </div>
-        </div>
-        <div class="check-panel" id="checkPanel" aria-live="polite">
-          <div class="check-state check-empty" data-state="empty">
-            <i class="ph ph-globe-hemisphere-west" aria-hidden="true"></i>
-            <p>Results for SPF, DMARC and TLS appear here.</p>
-          </div>
-          <div class="check-state check-loading" data-state="loading" hidden>
-            <span class="sk sk-title"></span>
-            <div class="check-tiles"><span class="sk sk-tile"></span><span class="sk sk-tile"></span><span class="sk sk-tile"></span></div>
-            <span class="sk sk-line"></span>
-          </div>
-          <div class="check-state check-result" data-state="result" hidden>
-            <p class="check-domain" id="checkDomain"></p>
-            <div class="check-tiles">
-              <div class="tile" id="tileSpf"><span class="tile-k">SPF lookups</span><span class="tile-v"></span><span class="tile-n"></span><span class="tile-bar"><i></i></span></div>
-              <div class="tile" id="tileDmarc"><span class="tile-k">DMARC policy</span><span class="tile-v"></span><span class="tile-n"></span></div>
-              <div class="tile" id="tileTls"><span class="tile-k">Certificate</span><span class="tile-v"></span><span class="tile-n"></span></div>
-            </div>
-            <a class="check-full" id="checkFull" href="https://dns.hetops.dev" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="check-full-report">Full report: 26 checks <i class="ph ph-arrow-up-right" aria-hidden="true"></i></a>
-          </div>
-        </div>
+    <!-- Activity -->
+    <section class="activity wrap" data-section="activity" aria-labelledby="activity-h">
+      <div class="activity-head">
+        <h2 id="activity-h">Shipping, most days</h2>
+        <dl class="activity-stats">
+          <div data-live-hide hidden><dt>Public repos</dt><dd data-live="repos"></dd></div>
+          <div data-live-hide hidden><dt>Pull requests</dt><dd data-live="prs"></dd></div>
+          <div data-live-hide hidden><dt>Contributions, 12 months</dt><dd data-live="contributions"></dd></div>
+        </dl>
+      </div>
+      <div class="heatmap" id="heatmap" role="img" aria-label="GitHub contributions over the last year"><p class="heatmap-empty">Loading contributions…</p></div>
+      <p class="activity-note">Combined across github.com/Het101 and github.com/Hetu29.</p>
+      <div class="shipped">
+        <h3>Shipped recently</h3>
+        <ol class="shipped-list">
+          <li><time datetime="2026-10-05">5 Oct 2026</time><span class="shipped-tag radar">Retirement Radar</span><span>0.3.0: ElastiCache, OpenSearch and MSK; every date re-checked against AWS.</span></li>
+          <li><time datetime="2026-10-05">5 Oct 2026</time><span class="shipped-tag dns">DNS</span><span>SPF lookups counted through nested includes, a <a href="https://dns.hetops.dev/spf-checker" target="_blank" rel="noopener">public SPF checker</a>, and alerts when a domain crosses the limit.</span></li>
+          <li><time datetime="2026-10-05">5 Oct 2026</time><span class="shipped-tag dns">DNS</span><span>Security pass: 62 code-scanning alerts to 0, SSRF checks on every outbound hop, credentials hashed at rest.</span></li>
+          <li><time datetime="2026-10-04">4 Oct 2026</time><span class="shipped-tag dns">DNS</span><span>Paid Pro and Team plans: monitoring, alerts and automatic DMARC report collection.</span></li>
+          <li><time datetime="2026-10-04">4 Oct 2026</time><span class="shipped-tag radar">Retirement Radar</span><span>First release on npm, then a staged, provenance-signed release pipeline.</span></li>
+        </ol>
       </div>
     </section>
 
-    <!-- ── How I ship ───────────────────────────────────────── -->
-    <section class="ship wrap section" id="how-i-ship" data-section="how-i-ship">
-      <header class="section-head">
-        <h2 class="h2">How I ship</h2>
-        <p class="sub">The same bar for side projects as for production. Every repo enforces it, not just describes it.</p>
-      </header>
-      <div class="bento">
-        <article class="bento-tile bento-pipe">
-          <div class="bento-head"><i class="ph ph-flow-arrow" aria-hidden="true"></i><h3>Every pull request</h3></div>
-          <p>Nothing reaches main until all of this is green, and nothing reaches npm until I approve it with 2FA.</p>
-          <ol class="pipe" id="pipe" aria-label="Release pipeline">
-            <li data-s="ok"><b>test (20 · 22 · 24)</b><span>unit tests and a real run of the built artifact</span></li>
-            <li data-s="ok"><b>hygiene</b><span>workflow audit, secret scan, signed and conventional commits</span></li>
-            <li data-s="ok"><b>analyze</b><span>CodeQL security and quality queries</span></li>
-            <li data-s="ok"><b>stage</b><span>npm publish staged from CI, with provenance</span></li>
-            <li data-s="ok"><b>approve</b><span>a human, with a second factor</span></li>
-          </ol>
-        </article>
-        <article class="bento-tile bento-log">
-          <div class="bento-head"><i class="ph ph-seal-check" aria-hidden="true"></i><h3>Signed, protected main</h3></div>
-          <div class="log" aria-hidden="true">
-            <div class="log-track">
-              <span><b>G</b>feat(spf): count DNS lookups through nested includes</span>
-              <span><b>G</b>fix(security): block IPv4-mapped IPv6 in every written form</span>
-              <span><b>G</b>feat: scan ElastiCache, OpenSearch and MSK</span>
-              <span><b>G</b>fix(auth): never build sign-in links from request headers</span>
-              <span><b>G</b>build: Node 22 two-stage image, and CI that runs it</span>
-              <span><b>G</b>feat(spf): count DNS lookups through nested includes</span>
-              <span><b>G</b>fix(security): block IPv4-mapped IPv6 in every written form</span>
-              <span><b>G</b>feat: scan ElastiCache, OpenSearch and MSK</span>
-            </div>
-          </div>
-          <p>Signed commits, linear history, required checks, no force-push.</p>
-        </article>
-        <article class="bento-tile bento-num">
-          <span class="num"><span>62</span><i class="ph ph-arrow-right" aria-hidden="true"></i><b>0</b></span>
-          <p>Open code-scanning alerts on DNS Intelligence after one triage pass, each dismissal written down.</p>
-        </article>
-        <article class="bento-tile bento-wide">
-          <div><div class="bento-head"><i class="ph ph-hourglass-medium" aria-hidden="true"></i><h3>Careful dependencies</h3></div><p>Dependabot waits 7 days before proposing a release, every Action is pinned to a commit, and new dependencies are reviewed for known advisories and licences.</p></div>
-          <div><div class="bento-head"><i class="ph ph-lock-key" aria-hidden="true"></i><h3>Least privilege</h3></div><p>Read-only by design where possible, enforced by tests. Credentials hashed at rest. Releases need no stored token.</p></div>
-        </article>
-      </div>
-      <a class="more" href="https://github.com/Het101/retirement-radar/blob/main/SECURITY.md" target="_blank" rel="noopener" data-umami-event="outbound" data-umami-event-target="security-md">Read a SECURITY.md <i class="ph ph-arrow-up-right"></i></a>
-    </section>
-
-    <!-- ── Activity ─────────────────────────────────────────── -->
-    <section class="wrap section" data-section="activity" aria-labelledby="activity-h">
-      <div class="activity">
-        <div class="activity-head">
-          <h2 class="h2" id="activity-h">Shipping, most days</h2>
-          <dl class="activity-stats">
-            <div data-live-hide hidden><dt>Public repos</dt><dd data-live="repos"></dd></div>
-            <div data-live-hide hidden><dt>Pull requests</dt><dd data-live="prs"></dd></div>
-            <div data-live-hide hidden><dt>Commits this year</dt><dd data-live="commits"></dd></div>
-          </dl>
-        </div>
-        <div class="heatmap" id="heatmap" role="img" aria-label="GitHub contributions over the last year"><p class="heatmap-empty">Loading contributions…</p></div>
-        <p class="activity-note">Combined across github.com/Het101 and github.com/Hetu29.</p>
-        <div class="shipped">
-          <h3 class="shipped-h">Shipped recently</h3>
-          <ol class="shipped-list">
-            <li><time datetime="2026-10-05">5 Oct 2026</time><span class="shipped-tag radar">Retirement Radar</span><span>0.3.0: ElastiCache, OpenSearch and MSK; every date re-checked against AWS.</span></li>
-            <li><time datetime="2026-10-05">5 Oct 2026</time><span class="shipped-tag dns">DNS</span><span>SPF lookups counted through nested includes, a <a href="https://dns.hetops.dev/spf-checker" target="_blank" rel="noopener">public SPF checker</a>, and alerts when a domain crosses the limit.</span></li>
-            <li><time datetime="2026-10-05">5 Oct 2026</time><span class="shipped-tag dns">DNS</span><span>Security pass: 62 code-scanning alerts to 0, SSRF checks on every outbound hop, credentials hashed at rest.</span></li>
-            <li><time datetime="2026-10-04">4 Oct 2026</time><span class="shipped-tag dns">DNS</span><span>Paid Pro and Team plans: monitoring, alerts and automatic DMARC report collection.</span></li>
-            <li><time datetime="2026-10-04">4 Oct 2026</time><span class="shipped-tag radar">Retirement Radar</span><span>First release on npm, then a staged, provenance-signed release pipeline.</span></li>
-          </ol>
-        </div>
-      </div>
-    </section>
-
-    <!-- ── Writing ──────────────────────────────────────────── -->
-    <section id="writing" class="wrap section" data-section="writing">
-      <h2 class="h2">Writing</h2>
+    <!-- Writing -->
+    <section id="writing" class="writing wrap" data-section="writing">
+      <h2>Writing</h2>
       <ul class="posts">
-        <li>
-          <a href="https://github.com/Het101/threadvault/blob/main/docs/postmortem-acs-chat-migration.md" target="_blank" rel="noopener" data-umami-event="writing-click" data-umami-event-post="acs-postmortem">
-            <span class="post-meta">2026 · Post-mortem</span>
-            <span class="post-title">What went wrong moving 7,200 chat threads, and how we got the history back</span>
-            <i class="ph ph-arrow-up-right" aria-hidden="true"></i>
-          </a>
-        </li>
-        <li>
-          <a href="https://medium.com/@het101/scaling-kubernetes-at-enterprise-scale-c3a3c9256671" target="_blank" rel="noopener" data-umami-event="writing-click" data-umami-event-post="scaling-kubernetes">
-            <span class="post-meta">Apr 2024 · Medium</span>
-            <span class="post-title">Scaling Kubernetes at enterprise scale: HPA/VPA tuning, multi-cloud autoscaling and zero-downtime rollouts</span>
-            <i class="ph ph-arrow-up-right" aria-hidden="true"></i>
-          </a>
-        </li>
+        <li><a href="https://github.com/Het101/threadvault/blob/main/docs/postmortem-acs-chat-migration.md" target="_blank" rel="noopener" data-umami-event="writing-click" data-umami-event-post="acs-postmortem">
+          <span class="post-meta">2026 · Post-mortem</span><span class="post-title">What went wrong moving 7,200 chat threads, and how we got the history back</span><i class="ph ph-arrow-up-right" aria-hidden="true"></i></a></li>
+        <li><a href="https://medium.com/@het101/scaling-kubernetes-at-enterprise-scale-c3a3c9256671" target="_blank" rel="noopener" data-umami-event="writing-click" data-umami-event-post="scaling-kubernetes">
+          <span class="post-meta">Apr 2024 · Medium</span><span class="post-title">Scaling Kubernetes at enterprise scale: HPA/VPA tuning, multi-cloud autoscaling and zero-downtime rollouts</span><i class="ph ph-arrow-up-right" aria-hidden="true"></i></a></li>
       </ul>
     </section>
 
-    <!-- ── Contact ──────────────────────────────────────────── -->
+    <!-- Contact: the eye closes at the end -->
     <section id="contact" class="contact wrap" data-section="contact">
-      <div class="contact-glow" aria-hidden="true"></div>
-      <h2 class="split">Got a production problem worth solving?</h2>
+      <svg class="mini-eye" id="miniEye" viewBox="0 0 240 96" aria-hidden="true"><defs><clipPath id="miniClip"><path id="miniClipPath"/></clipPath></defs><g clip-path="url(#miniClip)"><circle class="mini-iris" cx="120" cy="48" r="34"/><circle class="mini-pupil" id="miniPupil" cx="120" cy="48" r="13"/></g><path class="mini-lid" id="miniUp"/><path class="mini-lid low" id="miniLow"/></svg>
+      <h2>Got a production problem worth solving?</h2>
       <p>Infrastructure, migrations, or a tool that should exist. I reply to every email.</p>
       <div class="contact-row">
-        <a class="btn btn-primary btn-lg" href="mailto:patel.x.het@gmail.com" data-umami-event="email-click" data-umami-event-from="contact"><i class="ph ph-envelope-simple" aria-hidden="true"></i>Email me</a>
+        <a class="btn btn-gold btn-lg" id="contactEmail" href="mailto:patel.x.het@gmail.com" data-umami-event="email-click" data-umami-event-from="contact"><i class="ph ph-envelope-simple" aria-hidden="true"></i>Email me</a>
         <button class="copy" type="button" data-copy="patel.x.het@gmail.com" data-umami-event="email-copy">patel.x.het@gmail.com <i class="ph ph-copy" aria-hidden="true"></i></button>
       </div>
       <div class="social">
@@ -466,7 +383,7 @@
   </main>
 
   <footer class="footer wrap">
-    <span class="brand brand-sm"><svg class="brand-mark" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="10 22 80 56" fill="#10b981"><rect x="10" y="22" width="24" height="56" rx="5"/><rect x="66" y="22" width="24" height="56" rx="5"/><rect x="33" y="46" width="34" height="8"/><circle cx="50" cy="50" r="11"/></svg><span class="brand-name">HetOps</span></span>
+    <span class="brand"><svg class="brand-mark" aria-hidden="true" viewBox="10 22 80 56"><rect x="10" y="22" width="24" height="56" rx="5"/><rect x="66" y="22" width="24" height="56" rx="5"/><rect x="33" y="46" width="34" height="8"/><circle cx="50" cy="50" r="11"/></svg><span>HetOps</span></span>
     <nav aria-label="HetOps tools">
       <a href="https://dns.hetops.dev">DNS</a>
       <a href="https://tools.hetops.dev">Tools</a>

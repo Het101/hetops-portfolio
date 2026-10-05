@@ -1,0 +1,87 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-05T18:30:00+05:30",
+  "title": "Design System: hetops.dev",
+  "extensions": {
+    "colorMeta": {
+      "iris-gold": { "role": "primary", "displayName": "Iris Gold", "canonical": "#e3a944", "tonalRamp": ["#1d1404", "#8a6326", "#e3a944", "#f0bd5e"] },
+      "iris-moss": { "role": "secondary", "displayName": "Iris Moss", "canonical": "#45b88d", "tonalRamp": ["#1b4536", "#33644f", "#45b88d", "#74d3ab"] },
+      "lid-dark": { "role": "neutral", "displayName": "Lid Dark", "canonical": "#08090a", "tonalRamp": ["#08090a", "#0f1112", "#171a1b"] },
+      "sclera": { "role": "neutral", "displayName": "Sclera", "canonical": "#efe9dd" }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Hero and contact headlines, Archivo at 112% width." },
+      "chart-row": { "displayName": "Chart row", "purpose": "Snellen-style experience rows scaled by --s." },
+      "data": { "displayName": "Data", "purpose": "Code, CI job names, acuity marks and domains only." }
+    },
+    "shadows": [
+      { "name": "lift", "value": "0 10px 24px -14px rgba(0,0,0,0.8)", "purpose": "Primary buttons." },
+      { "name": "node", "value": "0 8px 18px -6px rgba(0,0,0,0.8)", "purpose": "Orbit nodes over the iris." }
+    ],
+    "motion": [
+      { "name": "ease-out-expo", "value": "cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "Every state transition." },
+      { "name": "wake", "value": "0.6s closed, 0.32s flutter open, 0.2s close, 1.15s expo open", "purpose": "Eye opening on load." },
+      { "name": "blink", "value": "0.09s close, 0.22s open, every 5.2 to 10s", "purpose": "Ambient life while the hero is in view." },
+      { "name": "dive", "value": "scroll-scrubbed over 85% of a viewport, scale to 18x on the pupil", "purpose": "Transition from hero into the site." }
+    ],
+    "breakpoints": [
+      { "name": "mobile", "value": "760px" },
+      { "name": "nav", "value": "860px" },
+      { "name": "stack", "value": "1024px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Gold Button",
+      "kind": "button",
+      "refersTo": "button-gold",
+      "description": "Primary action: Email me, Check.",
+      "html": "<button class=\"ds-btn-gold\">Email me</button>",
+      "css": ".ds-btn-gold { height: 50px; padding: 0 24px; border-radius: 999px; border: 0; background: #e3a944; color: #1d1404; font: 600 15px Archivo, system-ui, sans-serif; box-shadow: 0 10px 24px -14px rgba(0,0,0,.8); cursor: pointer; transition: background .25s cubic-bezier(.16,1,.3,1), transform .2s; } .ds-btn-gold:hover { background: #f0bd5e; } .ds-btn-gold:active { transform: translateY(1px) scale(.98); } .ds-btn-gold:focus-visible { outline: 2px solid #e3a944; outline-offset: 3px; }"
+    },
+    {
+      "name": "Line Button",
+      "kind": "button",
+      "refersTo": "button-line",
+      "description": "Secondary action: Résumé.",
+      "html": "<button class=\"ds-btn-line\">Résumé (PDF)</button>",
+      "css": ".ds-btn-line { height: 50px; padding: 0 24px; border-radius: 999px; border: 1px solid rgba(239,233,221,.18); background: transparent; color: #efe9dd; font: 600 15px Archivo, system-ui, sans-serif; cursor: pointer; } .ds-btn-line:hover { background: #171a1b; border-color: rgba(239,233,221,.6); } .ds-btn-line:focus-visible { outline: 2px solid #e3a944; outline-offset: 3px; }"
+    },
+    {
+      "name": "Domain Input",
+      "kind": "input",
+      "refersTo": "input-domain",
+      "description": "Pill input for the live domain check.",
+      "html": "<input class=\"ds-input\" placeholder=\"yourcompany.com\">",
+      "css": ".ds-input { height: 54px; padding: 0 22px; border-radius: 999px; border: 1px solid rgba(239,233,221,.18); background: #0f1112; color: #efe9dd; font: 15px 'JetBrains Mono', monospace; } .ds-input::placeholder { color: rgba(239,233,221,.6); } .ds-input:focus { outline: none; border-color: rgba(227,169,68,.7); box-shadow: 0 0 0 4px rgba(227,169,68,.14); }"
+    },
+    {
+      "name": "Orbit Node",
+      "kind": "custom",
+      "refersTo": "orbit-node",
+      "description": "A tool on the iris orbit; picking it dilates the pupil.",
+      "html": "<button class=\"ds-node\" aria-label=\"DNS Intelligence\"><span></span></button>",
+      "css": ".ds-node { width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; background: #0b0d0e; border: 1px solid rgba(239,233,221,.26); box-shadow: 0 8px 18px -6px rgba(0,0,0,.8); cursor: pointer; transition: border-color .3s, scale .4s cubic-bezier(.16,1,.3,1); } .ds-node span { width: 30px; height: 30px; border-radius: 8px; background: #0891b2; } .ds-node:hover, .ds-node:focus-visible { border-color: #e3a944; scale: 1.14; outline: none; }"
+    },
+    {
+      "name": "Chart Row",
+      "kind": "custom",
+      "refersTo": "chart-row",
+      "description": "One line of the Snellen-style experience chart.",
+      "html": "<div class=\"ds-row\"><span class=\"ds-ac\">20/100</span><span class=\"ds-big\">10K DEPLOYS</span><span class=\"ds-fine\">canary releases with automated rollback</span></div>",
+      "css": ".ds-row { display: grid; grid-template-columns: 80px 1fr 80px; align-items: baseline; text-align: center; color: #efe9dd; } .ds-ac { font: 12px 'JetBrains Mono', monospace; color: rgba(239,233,221,.6); text-align: left; } .ds-big { grid-column: 2; font: 800 56px/1 Archivo, sans-serif; letter-spacing: .04em; } .ds-fine { grid-column: 2; margin-top: 10px; font: 14px Archivo, sans-serif; color: rgba(239,233,221,.6); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Watching Eye",
+    "overview": "Het's work is observability, so the site is an eye. It wakes on load, his tools orbit in a generative hazel iris, his results sit in the white of the eye wired by gold veins, and scrolling dives through the pupil into the rest of the page. Lid-dark ground, iris gold and moss, sclera type; almonds, rings and lenses; 1px rules, no boxes.",
+    "keyCharacteristics": ["Generative canvas iris", "Pupil dive on scroll", "Snellen eye chart for results", "Loupe over screenshots", "Release ring for CI"],
+    "rules": [
+      { "name": "One Pupil Rule", "body": "The pupil is the ground colour so the dive lands seamlessly.", "section": "colors" },
+      { "name": "Gold Means Look Here", "body": "Gold marks one thing per region: a number, an action or progress.", "section": "colors" },
+      { "name": "Wide Means Display", "body": "Expanded widths are for headings only.", "section": "typography" }
+    ],
+    "dos": ["Wire every new tool into the orbit and every headline number into the sclera and chart.", "Keep all motion off under reduced motion."],
+    "donts": ["No boxed cards, eyebrow labels, gradient text or glow shadows.", "No mono as decoration."]
+  }
+}
