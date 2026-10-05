@@ -168,9 +168,9 @@ if (renderer) {
       li.className = 'orb orb-tool';
       li.innerHTML = `<button type="button" aria-label="${p.name}: ${p.status}"><img src="${p.icon}" alt="" width="34" height="34"></button>`;
       const btn = li.firstChild;
-      btn.addEventListener('click', () => pick(it.tool, true, o, els.length));
-      btn.addEventListener('focus', () => pick(it.tool, false, o));
-      if (fine) { btn.addEventListener('pointerenter', () => pick(it.tool, false, o)); btn.addEventListener('pointerleave', () => unpick()); }
+      btn.addEventListener('click', () => pick(it.tool, true));
+      btn.addEventListener('focus', () => pick(it.tool, false));
+      if (fine) { btn.addEventListener('pointerenter', () => pick(it.tool, false)); btn.addEventListener('pointerleave', () => unpick()); }
     } else {
       li.className = 'orb ' + (it.big ? 'orb-num' : 'orb-tag');
       li.innerHTML = it.big ? `<b>${it.big}</b><span>${it.small}</span>` : `<span>${it.label}</span>`;
@@ -181,7 +181,7 @@ if (renderer) {
 
   let picked = null;
   const defaultCaption = caption.innerHTML;
-  function pick(i, byUser, o) {
+  function pick(i, byUser) {
     const p = PRODUCTS[i]; picked = els.find((e) => e.tool === i);
     els.forEach((e) => e.li.classList.toggle('on', e === picked));
     const ext = p.url.startsWith('http');
