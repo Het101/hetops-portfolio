@@ -83,7 +83,7 @@ components:
 
 ## Overview
 
-**Creative North Star: "The Watching Eye."** Het's work is observability: watching production so problems are seen before they become incidents. The page makes that literal. A closed eye wakes on load, flutters, and opens. His tools orbit inside a generative iris, his results sit in the white of the eye wired to it by gold veins, and scrolling dives through the pupil into the rest of the site. The page ends with a small eye that closes.
+**Creative North Star: "The Watching Eye."** Het's work is observability: watching production so problems are seen before they become incidents. The page makes that literal. A closed eye wakes on load, flutters, and opens. His tools orbit inside a generative iris, his results sit in the white of the eye wired to it by gold veins, and it looks at whatever you point at. The page ends with a small eye that closes.
 
 The voice is precise and calm, not neon. The palette comes from a hazel iris on lid-dark ground. Shapes are almonds, rings and lenses. Structure is 1px rules and space, never boxes.
 
@@ -139,14 +139,8 @@ The page is flat. Depth comes from the iris itself (limbal ring, pupil shadow) a
 
 ## Components
 
-- **Eye (hero):**
-  - Lids are two cubic curves.
-  - The interior is clipped to the space between them.
-  - Lashes are drawn curves that hang when the eye is closed and lift as it opens.
-  - The iris is a seeded canvas of about 1,500 fibres, gold near the pupil and moss at the rim, with a collarette, crypts and a limbal ring.
-  - The pupil follows the pointer and dilates when a product node is picked.
-  - The eye blinks every 5 to 10 seconds.
-- **Orbit nodes:** 48px circles on a slowly turning ring inside the iris. Hovering, focusing or clicking one dilates the pupil and fills the caption.
+- **Eye (hero, three.js in eye3d.js):** a 3D eyeball with a seeded iris texture (gold to moss fibres, collarette, limbal ring), clearcoat wetness and a clear cornea for highlights, inside dark lid shells with lashes. It wakes (closed, flutter, open), blinks every 5 to 10s, follows the pointer, and looks at and dilates for the tool you point at. Two tilted orbits circle it: the six tools as buttons (inner) and results plus stack (outer), drawn as DOM so text stays crisp and links work; items behind the eye are hidden. No WebGL shows a CSS iris fallback; reduced motion renders it open and still.
+- **Circle rule:** anything inside a ring (story stage, release ring) is inset to fit within the circle and clipped to it; sizes inside scale with the circle (container units).
 - **Eye chart:** rows of shrinking type, each labelled with a mono acuity mark and a line of fine print beneath. On hover-capable devices the rows you aren't hovering blur.
 - **Lens:** screenshots carry a 190px gold-ringed loupe at 2.4x that follows a fine pointer.
 - **Release ring:** the CI stages sit around a ring with `main` at the centre. The gold arc runs stage by stage while the ring is visible.

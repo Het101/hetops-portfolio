@@ -58,10 +58,7 @@ const showToast = (msg) => { toast.textContent = msg; toast.classList.add('show'
 async function copyEmail(addr) { try { await navigator.clipboard.writeText(addr); showToast('Email copied'); } catch (e) { showToast(addr); } }
 $$('[data-copy]').forEach((b) => b.addEventListener('click', () => copyEmail(b.dataset.copy)));
 
-// ── The eye ─────────────────────────────────────────────────────
-// Lids are two cubic curves between the eye's corners. Openness 0 is a closed slit
-// (bowed slightly down, like a sleeping eye); 1 is wide open. Everything inside the
-// eye is clipped to the space between them.
+// ── Tools: shared with the 3D eye (eye3d.js) and the palette ─────
 const PRODUCTS = [
   { key: 'dns', name: 'DNS Intelligence', icon: '/assets/brand/dns-icon.svg', status: 'Live', text: '26 checks across DNS, TLS, headers and email authentication. Free, with Pro and Team plans.', url: 'https://dns.hetops.dev', link: 'dns.hetops.dev' },
   { key: 'threadvault', name: 'Threadvault', icon: '/assets/brand/threadvault-icon.webp', status: 'Open source on npm', text: 'Mirrors ACS and Twilio chat into your own Postgres, then migrates, replays and verifies it.', url: 'https://github.com/Het101/threadvault', link: 'GitHub' },
@@ -70,166 +67,7 @@ const PRODUCTS = [
   { key: 'status', name: 'Status', icon: '/assets/brand/status-icon.webp', status: 'Live', text: 'Uptime monitoring for every HetOps service.', url: 'https://status.hetops.dev', link: 'status.hetops.dev' },
   { key: 'tools', name: 'Dev Toolkit', icon: '/assets/brand/tools-icon.webp', status: 'Live', text: '100+ developer utilities: encoders, formatters, generators and converters.', url: 'https://tools.hetops.dev', link: 'tools.hetops.dev' },
 ];
-
-const eyeWrap = $('#eyeWrap'), eye = $('#eye'), world = $('#world'), iris = $('#iris'), lids = $('#lids'), veins = $('#veins');
-const [lidUp, lidLow, lashes] = $$('path', lids);
-const lid = { u: -0.08, l: 0.08 };
-let W = 0, H = 0;
-
-const bez = (p0, p1, p2, p3, t) => { const m = 1 - t; return m * m * m * p0 + 3 * m * m * t * p1 + 3 * m * t * t * p2 + t * t * t * p3; };
-const dbez = (p0, p1, p2, p3, t) => { const m = 1 - t; return 3 * m * m * (p1 - p0) + 6 * m * t * (p2 - p1) + 3 * t * t * (p3 - p2); };
-
-function renderLids() {
-  const k = (2 * H / 3) * 0.92, mid = H / 2;
-  const uy = mid - k * lid.u, ly = mid + k * lid.l;
-  const up = `M0 ${mid} C ${W * 0.25} ${uy} ${W * 0.75} ${uy} ${W} ${mid}`;
-  const low = `M0 ${mid} C ${W * 0.25} ${ly} ${W * 0.75} ${ly} ${W} ${mid}`;
-  const clip = `path('${up} C ${W * 0.75} ${ly} ${W * 0.25} ${ly} 0 ${mid} Z')`;
-  eye.style.clipPath = clip; world.style.clipPath = clip;
-  lidUp.setAttribute('d', up); lidLow.setAttribute('d', low);
-  // Lashes hang down while closed and lift as the lid opens; each one curls out
-  // towards its own corner, longest at the middle of the lid.
-  const dir = clamp((lid.u - 0.12) / 0.4, -1, 1), L = H * 0.075;
-  let d = '';
-  for (let i = 0; i <= 30; i++) {
-    const t = 0.2 + (i / 30) * 0.66;
-    const x = bez(0, W * 0.25, W * 0.75, W, t), y = bez(mid, uy, uy, mid, t);
-    const dx = dbez(0, W * 0.25, W * 0.75, W, t), dy = dbez(mid, uy, uy, mid, t), n = Math.hypot(dx, dy) || 1;
-    const tx = dx / n, ty = dy / n, nx = ty, ny = -tx; // normal points up when the lid is open
-    const len = L * (0.35 + 0.65 * Math.sin(Math.PI * (t - 0.2) / 0.66)) * (0.5 + 0.5 * Math.abs(dir)) * (0.85 + ((i * 37) % 10) / 33);
-    const curl = (t - 0.53) * 2.4;
-    const c1x = (nx * dir * 0.7 + tx * curl * 0.15) * len, c1y = (ny * dir * 0.7 + ty * curl * 0.15) * len;
-    const ex = (nx * dir * 0.8 + tx * curl * 0.75) * len, ey = (ny * dir * 0.8 + ty * curl * 0.75) * len;
-    d += `M${x.toFixed(1)} ${y.toFixed(1)} q${c1x.toFixed(1)} ${c1y.toFixed(1)} ${ex.toFixed(1)} ${ey.toFixed(1)}`;
-  }
-  lashes.setAttribute('d', d);
-}
-
-// A seeded generator keeps the iris the same on every visit.
-const seeded = (a) => () => { a |= 0; a = (a + 0x6d2b79f5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
-function drawIris() {
-  const c = $('#irisCanvas'), dpr = Math.min(2, devicePixelRatio || 1), size = Math.round(iris.clientWidth * dpr);
-  if (!size) return;
-  c.width = c.height = size;
-  const ctx = c.getContext('2d'), R = size / 2, pr = R * 0.34, rnd = seeded(29);
-  ctx.translate(R, R);
-  const base = ctx.createRadialGradient(0, 0, pr, 0, 0, R);
-  base.addColorStop(0, '#6d4a1c'); base.addColorStop(0.28, '#8a6326'); base.addColorStop(0.5, '#33644f'); base.addColorStop(0.82, '#1b4536'); base.addColorStop(1, '#0c1612');
-  ctx.fillStyle = base; ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.fill();
-  // Stroma: thousands of fibres from the pupil outwards, gold near the centre, moss at the rim.
-  for (let i = 0; i < 1500; i++) {
-    const a = rnd() * Math.PI * 2, r0 = pr * (1 + rnd() * 0.12), r1 = R * (0.5 + rnd() * 0.46), bend = (rnd() - 0.5) * 0.12;
-    const m = clamp((r1 / R - 0.5) / 0.46, 0, 1), gold = rnd() < 0.62 - m * 0.45;
-    const col = gold ? [227, 169, 68] : [92, 196, 152];
-    ctx.strokeStyle = `rgba(${col[0]},${col[1]},${col[2]},${(0.12 + rnd() * 0.36).toFixed(2)})`;
-    ctx.lineWidth = (0.5 + rnd() * 1.2) * dpr;
-    const rm = (r0 + r1) / 2;
-    ctx.beginPath();
-    ctx.moveTo(Math.cos(a) * r0, Math.sin(a) * r0);
-    ctx.quadraticCurveTo(Math.cos(a + bend) * rm, Math.sin(a + bend) * rm, Math.cos(a + bend * 0.4) * r1, Math.sin(a + bend * 0.4) * r1);
-    ctx.stroke();
-  }
-  // Crypts: small dark hollows in the stroma.
-  for (let i = 0; i < 46; i++) {
-    const a = rnd() * Math.PI * 2, r = R * (0.5 + rnd() * 0.34), s = R * (0.02 + rnd() * 0.035);
-    ctx.fillStyle = 'rgba(6,12,9,0.26)'; ctx.beginPath();
-    ctx.ellipse(Math.cos(a) * r, Math.sin(a) * r, s * 1.8, s, a, 0, Math.PI * 2); ctx.fill();
-  }
-  // Collarette: the ragged gold ring that separates the inner and outer iris.
-  ctx.strokeStyle = 'rgba(240,189,94,0.55)'; ctx.lineWidth = 1.6 * dpr; ctx.beginPath();
-  for (let i = 0; i <= 180; i++) {
-    const a = (i / 180) * Math.PI * 2, r = R * (0.52 + Math.sin(a * 11) * 0.018 + (rnd() - 0.5) * 0.02);
-    i ? ctx.lineTo(Math.cos(a) * r, Math.sin(a) * r) : ctx.moveTo(Math.cos(a) * r, Math.sin(a) * r);
-  }
-  ctx.closePath(); ctx.stroke();
-  // Limbal ring: the dark edge that makes an iris read as an eye.
-  const limb = ctx.createRadialGradient(0, 0, R * 0.8, 0, 0, R);
-  limb.addColorStop(0, 'rgba(4,7,6,0)'); limb.addColorStop(0.75, 'rgba(4,7,6,0.6)'); limb.addColorStop(1, 'rgba(4,7,6,0.96)');
-  ctx.fillStyle = limb; ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.fill();
-  const inner = ctx.createRadialGradient(0, 0, pr * 0.95, 0, 0, pr * 1.35);
-  inner.addColorStop(0, 'rgba(10,8,4,0.9)'); inner.addColorStop(1, 'rgba(10,8,4,0)');
-  ctx.fillStyle = inner; ctx.beginPath(); ctx.arc(0, 0, pr * 1.35, 0, Math.PI * 2); ctx.fill();
-}
-
-// Veins: each result in the white of the eye is wired to the iris.
-function drawVeins() {
-  if (mobile()) return;
-  const wr = world.getBoundingClientRect(), s = wr.width / W || 1;
-  const cx = W / 2, cy = H / 2, ir = iris.clientWidth / 2;
-  veins.setAttribute('viewBox', `0 0 ${W} ${H}`);
-  veins.innerHTML = $$('.world-list li:not([hidden])').map((li, i) => {
-    const r = li.getBoundingClientRect(), right = li.classList.contains('r');
-    const x = ((right ? r.left + 3 : r.right - 3) - wr.left) / s, y = (r.top + r.height / 2 - wr.top) / s;
-    const ang = Math.atan2(y - cy, x - cx), ex = cx + Math.cos(ang) * ir * 0.97, ey = cy + Math.sin(ang) * ir * 0.97;
-    const mx = (x + ex) / 2, my = (y + ey) / 2 + (i % 2 ? 14 : -14);
-    return `<path pathLength="1" d="M${x.toFixed(1)} ${y.toFixed(1)} Q${mx.toFixed(1)} ${my.toFixed(1)} ${ex.toFixed(1)} ${ey.toFixed(1)}"/>`;
-  }).join('');
-}
-
-// Orbit: the tools ride a ring inside the iris.
-const orbit = $('#orbit'), caption = $('#eyeCaption');
-const defaultCaption = caption.innerHTML;
-orbit.innerHTML = PRODUCTS.map((p, i) => `<li style="--a:${i * 60}deg"><button class="node" type="button" data-i="${i}" aria-label="${p.name}: ${p.status}"><img src="${p.icon}" alt="" width="30" height="30"></button></li>`).join('');
-const nodes = $$('.node', orbit);
-function focusProduct(i, byUser) {
-  nodes.forEach((n, j) => n.classList.toggle('on', j === i));
-  if (i < 0) { caption.innerHTML = defaultCaption; return; }
-  const p = PRODUCTS[i], ext = p.url.startsWith('http');
-  caption.innerHTML = `<img src="${p.icon}" alt=""><b>${p.name}</b><span>${p.text}</span><a href="${p.url}"${ext ? ' target="_blank" rel="noopener"' : ''} data-umami-event="project-link" data-umami-event-project="eye-${p.key}">${p.link} <i class="ph ph-arrow-up-right" aria-hidden="true"></i></a>`;
-  if (byUser) track('eye-pick', { tool: p.key });
-}
-nodes.forEach((n) => {
-  n.addEventListener('click', () => focusProduct(+n.dataset.i, true));
-  n.addEventListener('focus', () => focusProduct(+n.dataset.i, false));
-  if (finePointer) n.addEventListener('pointerenter', () => focusProduct(+n.dataset.i, false));
-});
-
-function measure() { W = eye.offsetWidth; H = eye.offsetHeight; renderLids(); drawIris(); drawVeins(); }
-measure();
-let rz = 0;
-addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() => { measure(); if (hasGsap) ScrollTrigger.refresh(); }, 150); });
-
-const wake = () => { world.classList.add('awake'); eyeWrap.classList.add('awake'); };
-if (!hasGsap) { lid.u = 1; lid.l = 1; renderLids(); wake(); }
-else {
-  // Wake up: a beat closed, a sleepy flutter, then open.
-  gsap.set('.hero-text > *, .eye-caption', { opacity: 0, y: 16 });
-  gsap.timeline({ delay: 0.6, onUpdate: renderLids })
-    .to(lid, { u: 0.24, l: 0.18, duration: 0.32, ease: 'power2.out' })
-    .to(lid, { u: 0.04, l: 0.06, duration: 0.2, ease: 'power2.in' })
-    .to(lid, { u: 1, l: 1, duration: 1.15, ease: 'expo.out', onStart: wake }, '+=0.12')
-    .to('.hero-text > *, .eye-caption', { opacity: 1, y: 0, duration: 0.9, stagger: 0.1, ease: 'expo.out' }, '-=0.9');
-
-  // Blink now and then, only while the eye is on screen.
-  const blink = () => {
-    if (!document.hidden && scrollY < innerHeight * 0.5) gsap.timeline({ onUpdate: renderLids })
-      .to(lid, { u: 0.02, l: 0.03, duration: 0.09, ease: 'power2.in' })
-      .to(lid, { u: 1, l: 1, duration: 0.22, ease: 'power2.out' });
-    setTimeout(blink, 5200 + Math.random() * 4800);
-  };
-  setTimeout(blink, 6500);
-
-  // Scrolling dives through the pupil into the rest of the site.
-  // The eye sits above the middle of the screen, so it also slides down to put the pupil dead centre.
-  gsap.timeline({ scrollTrigger: { trigger: '.hero', start: 'top top', end: '+=85%', scrub: 0.6, pin: true, anticipatePin: 1, invalidateOnRefresh: true,
-    onEnter: () => { iris.style.setProperty('--gx', '0px'); iris.style.setProperty('--gy', '0px'); } } })
-    .to('.hero-text, .eye-caption', { opacity: 0, y: -30, duration: 0.25 }, 0)
-    .to('.world-list, #veins, #lids', { opacity: 0, duration: 0.2 }, 0.04)
-    .to(eyeWrap, { y: () => innerHeight / 2 - (eyeWrap.offsetTop + eye.offsetTop + H / 2), duration: 0.5, ease: 'power1.inOut' }, 0.02)
-    .to(eyeWrap, { scale: 18, ease: 'power2.in', duration: 1 }, 0.06);
-}
-
-// The eye follows the pointer while it is the whole view.
-if (!reduce && finePointer) {
-  const hero = $('.hero');
-  hero.addEventListener('pointermove', (e) => {
-    if (scrollY > 40) return;
-    const r = eyeWrap.getBoundingClientRect();
-    const dx = clamp((e.clientX - (r.left + r.width / 2)) / r.width, -0.5, 0.5), dy = clamp((e.clientY - (r.top + r.height / 2)) / r.height, -0.5, 0.5);
-    iris.style.setProperty('--gx', `${(dx * W * 0.07).toFixed(1)}px`); iris.style.setProperty('--gy', `${(dy * H * 0.1).toFixed(1)}px`);
-  });
-  hero.addEventListener('pointerleave', () => { iris.style.setProperty('--gx', '0px'); iris.style.setProperty('--gy', '0px'); });
-}
+window.HETOPS = { PRODUCTS, track };
 
 // ── Command palette ─────────────────────────────────────────────
 const palette = $('#palette'), pInput = $('#paletteInput'), pList = $('#paletteList');
@@ -384,7 +222,7 @@ Promise.all(['threadvault', 'retirement-radar'].map((pkg) => getJSON(`https://ap
     // npm's stats lag a new package by a day or two; the count appears once it exists.
     if (rr && rr.downloads != null) setLive('npmRadar', rr.downloads);
     const all = (tv?.downloads || 0) + (rr?.downloads || 0);
-    if (all) { setLive('npmAll', all); drawVeins(); }
+    if (all) setLive('npmAll', all);
   });
 
 (async () => {
