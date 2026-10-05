@@ -630,14 +630,15 @@ html.intro .intro-overlay.gone { opacity: 0; pointer-events: none; }
 .inside.static::before, .inside.static::after { display: none; }
 
 /* Journey rail: the five stops, current one lit. */
-.inside-rail { position: absolute; right: max(24px, calc((100vw - 1180px) / 2)); top: 50%; translate: 0 -50%; z-index: 2; display: grid; gap: 4px; }
+.inside-rail { position: absolute; right: max(24px, calc((100vw - 1180px) / 2)); top: 50%; translate: 0 -50%; z-index: 2; display: grid; gap: 4px; width: 150px; }
+.inside-rail li { display: flex; justify-content: flex-end; }
 .inside-rail::before { content: ""; position: absolute; right: 7px; top: 14px; bottom: 14px; width: 1px; background: var(--line-2); }
 .inside-rail::after {
   content: ""; position: absolute; right: 7px; top: 14px; width: 1px; height: calc((100% - 28px) * var(--journey, 0));
   background: var(--gold); transition: height 0.2s linear;
 }
 .inside-rail button {
-  position: relative; display: flex; align-items: center; justify-content: flex-end; gap: 12px; min-height: 36px; padding: 0 0 0 12px;
+  position: relative; width: 100%; display: flex; align-items: center; justify-content: flex-end; gap: 12px; min-height: 36px; padding: 0 0 0 12px;
   background: none; border: 0; cursor: pointer; color: var(--text-3); font: 500 13px var(--sans); transition: color 0.3s;
 }
 .inside-rail button::after {
@@ -649,7 +650,7 @@ html.intro .intro-overlay.gone { opacity: 0; pointer-events: none; }
 .inside-rail button.on::after { background: var(--gold); border-color: var(--gold); scale: 1.15; }
 .inside.static .inside-rail { display: none; }
 @media (max-width: 760px) {
-  .inside-rail { right: 12px; top: auto; bottom: 34vh; translate: none; }
+  .inside-rail { right: 12px; top: auto; bottom: 34vh; translate: none; width: 15px; }
   .inside-rail button { font-size: 0; gap: 0; min-height: 28px; }
 }
 

@@ -27,6 +27,12 @@ if (!renderer) {
   const camera = new THREE.PerspectiveCamera(55, 1, 0.1, 400);
   scene.add(new THREE.AmbientLight(0xffffff, 0.35));
   const key = new THREE.PointLight(0xf0bd5e, 60, 60, 1.6); scene.add(key);
+  const dotTex = (() => {
+    const c = document.createElement('canvas'); c.width = c.height = 64;
+    const g = c.getContext('2d'), r = g.createRadialGradient(32, 32, 0, 32, 32, 32);
+    r.addColorStop(0, 'rgba(255,255,255,1)'); r.addColorStop(0.45, 'rgba(255,255,255,0.85)'); r.addColorStop(1, 'rgba(255,255,255,0)');
+    g.fillStyle = r; g.fillRect(0, 0, 64, 64); return new THREE.CanvasTexture(c);
+  })();
   const GOLD = new THREE.Color(0xe3a944), MOSS = new THREE.Color(0x45b88d), RED = new THREE.Color(0xef7a64), DIM = new THREE.Color(0x151819);
   let seed = 7; const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
 
@@ -56,16 +62,20 @@ if (!renderer) {
 
   // ── Stop 1: three clouds, a grid of pods each; one region fails over ─
   const CL = new THREE.Vector3(0, -2, -96), clusters = [];
-  const box = new THREE.BoxGeometry(0.55, 0.55, 0.55);
+  const orb = new THREE.SphereGeometry(0.34, 20, 14);
   ['AWS', 'GCP', 'Azure'].forEach((name, k) => {
     const g = new THREE.Group(); g.position.set(CL.x + (k - 1) * 13, CL.y, CL.z); scene.add(g);
-    const plat = new THREE.Mesh(new THREE.CylinderGeometry(5.2, 5.4, 0.3, 6), new THREE.MeshStandardMaterial({ color: 0x111416, roughness: 0.6, metalness: 0.3, emissive: 0x0d1a14, emissiveIntensity: 0.6 }));
+    const plat = new THREE.Mesh(new THREE.CylinderGeometry(5.2, 5.4, 0.3, 72), new THREE.MeshStandardMaterial({ color: 0x111416, roughness: 0.6, metalness: 0.3, emissive: 0x0d1a14, emissiveIntensity: 0.6 }));
     g.add(plat);
-    const edge = new THREE.LineSegments(new THREE.EdgesGeometry(plat.geometry), new THREE.LineBasicMaterial({ color: 0x45b88d, transparent: true, opacity: 0.6 }));
+    const ring = new THREE.EllipseCurve(0, 0, 5.2, 5.2).getPoints(96).map((q) => new THREE.Vector3(q.x, 0.16, q.y));
+    const edge = new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(ring), new THREE.LineBasicMaterial({ color: 0x45b88d, transparent: true, opacity: 0.7 }));
     g.add(edge);
-    const pods = new THREE.InstancedMesh(box, new THREE.MeshBasicMaterial(), 25);
+    const pods = new THREE.InstancedMesh(orb, new THREE.MeshBasicMaterial(), 25);
     const m = new THREE.Matrix4();
-    for (let i = 0; i < 25; i++) { m.makeTranslation(((i % 5) - 2) * 1.4, 0.5, (Math.floor(i / 5) - 2) * 1.4); pods.setMatrixAt(i, m); pods.setColorAt(i, MOSS); }
+    for (let i = 0; i < 25; i++) {
+      const ringN = i === 0 ? 0 : i <= 8 ? 1 : 2, idx = i === 0 ? 0 : i <= 8 ? i - 1 : i - 9, cnt = ringN === 1 ? 8 : 16, a = (idx / cnt) * Math.PI * 2 + ringN * 0.2;
+      m.makeTranslation(Math.cos(a) * ringN * 1.6, 0.55, Math.sin(a) * ringN * 1.6); pods.setMatrixAt(i, m); pods.setColorAt(i, MOSS);
+    }
     g.add(pods); clusters.push({ g, pods, edge, name });
   });
 
@@ -83,10 +93,11 @@ if (!renderer) {
   });
 
   // ── Stop 3: 400 servers; idle ones switch off as you scroll ───
-  const CZ = -214, N = 400, servers = new THREE.InstancedMesh(new THREE.BoxGeometry(0.9, 0.9, 0.9), new THREE.MeshBasicMaterial(), N);
+  const CZ = -214, N = 400, servers = new THREE.InstancedMesh(new THREE.SphereGeometry(0.42, 18, 12), new THREE.MeshBasicMaterial(), N);
   const order = [], m4 = new THREE.Matrix4();
   for (let i = 0; i < N; i++) {
-    m4.makeTranslation(((i % 20) - 9.5) * 1.5, -3 + Math.sin(i * 1.3) * 0.15, CZ + (Math.floor(i / 20) - 9.5) * 1.5);
+    const ga = i * 2.39996323, gr = 0.72 * Math.sqrt(i + 0.5);
+    m4.makeTranslation(Math.cos(ga) * gr, -3, CZ + Math.sin(ga) * gr);
     servers.setMatrixAt(i, m4); servers.setColorAt(i, GOLD); order.push({ i, r: rnd() });
   }
   order.sort((a, b) => a.r - b.r); scene.add(servers);
@@ -100,7 +111,7 @@ if (!renderer) {
   }
   const tGeo = new THREE.BufferGeometry();
   tGeo.setAttribute('position', new THREE.BufferAttribute(tPos, 3)); tGeo.setAttribute('color', new THREE.BufferAttribute(tCol, 3));
-  scene.add(new THREE.Points(tGeo, new THREE.PointsMaterial({ size: 0.2, vertexColors: true, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending })));
+  scene.add(new THREE.Points(tGeo, new THREE.PointsMaterial({ size: 0.26, map: dotTex, vertexColors: true, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending })));
 
   // ── Dust: faint motes along the whole route so the flight never feels empty ─
   {
@@ -111,7 +122,7 @@ if (!renderer) {
     }
     const g = new THREE.BufferGeometry();
     g.setAttribute('position', new THREE.BufferAttribute(pos, 3)); g.setAttribute('color', new THREE.BufferAttribute(col, 3));
-    scene.add(new THREE.Points(g, new THREE.PointsMaterial({ size: 0.12, vertexColors: true, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending })));
+    scene.add(new THREE.Points(g, new THREE.PointsMaterial({ size: 0.2, map: dotTex, vertexColors: true, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending })));
   }
 
   // ── Labels in the scene: cloud names over the clusters, stage names over the gates ─
