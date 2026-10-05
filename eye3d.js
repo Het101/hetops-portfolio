@@ -5,6 +5,7 @@ import * as THREE from 'three';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 
 const stage = document.getElementById('eyeStage');
+const body = document.getElementById('eyeBody');
 const canvas = document.getElementById('eyeCanvas');
 const list = document.getElementById('orbits');
 const caption = document.getElementById('eyeCaption');
@@ -130,18 +131,38 @@ if (renderer) {
   const upper = new THREE.Mesh(lidGeo, lidMat), lower = new THREE.Mesh(lidGeo, lidMat);
   lower.rotation.z = Math.PI; // the same hemisphere, flipped to cover the bottom
   head.add(upper, lower);
-  // Lashes on the upper lid's edge: two-segment curls, longest at the centre.
-  const lash = [];
-  for (let i = 0; i <= 44; i++) {
-    const phi = -1.25 + (i / 44) * 2.5, s = Math.cos(phi * 0.8), len = 0.2 * Math.pow(Math.max(s, 0), 0.6) + 0.04;
-    const bx = Math.sin(phi) * 1.07, bz = Math.cos(phi) * 1.07;
-    const out = new THREE.Vector3(bx, 0, bz).normalize();
-    const mid = new THREE.Vector3(bx, 0, bz).addScaledVector(out, len * 0.55).add(new THREE.Vector3(0, len * 0.25, 0));
-    const tip = new THREE.Vector3(bx, 0, bz).addScaledVector(out, len * 0.8).add(new THREE.Vector3(Math.sin(phi) * len * 0.3, len * 0.75, 0));
-    lash.push(bx, 0, bz, mid.x, mid.y, mid.z, mid.x, mid.y, mid.z, tip.x, tip.y, tip.z);
+  // Lashes: tapered ribbons that leave the lid edge pointing out, then curl. Longest at the
+  // centre, splaying towards the corners, with a little randomness so no two match.
+  function lashGeometry(count, lenMin, lenMax, seed) {
+    let sd = seed; const rnd = () => ((sd = (sd * 16807) % 2147483647) / 2147483647);
+    const pos = [], idx = [], SEG = 8, up = new THREE.Vector3(0, 1, 0);
+    for (let i = 0; i < count; i++) {
+      const phi = -1.2 + (i / (count - 1)) * 2.4 + (rnd() - 0.5) * 0.03;
+      const wgt = Math.pow(Math.max(Math.cos(phi * 0.95), 0), 0.8);
+      const len = (lenMin + (lenMax - lenMin) * wgt) * (0.78 + rnd() * 0.36);
+      const row = i % 2 ? -0.012 : 0.004;
+      const out = new THREE.Vector3(Math.sin(phi), 0, Math.cos(phi));
+      const side = new THREE.Vector3(Math.cos(phi), 0, -Math.sin(phi));
+      const base = out.clone().multiplyScalar(1.07 + row).add(new THREE.Vector3(0, -0.004, 0));
+      const splay = phi * 0.42 + (rnd() - 0.5) * 0.12, w0 = 0.011 + rnd() * 0.004;
+      const start = pos.length / 3;
+      for (let k = 0; k <= SEG; k++) {
+        const t = k / SEG, w = w0 * Math.pow(1 - t, 0.85) + 0.0012;
+        const pt = base.clone()
+          .addScaledVector(out, len * (0.78 * t - 0.22 * t * t))
+          .addScaledVector(up, len * (0.12 * t + 0.88 * t * t))
+          .addScaledVector(side, len * splay * t);
+        pos.push(pt.x - side.x * w / 2, pt.y, pt.z - side.z * w / 2, pt.x + side.x * w / 2, pt.y, pt.z + side.z * w / 2);
+        if (k) { const a = start + (k - 1) * 2; idx.push(a, a + 1, a + 2, a + 1, a + 3, a + 2); }
+      }
+    }
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.setIndex(idx); g.computeVertexNormals();
+    return g;
   }
-  const lashGeo = new THREE.BufferGeometry(); lashGeo.setAttribute('position', new THREE.Float32BufferAttribute(lash, 3));
-  upper.add(new THREE.LineSegments(lashGeo, new THREE.LineBasicMaterial({ color: 0xd8d0c0, transparent: true, opacity: 0.75 })));
+  const lashMat = new THREE.MeshStandardMaterial({ color: 0x2b2119, roughness: 0.5, metalness: 0, side: THREE.DoubleSide });
+  upper.add(new THREE.Mesh(lashGeometry(130, 0.13, 0.3, 7), lashMat));
+  lower.add(new THREE.Mesh(lashGeometry(54, 0.04, 0.1, 19), lashMat));
 
   // Lid openness 0 = closed, 1 = open. Upper swings further than lower, like a real eye.
   const lid = { o: 0 };
@@ -192,24 +213,26 @@ if (renderer) {
   stage.addEventListener('pointerleave', () => { if (picked) { unpick(); caption.innerHTML = defaultCaption; } });
 
   // ── Layout ───────────────────────────────────────────────────
-  let W = 1, H = 1, eyeR = 1;
+  let W = 1, H = 1, eyeR = 1, docked = false;
   function resize() {
-    W = stage.clientWidth; H = stage.clientHeight;
+    W = body.clientWidth; H = body.clientHeight;
     renderer.setSize(W, H, false); camera.aspect = W / H;
-    // Keep the outer orbit inside the stage on any aspect.
-    const fit = Math.max((W < 560 ? 3 : 2.5) / camera.aspect, 1.6);
+    // Keep the outer orbit inside the stage on any aspect; docked, frame just the eye.
+    const fit = docked ? 1.25 : Math.max((W < 560 ? 3 : 2.5) / camera.aspect, 1.6);
     camera.position.z = fit / Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
     camera.updateProjectionMatrix();
     eyeR = (H / 2) / (camera.position.z * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2))) * 1.07;
   }
-  new ResizeObserver(resize).observe(stage); resize();
+  new ResizeObserver(() => { resize(); draw(); }).observe(body); resize();
 
   // ── Pointer: the eye follows the pointer, or the tool you point at ─
   const aim = { x: 0, y: 0 }, look = { x: 0, y: 0 };
-  if (fine && !reduce) addEventListener('pointermove', (e) => {
-    const r = stage.getBoundingClientRect();
-    aim.x = Math.max(-1, Math.min(1, (e.clientX - (r.left + r.width / 2)) / (r.width * 0.6)));
-    aim.y = Math.max(-1, Math.min(1, (e.clientY - (r.top + r.height / 2)) / (r.height * 0.6)));
+  // Docked in the corner it watches the whole page, so the range is the viewport.
+  if (!reduce) addEventListener('pointermove', (e) => {
+    const r = body.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+    const rx = docked ? innerWidth * 0.45 : r.width * 0.6, ry = docked ? innerHeight * 0.45 : r.height * 0.6;
+    aim.x = Math.max(-1, Math.min(1, (e.clientX - cx) / rx));
+    aim.y = Math.max(-1, Math.min(1, (e.clientY - cy) / ry));
   }, { passive: true });
 
   // ── Tiny tween runner (the render loop drives it) ─────────────
@@ -230,7 +253,7 @@ if (renderer) {
     }
     // Where to look: the picked tool, else the pointer.
     let tx = aim.x, ty = aim.y;
-    if (picked && picked.sx != null) { tx = (picked.sx - W / 2) / (W * 0.35); ty = (picked.sy - H / 2) / (H * 0.35); }
+    if (picked && picked.sx != null && !docked) { tx = (picked.sx - W / 2) / (W * 0.35); ty = (picked.sy - H / 2) / (H * 0.35); }
     look.x += (tx - look.x) * Math.min(1, dt * 5); look.y += (ty - look.y) * Math.min(1, dt * 5);
     gaze.rotation.y = look.x * 0.42; gaze.rotation.x = look.y * 0.3;
     upper.rotation.x = -lid.o * (OPEN_UP + Math.min(0, look.y) * -0.18);
@@ -244,7 +267,7 @@ if (renderer) {
       if (!reduce) o.phase += o.speedNow * dt;
       o.pivot.updateMatrixWorld();
     }
-    for (const e of els) {
+    for (const e of docked ? [] : els) {
       const a = e.angle + e.o.phase;
       v.set(Math.cos(a) * e.o.r, Math.sin(a) * e.o.r, 0).applyMatrix4(e.o.pivot.matrixWorld);
       const behind = v.z < 0;
@@ -260,18 +283,52 @@ if (renderer) {
       e.li.classList.toggle('hidden', hidden);
     }
     renderer.render(scene, camera);
+    if (!window.__eye3dReady) { window.__eye3dReady = true; window.dispatchEvent(new Event('eye3d:ready')); }
     if (running) requestAnimationFrame(frame);
   }
-  const start = () => { if (!running && visible && !document.hidden) { running = true; last = performance.now(); requestAnimationFrame(frame); } };
+  function draw() { if (!running) { running = true; frame(performance.now()); running = false; } }
+  const start = () => { if (!running && (visible || docked) && !document.hidden) { running = true; last = performance.now(); requestAnimationFrame(frame); } };
   const stop = () => { running = false; };
-  new IntersectionObserver(([e]) => { visible = e.isIntersecting; visible ? start() : stop(); }).observe(stage);
+  new IntersectionObserver(([e]) => { visible = e.isIntersecting; if (visible) start(); else if (!docked) stop(); }).observe(stage);
+
+  // ── Dock: past the hero the eye shrinks into the corner and keeps watching ─
+  let said = false;
+  function setDock(on) {
+    if (on === docked) return;
+    const first = body.getBoundingClientRect();
+    docked = on;
+    body.classList.toggle('docked', on); stage.classList.toggle('is-docked', on);
+    orbits.forEach((o) => { o.pivot.visible = !on; });
+    if (on) unpick();
+    resize(); draw();
+    const lastR = body.getBoundingClientRect();
+    if (!reduce) body.animate([
+      { transformOrigin: '0 0', transform: 'translate(' + (first.left - lastR.left) + 'px, ' + (first.top - lastR.top) + 'px) scale(' + (first.width / lastR.width) + ', ' + (first.height / lastR.height) + ')' },
+      { transformOrigin: '0 0', transform: 'none' },
+    ], { duration: 800, easing: 'cubic-bezier(0.16, 1, 0.3, 1)' });
+    if (on && !said) { said = true; body.classList.add('say'); setTimeout(() => body.classList.remove('say'), 3600); track('eye-dock'); }
+    start();
+  }
+  new IntersectionObserver(([e]) => { setDock(e.intersectionRatio < 0.3 && e.boundingClientRect.top < 0); }, { threshold: [0, 0.3, 0.6] }).observe(stage);
+  // The contact section has its own eye; the watcher steps aside there.
+  const contact = document.getElementById('contact');
+  if (contact) new IntersectionObserver(([e]) => { body.classList.toggle('resting', e.isIntersecting); }, { threshold: 0.2 }).observe(contact);
   document.addEventListener('visibilitychange', () => (document.hidden ? stop() : start()));
 
   // ── Wake up: a beat closed, a sleepy flutter, then open; blink now and then ─
   if (reduce) {
-    lid.o = 1; stage.classList.add('awake'); running = true; frame(performance.now()); running = false;
+    lid.o = 1; stage.classList.add('awake'); draw();
     // Reduced motion: no loop, but redraw on resize.
-    new ResizeObserver(() => { running = true; frame(performance.now()); running = false; }).observe(stage);
+  } else if (window.__introPlayed) {
+    // The intro eye already woke up and shrank into place; this one is open underneath it.
+    lid.o = 1; start();
+    const awake = () => stage.classList.add('awake');
+    if (document.documentElement.classList.contains('intro')) window.addEventListener('intro:done', awake, { once: true }); else awake();
+    const blink = async () => {
+      if (running) { await tween(0.02, 0.09, easeIn); await tween(1, 0.22, easeOut); }
+      setTimeout(blink, 4800 + Math.random() * 5200);
+    };
+    setTimeout(blink, 5200);
   } else {
     start();
     (async () => {
