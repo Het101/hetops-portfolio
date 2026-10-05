@@ -20,7 +20,11 @@ const hasGsap = !!(window.gsap && window.ScrollTrigger) && !reduce;
 if (hasGsap) gsap.registerPlugin(ScrollTrigger);
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 
-const scrollToId = (id) => { const el = document.getElementById(id); if (el) el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' }); };
+// An effect (fx.js) may take over in-page jumps; otherwise scroll.
+const scrollToId = (id) => {
+  if (window.HETOPS && window.HETOPS.navigate) return window.HETOPS.navigate(id);
+  const el = document.getElementById(id); if (el) el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' });
+};
 document.addEventListener('click', (e) => {
   const a = e.target.closest('a[href^="#"]');
   if (!a) return;
@@ -262,6 +266,7 @@ Promise.all(['threadvault', 'retirement-radar'].map((pkg) => getJSON(`https://ap
   const heat = $('#heatmap');
   if (!days.size) { heat.querySelector('p').textContent = 'Contribution data is unavailable right now.'; return; }
   setLive('contributions', [...days.values()].reduce((a, b) => a + b, 0));
+  window.dispatchEvent(new CustomEvent('live:activity', { detail: [...days.entries()].sort().slice(-7).reduce((a, [, n]) => a + n, 0) }));
   const sorted = [...days.entries()].sort(([a], [b]) => (a < b ? -1 : 1));
   const pad = new Date(sorted[0][0]).getUTCDay();
   const level = (n) => (n === 0 ? 0 : n < 3 ? 1 : n < 6 ? 2 : n < 10 ? 3 : 4);
@@ -287,6 +292,7 @@ Promise.all(['threadvault', 'retirement-radar'].map((pkg) => getJSON(`https://ap
     err.hidden = true;
     if (!valid(domain)) { err.textContent = 'Enter a domain like example.com.'; err.hidden = false; input.focus(); return; }
     btn.disabled = true; show('loading');
+    window.dispatchEvent(new CustomEvent('check:start', { detail: panel }));
     try {
       const [mail, tls] = await Promise.allSettled([post('email-security', domain), post('ssl', domain)]);
       if (mail.status === 'rejected' && tls.status === 'rejected') throw mail.reason;
@@ -310,6 +316,8 @@ Promise.all(['threadvault', 'retirement-radar'].map((pkg) => getJSON(`https://ap
       $('#checkFull').href = `https://dns.hetops.dev/?domain=${encodeURIComponent(domain)}`;
       show('result');
       track('portfolio-check');
+      const tones = $$('.tile', panel).map((t) => t.dataset.tone);
+      window.dispatchEvent(new CustomEvent('check:result', { detail: tones.includes('err') ? 'err' : tones.includes('warn') ? 'warn' : 'ok' }));
     } catch (e) {
       show('empty');
       const msg = /rate|429/i.test(e.message) ? 'Too many checks right now. Try again in a minute.'
