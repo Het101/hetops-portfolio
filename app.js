@@ -18,23 +18,12 @@ const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const finePointer = matchMedia('(pointer: fine)').matches;
 const NAV_H = 72;
 
-// ── Smooth scroll + GSAP ────────────────────────────────────────
+// ── GSAP (native scrolling; no scroll hijack) ───────────────────
 const hasGsap = !!(window.gsap && window.ScrollTrigger) && !reduce;
-let lenis = null;
-if (hasGsap) {
-  gsap.registerPlugin(ScrollTrigger);
-  if (window.Lenis) {
-    lenis = new Lenis({ duration: 1.1, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
-    lenis.on('scroll', ScrollTrigger.update);
-    gsap.ticker.add((t) => lenis.raf(t * 1000));
-    gsap.ticker.lagSmoothing(0);
-  }
-}
+if (hasGsap) gsap.registerPlugin(ScrollTrigger);
 const scrollToId = (id) => {
   const el = document.getElementById(id);
-  if (!el) return;
-  if (lenis) lenis.scrollTo(el, { offset: -NAV_H - 8 });
-  else el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' });
+  if (el) el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' });
 };
 document.addEventListener('click', (e) => {
   const a = e.target.closest('a[href^="#"]');
@@ -77,10 +66,11 @@ const setActive = (id) => {
   moveIndicator(navLinks.find((a) => a.dataset.nav === id));
 };
 const sectionIds = navLinks.map((a) => a.dataset.nav);
+const NAV_ALIAS = { tools: 'work' };
 const spy = new IntersectionObserver((entries) => {
-  for (const e of entries) if (e.isIntersecting) setActive(e.target.id);
+  for (const e of entries) if (e.isIntersecting) setActive(NAV_ALIAS[e.target.id] || e.target.id);
 }, { rootMargin: '-45% 0px -50% 0px' });
-sectionIds.forEach((id) => { const el = document.getElementById(id); if (el) spy.observe(el); });
+[...sectionIds, ...Object.keys(NAV_ALIAS)].forEach((id) => { const el = document.getElementById(id); if (el) spy.observe(el); });
 // The bar firms up after the first few pixels of scroll. Position-based (a sentinel at the
 // very top), so it is stable at any scroll speed.
 const sentinel = Object.assign(document.createElement('div'), { ariaHidden: 'true' });
@@ -111,10 +101,11 @@ const palette = $('#palette'), pInput = $('#paletteInput'), pList = $('#paletteL
 const go = (id) => () => scrollToId(id);
 const open = (url) => () => window.open(url, '_blank', 'noopener');
 const ACTIONS = [
-  { group: 'Sections', icon: 'ph-book-open', label: 'The Threadvault story', run: go('story') },
-  { group: 'Sections', icon: 'ph-squares-four', label: 'Work', run: go('work') },
-  { group: 'Sections', icon: 'ph-graph', label: 'Ecosystem map', run: go('ecosystem') },
   { group: 'Sections', icon: 'ph-briefcase', label: 'Experience', run: go('experience') },
+  { group: 'Sections', icon: 'ph-book-open', label: 'Work: the Threadvault story', run: go('work') },
+  { group: 'Sections', icon: 'ph-squares-four', label: 'Work: DNS Intelligence, Retirement Radar, Tallybank', run: go('tools') },
+  { group: 'Sections', icon: 'ph-magnifying-glass', label: 'Check a domain', run: go('check') },
+  { group: 'Sections', icon: 'ph-flow-arrow', label: 'How I ship', run: go('how-i-ship') },
   { group: 'Sections', icon: 'ph-pen-nib', label: 'Writing', run: go('writing') },
   { group: 'Sections', icon: 'ph-envelope-simple', label: 'Contact', run: go('contact') },
   { group: 'Projects', img: '/assets/brand/threadvault-icon.webp', label: 'Threadvault on GitHub', hint: 'github.com', run: open('https://github.com/Het101/threadvault') },
@@ -134,14 +125,15 @@ const renderPalette = () => {
   const q = pInput.value.trim().toLowerCase();
   pItems = ACTIONS.filter((a) => !q || (a.label + ' ' + (a.hint || '') + ' ' + a.group).toLowerCase().includes(q));
   pSel = Math.min(pSel, Math.max(0, pItems.length - 1));
-  if (!pItems.length) { pList.innerHTML = '<li class="palette-empty">Nothing matches that.</li>'; return; }
+  if (!pItems.length) { pList.innerHTML = '<li class="palette-empty">Nothing matches that.</li>'; pInput.removeAttribute('aria-activedescendant'); return; }
   let html = '', last = '';
   pItems.forEach((a, i) => {
     if (a.group !== last) { html += `<li class="palette-group" role="presentation">${a.group}</li>`; last = a.group; }
     const icon = a.img ? `<img src="${a.img}" alt="">` : `<i class="ph ${a.icon}" aria-hidden="true"></i>`;
-    html += `<li class="palette-item" role="option" data-i="${i}" aria-selected="${i === pSel}">${icon}<span>${a.label}</span>${a.hint ? `<span class="hint">${a.hint}</span>` : ''}</li>`;
+    html += `<li class="palette-item" role="option" id="pal-${i}" data-i="${i}" aria-selected="${i === pSel}">${icon}<span>${a.label}</span>${a.hint ? `<span class="hint">${a.hint}</span>` : ''}</li>`;
   });
   pList.innerHTML = html;
+  pInput.setAttribute('aria-activedescendant', `pal-${pSel}`);
 };
 const runPalette = (i) => { const a = pItems[i]; if (!a) return; palette.close(); track('palette-run', { item: a.label }); a.run(); };
 const openPalette = () => { if (palette.open) return; pInput.value = ''; pSel = 0; renderPalette(); palette.showModal(); pInput.focus(); };
@@ -169,7 +161,7 @@ async function copyEmail(addr) {
 }
 $$('[data-copy]').forEach((b) => b.addEventListener('click', () => copyEmail(b.dataset.copy)));
 
-// ── Hero: word reveal, tilt, spotlight ──────────────────────────
+// ── Hero: word reveal, tilt ──────────────────────────
 // Each word is wrapped so it can rise out of its own mask; text stays real text for readers and SEO.
 $$('.split').forEach((el) => {
   const walk = (node) => {
@@ -219,20 +211,6 @@ if (!reduce && finePointer) {
   });
   hero.addEventListener('pointerleave', () => { stage.style.setProperty('--ry', '0deg'); stage.style.setProperty('--rx', '0deg'); });
 
-  // Spotlight borders follow the pointer.
-  $$('.spot').forEach((el) => el.addEventListener('pointermove', (e) => {
-    const r = el.getBoundingClientRect();
-    el.style.setProperty('--sx', `${e.clientX - r.left}px`); el.style.setProperty('--sy', `${e.clientY - r.top}px`);
-  }));
-
-  // Magnetic primary buttons.
-  $$('.magnetic').forEach((b) => {
-    b.addEventListener('pointermove', (e) => {
-      const r = b.getBoundingClientRect();
-      b.style.transform = `translate(${(e.clientX - r.left - r.width / 2) * 0.25}px, ${(e.clientY - r.top - r.height / 2) * 0.35}px)`;
-    });
-    b.addEventListener('pointerleave', () => { b.style.transition = 'transform 0.5s cubic-bezier(.16,1,.3,1)'; b.style.transform = ''; setTimeout(() => { b.style.transition = ''; }, 500); });
-  });
 }
 
 // ── Count-up numbers ────────────────────────────────────────────
@@ -280,78 +258,12 @@ new IntersectionObserver(([e], ob) => {
 }, { threshold: 0.4 }).observe($('.rule'));
 $$('.rule-wire').forEach((w) => w.style.setProperty('--w', reduce ? 1 : 0));
 
-// ── Ecosystem map ───────────────────────────────────────────────
-const ECOSYSTEM = [
-  { key: 'dns', name: 'DNS Intelligence', icon: '/assets/brand/dns-icon.svg', c: '8,145,178', status: 'live', label: 'Live', url: 'https://dns.hetops.dev', link: 'dns.hetops.dev',
-    text: '26 checks across DNS, TLS, headers, DNSSEC and email authentication. Pro and Team plans add monitoring, alerts and automatic DMARC reports.' },
-  { key: 'threadvault', name: 'Threadvault', icon: '/assets/brand/threadvault-icon.webp', c: '109,59,235', status: 'live', label: 'Open source on npm', url: 'https://github.com/Het101/threadvault', link: 'github.com/Het101/threadvault',
-    text: 'Mirrors Azure Communication Services and Twilio chat into your own Postgres, then migrates, replays and verifies it.' },
-  { key: 'tallybank', name: 'Tallybank', icon: '/assets/brand/tallybank-icon.svg', c: '36,89,212', status: 'private', label: 'Private', url: '', link: '',
-    text: 'Bank statements to Tally ERP 9 vouchers for five family books. Ties every run to the bank totals and never guesses.' },
-  { key: 'status', name: 'Status', icon: '/assets/brand/status-icon.webp', c: '101,163,13', status: 'live', label: 'Live', url: 'https://status.hetops.dev', link: 'status.hetops.dev',
-    text: 'Uptime monitoring for every HetOps service, powered by Uptime Kuma.' },
-  { key: 'tools', name: 'Dev Toolkit', icon: '/assets/brand/tools-icon.webp', c: '63,71,86', status: 'live', label: 'Live', url: 'https://tools.hetops.dev', link: 'tools.hetops.dev',
-    text: '100+ developer utilities: encoders, formatters, generators and converters. Based on it-tools.' },
-  { key: 'radar', name: 'Retirement Radar', icon: '/assets/brand/radar-icon.webp', c: '229,72,77', status: 'live', label: 'Open source on npm', url: 'https://github.com/Het101/retirement-radar', link: 'github.com/Het101/retirement-radar',
-    text: 'Read-only CLI that finds EKS, RDS, ElastiCache, OpenSearch, MSK and Lambda versions at or near end of support, before extended support shows up on the bill.' },
-  { key: 'restore', name: 'Restore Drill', icon: '/assets/brand/restoredrill-icon.webp', c: '194,55,143', status: 'planned', label: 'Planned', url: '', link: '',
-    text: 'Restores your backups on a schedule and proves they work, with evidence for auditors.' },
-];
-const ecoMap = $('#ecoMap'), wires = $('.eco-wires'), ecoPanel = $('#ecoPanel');
-const R = 40; // radius in % of the map
-ECOSYSTEM.forEach((p, i) => {
-  const a = (i / ECOSYSTEM.length) * Math.PI * 2 - Math.PI / 2;
-  p.x = 50 + R * Math.cos(a); p.y = 50 + R * Math.sin(a);
-  const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-  line.setAttribute('x1', 300); line.setAttribute('y1', 300); line.setAttribute('x2', p.x * 6); line.setAttribute('y2', p.y * 6);
-  line.setAttribute('class', p.status === 'planned' ? 'planned' : 'live');
-  line.style.setProperty('--c', p.c);
-  wires.appendChild(line); p.line = line;
-  const b = document.createElement('button');
-  b.className = 'eco-node' + (p.status === 'planned' ? ' planned' : '');
-  b.style.left = p.x + '%'; b.style.top = p.y + '%'; b.style.setProperty('--c', p.c);
-  b.innerHTML = `<img src="${p.icon}" alt="" width="60" height="60"><span>${p.name}</span>`;
-  b.setAttribute('aria-label', `${p.name}: ${p.label}`);
-  b.addEventListener('click', () => { selectEco(i, true); });
-  b.addEventListener('pointerenter', () => { if (finePointer) selectEco(i, false); });
-  ecoMap.appendChild(b); p.btn = b;
-});
-let ecoCur = -1, ecoTimer = 0, ecoUserPicked = false;
-function selectEco(i, byUser) {
-  if (byUser) { ecoUserPicked = true; clearInterval(ecoTimer); track('ecosystem-pick', { tool: ECOSYSTEM[i].key }); }
-  if (i === ecoCur) return;
-  ecoCur = i;
-  const p = ECOSYSTEM[i];
-  ECOSYSTEM.forEach((q, j) => { q.btn.classList.toggle('on', j === i); q.line.classList.toggle('on', j === i); });
-  ecoPanel.style.setProperty('--c', p.c);
-  ecoPanel.classList.remove('swap'); void ecoPanel.offsetWidth; ecoPanel.classList.add('swap');
-  ecoPanel.innerHTML = `
-    <img class="p-icon" src="${p.icon}" width="48" height="48" alt="">
-    <span class="eco-status ${p.status}">${p.label}</span>
-    <h3>${p.name}</h3>
-    <p>${p.text}</p>
-    ${p.url ? `<div class="links"><a href="${p.url}" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="eco-${p.key}">${p.link} <i class="ph ph-arrow-up-right"></i></a></div>` : ''}`;
-}
-selectEco(0, false);
-// Gently cycle through the tools while the map is on screen, until someone picks one.
-if (!reduce) new IntersectionObserver(([e]) => {
-  clearInterval(ecoTimer);
-  if (e.isIntersecting && !ecoUserPicked) ecoTimer = setInterval(() => selectEco((ecoCur + 1) % ECOSYSTEM.length, false), 3200);
-}, { threshold: 0.5 }).observe(ecoMap);
-if (hasGsap) gsap.from('.eco-node', { scale: 0, opacity: 0, duration: 0.8, stagger: 0.07, ease: 'back.out(1.7)', scrollTrigger: { trigger: ecoMap, start: 'top 70%' } });
-
 // ── Experience: line fills, dots light up ───────────────────────
 if (hasGsap) {
   gsap.to('.timeline-fill', { scaleY: 1, ease: 'none', scrollTrigger: { trigger: '.timeline', start: 'top 65%', end: 'bottom 65%', scrub: true } });
 }
 const litObs = new IntersectionObserver((entries) => entries.forEach((e) => { if (e.isIntersecting) e.target.classList.add('lit'); }), { rootMargin: '0px 0px -35% 0px' });
 $$('.timeline li').forEach((li) => litObs.observe(li));
-
-// ── Marquee (logos only; AWS, Azure and Oracle have no public logo set) ─
-const LOGOS = ['kubernetes', 'docker', 'terraform', 'helm', 'argo', 'githubactions', 'prometheus', 'grafana', 'ansible', 'jenkins',
-  'gitlab', 'vault', 'cloudflare', 'traefikproxy', 'nginx', 'googlecloud', 'pulumi', 'opentelemetry', 'linux', 'postgresql', 'n8n', 'python', 'typescript'];
-const logoHtml = LOGOS.map((s) => `<img src="https://cdn.simpleicons.org/${s}/e4e4e7" alt="${s}" width="28" height="28" loading="lazy">`).join('');
-$('#marquee').innerHTML = logoHtml + logoHtml.replace(/alt="[^"]*"/g, 'alt="" aria-hidden="true"');
 
 // ── Read depth: which sections people actually reach ────────────
 const seen = new Set();
@@ -373,8 +285,11 @@ if (hasGsap) {
 // ── Live numbers (public, unauthenticated sources only) ─────────
 const ACCOUNTS = ['Het101', 'Hetu29'];
 const getJSON = (url) => fetch(url).then((r) => (r.ok ? r.json() : null)).catch(() => null);
+// Anything marked data-live-hide stays hidden until its number arrives, so a slow or
+// rate-limited API never leaves a bare "-" on the page.
 const setLive = (key, n) => {
   $$(`[data-live="${key}"]`).forEach((el) => {
+    el.closest('[data-live-hide]')?.removeAttribute('hidden');
     if (el.closest('.proof')) proofSeen.then(() => countUp(el, n));
     else el.textContent = Number(n).toLocaleString('en-IN');
   });
@@ -383,10 +298,10 @@ const setLive = (key, n) => {
 Promise.all(['threadvault', 'retirement-radar'].map((pkg) => getJSON(`https://api.npmjs.org/downloads/point/last-month/${pkg}`)))
   .then(([tv, rr]) => {
     if (tv && tv.downloads != null) setLive('npm', tv.downloads);
-    // npm's stats lag a new package by a day or two; show the count only once it exists.
-    if (rr && rr.downloads != null) { setLive('npmRadar', rr.downloads); $$('.radar-dl').forEach((el) => { el.hidden = false; }); }
+    // npm's stats lag a new package by a day or two; the count appears once it exists.
+    if (rr && rr.downloads != null) setLive('npmRadar', rr.downloads);
     const all = (tv?.downloads || 0) + (rr?.downloads || 0);
-    if (tv || rr) setLive('npmAll', all);
+    if (all) setLive('npmAll', all);
   });
 
 (async () => {
@@ -471,8 +386,15 @@ addEventListener('beforeprint', () => { $$('.stage-panel').forEach((p) => p.clas
       track('portfolio-check');
     } catch (e) {
       show('empty');
-      err.textContent = /rate|429/i.test(e.message) ? 'Too many checks right now. Try again in a minute.' : `Could not check ${domain}: ${e.message}`;
+      const msg = /rate|429/i.test(e.message) ? 'Too many checks right now. Try again in a minute.'
+        : e instanceof TypeError ? 'Couldn\'t reach DNS Intelligence from here.'
+        : `That check didn't finish (${e.message}).`;
+      const retry = Object.assign(document.createElement('button'), { type: 'button', className: 'check-retry', textContent: 'Try again' });
+      retry.addEventListener('click', () => run(domain));
+      const full = Object.assign(document.createElement('a'), { href: `https://dns.hetops.dev/?domain=${encodeURIComponent(domain)}`, target: '_blank', rel: 'noopener', textContent: 'Run it on dns.hetops.dev' });
+      err.replaceChildren(msg + ' ', retry, ' or ', full, '.');
       err.hidden = false;
+      track('portfolio-check-error');
     } finally { go.disabled = false; }
   }
   form.addEventListener('submit', (e) => { e.preventDefault(); const d = clean(input.value); input.value = d; run(d); });
