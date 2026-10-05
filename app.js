@@ -267,7 +267,9 @@ if (hasGsap && matchMedia('(min-width: 1025px)').matches) {
     if (!next) return;
     // Dim, don't fade: a faded card turns see-through and the cards stacked behind
     // it show through its text. brightness() keeps it opaque.
-    gsap.to(card, { scale: 0.94, filter: 'brightness(0.45)', ease: 'none',
+    // fromTo with an explicit brightness(1): GSAP can't interpolate from filter:none,
+    // so a plain .to() jumped straight to fully dark the moment the trigger started.
+    gsap.fromTo(card, { scale: 1, filter: 'brightness(1)' }, { scale: 0.94, filter: 'brightness(0.6)', ease: 'none', immediateRender: false,
       scrollTrigger: { trigger: next, start: 'top bottom', end: `top ${NAV_H + 40}px`, scrub: true } });
   });
 }
