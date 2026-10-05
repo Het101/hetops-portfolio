@@ -83,6 +83,7 @@ const ACTIONS = [
   ...PRODUCTS.filter((p) => p.url.startsWith('http')).map((p) => ({ group: 'Projects', img: p.icon, label: p.name, hint: p.link, run: open(p.url) })),
   { group: 'Projects', img: '/assets/brand/dns-icon.svg', label: 'SPF lookup checker', hint: 'dns.hetops.dev/spf-checker', run: open('https://dns.hetops.dev/spf-checker') },
   { group: 'Projects', img: '/assets/brand/dns-icon.svg', label: 'DNS Intelligence plans', hint: 'dns.hetops.dev/#pricing', run: open('https://dns.hetops.dev/#pricing') },
+  { group: 'Actions', icon: 'ph-terminal-window', label: 'sudo hire het', run: () => hire() },
   { group: 'Actions', icon: 'ph-copy', label: 'Copy email address', run: () => copyEmail('patel.x.het@gmail.com') },
   { group: 'Actions', icon: 'ph-file-pdf', label: 'Open résumé (PDF)', run: open('/Het_Patel_Resume.pdf') },
   { group: 'Actions', icon: 'ph-linkedin-logo', label: 'LinkedIn', run: open('https://www.linkedin.com/in/het11/') },
@@ -222,6 +223,47 @@ if (!reduce && 'IntersectionObserver' in window) {
   }), { rootMargin: '0px 0px -18% 0px', threshold: 0.2 });
   [...focusables, ...rows, ...watched.keys()].forEach((el) => io.observe(el));
 }
+
+// ── Easter egg: type `sudo hire het` anywhere ──────────────────
+const HIRE_LINES = [
+  ['$ sudo hire het', 'cmd'],
+  ['[sudo] password for recruiter: ********', ''],
+  ['Checking candidate... 3 years in production, every commit signed', 'ok'],
+  ['Running the release ring: test, hygiene, analyze, stage, approve', 'ok'],
+  ['Provisioning DevOps Engineer... done', 'ok'],
+  ['Attaching on-call pager... done', 'ok'],
+  ['Opening a line to patel.x.het@gmail.com', 'go'],
+];
+let hiring = false;
+async function hire() {
+  if (hiring) return; hiring = true; track('easter-egg', { egg: 'sudo-hire-het' });
+  const box = document.createElement('div');
+  box.className = 'hire'; box.setAttribute('role', 'dialog'); box.setAttribute('aria-label', 'sudo hire het');
+  box.innerHTML = '<div class="hire-term"><div class="hire-bar"><i></i><i></i><i></i><span>het@hetops: ~</span><button type="button" aria-label="Close">Esc</button></div><ol class="hire-out" aria-live="polite"></ol></div>';
+  document.body.appendChild(box);
+  const out = box.querySelector('.hire-out');
+  const close = () => { box.classList.add('out'); setTimeout(() => box.remove(), 300); hiring = false; removeEventListener('keydown', onKey); };
+  const onKey = (e) => { if (e.key === 'Escape') close(); };
+  addEventListener('keydown', onKey);
+  box.addEventListener('click', (e) => { if (e.target === box || e.target.closest('.hire-bar button')) close(); });
+  requestAnimationFrame(() => box.classList.add('in'));
+  for (const [text, kind] of HIRE_LINES) {
+    if (!box.isConnected) return;
+    const li = document.createElement('li'); li.className = kind; out.appendChild(li);
+    if (kind === 'cmd' && !reduce) { for (const ch of text) { li.textContent += ch; await new Promise((r) => setTimeout(r, 45)); } }
+    else { if (kind === 'ok') li.appendChild(Object.assign(document.createElement('i'), { className: 'ph ph-check' })); li.append(text); }
+    await new Promise((r) => setTimeout(r, reduce ? 120 : kind === 'cmd' ? 350 : 520));
+  }
+  if (!box.isConnected) return;
+  location.href = 'mailto:patel.x.het@gmail.com?subject=' + encodeURIComponent("Let's talk (sudo hire het)");
+}
+let typed = '';
+addEventListener('keydown', (e) => {
+  if (/INPUT|TEXTAREA/.test(document.activeElement.tagName) || e.ctrlKey || e.metaKey || e.altKey) return;
+  if (e.key.length !== 1) return;
+  typed = (typed + e.key.toLowerCase()).slice(-13);
+  if (typed === 'sudo hire het') { typed = ''; hire(); }
+});
 
 // ── Read depth: which sections people actually reach ────────────
 const seen = new Set();

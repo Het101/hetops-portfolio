@@ -110,7 +110,9 @@ if (renderer) {
   const head = new THREE.Group(); scene.add(head);
   const gaze = new THREE.Group(); head.add(gaze);
   const ballGeo = new THREE.SphereGeometry(1, 128, 96); ballGeo.rotateX(Math.PI / 2);
-  gaze.add(new THREE.Mesh(ballGeo, new THREE.MeshPhysicalMaterial({ map: eyeTexture(), roughness: 0.42, clearcoat: 1, clearcoatRoughness: 0.05, envMapIntensity: 0.8 })));
+  const irisTex = eyeTexture();
+  const ballMat = new THREE.MeshPhysicalMaterial({ map: irisTex, roughness: 0.42, clearcoat: 1, clearcoatRoughness: 0.05, envMapIntensity: 0.8, emissive: 0x000000, emissiveMap: irisTex });
+  gaze.add(new THREE.Mesh(ballGeo, ballMat));
   // Pupil cap: a separate black cap so it can dilate.
   const pupilMat = new THREE.MeshBasicMaterial({ color: 0x030303 });
   let pupilGeo = null, pupilSize = P;
@@ -265,7 +267,12 @@ if (renderer) {
     upper.rotation.x = -open * (OPEN_UP + Math.min(0, look.y) * -0.18);
     lower.rotation.x = open * OPEN_LOW;
     // Pupil dilates while a tool is picked.
-    const want = picked ? P * 1.32 : P;
+    // Live health: a calm eye when everything is up; a tinted, narrowed one when something is down.
+    if (health !== 'ok' && health !== 'unknown') {
+      const pulse = 0.5 + 0.5 * Math.sin(now / 260);
+      ballMat.emissive.setHex(health === 'down' ? 0xef7a64 : 0xe3a944); ballMat.emissiveIntensity = 0.18 + pulse * 0.3;
+    } else ballMat.emissiveIntensity = 0;
+    const want = (picked || glancing ? P * 1.32 : P) * (health === 'down' ? 0.7 : health === 'degraded' ? 0.85 : 1);
     if (Math.abs(want - pupilSize) > 0.002) setPupil(pupilSize + (want - pupilSize) * Math.min(1, dt * 6));
 
     for (const o of orbits) {
@@ -318,6 +325,41 @@ if (renderer) {
   new IntersectionObserver(([e]) => { setDock(e.intersectionRatio < 0.3 && e.boundingClientRect.top < 0); }, { threshold: [0, 0.3, 0.6] }).observe(stage);
   // Something new came into focus: if the visitor isn't steering with the pointer,
   // glance at it, and blink when a new section arrives.
+  // ── Live watch: the eye shows whether the HetOps services are up (dns.hetops.dev/api/watch) ─
+  let health = 'unknown';
+  const pills = [...document.querySelectorAll('[data-watch]')];
+  async function watch() {
+    try {
+      const r = await fetch('https://dns.hetops.dev/api/watch', { cache: 'no-store' });
+      if (!r.ok) throw new Error(r.status);
+      const w = await r.json();
+      health = w.up === w.total ? 'ok' : w.up === 0 ? 'down' : 'degraded';
+      const text = health === 'ok' ? `Watching ${w.total} services · all up` : `Watching ${w.total} services · ${w.total - w.up} down`;
+      pills.forEach((p) => { p.hidden = false; p.dataset.state = health; p.querySelector('span').textContent = text; p.title = w.services.map((s) => `${s.name}: ${s.up ? 'up' : 'down'}`).join('\n'); });
+    } catch (e) { health = 'unknown'; }
+  }
+  watch(); setInterval(() => { if (!document.hidden) watch(); }, 120000);
+
+  // ── Glance: docked, the eye looks at the project link you point at and says what it is ─
+  let glancing = null;
+  const note = body.querySelector('.dock-note'), noteDefault = note.textContent;
+  document.addEventListener('pointerover', (e) => {
+    if (!docked || reduce) return;
+    const el = e.target.closest('.case .links a, .story .links a, .lens, .shipped-list a, .case-link');
+    if (!el || el === glancing) return;
+    glancing = el;
+    const art = el.closest('article, li');
+    const name = art && art.querySelector('h3, .shipped-tag'), line = art && art.querySelector('.problem, span:last-child');
+    if (name) { note.textContent = name.textContent.trim() + (line ? ': ' + line.textContent.trim() : ''); body.classList.add('say'); }
+    const t = el.getBoundingClientRect(), r = body.getBoundingClientRect();
+    aim.x = Math.max(-1, Math.min(1, (t.left + t.width / 2 - (r.left + r.width / 2)) / (innerWidth * 0.45)));
+    aim.y = Math.max(-1, Math.min(1, (t.top + t.height / 2 - (r.top + r.height / 2)) / (innerHeight * 0.45)));
+  });
+  document.addEventListener('pointerout', (e) => {
+    if (!glancing || (e.relatedTarget && glancing.contains(e.relatedTarget))) return;
+    glancing = null; body.classList.remove('say'); setTimeout(() => { if (!glancing) note.textContent = noteDefault; }, 300);
+  });
+
   let lastBlink = 0;
   window.addEventListener('eye:glance', (ev) => {
     if (!docked || reduce) return;
