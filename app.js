@@ -197,6 +197,25 @@ new IntersectionObserver(([e], ob) => {
   $('#contactEmail').addEventListener('pointerleave', () => pupil.setAttribute('r', 13));
 })();
 
+// ── Focus: things come into focus as the eye reaches them ──────
+// Headings and chart rows sharpen from a blur; screenshots open through a round aperture.
+if (!reduce && 'IntersectionObserver' in window) {
+  const focusables = $$('.head h2, .words > h2, .writing > h2, .activity-head h2, .check-copy h2, .contact h2');
+  const rows = $$('.chart li'), lenses = $$('.lens, .stage, .rule, .ring');
+  [...focusables, ...rows].forEach((el) => el.classList.add('pre-focus'));
+  lenses.forEach((el) => el.classList.add('pre-aperture'));
+  // A shape clipped to nothing never "intersects", so apertures are watched through their parent.
+  const watched = new Map(lenses.map((el) => [el.parentElement, el]));
+  const io = new IntersectionObserver((entries) => entries.forEach((e) => {
+    if (!e.isIntersecting) return;
+    io.unobserve(e.target);
+    const el = watched.get(e.target) || e.target, i = rows.indexOf(el);
+    setTimeout(() => el.classList.add(el.classList.contains('pre-aperture') ? 'apertured' : 'focused'), i > 0 ? i * 140 : 0);
+    window.dispatchEvent(new CustomEvent('eye:glance', { detail: el }));
+  }), { rootMargin: '0px 0px -18% 0px', threshold: 0.2 });
+  [...focusables, ...rows, ...watched.keys()].forEach((el) => io.observe(el));
+}
+
 // ── Read depth: which sections people actually reach ────────────
 const seen = new Set();
 const depth = new IntersectionObserver((entries) => {

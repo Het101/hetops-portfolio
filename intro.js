@@ -1,5 +1,5 @@
 // hetops.dev intro: a big eye wakes, opens, then shrinks into the 3D eye in the hero.
-// Plays once per session; the inline head script decides (and removes it after 9s no matter what).
+// Plays on every load; the inline head script decides (and removes it after 9s no matter what).
 (() => {
   const root = document.documentElement;
   if (!root.classList.contains('intro')) return;
@@ -88,7 +88,6 @@
 
   function finish() {
     if (done) return; done = true;
-    try { sessionStorage.setItem('intro-seen', '1'); } catch (e) {}
     root.classList.remove('intro');
     overlay.remove();
     window.dispatchEvent(new Event('intro:done'));
