@@ -26,6 +26,9 @@ if (!renderer) {
   scene.fog = new THREE.FogExp2(0x08090a, 0.022);
   const camera = new THREE.PerspectiveCamera(55, 1, 0.1, 400);
   scene.add(new THREE.AmbientLight(0xffffff, 0.35));
+  // Shaded shapes (hex pods, bars, diamonds) need real light: a warm key from above and a cool sky.
+  const sun = new THREE.DirectionalLight(0xfff1d6, 2.6); sun.position.set(12, 30, 18); scene.add(sun);
+  scene.add(new THREE.HemisphereLight(0xdff5ea, 0x1a1408, 1.4));
   const key = new THREE.PointLight(0xf0bd5e, 60, 60, 1.6); scene.add(key);
   const dotTex = (() => {
     const c = document.createElement('canvas'); c.width = c.height = 64;
@@ -62,19 +65,25 @@ if (!renderer) {
 
   // ── Stop 1: three clouds, a grid of pods each; one region fails over ─
   const CL = new THREE.Vector3(0, -2, -96), clusters = [];
-  const orb = new THREE.SphereGeometry(0.34, 20, 14);
+  const hexPod = new THREE.CylinderGeometry(0.46, 0.46, 0.8, 6);
+  const PODS = 19, honey = [[0, 0]];
+  for (let ring = 1; ring <= 2; ring++) {
+    // Walk each hexagonal ring in axial coordinates.
+    let q = ring, r = 0;
+    const dirs = [[-1, 1], [-1, 0], [0, -1], [1, -1], [1, 0], [0, 1]];
+    for (const [dq, dr] of dirs) for (let k = 0; k < ring; k++) { honey.push([q, r]); q += dq; r += dr; }
+  }
   ['AWS', 'GCP', 'Azure'].forEach((name, k) => {
     const g = new THREE.Group(); g.position.set(CL.x + (k - 1) * 13, CL.y, CL.z); scene.add(g);
-    const plat = new THREE.Mesh(new THREE.CylinderGeometry(5.2, 5.4, 0.3, 72), new THREE.MeshStandardMaterial({ color: 0x111416, roughness: 0.6, metalness: 0.3, emissive: 0x0d1a14, emissiveIntensity: 0.6 }));
+    const plat = new THREE.Mesh(new THREE.CylinderGeometry(5.2, 5.4, 0.3, 6), new THREE.MeshStandardMaterial({ color: 0x111416, roughness: 0.6, metalness: 0.3, emissive: 0x0d1a14, emissiveIntensity: 0.6 }));
     g.add(plat);
-    const ring = new THREE.EllipseCurve(0, 0, 5.2, 5.2).getPoints(96).map((q) => new THREE.Vector3(q.x, 0.16, q.y));
-    const edge = new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(ring), new THREE.LineBasicMaterial({ color: 0x45b88d, transparent: true, opacity: 0.7 }));
+    const edge = new THREE.LineSegments(new THREE.EdgesGeometry(plat.geometry), new THREE.LineBasicMaterial({ color: 0x45b88d, transparent: true, opacity: 0.7 }));
     g.add(edge);
-    const pods = new THREE.InstancedMesh(orb, new THREE.MeshBasicMaterial(), 25);
+    const pods = new THREE.InstancedMesh(hexPod, new THREE.MeshStandardMaterial({ roughness: 0.45, metalness: 0.1 }), PODS);
     const m = new THREE.Matrix4();
-    for (let i = 0; i < 25; i++) {
-      const ringN = i === 0 ? 0 : i <= 8 ? 1 : 2, idx = i === 0 ? 0 : i <= 8 ? i - 1 : i - 9, cnt = ringN === 1 ? 8 : 16, a = (idx / cnt) * Math.PI * 2 + ringN * 0.2;
-      m.makeTranslation(Math.cos(a) * ringN * 1.6, 0.55, Math.sin(a) * ringN * 1.6); pods.setMatrixAt(i, m); pods.setColorAt(i, MOSS);
+    for (let i = 0; i < PODS; i++) {
+      const [q, r] = honey[i];
+      m.makeTranslation(1.62 * (q + r / 2), 0.55, 1.62 * r * 0.866); pods.setMatrixAt(i, m); pods.setColorAt(i, MOSS);
     }
     g.add(pods); clusters.push({ g, pods, edge, name });
   });
@@ -88,16 +97,18 @@ if (!renderer) {
     gate.rotation.y = Math.PI / 2; gate.position.set(x, 0, PZ); scene.add(gate); gates.push(gate);
   });
   const packets = Array.from({ length: 9 }, (_, i) => {
-    const s = new THREE.Mesh(new THREE.SphereGeometry(0.28, 16, 12), new THREE.MeshBasicMaterial({ color: 0xf0bd5e }));
+    const s = new THREE.Mesh(new THREE.OctahedronGeometry(0.36), new THREE.MeshStandardMaterial({ color: 0xf0bd5e, emissive: 0xe3a944, emissiveIntensity: 0.6, roughness: 0.3, flatShading: true }));
     s.position.set(-26 + i * 6, 0, PZ); scene.add(s); return s;
   });
 
   // ── Stop 3: 400 servers; idle ones switch off as you scroll ───
-  const CZ = -214, N = 400, servers = new THREE.InstancedMesh(new THREE.SphereGeometry(0.42, 18, 12), new THREE.MeshBasicMaterial(), N);
+  const CZ = -214, N = 400, servers = new THREE.InstancedMesh(new THREE.BoxGeometry(0.42, 1, 0.42), new THREE.MeshStandardMaterial({ roughness: 0.5, metalness: 0.2 }), N);
+  const barPos = [], barH = [], barNow = new Float32Array(N).fill(1), qI = new THREE.Quaternion(), vS = new THREE.Vector3(), vP = new THREE.Vector3();
   const order = [], m4 = new THREE.Matrix4();
   for (let i = 0; i < N; i++) {
     const ga = i * 2.39996323, gr = 0.72 * Math.sqrt(i + 0.5);
-    m4.makeTranslation(Math.cos(ga) * gr, -3, CZ + Math.sin(ga) * gr);
+    barPos.push([Math.cos(ga) * gr, CZ + Math.sin(ga) * gr]); barH.push(1.2 + rnd() * 1.6);
+    m4.compose(vP.set(Math.cos(ga) * gr, -3 + barH[i] / 2, CZ + Math.sin(ga) * gr), qI, vS.set(1, barH[i], 1));
     servers.setMatrixAt(i, m4); servers.setColorAt(i, GOLD); order.push({ i, r: rnd() });
   }
   order.sort((a, b) => a.r - b.r); scene.add(servers);
@@ -191,7 +202,7 @@ if (!renderer) {
     // Clusters: pods pulse; between 0.24 and 0.32 AWS fails and its pods go dark while the rest light up.
     const fail = band(p, 0.24, 0.3), back = band(p, 0.31, 0.35);
     clusters.forEach((c, k) => {
-      for (let i = 0; i < 25; i++) {
+      for (let i = 0; i < PODS; i++) {
         const pulse = 0.75 + 0.25 * Math.sin(clock * 3 + i * 0.7 + k);
         if (k === 0) tmpC.copy(MOSS).lerp(RED, Math.min(1, fail * 2)).lerp(DIM, Math.max(0, fail * 2 - 1)).lerp(MOSS, back);
         else tmpC.copy(MOSS).lerp(GOLD, fail * (1 - back) * (i % 3 === 0 ? 1 : 0.3));
@@ -203,7 +214,7 @@ if (!renderer) {
     });
 
     // Pipeline: packets glide along; a gate flashes green as one passes through it.
-    packets.forEach((s) => { s.position.x += dt * 6; if (s.position.x > 26) s.position.x -= 54; });
+    packets.forEach((s) => { s.position.x += dt * 6; s.rotation.x += dt * 2.2; s.rotation.y += dt * 1.4; if (s.position.x > 26) s.position.x -= 54; });
     gates.forEach((g) => {
       const near = packets.some((s) => Math.abs(s.position.x - g.position.x) < 0.7);
       g.material.emissiveIntensity += ((near ? 2.4 : 0.25) - g.material.emissiveIntensity) * Math.min(1, dt * 10);
@@ -211,7 +222,14 @@ if (!renderer) {
 
     // Cost: the idle 60% switch off as the stop plays; the counter follows.
     const off = band(p, 0.6, 0.78), offN = Math.floor(off * N * 0.6);
-    for (let k = 0; k < N; k++) servers.setColorAt(order[k].i, k < offN ? DIM : GOLD);
+    for (let k = 0; k < N; k++) {
+      const i = order[k].i, on = k >= offN;
+      barNow[i] += ((on ? 1 : 0.06) - barNow[i]) * Math.min(1, dt * 5);
+      const h = barH[i] * barNow[i];
+      m4.compose(vP.set(barPos[i][0], -3 + h / 2, barPos[i][1]), qI, vS.set(1, h, 1)); servers.setMatrixAt(i, m4);
+      servers.setColorAt(i, on ? GOLD : DIM);
+    }
+    servers.instanceMatrix.needsUpdate = true;
     servers.instanceColor.needsUpdate = true;
     if (counter) counter.textContent = fmt(off * 2e6);
 
