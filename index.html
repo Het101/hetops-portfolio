@@ -114,7 +114,7 @@
     <!-- ── Proof ────────────────────────────────────────────── -->
     <section class="proof" aria-label="Numbers" data-section="proof">
       <div class="proof-item"><span class="proof-num" data-live="contributions">-</span><span class="proof-lbl">GitHub contributions in the last year</span></div>
-      <div class="proof-item"><span class="proof-num" data-live="npm">-</span><span class="proof-lbl">Threadvault installs from npm last month</span></div>
+      <div class="proof-item"><span class="proof-num" data-live="npmAll">-</span><span class="proof-lbl">npm installs last month, Threadvault and Retirement Radar</span></div>
       <div class="proof-item"><span class="proof-num"><span data-count="3">3</span> yrs</span><span class="proof-lbl">running production infrastructure</span></div>
       <div class="proof-item"><span class="proof-num" data-count="26">26</span><span class="proof-lbl">checks in one DNS Intelligence scan</span></div>
     </section>
@@ -195,14 +195,33 @@
             <img class="p-icon" src="/assets/brand/dns-icon.svg" width="48" height="48" alt="">
             <p class="kicker">Live at dns.hetops.dev</p>
             <h3>DNS Intelligence</h3>
-            <p>A domain scanner with 26 checks across DNS, TLS, security headers, DNSSEC, email authentication and reputation. Watch a domain and it emails you when something changes. There is a public API too.</p>
+            <p>A domain scanner with 26 checks across DNS, TLS, security headers, DNSSEC, email authentication and reputation. It counts SPF lookups through every nested include, the way mail servers do.</p>
+            <p><b>Domain Watch</b> monitors domains and alerts on certificate, SPF, DMARC, MX and nameserver changes, and collects DMARC reports automatically. Free for one domain; Pro and Team plans from $5 a month.</p>
             <div class="links">
               <a href="https://dns.hetops.dev" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="dns-live">Try it <i class="ph ph-arrow-up-right"></i></a>
+              <a href="https://dns.hetops.dev/spf-checker" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="dns-spf-checker">SPF checker <i class="ph ph-arrow-up-right"></i></a>
               <a href="https://github.com/Het101/hetops-dns" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="dns-source">Source <i class="ph ph-arrow-up-right"></i></a>
             </div>
           </div>
           <a class="stack-media" href="https://dns.hetops.dev" target="_blank" rel="noopener" tabindex="-1" data-umami-event="project-link" data-umami-event-project="dns-screenshot">
             <img src="/assets/img/dns-report.webp?v=2" width="1600" height="1075" loading="lazy" alt="DNS Intelligence report for github.com: health score 87, grade A.">
+          </a>
+        </article>
+
+        <article class="stack-card spot" style="--tint: 229,72,77">
+          <div class="stack-body">
+            <img class="p-icon" src="/assets/brand/radar-icon.webp" width="48" height="48" alt="">
+            <p class="kicker">Open source on npm<span class="radar-dl" hidden> · <span data-live="npmRadar">-</span> installs last month</span></p>
+            <h3>Retirement Radar</h3>
+            <p>AWS now bills automatically for running old versions: EKS extended support alone is about $365 a month per cluster. This read-only CLI scans every region for EKS, RDS, ElastiCache, OpenSearch, MSK and Lambda versions at or near end of support, with the AWS source for every date.</p>
+            <p class="cmd"><code>npx retirement-radar scan</code></p>
+            <div class="links">
+              <a href="https://github.com/Het101/retirement-radar" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="radar-source">Source <i class="ph ph-arrow-up-right"></i></a>
+              <a href="https://www.npmjs.com/package/retirement-radar" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="radar-npm">npm <i class="ph ph-arrow-up-right"></i></a>
+            </div>
+          </div>
+          <a class="stack-media" href="https://github.com/Het101/retirement-radar" target="_blank" rel="noopener" tabindex="-1" data-umami-event="project-link" data-umami-event-project="radar-screenshot">
+            <img src="/assets/img/radar-output.webp" width="1600" height="1050" loading="lazy" alt="Retirement Radar output: resources marked retired, on paid extended support, soon or upcoming, with dates and the monthly EKS extended support cost.">
           </a>
         </article>
 
@@ -235,6 +254,23 @@
           </dl>
         </article>
       </div>
+    </section>
+
+    <!-- ── How I ship ───────────────────────────────────────── -->
+    <section class="ship wrap section" id="how-i-ship" data-section="how-i-ship">
+      <header class="section-head">
+        <h2 class="h2">How I ship</h2>
+        <p class="sub">The same bar for side projects as for production. Every repo enforces it, not just describes it.</p>
+      </header>
+      <div class="ship-grid">
+        <div class="ship-item spot"><i class="ph ph-seal-check" aria-hidden="true"></i><h3>Signed, protected main</h3><p>Signed commits, linear history, required checks and no force-push on every repository.</p></div>
+        <div class="ship-item spot"><i class="ph ph-flow-arrow" aria-hidden="true"></i><h3>CI on every pull request</h3><p>Tests on several Node versions, a real run of the built artifact, a workflow audit and a secret scan.</p></div>
+        <div class="ship-item spot"><i class="ph ph-shield-check" aria-hidden="true"></i><h3>Security scanning</h3><p>CodeQL and OpenSSF Scorecard on every change. DNS Intelligence went from 62 open alerts to 0.</p></div>
+        <div class="ship-item spot"><i class="ph ph-package" aria-hidden="true"></i><h3>Provenance-signed releases</h3><p>npm packages publish from CI with provenance, staged until I approve them with 2FA. No long-lived tokens.</p></div>
+        <div class="ship-item spot"><i class="ph ph-hourglass-medium" aria-hidden="true"></i><h3>Careful dependencies</h3><p>Dependabot with a 7-day cooldown, dependency review, and every GitHub Action pinned to a commit.</p></div>
+        <div class="ship-item spot"><i class="ph ph-lock-key" aria-hidden="true"></i><h3>Least privilege</h3><p>Read-only by design where possible, enforced by tests. Credentials hashed at rest.</p></div>
+      </div>
+      <a class="more" href="https://github.com/Het101/retirement-radar/blob/main/SECURITY.md" target="_blank" rel="noopener" data-umami-event="outbound" data-umami-event-target="security-md">Read a SECURITY.md <i class="ph ph-arrow-up-right"></i></a>
     </section>
 
     <!-- ── Ecosystem map ────────────────────────────────────── -->
@@ -302,6 +338,16 @@
         </div>
         <div class="heatmap" id="heatmap" role="img" aria-label="GitHub contributions over the last year"><p class="heatmap-empty">Loading contributions…</p></div>
         <p class="activity-note">Combined across github.com/Het101 and github.com/Hetu29.</p>
+        <div class="shipped">
+          <h3 class="shipped-h">Shipped recently</h3>
+          <ol class="shipped-list">
+            <li><time datetime="2026-10-05">5 Oct 2026</time><span class="shipped-tag radar">Retirement Radar</span><span>0.3.0: ElastiCache, OpenSearch and MSK; every date re-checked against AWS.</span></li>
+            <li><time datetime="2026-10-05">5 Oct 2026</time><span class="shipped-tag dns">DNS</span><span>SPF lookups counted through nested includes, a <a href="https://dns.hetops.dev/spf-checker" target="_blank" rel="noopener">public SPF checker</a>, and alerts when a domain crosses the limit.</span></li>
+            <li><time datetime="2026-10-05">5 Oct 2026</time><span class="shipped-tag dns">DNS</span><span>Security pass: 62 code-scanning alerts to 0, SSRF checks on every outbound hop, credentials hashed at rest.</span></li>
+            <li><time datetime="2026-10-04">4 Oct 2026</time><span class="shipped-tag watch">Domain Watch</span><span>Paid plans: Pro and Team, with automatic DMARC report collection.</span></li>
+            <li><time datetime="2026-10-04">4 Oct 2026</time><span class="shipped-tag radar">Retirement Radar</span><span>First release on npm, then a staged, provenance-signed release pipeline.</span></li>
+          </ol>
+        </div>
       </div>
     </section>
 

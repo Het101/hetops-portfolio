@@ -119,6 +119,9 @@ const ACTIONS = [
   { group: 'Sections', icon: 'ph-envelope-simple', label: 'Contact', run: go('contact') },
   { group: 'Projects', img: '/assets/brand/threadvault-icon.webp', label: 'Threadvault on GitHub', hint: 'github.com', run: open('https://github.com/Het101/threadvault') },
   { group: 'Projects', img: '/assets/brand/dns-icon.svg', label: 'DNS Intelligence', hint: 'dns.hetops.dev', run: open('https://dns.hetops.dev') },
+  { group: 'Projects', img: '/assets/brand/dns-icon.svg', label: 'SPF lookup checker', hint: 'dns.hetops.dev/spf-checker', run: open('https://dns.hetops.dev/spf-checker') },
+  { group: 'Projects', img: '/assets/brand/domainwatch-icon.webp', label: 'Domain Watch plans', hint: 'dns.hetops.dev/#pricing', run: open('https://dns.hetops.dev/#pricing') },
+  { group: 'Projects', img: '/assets/brand/radar-icon.webp', label: 'Retirement Radar on GitHub', hint: 'github.com', run: open('https://github.com/Het101/retirement-radar') },
   { group: 'Projects', img: '/assets/brand/tools-icon.webp', label: 'Dev Toolkit', hint: 'tools.hetops.dev', run: open('https://tools.hetops.dev') },
   { group: 'Projects', img: '/assets/brand/status-icon.webp', label: 'Status page', hint: 'status.hetops.dev', run: open('https://status.hetops.dev') },
   { group: 'Actions', icon: 'ph-copy', label: 'Copy email address', run: () => copyEmail('patel.x.het@gmail.com') },
@@ -285,10 +288,10 @@ const ECOSYSTEM = [
     text: 'Uptime monitoring for every HetOps service, powered by Uptime Kuma.' },
   { key: 'tools', name: 'Dev Toolkit', icon: '/assets/brand/tools-icon.webp', c: '63,71,86', status: 'live', label: 'Live', url: 'https://tools.hetops.dev', link: 'tools.hetops.dev',
     text: '100+ developer utilities: encoders, formatters, generators and converters. Based on it-tools.' },
-  { key: 'domainwatch', name: 'Domain Watch', icon: '/assets/brand/domainwatch-icon.webp', c: '217,119,6', status: 'planned', label: 'Planned', url: '', link: '',
-    text: 'Daily monitoring for DNS, certificates and email authentication, built on DNS Intelligence.' },
-  { key: 'radar', name: 'Retirement Radar', icon: '/assets/brand/radar-icon.webp', c: '229,72,77', status: 'planned', label: 'Planned', url: '', link: '',
-    text: 'Finds cloud services and versions in your account that are about to retire or start costing extra.' },
+  { key: 'domainwatch', name: 'Domain Watch', icon: '/assets/brand/domainwatch-icon.webp', c: '217,119,6', status: 'live', label: 'Live · free and paid plans', url: 'https://dns.hetops.dev/#pricing', link: 'dns.hetops.dev/#pricing',
+    text: 'Monitors your domains and alerts on certificate, SPF, DMARC, MX and nameserver changes, including SPF going over the 10-lookup limit. Collects DMARC reports automatically on Pro and Team.' },
+  { key: 'radar', name: 'Retirement Radar', icon: '/assets/brand/radar-icon.webp', c: '229,72,77', status: 'live', label: 'Open source on npm', url: 'https://github.com/Het101/retirement-radar', link: 'github.com/Het101/retirement-radar',
+    text: 'Read-only CLI that finds EKS, RDS, ElastiCache, OpenSearch, MSK and Lambda versions at or near end of support, before extended support shows up on the bill.' },
   { key: 'restore', name: 'Restore Drill', icon: '/assets/brand/restoredrill-icon.webp', c: '194,55,143', status: 'planned', label: 'Planned', url: '', link: '',
     text: 'Restores your backups on a schedule and proves they work, with evidence for auditors.' },
 ];
@@ -360,7 +363,7 @@ $$('[data-section]').forEach((el) => depth.observe(el));
 
 // Generic entrance for section heads and cards (GSAP only; visible without it).
 if (hasGsap) {
-  $$('.section-head, .section > .h2, .quote, .posts li, .activity, .proof-item').forEach((el) => {
+  $$('.section-head, .section > .h2, .quote, .posts li, .activity, .proof-item, .ship-item, .shipped-list li').forEach((el) => {
     gsap.from(el, { y: 36, opacity: 0, duration: 1, ease: 'expo.out', scrollTrigger: { trigger: el, start: 'top 88%' } });
   });
 }
@@ -374,7 +377,15 @@ const setLive = (key, n) => {
     else el.textContent = Number(n).toLocaleString('en-IN');
   });
 };
-getJSON('https://api.npmjs.org/downloads/point/last-month/threadvault').then((d) => { if (d && d.downloads) setLive('npm', d.downloads); });
+// Per package, plus the combined number for the proof strip.
+Promise.all(['threadvault', 'retirement-radar'].map((pkg) => getJSON(`https://api.npmjs.org/downloads/point/last-month/${pkg}`)))
+  .then(([tv, rr]) => {
+    if (tv && tv.downloads != null) setLive('npm', tv.downloads);
+    // npm's stats lag a new package by a day or two; show the count only once it exists.
+    if (rr && rr.downloads != null) { setLive('npmRadar', rr.downloads); $$('.radar-dl').forEach((el) => { el.hidden = false; }); }
+    const all = (tv?.downloads || 0) + (rr?.downloads || 0);
+    if (tv || rr) setLive('npmAll', all);
+  });
 
 (async () => {
   const year = new Date().getFullYear();
