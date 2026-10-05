@@ -323,7 +323,7 @@ new IntersectionObserver(([e], ob) => {
   const items = $$('li', pipe), n = items.length;
   const labels = items.map((li, i) => {
     const s = document.createElement('span'); s.className = 'ring-stage'; s.style.setProperty('--a', `${(i / n) * 360}deg`);
-    s.innerHTML = `<span>${li.querySelector('b').textContent}</span>`; s.dataset.s = 'ok'; ring.appendChild(s); return s;
+    s.appendChild(document.createElement('span')).textContent = li.querySelector('b').textContent; s.dataset.s = 'ok'; ring.appendChild(s); return s;
   });
   const set = (i, state) => { items[i].dataset.s = state; labels[i].dataset.s = state; };
   if (reduce) return;
