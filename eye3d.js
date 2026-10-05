@@ -110,9 +110,7 @@ if (renderer) {
   const head = new THREE.Group(); scene.add(head);
   const gaze = new THREE.Group(); head.add(gaze);
   const ballGeo = new THREE.SphereGeometry(1, 128, 96); ballGeo.rotateX(Math.PI / 2);
-  const irisTex = eyeTexture();
-  const ballMat = new THREE.MeshPhysicalMaterial({ map: irisTex, roughness: 0.42, clearcoat: 1, clearcoatRoughness: 0.05, envMapIntensity: 0.8 });
-  gaze.add(new THREE.Mesh(ballGeo, ballMat));
+  gaze.add(new THREE.Mesh(ballGeo, new THREE.MeshPhysicalMaterial({ map: eyeTexture(), roughness: 0.42, clearcoat: 1, clearcoatRoughness: 0.05, envMapIntensity: 0.8 })));
   // Pupil cap: a separate black cap so it can dilate.
   const pupilMat = new THREE.MeshBasicMaterial({ color: 0x030303 });
   let pupilGeo = null, pupilSize = P;
@@ -181,70 +179,6 @@ if (renderer) {
     pivot.add(new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({ color: 0xe3a944, transparent: true, opacity: 0.22 })));
     return { ...d, pivot, phase: 0, speedNow: d.speed };
   });
-
-  // ── Lab: living iris (?fx=iris). Requests stream into the pupil at the rate of my real
-  // GitHub activity, the iris beats, and the eye reacts to the domain check's verdict.
-  let living = null, pupilMul = 1;
-  if (new URLSearchParams(location.search).get('fx') === 'iris' && !reduce) {
-    const N = 600, pos = new Float32Array(N * 3), col = new Float32Array(N * 3);
-    const st = Array.from({ length: N }, () => ({ t: 1, sp: 0, from: new THREE.Vector3(), c: new THREE.Color() }));
-    const geo = new THREE.BufferGeometry();
-    geo.setAttribute('position', new THREE.BufferAttribute(pos, 3)); geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
-    const dot = document.createElement('canvas'); dot.width = dot.height = 64;
-    const dg = dot.getContext('2d'), grd = dg.createRadialGradient(32, 32, 0, 32, 32, 32);
-    grd.addColorStop(0, 'rgba(255,255,255,1)'); grd.addColorStop(0.35, 'rgba(255,255,255,0.6)'); grd.addColorStop(1, 'rgba(255,255,255,0)');
-    dg.fillStyle = grd; dg.fillRect(0, 0, 64, 64);
-    const stream = new THREE.Points(geo, new THREE.PointsMaterial({ size: 0.14, map: new THREE.CanvasTexture(dot), vertexColors: true, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending }));
-    scene.add(stream);
-    const GOLD = new THREE.Color(0xf0bd5e), MOSS = new THREE.Color(0x74d3ab), TONES = { ok: new THREE.Color(0x45b88d), warn: new THREE.Color(0xe3a944), err: new THREE.Color(0xef7a64) };
-    let rate = 26, acc = 0, burst = 0, tint = null, tintT = 0, scanning = false, verdict = null, verdictT = 0, clock = 0;
-    const target = new THREE.Vector3(), tmp = new THREE.Vector3();
-    const spawn = (n) => {
-      for (const p of st) {
-        if (n <= 0) break;
-        if (p.t < 1) continue;
-        // Requests come from the tools and results on the orbits, so each stream starts at one of them.
-        const src = els.length ? els[(Math.random() * els.length) | 0] : null;
-        if (src && src.wx != null) p.from.set(src.wx + (Math.random() - 0.5) * 0.12, src.wy + (Math.random() - 0.5) * 0.12, src.wz);
-        else { const a = Math.random() * Math.PI * 2; p.from.set(Math.cos(a) * 2.4, Math.sin(a) * 1.2, 1); }
-        p.t = 0; p.sp = 0.45 + Math.random() * 0.35; p.c.copy(Math.random() < 0.55 ? GOLD : MOSS); n--;
-      }
-    };
-    ballMat.emissive = new THREE.Color(0xffffff); ballMat.emissiveMap = irisTex; ballMat.emissiveIntensity = 0.06;
-    window.addEventListener('live:activity', (e) => { rate = 18 + Math.min(80, e.detail) * 0.9; });
-    window.addEventListener('check:start', (e) => {
-      scanning = true; burst += 160;
-      if (docked) { const t = e.detail.getBoundingClientRect(), r = body.getBoundingClientRect();
-        aim.x = Math.max(-1, Math.min(1, (t.left + t.width / 2 - (r.left + r.width / 2)) / (innerWidth * 0.45)));
-        aim.y = Math.max(-1, Math.min(1, (t.top + t.height / 2 - (r.top + r.height / 2)) / (innerHeight * 0.45))); }
-    });
-    window.addEventListener('check:result', (e) => { scanning = false; verdict = e.detail; verdictT = 2.8; tint = TONES[e.detail]; tintT = 2.8; });
-    living = (dt) => {
-      clock += dt;
-      stream.visible = !docked;
-      acc += dt * (rate + (burst > 0 ? 260 : 0)); if (burst > 0) burst -= dt * 260;
-      const n = Math.floor(acc); acc -= n; if (n) spawn(n);
-      gaze.localToWorld(target.set(0, 0, 1.02));
-      for (let i = 0; i < N; i++) {
-        const p = st[i];
-        if (p.t >= 1) { col[i * 3] = col[i * 3 + 1] = col[i * 3 + 2] = 0; continue; }
-        p.t = Math.min(1, p.t + dt * p.sp);
-        const e = p.t * p.t * (3 - 2 * p.t), swirl = Math.sin(p.t * Math.PI) * 0.12;
-        tmp.lerpVectors(p.from, target, e);
-        tmp.x += Math.cos(i + p.t * 6) * swirl; tmp.y += Math.sin(i + p.t * 6) * swirl;
-        pos.set([tmp.x, tmp.y, tmp.z], i * 3);
-        const f = Math.sin(p.t * Math.PI) * (p.t > 0.92 ? (1 - p.t) / 0.08 : 1);
-        col.set([p.c.r * f, p.c.g * f, p.c.b * f], i * 3);
-      }
-      geo.attributes.position.needsUpdate = true; geo.attributes.color.needsUpdate = true;
-      // Heartbeat: a double pulse every 1.1s, like a monitor trace.
-      const b = clock % 1.1, beat = Math.exp(-Math.pow(b * 9, 2)) + 0.6 * Math.exp(-Math.pow((b - 0.22) * 9, 2));
-      tintT = Math.max(0, tintT - dt); verdictT = Math.max(0, verdictT - dt);
-      ballMat.emissive.copy(tint && tintT > 0 ? new THREE.Color(0xffffff).lerp(tint, Math.min(1, tintT)) : new THREE.Color(0xffffff));
-      ballMat.emissiveIntensity = 0.05 + beat * 0.16 + (tintT > 0 ? Math.min(1, tintT) * 1.1 : 0) + (scanning ? 0.2 : 0);
-      pupilMul = scanning ? 0.82 : verdictT > 0 ? (verdict === 'err' ? 0.7 : verdict === 'ok' ? 1.2 : 0.9) : 1;
-    };
-  }
 
   // DOM for orbit items: crisp text, real links and buttons.
   const els = [];
@@ -327,8 +261,7 @@ if (renderer) {
     upper.rotation.x = -lid.o * (OPEN_UP + Math.min(0, look.y) * -0.18);
     lower.rotation.x = lid.o * OPEN_LOW;
     // Pupil dilates while a tool is picked.
-    if (living) living(dt);
-    const want = (picked ? P * 1.32 : P) * pupilMul;
+    const want = picked ? P * 1.32 : P;
     if (Math.abs(want - pupilSize) > 0.002) setPupil(pupilSize + (want - pupilSize) * Math.min(1, dt * 6));
 
     for (const o of orbits) {
@@ -339,7 +272,6 @@ if (renderer) {
     for (const e of docked ? [] : els) {
       const a = e.angle + e.o.phase;
       v.set(Math.cos(a) * e.o.r, Math.sin(a) * e.o.r, 0).applyMatrix4(e.o.pivot.matrixWorld);
-      e.wx = v.x; e.wy = v.y; e.wz = v.z;
       const behind = v.z < 0;
       cam.copy(v).project(camera);
       const sx = (cam.x * 0.5 + 0.5) * W, sy = (-cam.y * 0.5 + 0.5) * H;
