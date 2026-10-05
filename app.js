@@ -187,13 +187,20 @@ new IntersectionObserver(([e], ob) => {
     up.setAttribute('d', u); low.setAttribute('d', l); clip.setAttribute('d', `${u} C 175 ${ly} 65 ${ly} 10 48 Z`);
   };
   draw();
-  if (!hasGsap) return;
-  let base = 1;
-  gsap.to(st, { o: 0.06, ease: 'none', onUpdate: draw, scrollTrigger: { trigger: '.footer', start: 'top bottom', end: 'bottom bottom', scrub: 0.5, onUpdate: (s) => { base = 1 - s.progress * 0.94; } } });
-  $('#contactEmail').addEventListener('pointerenter', () => {
-    pupil.setAttribute('r', 17);
-    gsap.timeline({ onUpdate: draw }).to(st, { o: 0.02, duration: 0.1 }).to(st, { o: base, duration: 0.25 });
-  });
+  if (reduce) return;
+  // Openness follows the real distance to the end of the page (a measured trigger goes stale
+  // as fonts and the 3D sections settle). Only runs while the contact section is on screen.
+  let on = false, winkUntil = 0;
+  const END = 520;
+  const step = (now) => {
+    if (!on) return;
+    const left = document.documentElement.scrollHeight - (scrollY + innerHeight);
+    const target = Math.max(0.02, Math.min(1, left / END)) * (now < winkUntil ? 0.05 : 1);
+    st.o += (target - st.o) * 0.18; draw();
+    requestAnimationFrame(step);
+  };
+  new IntersectionObserver(([e]) => { on = e.isIntersecting; if (on) requestAnimationFrame(step); }).observe($('#contact'));
+  $('#contactEmail').addEventListener('pointerenter', () => { pupil.setAttribute('r', 17); winkUntil = performance.now() + 160; });
   $('#contactEmail').addEventListener('pointerleave', () => pupil.setAttribute('r', 13));
 })();
 

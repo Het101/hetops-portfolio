@@ -692,3 +692,6 @@ html.intro-landed .hero-copy > :nth-child(4) { transition-delay: 0.36s; }
 .inside-rail button:not(.on) { color: transparent; }
 .inside-rail:hover button, .inside-rail:focus-within button { color: var(--text-3); }
 .inside-rail:hover button.on, .inside-rail button.on { color: var(--text); }
+/* The watcher sleeps in the bottom-right corner at the end of the page; keep the footer clear of it. */
+.footer { padding-right: max(32px, 168px); }
+@media (max-width: 760px) { .footer { padding-right: 20px; padding-bottom: 120px; } }
