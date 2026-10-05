@@ -213,7 +213,7 @@ if (renderer) {
   stage.addEventListener('pointerleave', () => { if (picked) { unpick(); caption.innerHTML = defaultCaption; } });
 
   // ── Layout ───────────────────────────────────────────────────
-  let W = 1, H = 1, eyeR = 1, docked = false;
+  let W = 1, H = 1, eyeR = 1, docked = false, sleepy = 1;
   function resize() {
     W = body.clientWidth; H = body.clientHeight;
     renderer.setSize(W, H, false); camera.aspect = W / H;
@@ -258,8 +258,12 @@ if (renderer) {
     if (picked && picked.sx != null && !docked) { tx = (picked.sx - W / 2) / (W * 0.35); ty = (picked.sy - H / 2) / (H * 0.35); }
     look.x += (tx - look.x) * Math.min(1, dt * 5); look.y += (ty - look.y) * Math.min(1, dt * 5);
     gaze.rotation.y = look.x * 0.42; gaze.rotation.x = look.y * 0.3;
-    upper.rotation.x = -lid.o * (OPEN_UP + Math.min(0, look.y) * -0.18);
-    lower.rotation.x = lid.o * OPEN_LOW;
+    // Docked, the watcher falls asleep as the page ends: lids close over the last screen.
+    const left = docked ? document.documentElement.scrollHeight - (scrollY + innerHeight) : 1e9;
+    sleepy += (Math.min(1, Math.max(0.02, left / 520)) - sleepy) * Math.min(1, dt * 6);
+    const open = lid.o * (docked ? sleepy : 1);
+    upper.rotation.x = -open * (OPEN_UP + Math.min(0, look.y) * -0.18);
+    lower.rotation.x = open * OPEN_LOW;
     // Pupil dilates while a tool is picked.
     const want = picked ? P * 1.32 : P;
     if (Math.abs(want - pupilSize) > 0.002) setPupil(pupilSize + (want - pupilSize) * Math.min(1, dt * 6));
@@ -327,9 +331,7 @@ if (renderer) {
       lastBlink = now; tween(0.02, 0.08, easeIn).then(() => tween(1, 0.2, easeOut));
     }
   });
-  // The contact section has its own eye; the watcher steps aside there.
-  const contact = document.getElementById('contact');
-  if (contact) new IntersectionObserver(([e]) => { body.classList.toggle('resting', e.isIntersecting); }, { threshold: 0.2 }).observe(contact);
+  // At the end of the page the watcher closes its eyes rather than leaving (see sleepy in the frame loop).
   document.addEventListener('visibilitychange', () => (document.hidden ? stop() : start()));
 
   // ── Wake up: a beat closed, a sleepy flutter, then open; blink now and then ─
