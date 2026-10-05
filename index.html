@@ -110,6 +110,20 @@
       </div>
     </section>
 
+    <!-- Inside the eye: scroll flies through the iris into the work -->
+    <section class="inside" id="inside" data-section="inside" aria-label="Inside the eye">
+      <div class="inside-sticky">
+        <canvas class="inside-canvas" id="insideCanvas" aria-hidden="true"></canvas>
+        <div class="inside-caps">
+          <div class="inside-cap" data-from="0" data-to="0.1"><h2>Inside the eye</h2><p>Everything you are about to fly past is something I run or built.</p></div>
+          <div class="inside-cap" data-from="0.15" data-to="0.36"><h2>100+ node clusters, three clouds</h2><p>One control plane across AWS, GCP and Azure. When a region fails, its workloads move to the others.</p></div>
+          <div class="inside-cap" data-from="0.38" data-to="0.58"><h2>Every change goes through the ring</h2><p>test, hygiene, analyze, stage, approve. Nothing reaches main until all five pass.</p></div>
+          <div class="inside-cap" data-from="0.6" data-to="0.8"><h2><span id="insideCounter">$0k</span> a year, switched off</h2><p>Cost automation finds idle cloud resources and right-sizes the rest. Saved over $2M a year.</p></div>
+          <div class="inside-cap" data-from="0.83" data-to="1"><h2>7,200 threads, history kept</h2><p>A chat migration broke every thread. The repair kept every author and became Threadvault.</p></div>
+        </div>
+      </div>
+    </section>
+
     <!-- Experience as an eye chart: the closer you look, the finer the print -->
     <section class="exp wrap" id="experience" data-section="experience">
       <header class="head">
@@ -308,6 +322,34 @@
       </div>
     </section>
 
+    <!-- Break production: a simulation visitors can break and watch heal -->
+    <section class="chaos wrap" id="chaos" data-section="chaos" aria-labelledby="chaos-h">
+      <header class="head">
+        <h2 id="chaos-h">Break production</h2>
+        <p class="sub">Go on. Pick a failure and watch the system notice, contain and heal it. A simulation, built the way I run the real thing.</p>
+      </header>
+      <div class="chaos-grid">
+        <div class="chaos-board">
+          <svg viewBox="0 50 720 280" role="img" aria-label="Simulated system: users, load balancer, pods and database, with requests flowing"></svg>
+          <dl class="chaos-metrics">
+            <div><dt>Availability</dt><dd data-m="avail">100.00%</dd></div>
+            <div><dt>Error rate</dt><dd data-m="err">0.0%</dd></div>
+            <div><dt>p95 latency</dt><dd data-m="lat">80 ms</dd></div>
+            <div><dt>Incident clock</dt><dd data-m="mttr">0.0s</dd></div>
+          </dl>
+        </div>
+        <div class="chaos-side">
+          <div class="chaos-btns">
+            <button class="chaos-btn" type="button" data-break="pod"><i class="ph ph-skull" aria-hidden="true"></i>Kill a pod</button>
+            <button class="chaos-btn" type="button" data-break="spike"><i class="ph ph-trend-up" aria-hidden="true"></i>Traffic spike</button>
+            <button class="chaos-btn" type="button" data-break="cert"><i class="ph ph-lock-key-open" aria-hidden="true"></i>Expire the TLS cert</button>
+            <button class="chaos-btn" type="button" data-break="release"><i class="ph ph-rocket-launch" aria-hidden="true"></i>Ship a bad release</button>
+          </div>
+          <ol class="chaos-log" aria-live="polite" aria-label="Incident log"></ol>
+        </div>
+      </div>
+    </section>
+
     <!-- Testimonials -->
     <section class="words wrap" data-section="testimonials" aria-labelledby="words-h">
       <h2 id="words-h">From people I've worked with</h2>
@@ -398,5 +440,7 @@
   <script src="/app.js" defer></script>
   <script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/" } }</script>
   <script type="module" src="/eye3d.js"></script>
+  <script type="module" src="/inside.js"></script>
+  <script src="/chaos.js" defer></script>
 </body>
 </html>
