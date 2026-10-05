@@ -476,3 +476,67 @@ h3 { font-size: 24px; font-stretch: 108%; }
   *, *::before, *::after { animation: none !important; transition-duration: 0.01ms !important; }
   .step { opacity: 1; }
 }
+
+/* ── Intro: the big eye wakes, then shrinks into the hero ───────── */
+.intro-overlay { display: none; }
+html.intro { overflow: hidden; }
+html.intro .intro-overlay {
+  position: fixed; inset: 0; z-index: 90; display: grid; place-items: center; background: var(--ink);
+  transition: background-color 0.9s var(--ease), opacity 0.45s var(--ease);
+}
+html.intro .intro-overlay.landing { background-color: transparent; }
+html.intro .intro-overlay.gone { opacity: 0; pointer-events: none; }
+.intro-eye { position: relative; width: min(1100px, 92vw); aspect-ratio: 5 / 2; will-change: transform; }
+.ie-eye {
+  position: absolute; inset: 0; clip-path: ellipse(50% 0% at 50% 50%);
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.6), transparent 32%, transparent 68%, rgba(0, 0, 0, 0.6)), radial-gradient(ellipse 60% 70% at 50% 50%, #1d1f1f 0%, #121414 55%, #0b0c0d 100%);
+  transition: background-color 0.6s;
+}
+.ie-iris { position: absolute; left: 50%; top: 50%; height: 92%; aspect-ratio: 1; translate: -50% -50%; border-radius: 50%; }
+.ie-lids { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; transition: opacity 0.5s; }
+.ie-lid { fill: none; stroke: var(--text); stroke-width: 1.6; stroke-linecap: round; }
+.ie-lid.low { stroke: var(--text-3); stroke-width: 1.1; }
+.ie-lashes { fill: none; stroke: var(--text-2); stroke-width: 1.3; stroke-linecap: round; }
+.intro-overlay.landing .ie-lids { opacity: 0; }
+.intro-overlay.landing .ie-eye { background: transparent; clip-path: none !important; }
+.intro-skip {
+  position: absolute; right: 24px; bottom: 24px; min-height: 44px; padding: 0 18px; border-radius: 999px; cursor: pointer;
+  border: 1px solid var(--line-2); background: transparent; color: var(--text-3); font-size: 13px;
+}
+.intro-skip:hover { color: var(--text); }
+.intro-overlay.landing .intro-skip { opacity: 0; }
+@media (max-width: 760px) { .intro-eye { width: 94vw; aspect-ratio: 1.55; } }
+
+/* ── The watcher: the eye docks in the corner past the hero ───── */
+.eye-body { position: absolute; inset: 0; }
+.eye-body.docked {
+  position: fixed; inset: auto 24px 24px auto; width: 128px; height: 128px; z-index: 45; border-radius: 50%;
+  transition: opacity 0.4s var(--ease), translate 0.4s var(--ease);
+}
+.eye-body.docked.resting { opacity: 0; translate: 0 16px; pointer-events: none; }
+.is-docked .orbits, .is-docked::before { opacity: 0; transition: opacity 0.3s; }
+.dock-hit { display: none; }
+.docked .dock-hit { display: block; position: absolute; inset: 14%; border-radius: 50%; }
+.docked .dock-hit:focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; }
+.dock-note {
+  position: absolute; right: calc(100% + 6px); bottom: 50%; translate: 0 50%; width: max-content; max-width: 230px;
+  padding: 10px 14px; border-radius: 16px 16px 4px 16px; background: var(--text); color: var(--ink);
+  font-size: 13.5px; font-weight: 600; line-height: 1.35; opacity: 0; scale: 0.92; transform-origin: right center;
+  pointer-events: none; transition: opacity 0.3s var(--ease), scale 0.4s var(--ease); display: none;
+}
+.docked .dock-note { display: block; }
+.docked:hover .dock-note, .docked.say .dock-note { opacity: 1; scale: 1; }
+@media (max-width: 760px) {
+  .eye-body.docked { width: 92px; height: 92px; inset: auto 12px 12px auto; }
+  .dock-note { max-width: 180px; font-size: 12.5px; }
+}
+
+/* ── Radar: the scope sweeps while a domain is being checked ───── */
+@keyframes spin { to { rotate: 360deg; } }
+.scope i { animation: spin 6s linear infinite; }
+.scope.scanning i { opacity: 1; animation-duration: 1.1s; }
+.scope::after {
+  content: ""; position: absolute; left: 50%; top: 50%; width: 50%; height: 1px; transform-origin: left center;
+  background: linear-gradient(90deg, rgba(227, 169, 68, 0.9), transparent); animation: spin 6s linear infinite;
+}
+.scope.scanning::after { animation-duration: 1.1s; }
