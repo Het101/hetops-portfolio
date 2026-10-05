@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Retirement Radar: find AWS versions before extended support bills you · Het Patel</title>
+  <meta name="description" content="A read-only CLI that scans every AWS region for EKS, RDS, ElastiCache, OpenSearch, MSK and Lambda versions at or near end of support.">
+  <link rel="canonical" href="https://hetops.dev/work/retirement-radar/">
+  <meta name="theme-color" content="#08090a">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://hetops.dev/work/retirement-radar/">
+  <meta property="og:title" content="Retirement Radar: find AWS versions before extended support bills you · Het Patel">
+  <meta property="og:description" content="A read-only CLI that scans every AWS region for EKS, RDS, ElastiCache, OpenSearch, MSK and Lambda versions at or near end of support.">
+  <meta property="og:image" content="https://hetops.dev/assets/og.png?v=2">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+  <link rel="stylesheet" href="/styles.css">
+  <script defer src="https://analytics.hetops.dev/script.js" data-website-id="3b6004b2-abef-471c-a807-fdacd7981321" data-domains="hetops.dev"></script>
+</head>
+<body class="cs">
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="nav scrolled">
+    <a class="brand" href="/" aria-label="HetOps home"><svg class="brand-mark" aria-hidden="true" viewBox="10 22 80 56"><rect x="10" y="22" width="24" height="56" rx="5"/><rect x="66" y="22" width="24" height="56" rx="5"/><rect x="33" y="46" width="34" height="8"/><circle cx="50" cy="50" r="11"/></svg><span>HetOps</span></a>
+    <nav class="nav-links" aria-label="Case studies">
+      <a href="/work/threadvault/">Threadvault</a>
+      <a href="/work/dns-intelligence/">DNS Intelligence</a>
+      <a href="/work/retirement-radar/" aria-current="page">Retirement Radar</a>
+    </nav>
+    <div class="nav-actions">
+      <a class="nav-cv" href="/Het_Patel_Resume.pdf" target="_blank" rel="noopener" data-umami-event="resume-download" data-umami-event-from="case-retirement-radar">Résumé</a>
+    </div>
+  </header>
+  <main id="main" class="cs-main wrap">
+    <section class="cs-hero">
+      <a class="cs-back" href="/#work"><i class="ph ph-arrow-left" aria-hidden="true"></i>All work</a>
+      <img class="p-icon" src="/assets/brand/radar-icon.webp" width="64" height="64" alt="">
+      <h1>Retirement Radar</h1>
+      <p class="cs-lede">AWS now bills automatically for running old versions. EKS extended support alone is about $365 a month per cluster. This read-only CLI finds them first.</p>
+      <dl class="cs-meta"><div><dt>Role</dt><dd>Author and maintainer</dd></div><div><dt>Stack</dt><dd>Node.js CLI over the AWS CLI</dd></div><div><dt>Status</dt><dd>Open source on npm, 0.3.0</dd></div></dl>
+      <div class="links"><a href="https://github.com/Het101/retirement-radar" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="case-retirement-radar">Source <i class="ph ph-arrow-up-right"></i></a><a href="https://www.npmjs.com/package/retirement-radar" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="case-retirement-radar">npm <i class="ph ph-arrow-up-right"></i></a></div>
+    </section>
+    <section class="cs-sec">
+      <h2>The problem</h2>
+      <p>Managed services retire versions on a schedule, and AWS now moves you onto paid extended support instead of breaking you. For EKS that is $0.60 an hour per cluster instead of $0.10: about $365 a month each, and nobody gets an email about it.</p>
+    </section>
+    <section class="cs-sec">
+      <h2>How it works</h2>
+      <ol class="cs-flow"><li><b>npx retirement-radar scan</b><span>your own AWS credentials</span></li><li><b>Every region</b><span>read-only describe calls</span></li><li><b>Six services</b><span>EKS, RDS, ElastiCache, OpenSearch, MSK, Lambda</span></li><li><b>retirements.yaml</b><span>every date with its AWS source</span></li><li><b>The report</b><span>retired, extended, soon, upcoming, and the cost</span></li></ol>
+    </section>
+    <section class="cs-sec">
+      <h2>Decisions that matter</h2>
+      <ul class="cs-list"><li>Read-only by design, enforced by tests: it can only describe, never change.</li><li>Every date links to the AWS page it came from, and the whole table was re-checked against AWS on 5 October 2026.</li><li>Services are table-driven, so adding one is a row and a collector, not a rewrite.</li></ul>
+    </section>
+    <section class="cs-sec">
+      <h2>Shipping it</h2>
+      <ol class="cs-time"><li><b>Tag</b><p>A version tag runs the full checks.</p></li><li><b>Stage</b><p>npm publish is staged from CI with provenance through a trusted publisher. No long-lived token exists.</p></li><li><b>Approve</b><p>A human approves the staged release with a second factor before anyone can install it.</p></li></ol>
+    </section>
+    <section class="cs-next">
+      <h2>Got a production problem worth solving?</h2>
+      <div class="ctas">
+        <a class="btn btn-gold" href="mailto:patel.x.het@gmail.com" data-umami-event="email-click" data-umami-event-from="case-retirement-radar"><i class="ph ph-envelope-simple" aria-hidden="true"></i>Email me</a>
+        <a class="btn btn-line" href="/#work"><i class="ph ph-arrow-left" aria-hidden="true"></i>All work</a>
+      </div>
+    </section>
+  </main>
+  <footer class="footer wrap">
+    <span class="brand"><svg class="brand-mark" aria-hidden="true" viewBox="10 22 80 56"><rect x="10" y="22" width="24" height="56" rx="5"/><rect x="66" y="22" width="24" height="56" rx="5"/><rect x="33" y="46" width="34" height="8"/><circle cx="50" cy="50" r="11"/></svg><span>HetOps</span></span>
+    <nav aria-label="HetOps tools"><a href="https://dns.hetops.dev">DNS</a><a href="https://tools.hetops.dev">Tools</a><a href="https://status.hetops.dev">Status</a></nav>
+    <span class="copyright">© 2026 Het Patel</span>
+  </footer>
+</body>
+</html>

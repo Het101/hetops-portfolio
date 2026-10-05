@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DNS Intelligence: 26 checks and a watch on your domain · Het Patel</title>
+  <meta name="description" content="A domain scanner with 26 checks across DNS, TLS, headers, DNSSEC, email authentication and reputation, with monitoring that alerts before mail breaks.">
+  <link rel="canonical" href="https://hetops.dev/work/dns-intelligence/">
+  <meta name="theme-color" content="#08090a">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://hetops.dev/work/dns-intelligence/">
+  <meta property="og:title" content="DNS Intelligence: 26 checks and a watch on your domain · Het Patel">
+  <meta property="og:description" content="A domain scanner with 26 checks across DNS, TLS, headers, DNSSEC, email authentication and reputation, with monitoring that alerts before mail breaks.">
+  <meta property="og:image" content="https://hetops.dev/assets/og.png?v=2">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+  <link rel="stylesheet" href="/styles.css">
+  <script defer src="https://analytics.hetops.dev/script.js" data-website-id="3b6004b2-abef-471c-a807-fdacd7981321" data-domains="hetops.dev"></script>
+</head>
+<body class="cs">
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="nav scrolled">
+    <a class="brand" href="/" aria-label="HetOps home"><svg class="brand-mark" aria-hidden="true" viewBox="10 22 80 56"><rect x="10" y="22" width="24" height="56" rx="5"/><rect x="66" y="22" width="24" height="56" rx="5"/><rect x="33" y="46" width="34" height="8"/><circle cx="50" cy="50" r="11"/></svg><span>HetOps</span></a>
+    <nav class="nav-links" aria-label="Case studies">
+      <a href="/work/threadvault/">Threadvault</a>
+      <a href="/work/dns-intelligence/" aria-current="page">DNS Intelligence</a>
+      <a href="/work/retirement-radar/">Retirement Radar</a>
+    </nav>
+    <div class="nav-actions">
+      <a class="nav-cv" href="/Het_Patel_Resume.pdf" target="_blank" rel="noopener" data-umami-event="resume-download" data-umami-event-from="case-dns-intelligence">Résumé</a>
+    </div>
+  </header>
+  <main id="main" class="cs-main wrap">
+    <section class="cs-hero">
+      <a class="cs-back" href="/#work"><i class="ph ph-arrow-left" aria-hidden="true"></i>All work</a>
+      <img class="p-icon" src="/assets/brand/dns-icon.svg" width="64" height="64" alt="">
+      <h1>DNS Intelligence</h1>
+      <p class="cs-lede">An SPF record that needs more than 10 DNS lookups fails, and nested includes hide the real count. So I built a scanner that counts the way mail servers do, then a watch that tells you before it breaks.</p>
+      <dl class="cs-meta"><div><dt>Role</dt><dd>Built and run it, end to end</dd></div><div><dt>Stack</dt><dd>Node.js, Express, SQLite, Docker on Coolify</dd></div><div><dt>Status</dt><dd>Live, free plus Pro and Team plans</dd></div></dl>
+      <div class="links"><a href="https://dns.hetops.dev" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="case-dns-intelligence">Try it <i class="ph ph-arrow-up-right"></i></a><a href="https://dns.hetops.dev/spf-checker" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="case-dns-intelligence">SPF checker <i class="ph ph-arrow-up-right"></i></a><a href="https://github.com/Het101/hetops-dns" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="case-dns-intelligence">Source <i class="ph ph-arrow-up-right"></i></a></div>
+    </section>
+    <section class="cs-sec">
+      <h2>The problem</h2>
+      <p>Email authentication fails quietly. An SPF record can include another, which includes another; past 10 DNS lookups the whole record fails for every receiver, and most checks only count the top level. A certificate expires on a Saturday. DMARC sits at p=none for years.</p>
+    </section>
+    <section class="cs-sec">
+      <h2>What it does</h2>
+      <ul class="cs-list"><li>26 checks in one scan: DNS records, TLS and certificate, security headers, DNSSEC, SPF, DKIM, DMARC, MTA-STS and blocklists.</li><li>SPF lookups counted through every nested include as RFC 7208 receivers do, including void lookups, with a hard query budget.</li><li>Watch a domain and it emails you when the certificate, SPF, DMARC, MX or nameservers change, or when SPF crosses the limit. Pro and Team collect DMARC reports automatically.</li></ul>
+    </section>
+    <section class="cs-sec">
+      <h2>How it is built</h2>
+      <ol class="cs-flow"><li><b>Browser or API</b><span>rate limited, CORS allowlist</span></li><li><b>Express</b><span>one process</span></li><li><b>Probes</b><span>DNS, TLS, HTTP via an SSRF guard</span></li><li><b>SQLite</b><span>watches, users, hashed tokens</span></li><li><b>Scheduler</b><span>daily checks and email alerts</span></li></ol>
+    </section>
+    <section class="cs-sec">
+      <h2>Hardening it</h2>
+      <ol class="cs-time"><li><b>62 to 0</b><p>One triage pass took open code-scanning alerts from 62 to 0, every dismissal written down.</p></li><li><b>SSRF</b><p>Every outbound hop checked against private, loopback and link-local ranges, including IPv4-mapped IPv6 in every written form.</p></li><li><b>Secrets</b><p>Session and API tokens stored only as hashes, with a migration for existing rows. Sign-in links built only from the configured URL, never from request headers.</p></li><li><b>Release bar</b><p>Signed commits, required checks, CodeQL and Scorecard on every change; Dependabot with a 7-day cooldown and every Action pinned to a commit.</p></li></ol>
+    </section>
+    <section class="cs-next">
+      <h2>Got a production problem worth solving?</h2>
+      <div class="ctas">
+        <a class="btn btn-gold" href="mailto:patel.x.het@gmail.com" data-umami-event="email-click" data-umami-event-from="case-dns-intelligence"><i class="ph ph-envelope-simple" aria-hidden="true"></i>Email me</a>
+        <a class="btn btn-line" href="/#work"><i class="ph ph-arrow-left" aria-hidden="true"></i>All work</a>
+      </div>
+    </section>
+  </main>
+  <footer class="footer wrap">
+    <span class="brand"><svg class="brand-mark" aria-hidden="true" viewBox="10 22 80 56"><rect x="10" y="22" width="24" height="56" rx="5"/><rect x="66" y="22" width="24" height="56" rx="5"/><rect x="33" y="46" width="34" height="8"/><circle cx="50" cy="50" r="11"/></svg><span>HetOps</span></span>
+    <nav aria-label="HetOps tools"><a href="https://dns.hetops.dev">DNS</a><a href="https://tools.hetops.dev">Tools</a><a href="https://status.hetops.dev">Status</a></nav>
+    <span class="copyright">© 2026 Het Patel</span>
+  </footer>
+</body>
+</html>

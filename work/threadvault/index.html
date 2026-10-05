@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Threadvault: 7,200 chat threads, history kept · Het Patel</title>
+  <meta name="description" content="A chat migration left 7,022 messages with the wrong author and every thread rejecting replies. How it was recovered, and the open-source CLI that came out of it.">
+  <link rel="canonical" href="https://hetops.dev/work/threadvault/">
+  <meta name="theme-color" content="#08090a">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://hetops.dev/work/threadvault/">
+  <meta property="og:title" content="Threadvault: 7,200 chat threads, history kept · Het Patel">
+  <meta property="og:description" content="A chat migration left 7,022 messages with the wrong author and every thread rejecting replies. How it was recovered, and the open-source CLI that came out of it.">
+  <meta property="og:image" content="https://hetops.dev/assets/og.png?v=2">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+  <link rel="stylesheet" href="/styles.css">
+  <script defer src="https://analytics.hetops.dev/script.js" data-website-id="3b6004b2-abef-471c-a807-fdacd7981321" data-domains="hetops.dev"></script>
+</head>
+<body class="cs">
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="nav scrolled">
+    <a class="brand" href="/" aria-label="HetOps home"><svg class="brand-mark" aria-hidden="true" viewBox="10 22 80 56"><rect x="10" y="22" width="24" height="56" rx="5"/><rect x="66" y="22" width="24" height="56" rx="5"/><rect x="33" y="46" width="34" height="8"/><circle cx="50" cy="50" r="11"/></svg><span>HetOps</span></a>
+    <nav class="nav-links" aria-label="Case studies">
+      <a href="/work/threadvault/" aria-current="page">Threadvault</a>
+      <a href="/work/dns-intelligence/">DNS Intelligence</a>
+      <a href="/work/retirement-radar/">Retirement Radar</a>
+    </nav>
+    <div class="nav-actions">
+      <a class="nav-cv" href="/Het_Patel_Resume.pdf" target="_blank" rel="noopener" data-umami-event="resume-download" data-umami-event-from="case-threadvault">Résumé</a>
+    </div>
+  </header>
+  <main id="main" class="cs-main wrap">
+    <section class="cs-hero">
+      <a class="cs-back" href="/#work"><i class="ph ph-arrow-left" aria-hidden="true"></i>All work</a>
+      <img class="p-icon" src="/assets/brand/threadvault-icon.webp" width="64" height="64" alt="">
+      <h1>Threadvault</h1>
+      <p class="cs-lede">A chat migration left 7,022 messages with the wrong author and every thread rejecting replies. The repair became an open-source CLI.</p>
+      <dl class="cs-meta"><div><dt>Role</dt><dd>Incident lead, author of the tool</dd></div><div><dt>Stack</dt><dd>Node.js CLI, Azure Communication Services, Postgres</dd></div><div><dt>Status</dt><dd>Open source on npm</dd></div></dl>
+      <div class="links"><a href="https://github.com/Het101/threadvault" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="case-threadvault">Source <i class="ph ph-arrow-up-right"></i></a><a href="https://www.npmjs.com/package/threadvault" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="case-threadvault">npm <i class="ph ph-arrow-up-right"></i></a><a href="https://github.com/Het101/threadvault/blob/main/docs/postmortem-acs-chat-migration.md" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="case-threadvault">Full post-mortem <i class="ph ph-arrow-up-right"></i></a></div>
+    </section>
+    <section class="cs-sec">
+      <h2>What happened</h2>
+      <ol class="cs-time"><li><b>The move</b><p>A production chat estate moved from one Azure Communication Services resource to another. 7,200 threads were replayed onto the new resource.</p></li><li><b>The damage</b><p>7,022 messages showed the system account as their author, and every replayed thread rejected replies with CommunicationError Forbidden (HTTP 403).</p></li><li><b>The confusion</b><p>Reads came from our database, writes went to ACS. So threads looked fine to read but would not accept a reply, and the 403 looked like an auth problem. It was not.</p></li><li><b>The repair</b><p>Recoverable only because the extract had kept each message&#x27;s original sender and every thread&#x27;s participant list. Nobody lost a message.</p></li></ol>
+    </section>
+    <section class="cs-sec">
+      <h2>Why it broke</h2>
+      <p>ACS identities are scoped to the resource that minted them: <code>8:acs:&lt;resourceGuid&gt;_&lt;userGuid&gt;</code>. Move resources and every identity you stored becomes a string that refers to nothing, all at once, with no error at write time.</p>
+      <p>The replay sent every message as the only identity that existed on the new resource, the system user, and ACS cannot send on behalf of someone else or backdate authorship. It also created threads without re-adding participants, and only participants may post.</p>
+      <p>Behind those: no dry run, no resume, no verification step, and no supported way to export chat history from ACS at all.</p>
+    </section>
+    <section class="cs-sec">
+      <h2>What I built</h2>
+      <ol class="cs-flow"><li><b>extract</b><span>ACS to a portable file</span></li><li><b>plan</b><span>find gaps before writing</span></li><li><b>rehearse</b><span>prove it on a throwaway thread</span></li><li><b>apply</b><span>resumable, dry run until --commit</span></li><li><b>verify</b><span>read back and compare</span></li></ol>
+    </section>
+    <section class="cs-sec">
+      <p><code>npx threadvault doctor</code> audits a live resource and database for the five failure modes from the incident: stale identities, system-only threads, misattributed messages, a missing system identity and split-brain threads. It is read-only, never reads a message body, and exits 1 if it finds anything.</p>
+    </section>
+    <section class="cs-sec">
+      <h2>What changed</h2>
+      <ul class="cs-list"><li>ACS is a cache, not the system of record: history lives in a database I control, keyed by our own user IDs.</li><li>The original timestamp and sender travel in metadata, because ACS assigns both on receipt.</li><li>Participants are always restored. Every write is a dry run by default, resumable, and verified afterwards.</li></ul>
+    </section>
+    <section class="cs-next">
+      <h2>Got a production problem worth solving?</h2>
+      <div class="ctas">
+        <a class="btn btn-gold" href="mailto:patel.x.het@gmail.com" data-umami-event="email-click" data-umami-event-from="case-threadvault"><i class="ph ph-envelope-simple" aria-hidden="true"></i>Email me</a>
+        <a class="btn btn-line" href="/#work"><i class="ph ph-arrow-left" aria-hidden="true"></i>All work</a>
+      </div>
+    </section>
+  </main>
+  <footer class="footer wrap">
+    <span class="brand"><svg class="brand-mark" aria-hidden="true" viewBox="10 22 80 56"><rect x="10" y="22" width="24" height="56" rx="5"/><rect x="66" y="22" width="24" height="56" rx="5"/><rect x="33" y="46" width="34" height="8"/><circle cx="50" cy="50" r="11"/></svg><span>HetOps</span></span>
+    <nav aria-label="HetOps tools"><a href="https://dns.hetops.dev">DNS</a><a href="https://tools.hetops.dev">Tools</a><a href="https://status.hetops.dev">Status</a></nav>
+    <span class="copyright">© 2026 Het Patel</span>
+  </footer>
+</body>
+</html>
