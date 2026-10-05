@@ -120,7 +120,7 @@ const ACTIONS = [
   { group: 'Projects', img: '/assets/brand/threadvault-icon.webp', label: 'Threadvault on GitHub', hint: 'github.com', run: open('https://github.com/Het101/threadvault') },
   { group: 'Projects', img: '/assets/brand/dns-icon.svg', label: 'DNS Intelligence', hint: 'dns.hetops.dev', run: open('https://dns.hetops.dev') },
   { group: 'Projects', img: '/assets/brand/dns-icon.svg', label: 'SPF lookup checker', hint: 'dns.hetops.dev/spf-checker', run: open('https://dns.hetops.dev/spf-checker') },
-  { group: 'Projects', img: '/assets/brand/domainwatch-icon.webp', label: 'Domain Watch plans', hint: 'dns.hetops.dev/#pricing', run: open('https://dns.hetops.dev/#pricing') },
+  { group: 'Projects', img: '/assets/brand/dns-icon.svg', label: 'DNS Intelligence plans', hint: 'dns.hetops.dev/#pricing', run: open('https://dns.hetops.dev/#pricing') },
   { group: 'Projects', img: '/assets/brand/radar-icon.webp', label: 'Retirement Radar on GitHub', hint: 'github.com', run: open('https://github.com/Het101/retirement-radar') },
   { group: 'Projects', img: '/assets/brand/tools-icon.webp', label: 'Dev Toolkit', hint: 'tools.hetops.dev', run: open('https://tools.hetops.dev') },
   { group: 'Projects', img: '/assets/brand/status-icon.webp', label: 'Status page', hint: 'status.hetops.dev', run: open('https://status.hetops.dev') },
@@ -283,7 +283,7 @@ $$('.rule-wire').forEach((w) => w.style.setProperty('--w', reduce ? 1 : 0));
 // ── Ecosystem map ───────────────────────────────────────────────
 const ECOSYSTEM = [
   { key: 'dns', name: 'DNS Intelligence', icon: '/assets/brand/dns-icon.svg', c: '8,145,178', status: 'live', label: 'Live', url: 'https://dns.hetops.dev', link: 'dns.hetops.dev',
-    text: '26 checks across DNS, TLS, headers, DNSSEC and email authentication, with monitoring, alerts and a public API.' },
+    text: '26 checks across DNS, TLS, headers, DNSSEC and email authentication. Pro and Team plans add monitoring, alerts and automatic DMARC reports.' },
   { key: 'threadvault', name: 'Threadvault', icon: '/assets/brand/threadvault-icon.webp', c: '109,59,235', status: 'live', label: 'Open source on npm', url: 'https://github.com/Het101/threadvault', link: 'github.com/Het101/threadvault',
     text: 'Mirrors Azure Communication Services and Twilio chat into your own Postgres, then migrates, replays and verifies it.' },
   { key: 'tallybank', name: 'Tallybank', icon: '/assets/brand/tallybank-icon.svg', c: '36,89,212', status: 'private', label: 'Private', url: '', link: '',
@@ -292,8 +292,6 @@ const ECOSYSTEM = [
     text: 'Uptime monitoring for every HetOps service, powered by Uptime Kuma.' },
   { key: 'tools', name: 'Dev Toolkit', icon: '/assets/brand/tools-icon.webp', c: '63,71,86', status: 'live', label: 'Live', url: 'https://tools.hetops.dev', link: 'tools.hetops.dev',
     text: '100+ developer utilities: encoders, formatters, generators and converters. Based on it-tools.' },
-  { key: 'domainwatch', name: 'Domain Watch', icon: '/assets/brand/domainwatch-icon.webp', c: '217,119,6', status: 'live', label: 'Live · free and paid plans', url: 'https://dns.hetops.dev/#pricing', link: 'dns.hetops.dev/#pricing',
-    text: 'Monitors your domains and alerts on certificate, SPF, DMARC, MX and nameserver changes, including SPF going over the 10-lookup limit. Collects DMARC reports automatically on Pro and Team.' },
   { key: 'radar', name: 'Retirement Radar', icon: '/assets/brand/radar-icon.webp', c: '229,72,77', status: 'live', label: 'Open source on npm', url: 'https://github.com/Het101/retirement-radar', link: 'github.com/Het101/retirement-radar',
     text: 'Read-only CLI that finds EKS, RDS, ElastiCache, OpenSearch, MSK and Lambda versions at or near end of support, before extended support shows up on the bill.' },
   { key: 'restore', name: 'Restore Drill', icon: '/assets/brand/restoredrill-icon.webp', c: '194,55,143', status: 'planned', label: 'Planned', url: '', link: '',
@@ -367,7 +365,7 @@ $$('[data-section]').forEach((el) => depth.observe(el));
 
 // Generic entrance for section heads and cards (GSAP only; visible without it).
 if (hasGsap) {
-  $$('.section-head, .section > .h2, .quote, .posts li, .activity, .proof-item, .ship-item, .shipped-list li').forEach((el) => {
+  $$('.section-head, .section > .h2, .quote, .posts li, .activity, .proof-item, .bento-tile, .shipped-list li, .check-copy, .check-panel').forEach((el) => {
     gsap.from(el, { y: 36, opacity: 0, duration: 1, ease: 'expo.out', scrollTrigger: { trigger: el, start: 'top 88%' } });
   });
 }
@@ -427,3 +425,71 @@ Promise.all(['threadvault', 'retirement-radar'].map((pkg) => getJSON(`https://ap
 })();
 
 addEventListener('beforeprint', () => { $$('.stage-panel').forEach((p) => p.classList.add('is-active')); });
+
+
+// ── Live domain check: the real DNS Intelligence API ──────────────
+(() => {
+  const form = $('#checkForm'); if (!form) return;
+  const input = $('#checkInput'), go = $('#checkGo'), err = $('#checkErr'), panel = $('#checkPanel');
+  const API = 'https://dns.hetops.dev/api';
+  const show = (state) => $$('.check-state', panel).forEach((el) => { el.hidden = el.dataset.state !== state; });
+  const clean = (v) => v.trim().toLowerCase().replace(/^https?:\/\//, '').replace(/[/?#].*$/, '').replace(/\.$/, '');
+  const valid = (d) => /^(?!-)[a-z0-9-]{1,63}(\.(?!-)[a-z0-9-]{1,63})+$/.test(d);
+  const post = (path, domain) => fetch(`${API}/${path}`, {
+    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ domain }),
+  }).then((r) => r.json().then((d) => (r.ok ? d : Promise.reject(new Error(d.error || `HTTP ${r.status}`)))));
+  const tile = (id, value, note, tone) => {
+    const t = $('#' + id); t.dataset.tone = tone;
+    $('.tile-v', t).textContent = value; $('.tile-n', t).textContent = note;
+  };
+  async function run(domain) {
+    err.hidden = true;
+    if (!valid(domain)) { err.textContent = 'Enter a domain like example.com.'; err.hidden = false; input.focus(); return; }
+    go.disabled = true; show('loading');
+    try {
+      const [mail, tls] = await Promise.allSettled([post('email-security', domain), post('ssl', domain)]);
+      if (mail.status === 'rejected' && tls.status === 'rejected') throw mail.reason;
+      $('#checkDomain').textContent = domain;
+      const spf = mail.status === 'fulfilled' ? mail.value.spf || {} : null;
+      if (!spf) tile('tileSpf', '-', 'Could not check', 'muted');
+      else if (spf.error) tile('tileSpf', '-', 'DNS lookup failed, try again', 'muted');
+      else if (!spf.present) tile('tileSpf', 'None', 'No SPF record published', 'err');
+      else {
+        const n = spf.lookups?.count ?? 0, lim = spf.lookups?.limit || 10;
+        tile('tileSpf', `${n}/${lim}`, n > lim ? 'Over the limit: SPF fails' : n === lim ? 'At the limit: one more breaks SPF' : n >= lim - 2 ? `${lim - n} left before SPF breaks` : 'Within the limit', n > lim ? 'err' : n >= lim - 2 ? 'warn' : 'ok');
+        $('#tileSpf .tile-bar i').style.transform = `scaleX(${Math.min(1, n / lim)})`;
+      }
+      const dm = mail.status === 'fulfilled' ? mail.value.dmarc || {} : null;
+      if (!dm || dm.error) tile('tileDmarc', '-', 'Could not check', 'muted');
+      else if (!dm.present) tile('tileDmarc', 'None', 'Spoofed mail is not blocked', 'err');
+      else tile('tileDmarc', dm.policy || 'none', dm.policy === 'reject' ? 'Spoofed mail is rejected' : dm.policy === 'quarantine' ? 'Spoofed mail goes to spam' : 'Monitoring only', dm.policy === 'reject' ? 'ok' : dm.policy === 'quarantine' ? 'warn' : 'err');
+      const days = tls.status === 'fulfilled' ? tls.value.certificate?.daysRemaining : null;
+      if (days == null) tile('tileTls', '-', 'No certificate found', 'muted');
+      else tile('tileTls', `${days}d`, days <= 7 ? 'Expires this week' : days <= 30 ? 'Renew soon' : 'Valid', days <= 7 ? 'err' : days <= 30 ? 'warn' : 'ok');
+      $('#checkFull').href = `https://dns.hetops.dev/?domain=${encodeURIComponent(domain)}`;
+      show('result');
+      track('portfolio-check');
+    } catch (e) {
+      show('empty');
+      err.textContent = /rate|429/i.test(e.message) ? 'Too many checks right now. Try again in a minute.' : `Could not check ${domain}: ${e.message}`;
+      err.hidden = false;
+    } finally { go.disabled = false; }
+  }
+  form.addEventListener('submit', (e) => { e.preventDefault(); const d = clean(input.value); input.value = d; run(d); });
+  $$('[data-try]').forEach((b) => b.addEventListener('click', () => { input.value = b.dataset.try; run(b.dataset.try); }));
+})();
+
+// ── Pipeline tile: steps run in order, on a loop, only while visible ──
+(() => {
+  const pipe = $('#pipe'); if (!pipe || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const steps = $$('li', pipe); let timer = null, i = 0;
+  const tick = () => {
+    if (i === 0) steps.forEach((s) => { s.dataset.s = 'wait'; });
+    if (i < steps.length) { if (i > 0) steps[i - 1].dataset.s = 'ok'; steps[i].dataset.s = 'run'; i++; timer = setTimeout(tick, 1100); }
+    else { steps[steps.length - 1].dataset.s = 'ok'; i = 0; timer = setTimeout(tick, 2600); }
+  };
+  new IntersectionObserver(([e]) => {
+    if (e.isIntersecting && !timer) tick();
+    else if (!e.isIntersecting && timer) { clearTimeout(timer); timer = null; i = 0; steps.forEach((s) => { s.dataset.s = 'ok'; }); }
+  }, { threshold: 0.4 }).observe(pipe);
+})();

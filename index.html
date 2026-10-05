@@ -196,7 +196,7 @@
             <p class="kicker">Live at dns.hetops.dev</p>
             <h3>DNS Intelligence</h3>
             <p>A domain scanner with 26 checks across DNS, TLS, security headers, DNSSEC, email authentication and reputation. It counts SPF lookups through every nested include, the way mail servers do.</p>
-            <p><b>Domain Watch</b> monitors domains and alerts on certificate, SPF, DMARC, MX and nameserver changes, and collects DMARC reports automatically. Free for one domain; Pro and Team plans from $5 a month.</p>
+            <p><b>Pro and Team plans</b> monitor domains and alert on certificate, SPF, DMARC, MX and nameserver changes, and collects DMARC reports automatically. Free for one domain; Pro and Team plans from $5 a month.</p>
             <div class="links">
               <a href="https://dns.hetops.dev" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="dns-live">Try it <i class="ph ph-arrow-up-right"></i></a>
               <a href="https://dns.hetops.dev/spf-checker" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="dns-spf-checker">SPF checker <i class="ph ph-arrow-up-right"></i></a>
@@ -256,19 +256,94 @@
       </div>
     </section>
 
+    <!-- ── Live check ─────────────────────────────────────────── -->
+    <section class="check wrap section" id="check" data-section="check">
+      <div class="check-grid">
+        <div class="check-copy">
+          <p class="eyebrow">Live, not a screenshot</p>
+          <h2 class="h2">Check a domain right here</h2>
+          <p class="sub">This runs the real DNS Intelligence API: SPF lookups counted through every include, the DMARC policy, and how long the certificate has left.</p>
+          <form class="check-form" id="checkForm" novalidate>
+            <label for="checkInput">Domain</label>
+            <div class="check-row">
+              <input id="checkInput" name="domain" inputmode="url" autocomplete="off" spellcheck="false" placeholder="yourcompany.com" aria-describedby="checkHelp checkErr">
+              <button class="btn btn-primary" id="checkGo" type="submit"><i class="ph ph-magnifying-glass" aria-hidden="true"></i>Check</button>
+            </div>
+            <p class="check-help" id="checkHelp">Public DNS and TLS only. Nothing is stored.</p>
+            <p class="check-err" id="checkErr" role="alert" hidden></p>
+          </form>
+          <div class="check-try" aria-label="Examples">
+            <span>Try</span>
+            <button type="button" data-try="github.com">github.com</button>
+            <button type="button" data-try="stripe.com">stripe.com</button>
+            <button type="button" data-try="hetops.dev">hetops.dev</button>
+          </div>
+        </div>
+        <div class="check-panel" id="checkPanel" aria-live="polite">
+          <div class="check-state check-empty" data-state="empty">
+            <i class="ph ph-globe-hemisphere-west" aria-hidden="true"></i>
+            <p>Results for SPF, DMARC and TLS appear here.</p>
+          </div>
+          <div class="check-state check-loading" data-state="loading" hidden>
+            <span class="sk sk-title"></span>
+            <div class="check-tiles"><span class="sk sk-tile"></span><span class="sk sk-tile"></span><span class="sk sk-tile"></span></div>
+            <span class="sk sk-line"></span>
+          </div>
+          <div class="check-state check-result" data-state="result" hidden>
+            <p class="check-domain" id="checkDomain"></p>
+            <div class="check-tiles">
+              <div class="tile" id="tileSpf"><span class="tile-k">SPF lookups</span><span class="tile-v"></span><span class="tile-n"></span><span class="tile-bar"><i></i></span></div>
+              <div class="tile" id="tileDmarc"><span class="tile-k">DMARC policy</span><span class="tile-v"></span><span class="tile-n"></span></div>
+              <div class="tile" id="tileTls"><span class="tile-k">Certificate</span><span class="tile-v"></span><span class="tile-n"></span></div>
+            </div>
+            <a class="check-full" id="checkFull" href="https://dns.hetops.dev" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="check-full-report">Full report: 26 checks <i class="ph ph-arrow-up-right" aria-hidden="true"></i></a>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- ── How I ship ───────────────────────────────────────── -->
     <section class="ship wrap section" id="how-i-ship" data-section="how-i-ship">
       <header class="section-head">
         <h2 class="h2">How I ship</h2>
         <p class="sub">The same bar for side projects as for production. Every repo enforces it, not just describes it.</p>
       </header>
-      <div class="ship-grid">
-        <div class="ship-item spot"><i class="ph ph-seal-check" aria-hidden="true"></i><h3>Signed, protected main</h3><p>Signed commits, linear history, required checks and no force-push on every repository.</p></div>
-        <div class="ship-item spot"><i class="ph ph-flow-arrow" aria-hidden="true"></i><h3>CI on every pull request</h3><p>Tests on several Node versions, a real run of the built artifact, a workflow audit and a secret scan.</p></div>
-        <div class="ship-item spot"><i class="ph ph-shield-check" aria-hidden="true"></i><h3>Security scanning</h3><p>CodeQL and OpenSSF Scorecard on every change. DNS Intelligence went from 62 open alerts to 0.</p></div>
-        <div class="ship-item spot"><i class="ph ph-package" aria-hidden="true"></i><h3>Provenance-signed releases</h3><p>npm packages publish from CI with provenance, staged until I approve them with 2FA. No long-lived tokens.</p></div>
-        <div class="ship-item spot"><i class="ph ph-hourglass-medium" aria-hidden="true"></i><h3>Careful dependencies</h3><p>Dependabot with a 7-day cooldown, dependency review, and every GitHub Action pinned to a commit.</p></div>
-        <div class="ship-item spot"><i class="ph ph-lock-key" aria-hidden="true"></i><h3>Least privilege</h3><p>Read-only by design where possible, enforced by tests. Credentials hashed at rest.</p></div>
+      <div class="bento">
+        <article class="bento-tile bento-pipe spot">
+          <div class="bento-head"><i class="ph ph-flow-arrow" aria-hidden="true"></i><h3>Every pull request</h3></div>
+          <p>Nothing reaches main until all of this is green, and nothing reaches npm until I approve it with 2FA.</p>
+          <ol class="pipe" id="pipe" aria-label="Release pipeline">
+            <li data-s="ok"><b>test (20 · 22 · 24)</b><span>unit tests and a real run of the built artifact</span></li>
+            <li data-s="ok"><b>hygiene</b><span>workflow audit, secret scan, signed and conventional commits</span></li>
+            <li data-s="ok"><b>analyze</b><span>CodeQL security and quality queries</span></li>
+            <li data-s="ok"><b>stage</b><span>npm publish staged from CI, with provenance</span></li>
+            <li data-s="ok"><b>approve</b><span>a human, with a second factor</span></li>
+          </ol>
+        </article>
+        <article class="bento-tile bento-log spot">
+          <div class="bento-head"><i class="ph ph-seal-check" aria-hidden="true"></i><h3>Signed, protected main</h3></div>
+          <div class="log" aria-hidden="true">
+            <div class="log-track">
+              <span><b>G</b>feat(spf): count DNS lookups through nested includes</span>
+              <span><b>G</b>fix(security): block IPv4-mapped IPv6 in every written form</span>
+              <span><b>G</b>feat: scan ElastiCache, OpenSearch and MSK</span>
+              <span><b>G</b>fix(auth): never build sign-in links from request headers</span>
+              <span><b>G</b>build: Node 22 two-stage image, and CI that runs it</span>
+              <span><b>G</b>feat(spf): count DNS lookups through nested includes</span>
+              <span><b>G</b>fix(security): block IPv4-mapped IPv6 in every written form</span>
+              <span><b>G</b>feat: scan ElastiCache, OpenSearch and MSK</span>
+            </div>
+          </div>
+          <p>Signed commits, linear history, required checks, no force-push.</p>
+        </article>
+        <article class="bento-tile bento-num spot">
+          <span class="num"><span>62</span><i class="ph ph-arrow-right" aria-hidden="true"></i><b>0</b></span>
+          <p>Open code-scanning alerts on DNS Intelligence after one triage pass, each dismissal written down.</p>
+        </article>
+        <article class="bento-tile bento-wide spot">
+          <div><div class="bento-head"><i class="ph ph-hourglass-medium" aria-hidden="true"></i><h3>Careful dependencies</h3></div><p>Dependabot waits 7 days before proposing a release, every Action is pinned to a commit, and new dependencies are reviewed for known advisories and licences.</p></div>
+          <div><div class="bento-head"><i class="ph ph-lock-key" aria-hidden="true"></i><h3>Least privilege</h3></div><p>Read-only by design where possible, enforced by tests. Credentials hashed at rest. Releases need no stored token.</p></div>
+        </article>
       </div>
       <a class="more" href="https://github.com/Het101/retirement-radar/blob/main/SECURITY.md" target="_blank" rel="noopener" data-umami-event="outbound" data-umami-event-target="security-md">Read a SECURITY.md <i class="ph ph-arrow-up-right"></i></a>
     </section>
@@ -344,7 +419,7 @@
             <li><time datetime="2026-10-05">5 Oct 2026</time><span class="shipped-tag radar">Retirement Radar</span><span>0.3.0: ElastiCache, OpenSearch and MSK; every date re-checked against AWS.</span></li>
             <li><time datetime="2026-10-05">5 Oct 2026</time><span class="shipped-tag dns">DNS</span><span>SPF lookups counted through nested includes, a <a href="https://dns.hetops.dev/spf-checker" target="_blank" rel="noopener">public SPF checker</a>, and alerts when a domain crosses the limit.</span></li>
             <li><time datetime="2026-10-05">5 Oct 2026</time><span class="shipped-tag dns">DNS</span><span>Security pass: 62 code-scanning alerts to 0, SSRF checks on every outbound hop, credentials hashed at rest.</span></li>
-            <li><time datetime="2026-10-04">4 Oct 2026</time><span class="shipped-tag watch">Domain Watch</span><span>Paid plans: Pro and Team, with automatic DMARC report collection.</span></li>
+            <li><time datetime="2026-10-04">4 Oct 2026</time><span class="shipped-tag dns">DNS</span><span>Paid Pro and Team plans: monitoring, alerts and automatic DMARC report collection.</span></li>
             <li><time datetime="2026-10-04">4 Oct 2026</time><span class="shipped-tag radar">Retirement Radar</span><span>First release on npm, then a staged, provenance-signed release pipeline.</span></li>
           </ol>
         </div>
