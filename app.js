@@ -265,7 +265,9 @@ if (hasGsap && matchMedia('(min-width: 1025px)').matches) {
   cards.forEach((card, i) => {
     const next = cards[i + 1];
     if (!next) return;
-    gsap.to(card, { scale: 0.94, opacity: 0.55, ease: 'none',
+    // Dim, don't fade: a faded card turns see-through and the cards stacked behind
+    // it show through its text. brightness() keeps it opaque.
+    gsap.to(card, { scale: 0.94, filter: 'brightness(0.45)', ease: 'none',
       scrollTrigger: { trigger: next, start: 'top bottom', end: `top ${NAV_H + 40}px`, scrub: true } });
   });
 }
