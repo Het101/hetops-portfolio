@@ -104,6 +104,17 @@ jobs:
           node scripts/check-csp.mjs headers.txt
           echo "headers, compression, 404 and CSP hashes all check out"
 
+          # Coolify routes traffic only to a container whose HEALTHCHECK passes. A page that
+          # answers curl from outside can still fail it from inside (it did once: IPv4-only
+          # listen, localhost resolving to ::1), so wait for Docker to call it healthy.
+          for _ in $(seq 1 30); do
+            status=$(docker inspect -f '{{.State.Health.Status}}' portfolio)
+            [ "$status" = "healthy" ] && break
+            sleep 2
+          done
+          [ "$status" = "healthy" ] || { echo "::error::container never became healthy (status: $status)"; docker inspect -f '{{json .State.Health}}' portfolio; exit 1; }
+          echo "container reports healthy"
+
   hygiene:
     runs-on: ubuntu-latest
     steps:
