@@ -787,3 +787,12 @@ html.intro-landed .hero-copy > :nth-child(4) { transition-delay: 0.36s; }
 .cs-lid { fill: none; stroke: var(--text); stroke-width: 1.6; stroke-linecap: round; }
 .cs-lid.low { stroke: var(--text-3); stroke-width: 1.1; }
 @media (max-width: 760px) { .cs-eye { width: 110px; height: 55px; top: 48px; } }
+
+/* ── 404: the eye is closed, there is nothing to watch ─────────── */
+.nf { min-height: 100dvh; display: grid; align-content: center; justify-items: start; gap: 18px; max-width: 760px; }
+.nf-eye { width: 220px; height: auto; overflow: visible; margin-bottom: 12px; }
+.nf-lash { fill: none; stroke: var(--text-3); stroke-width: 1.3; stroke-linecap: round; }
+.nf-code { font: 500 14px var(--mono); color: var(--gold); }
+.nf h1 { font-size: clamp(2.4rem, 5.6vw, 4.2rem); font-stretch: 110%; font-weight: 760; letter-spacing: -0.04em; line-height: 1; }
+.nf-sub { font-size: 18px; color: var(--text-2); max-width: 44ch; }
+.nf .ctas { margin-top: 12px; }

@@ -87,6 +87,23 @@ jobs:
           done < "$RUNNER_TEMP/paths"
           echo "image serves the page and every local path"
 
+          # The headers are the site's own security posture; a DevOps portfolio that
+          # fails a header scan is its own counterexample. Check what nginx sends.
+          curl -s -D headers.txt -o /dev/null -H 'Accept-Encoding: gzip' http://localhost:8080/styles.css
+          for h in content-security-policy strict-transport-security x-content-type-options x-frame-options referrer-policy permissions-policy; do
+            grep -qi "^$h:" headers.txt || { echo "::error::response is missing $h"; exit 1; }
+          done
+          grep -qi '^content-encoding: gzip' headers.txt || { echo "::error::styles.css is not compressed"; exit 1; }
+          if grep -qi '^server: nginx/' headers.txt; then echo "::error::nginx version is exposed"; exit 1; fi
+          code=$(curl -s -o nf.html -w '%{http_code}' http://localhost:8080/definitely-not-a-page)
+          [ "$code" = "404" ] && grep -q 'Nothing here for the eye to watch' nf.html || { echo "::error::custom 404 is not served (got $code)"; exit 1; }
+          curl -fs -o /dev/null http://localhost:8080/.well-known/security.txt || { echo "::error::security.txt is missing"; exit 1; }
+
+          # The CSP allows the one inline script (the import map) by hash. Editing the
+          # import map without updating the hash would silently break the 3D eye.
+          node scripts/check-csp.mjs headers.txt
+          echo "headers, compression, 404 and CSP hashes all check out"
+
   hygiene:
     runs-on: ubuntu-latest
     steps:
