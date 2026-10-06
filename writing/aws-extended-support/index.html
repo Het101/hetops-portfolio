@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Your old AWS versions are now a line on your bill: find them before they cost you · Het Patel</title>
+  <meta name="description" content="EKS, RDS, ElastiCache and OpenSearch now charge automatically for running old versions. Here&#x27;s how to find every affected resource across regions, by hand or with one command.">
+  <link rel="canonical" href="https://hetops.dev/writing/aws-extended-support/">
+  <meta name="theme-color" content="#08090a">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://hetops.dev/writing/aws-extended-support/">
+  <meta property="og:title" content="Your old AWS versions are now a line on your bill: find them before they cost you · Het Patel">
+  <meta property="og:description" content="EKS, RDS, ElastiCache and OpenSearch now charge automatically for running old versions. Here&#x27;s how to find every affected resource across regions, by hand or with one command.">
+  <meta property="og:image" content="https://hetops.dev/assets/og/og-retirement-radar.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://hetops.dev/assets/og/og-retirement-radar.png">
+  <link rel="preload" href="/assets/fonts/Archivo.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/styles.css">
+  <script defer src="https://analytics.hetops.dev/script.js" data-website-id="3b6004b2-abef-471c-a807-fdacd7981321" data-domains="hetops.dev"></script>
+</head>
+<body class="cs">
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="nav scrolled">
+    <a class="brand" href="/" aria-label="HetOps home"><svg class="brand-mark" aria-hidden="true" viewBox="10 22 80 56"><rect x="10" y="22" width="24" height="56" rx="5"/><rect x="66" y="22" width="24" height="56" rx="5"/><rect x="33" y="46" width="34" height="8"/><circle cx="50" cy="50" r="11"/></svg><span>HetOps</span></a>
+    <nav class="nav-links" aria-label="Site"><a href="/writing/">Writing</a><a href="/#work">Work</a><a href="/#contact">Contact</a></nav>
+    <div class="nav-actions"><a class="nav-cv" href="/Het_Patel_Resume.pdf" target="_blank" rel="noopener">Résumé</a></div>
+  </header>
+  <main id="main" class="cs-main wrap">
+    <article class="wr">
+      <a class="cs-back" href="/writing/"><i class="ph ph-arrow-left" aria-hidden="true"></i>All writing</a>
+      <p class="wr-meta"><span>AWS · FinOps</span><time datetime="2026-10-05">5 Oct 2026</time><span>4 min read</span></p>
+      <h1>Your old AWS versions are now a line on your bill: find them before they cost you</h1>
+      <p class="wr-dek">EKS, RDS, ElastiCache and OpenSearch now charge automatically for running old versions. Here&#x27;s how to find every affected resource across regions, by hand or with one command.</p>
+      <div class="wr-body">
+<p>For years, running an old database or Kubernetes version on AWS was a security problem you could put off. It isn't any more. It's a billing problem, and it starts automatically.</p>
+<ul><li><strong>EKS:</strong> when a Kubernetes version leaves standard support, the cluster moves to <a href="https://docs.aws.amazon.com/eks/latest/userguide/kubernetes-versions.html" target="_blank" rel="noopener">extended support</a> on its own. The control plane goes from <strong>$0.10 to $0.60 per hour</strong>: about <strong>$365 a month extra, per cluster</strong>. After 12 more months, AWS upgrades the control plane for you, whether your workloads are ready or not.</li><li><strong>RDS and Aurora:</strong> past the end of standard support, databases are <a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/extended-support.html" target="_blank" rel="noopener">enrolled in RDS Extended Support</a> and billed <strong>per vCPU-hour</strong> on top of the instance price, with a higher rate from year three. PostgreSQL 13 crossed that line on 28 February 2026 and RDS for MySQL 8.0 on 31 July 2026.</li><li><strong>ElastiCache:</strong> Redis OSS 4 and 5 have been on paid <a href="https://docs.aws.amazon.com/AmazonElastiCache/latest/dg/extended-support-versions.html" target="_blank" rel="noopener">Extended Support</a> since 1 February 2026. Redis OSS 6 follows on 31 January 2027.</li><li><strong>OpenSearch:</strong> from <strong>7 November 2026</strong>, Extended Support for older Elasticsearch and OpenSearch versions <a href="https://aws.amazon.com/blogs/big-data/amazon-opensearch-service-extends-version-lifecycle-support-timelines/" target="_blank" rel="noopener">costs as much as the instances themselves</a>. For those domains, the bill roughly doubles next month.</li><li><strong>Lambda:</strong> no charge, but deprecated runtimes stop getting security patches. <code>python3.10</code> is <a href="https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtimes.html" target="_blank" rel="noopener">deprecated on 31 October 2026</a> and <code>dotnet8</code> on 10 November 2026.</li></ul>
+<p>None of this arrives as an alert. It shows up in Cost Explorer, weeks later, as a line most people don't recognise.</p>
+<h2 id="finding-it-by-hand">Finding it by hand</h2>
+<p>Old versions hide in regions nobody looks at, so loop over all of them. These are read-only calls.</p>
+<pre><code data-lang="bash">for r in $(aws ec2 describe-regions --query &#x27;Regions[].RegionName&#x27; --output text); do
+  echo &quot;== $r&quot;
+  # EKS: cluster versions
+  for c in $(aws eks list-clusters --region &quot;$r&quot; --query &#x27;clusters&#x27; --output text); do
+    aws eks describe-cluster --region &quot;$r&quot; --name &quot;$c&quot; --query &#x27;cluster.[name,version]&#x27; --output text
+  done
+  # RDS and Aurora: engine versions
+  aws rds describe-db-instances --region &quot;$r&quot; \
+    --query &#x27;DBInstances[].[DBInstanceIdentifier,Engine,EngineVersion]&#x27; --output text
+  aws rds describe-db-clusters --region &quot;$r&quot; \
+    --query &#x27;DBClusters[].[DBClusterIdentifier,Engine,EngineVersion]&#x27; --output text
+  # ElastiCache: engine versions
+  aws elasticache describe-cache-clusters --region &quot;$r&quot; \
+    --query &#x27;CacheClusters[].[CacheClusterId,Engine,EngineVersion]&#x27; --output text
+  # Lambda: runtimes
+  aws lambda list-functions --region &quot;$r&quot; \
+    --query &#x27;Functions[].[FunctionName,Runtime]&#x27; --output text
+done</code></pre>
+<p>Then compare what you find with each service's calendar. For EKS there's a shortcut: <code>aws eks describe-cluster-versions</code> returns every version with its end of standard and extended support dates.</p>
+<p>A few things that trip people up:</p>
+<ul><li><strong>Aurora and RDS have different calendars.</strong> Aurora MySQL version 3 (MySQL 8.0 compatible) stays on standard support until <a href="https://docs.aws.amazon.com/AmazonRDS/latest/AuroraMySQLReleaseNotes/AuroraMySQL.release-calendars.html" target="_blank" rel="noopener">30 April 2028</a>, while RDS for MySQL 8.0 left it in July 2026. Same "8.0", very different bill.</li><li><strong>Minor versions retire before majors.</strong> A PostgreSQL 14 database is fine until February 2027 as a major version, but some 14.x minors leave support earlier.</li><li><strong>Replication groups and read replicas</strong> share the primary's version, so count them once, not per node.</li></ul>
+<h2 id="or-with-one-command">Or with one command</h2>
+<p>I got tired of running that loop and squinting at calendars, so I wrote <strong>Retirement Radar</strong>, a small open-source CLI that does it for EKS, RDS/Aurora, ElastiCache, OpenSearch, MSK and Lambda, across every enabled region:</p>
+<pre><code data-lang="bash">npx retirement-radar scan</code></pre>
+<p>!<a href="https://raw.githubusercontent.com/Het101/retirement-radar/main/docs/scan-output.png" target="_blank" rel="noopener">Example output: resources marked RETIRED, EXTENDED, SOON or UPCOMING, with the end-of-support date and what it means</a></p>
+<p>Each row says what's happening and when: <strong>RETIRED</strong> (past the end), <strong>EXTENDED</strong> (you're paying extended support right now), <strong>SOON</strong> (within 90 days) or <strong>UPCOMING</strong> (within a year), plus an estimate of what EKS extended support is costing you per month.</p>
+<p>A few design choices, because this tool runs with your AWS credentials:</p>
+<ul><li><strong>Read-only.</strong> It only calls <code>list-*</code>, <code>describe-*</code> and <code>get-*</code> APIs, and a test fails the build if that ever changes. The README has a minimal IAM policy.</li><li><strong>Local.</strong> It uses the AWS CLI you already have (profiles, SSO and assumed roles just work) and sends nothing anywhere.</li><li><strong>Dates with sources.</strong> Every date lives in a <a href="https://github.com/Het101/retirement-radar/blob/main/retirements.yaml" target="_blank" rel="noopener"><code>retirements.yaml</code></a> with the AWS page it came from. A version it doesn't know is reported as <code>unknown</code>, never as fine.</li><li><strong>CI-friendly.</strong> <code>--fail-on soon</code> exits 1 when something needs action within 90 days, so a weekly GitHub Actions job can open the conversation before the bill does.</li></ul>
+<pre><code data-lang="yaml"># .github/workflows/retirement-radar.yml
+on: { schedule: [{ cron: &quot;0 8 * * 1&quot; }], workflow_dispatch: {} }
+permissions: { id-token: write, contents: read }
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: aws-actions/configure-aws-credentials@v4
+        with: { role-to-assume: arn:aws:iam::123456789012:role/retirement-radar, aws-region: us-east-1 }
+      - run: npx retirement-radar scan --fail-on soon</code></pre>
+<h2 id="what-to-do-with-the-results">What to do with the results</h2>
+<ul><li><strong>EXTENDED on EKS:</strong> every month you wait is roughly $365 per cluster. Upgrade one minor version at a time; check deprecated APIs first.</li><li><strong>EXTENDED on RDS:</strong> a blue/green deployment makes major upgrades far less scary than they used to be. Test the application against the new version on a snapshot restore first.</li><li><strong>OpenSearch on an early version:</strong> this is the urgent one. After 7 November the extension costs as much as the domain.</li><li><strong>SOON on Lambda:</strong> usually the cheapest fix of all: change the runtime, run your tests, deploy.</li></ul>
+<p>The code and the dates file are on GitHub: <a href="https://github.com/Het101/retirement-radar" target="_blank" rel="noopener">Het101/retirement-radar</a>. If you spot a wrong or missing date, there's an issue form for exactly that, and it's the most useful contribution the project gets.</p>
+      </div>
+    </article>
+    <section class="cs-next">
+      <h2>Got a production problem worth solving?</h2>
+      <div class="ctas">
+        <a class="btn btn-gold" href="mailto:patel.x.het@gmail.com" data-umami-event="email-click" data-umami-event-from="writing"><i class="ph ph-envelope-simple" aria-hidden="true"></i>Email me</a>
+        <a class="btn btn-line" href="/writing/"><i class="ph ph-arrow-left" aria-hidden="true"></i>All writing</a>
+      </div>
+    </section>
+  </main>
+  <footer class="footer wrap">
+    <span class="brand"><svg class="brand-mark" aria-hidden="true" viewBox="10 22 80 56"><rect x="10" y="22" width="24" height="56" rx="5"/><rect x="66" y="22" width="24" height="56" rx="5"/><rect x="33" y="46" width="34" height="8"/><circle cx="50" cy="50" r="11"/></svg><span>HetOps</span></span>
+    <nav aria-label="HetOps tools"><a href="https://dns.hetops.dev">DNS</a><a href="https://tools.hetops.dev">Tools</a><a href="https://status.hetops.dev">Status</a></nav>
+    <span class="copyright">© 2026 Het Patel</span>
+  </footer>
+  <script src="/case.js" defer></script>
+</body>
+</html>

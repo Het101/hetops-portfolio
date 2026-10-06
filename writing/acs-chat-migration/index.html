@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Post-mortem: 7,022 chat messages with the wrong author after an ACS resource move · Het Patel</title>
+  <meta name="description" content="Moving an Azure Communication Services resource left 7,022 messages attributed to the wrong person and 649 stored identities unusable. Root cause, recovery, and the five things worth checking on your own estate.">
+  <link rel="canonical" href="https://hetops.dev/writing/acs-chat-migration/">
+  <meta name="theme-color" content="#08090a">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://hetops.dev/writing/acs-chat-migration/">
+  <meta property="og:title" content="Post-mortem: 7,022 chat messages with the wrong author after an ACS resource move · Het Patel">
+  <meta property="og:description" content="Moving an Azure Communication Services resource left 7,022 messages attributed to the wrong person and 649 stored identities unusable. Root cause, recovery, and the five things worth checking on your own estate.">
+  <meta property="og:image" content="https://hetops.dev/assets/og/og-threadvault.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://hetops.dev/assets/og/og-threadvault.png">
+  <link rel="preload" href="/assets/fonts/Archivo.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/styles.css">
+  <script defer src="https://analytics.hetops.dev/script.js" data-website-id="3b6004b2-abef-471c-a807-fdacd7981321" data-domains="hetops.dev"></script>
+</head>
+<body class="cs">
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="nav scrolled">
+    <a class="brand" href="/" aria-label="HetOps home"><svg class="brand-mark" aria-hidden="true" viewBox="10 22 80 56"><rect x="10" y="22" width="24" height="56" rx="5"/><rect x="66" y="22" width="24" height="56" rx="5"/><rect x="33" y="46" width="34" height="8"/><circle cx="50" cy="50" r="11"/></svg><span>HetOps</span></a>
+    <nav class="nav-links" aria-label="Site"><a href="/writing/">Writing</a><a href="/#work">Work</a><a href="/#contact">Contact</a></nav>
+    <div class="nav-actions"><a class="nav-cv" href="/Het_Patel_Resume.pdf" target="_blank" rel="noopener">Résumé</a></div>
+  </header>
+  <main id="main" class="cs-main wrap">
+    <article class="wr">
+      <a class="cs-back" href="/writing/"><i class="ph ph-arrow-left" aria-hidden="true"></i>All writing</a>
+      <p class="wr-meta"><span>Post-mortem</span><time datetime="2026-10-04">4 Oct 2026</time><span>7 min read</span></p>
+      <h1>Post-mortem: 7,022 chat messages with the wrong author after an ACS resource move</h1>
+      <p class="wr-dek">Moving an Azure Communication Services resource left 7,022 messages attributed to the wrong person and 649 stored identities unusable. Root cause, recovery, and the five things worth checking on your own estate.</p>
+      <div class="wr-body">
+<p><em>If you are in the middle of this right now, skip to <a href="#if-this-is-happening-to-you">If this is happening to you</a>.</em></p>
+<h2 id="summary">Summary</h2>
+<p>We moved a production chat estate from one Azure Communication Services resource to another. 7,200 threads were replayed onto the new resource. Two defects followed:</p>
+<ul><li><strong>7,022 messages displayed the wrong author.</strong> Every replayed message showed the system user as its sender.</li><li><strong>Every replayed thread rejected replies</strong> with <code>CommunicationError Forbidden</code> (HTTP 403).</li></ul>
+<p>Both were recoverable, but only because the extract had — by accident rather than design — preserved two things: the original sender's user ID in message metadata, and the participant list of every thread.</p>
+<p>Nobody lost a message. But for the hours it took to understand, the chat history of a production system was wrong in a way that read as plausible.</p>
+<h2 id="what-people-saw">What people saw</h2>
+<p>Two separate symptoms, which is part of why it took a while to connect them.</p>
+<p>Support saw threads where every message appeared to come from the system account. The content was intact and the ordering was right, so it looked like a rendering bug, not a data problem.</p>
+<p>Separately, users could open a thread and read it, but sending a reply failed. The API returned:</p>
+<pre><code>CommunicationError: Forbidden
+status: 403</code></pre>
+<p>A 403 on a thread the user can already read is a confusing error. It reads like an auth or token problem, and that is where we looked first. It was not.</p>
+<h2 id="root-cause">Root cause</h2>
+<p><strong>ACS identities are scoped to the resource that minted them.</strong></p>
+<p>An ACS user identity looks like this:</p>
+<pre><code>8:acs:&lt;resourceGuid&gt;_&lt;userGuid&gt;</code></pre>
+<p>The first half is the resource. An identity minted by resource A is not a valid identity on resource B — it is not "expired" or "unauthorised", it simply does not exist there. Move to a new resource and every ACS identity you have stored in your own database becomes a string that refers to nothing.</p>
+<p>We knew identities were per-resource. What we had not internalised was the blast radius: <em>every</em> stored identity, <em>simultaneously</em>, with no error at write time.</p>
+<p>This produced both symptoms:</p>
+<p><strong>Wrong author.</strong> The replay sent each historical message using the only identity that existed on the new resource — the system identity. ACS records the sender as whoever actually sent the API call. It has no concept of "send this on behalf of someone else" and no way to backdate authorship. So every message was, as far as ACS was concerned, genuinely sent by the system user. The display was correct; the data was wrong.</p>
+<p><strong>Forbidden on reply.</strong> The replay created each thread and wrote its messages, but did not re-add the participants. In ACS, only a participant of a thread may post to it. The threads therefore had exactly one participant — the identity that created them — and every real user was locked out of a thread they could still read through our own API, because our read path served history from our database rather than from ACS.</p>
+<p>That last detail is why the two symptoms looked unrelated. Reads came from us. Writes went to ACS.</p>
+<h2 id="contributing-factors">Contributing factors</h2>
+<p>Being honest about these matters more than the root cause, because the root cause is a property of ACS and these are ours.</p>
+<p><strong>The replay had no dry run.</strong> There was no way to see what it would do without doing it. The first observation of its behaviour was in production.</p>
+<p><strong>Participants were treated as derived data.</strong> The reasoning was that participants could be reconstructed from our own tables later. True, but irrelevant — the thread was unusable in the meantime, and reconstructing them meant a second pass over 7,200 threads.</p>
+<p><strong>The replay was not resumable.</strong> It had to be run in one shot. This discouraged testing it on a subset, because a partial run left the target in a state nobody wanted to reason about.</p>
+<p><strong>There was no verification step.</strong> The replay reported what it had sent. Nothing read the result back and compared it to the source. "It completed without errors" is not the same as "it is correct", and in this case it completed without errors.</p>
+<p><strong>ACS has no chat history export.</strong> This is worth stating plainly because it shapes everything: there is no supported way to export chat history from ACS. There is no backup product. If you need your history out, you walk the REST API thread by thread and write it somewhere yourself. That work does not exist until you need it, which is generally the worst moment to write it.</p>
+<h2 id="why-it-was-recoverable">Why it was recoverable</h2>
+<p>Two accidents of the original extract saved us.</p>
+<p><strong>The dump had recorded each message's original sender as our own user UUID</strong>, not just the ACS identity. That meant the true author of all 7,022 messages was still knowable after the ACS identities had become meaningless. Had the extract stored only ACS identities, the authorship of those messages would have been unrecoverable — the identifiers would have pointed at a resource that no longer existed.</p>
+<p><strong>The dump had recorded the participant list of every thread.</strong> So the Forbidden could be repaired by re-adding participants, rather than by asking users who had been in which conversation.</p>
+<p>Neither of these was a deliberate resilience decision. They were in the dump because they were convenient at the time.</p>
+<h2 id="the-five-things-worth-checking">The five things worth checking</h2>
+<p>These generalise beyond our incident. If you run chat on ACS, all five are worth knowing the answer to:</p>
+<ol><li><strong>Stale identities.</strong> Do you store <code>acsUserId</code> values whose resource GUID is not your current resource? Code that only re-mints an identity when the stored value is <em>empty</em> will never repair these — an identity from another resource is exactly as broken as no identity, and it is not empty.</li><li><strong>System-only threads.</strong> Are there threads whose only ACS participant is your system identity? Those threads cannot be replied to by anyone.</li><li><strong>Misattributed messages.</strong> Are there messages whose ACS sender is the system identity but whose metadata names a real user? That is the signature of a replay that lost authorship.</li><li><strong>Missing system identity.</strong> Is there a system-user identity on the current resource? Without one, nothing can read history as the backend, and recovery options narrow sharply.</li><li><strong>Split-brain threads.</strong> Do you have threads in ACS with no matching database row, or rows pointing at threads that are not on this resource? Both are normal after a partial migration and both are invisible until someone opens one.</li></ol>
+<h2 id="what-we-changed">What we changed</h2>
+<p>The durable lesson is not "be careful during migrations". It is that <strong>ACS should be a cache, not a system of record.</strong> Your conversation history should live in a database you control, keyed by user IDs you control, with timestamps you control. Then a resource move is an inconvenience rather than an incident.</p>
+<p>Concretely, the rules that came out of this:</p>
+<ul><li><strong>Store your own user ID against every message, always.</strong> ACS identities are resource-scoped and disposable; your UUIDs are not.</li><li><strong>Preserve the original timestamp separately.</strong> ACS assigns <code>createdOn</code> server-side on receipt and cannot backdate. A replayed message carries the replay date inside ACS, so the true time must travel in metadata.</li><li><strong>Always restore participants.</strong> There is no version of this where skipping them is correct.</li><li><strong>Write attribution into metadata at replay time</strong>, and read it back from the user-ID field — never from a stored ACS identity, which names a resource that may not exist any more.</li><li><strong>Dry run by default</strong>, resume by default, verify afterwards.</li></ul>
+<h2 id="if-this-is-happening-to-you">If this is happening to you</h2>
+<p>If you are reading this because you searched <code>CommunicationError Forbidden</code> at an unsociable hour, here is the short version:</p>
+<p><strong>The 403 is almost certainly not an auth problem.</strong> Check whether the user is actually a participant of that thread on the ACS resource. A replay that created threads without re-adding participants produces exactly this.</p>
+<p><strong>Before you fix anything, get an extract.</strong> Walk the threads and write them to a file — threads, participants, messages, and for each message both the ACS sender and whatever your own user ID for that sender is. If you do nothing else, do this. Everything stays recoverable while that file exists.</p>
+<p><strong>Check your stored identities against the current resource GUID</strong> before assuming they are valid. Compare the segment between <code>8:acs:</code> and <code>_</code> with the resource you are actually pointing at.</p>
+<p><strong>Do not re-run a replay that is not resumable.</strong> You will duplicate everything it already wrote, and cleaning up duplicated threads on ACS is worse than the original problem.</p>
+<h2 id="the-tool">The tool</h2>
+<p>Threadvault is the tool we did not have that night. It is open source and free.</p>
+<pre><code data-lang="bash">npx threadvault doctor</code></pre>
+<p>That audits your ACS resource and your database for all five failure modes above. It is read-only, it never reads a message body, and it takes seconds. It exits <code>0</code> if clean, <code>1</code> if it found something.</p>
+<p>If you need to move resources, the full path is <code>extract → plan → rehearse → apply → verify</code>: export to a portable file, inspect it for gaps before writing anything, prove the durability goals on a throwaway thread, replay resumably, then read the result back and confirm it matches the source. Every write is a dry run until you pass <code>--commit</code>.</p>
+<ul><li>Repository: &lt;https://github.com/Het101/threadvault&gt;</li><li>Package: &lt;https://www.npmjs.com/package/threadvault&gt;</li></ul>
+<p>No message content, customer data, or identifying details appear in this write-up.</p>
+      </div>
+    </article>
+    <section class="cs-next">
+      <h2>Got a production problem worth solving?</h2>
+      <div class="ctas">
+        <a class="btn btn-gold" href="mailto:patel.x.het@gmail.com" data-umami-event="email-click" data-umami-event-from="writing"><i class="ph ph-envelope-simple" aria-hidden="true"></i>Email me</a>
+        <a class="btn btn-line" href="/writing/"><i class="ph ph-arrow-left" aria-hidden="true"></i>All writing</a>
+      </div>
+    </section>
+  </main>
+  <footer class="footer wrap">
+    <span class="brand"><svg class="brand-mark" aria-hidden="true" viewBox="10 22 80 56"><rect x="10" y="22" width="24" height="56" rx="5"/><rect x="66" y="22" width="24" height="56" rx="5"/><rect x="33" y="46" width="34" height="8"/><circle cx="50" cy="50" r="11"/></svg><span>HetOps</span></span>
+    <nav aria-label="HetOps tools"><a href="https://dns.hetops.dev">DNS</a><a href="https://tools.hetops.dev">Tools</a><a href="https://status.hetops.dev">Status</a></nav>
+    <span class="copyright">© 2026 Het Patel</span>
+  </footer>
+  <script src="/case.js" defer></script>
+</body>
+</html>
