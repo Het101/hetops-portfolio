@@ -4,6 +4,7 @@ COPY index.html 404.html gate.js styles.css app.js eye3d.js intro.js inside.js c
      favicon.ico favicon.svg apple-touch-icon.png icon-192.png icon-512.png site.webmanifest /usr/share/nginx/html/
 COPY assets /usr/share/nginx/html/assets
 COPY work /usr/share/nginx/html/work
+COPY writing /usr/share/nginx/html/writing
 COPY .well-known /usr/share/nginx/html/.well-known
 # Headers, compression, caching and the custom 404 (see nginx/default.conf).
 COPY nginx/default.conf /etc/nginx/conf.d/default.conf
