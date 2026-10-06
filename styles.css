@@ -773,3 +773,17 @@ html.intro-landed .hero-copy > :nth-child(4) { transition-delay: 0.36s; }
   .cs-flow { flex-direction: column; gap: 22px; }
   .cs-flow li:not(:last-child)::after { right: auto; left: 22px; top: auto; bottom: -19px; translate: 0; rotate: 90deg; }
 }
+
+/* ── Between pages: the browser cross-fades instead of a hard reload ── */
+@view-transition { navigation: auto; }
+::view-transition-old(root), ::view-transition-new(root) { animation-duration: 0.45s; animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1); }
+@media (prefers-reduced-motion: reduce) { @view-transition { navigation: none; } }
+
+/* Case pages: the small eye in the header. */
+.cs-hero { position: relative; }
+.cs-eye { position: absolute; right: 0; top: 64px; width: 160px; height: 80px; overflow: visible; }
+.cs-iris { fill: #2f5d4a; stroke: var(--gold); stroke-width: 1.5; transition: transform 0.5s var(--ease); }
+.cs-pupil { fill: var(--ink); transition: transform 0.45s var(--ease); }
+.cs-lid { fill: none; stroke: var(--text); stroke-width: 1.6; stroke-linecap: round; }
+.cs-lid.low { stroke: var(--text-3); stroke-width: 1.1; }
+@media (max-width: 760px) { .cs-eye { width: 110px; height: 55px; top: 48px; } }
