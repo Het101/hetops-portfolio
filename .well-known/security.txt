@@ -1,0 +1,5 @@
+Contact: mailto:patel.x.het@gmail.com
+Expires: 2027-10-06T00:00:00.000Z
+Preferred-Languages: en
+Canonical: https://hetops.dev/.well-known/security.txt
+Policy: https://github.com/Het101/hetops-portfolio/blob/main/SECURITY.md
