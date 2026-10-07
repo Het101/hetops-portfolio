@@ -278,6 +278,17 @@ const depth = new IntersectionObserver((entries) => {
 }, { threshold: 0.3 });
 $$('[data-section]').forEach((el) => depth.observe(el));
 
+// ── Inside the eye: its 3D scene loads on the first scroll or once the page is idle, so the
+// hero eye gets the main thread first. The import map in index.html resolves 'three'.
+(() => {
+  if (!$('#inside')) return;
+  let done = false;
+  const load = () => { if (done) return; done = true; import('/inside.js'); };
+  addEventListener('scroll', load, { once: true, passive: true });
+  const idle = window.requestIdleCallback || ((f) => setTimeout(f, 1500));
+  addEventListener('load', () => setTimeout(() => idle(load), 2500), { once: true });
+})();
+
 // ── Live numbers (public, unauthenticated sources only) ─────────
 // Anything marked data-live-hide stays hidden until its number arrives, so a slow or
 // rate-limited API never leaves a bare "-" on the page.
