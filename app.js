@@ -65,7 +65,7 @@ const PRODUCTS = [
   { key: 'radar', name: 'Retirement Radar', icon: '/assets/brand/radar-icon.webp', status: 'Open source on npm', text: 'Finds AWS versions at or near end of support before extended support reaches the bill.', url: 'https://github.com/Het101/retirement-radar', link: 'GitHub' },
   { key: 'radarcloud', name: 'Radar Cloud', icon: '/assets/brand/radarcloud-icon.webp', status: 'Live', text: 'Retirement Radar, hosted: daily scans of your AWS accounts through a read-only role, with email and Slack alerts.', url: 'https://radar.hetops.dev', link: 'radar.hetops.dev' },
   { key: 'tallybank', name: 'Tallybank', icon: '/assets/brand/tallybank-icon.svg', status: 'Private', text: 'Bank statements to Tally vouchers for five family books. Ties every run to the bank totals.', url: '#work', link: 'How it decides' },
-  { key: 'status', name: 'Status', icon: '/assets/brand/status-icon.webp', status: 'Live', text: 'Uptime monitoring for every HetOps service.', url: 'https://status.hetops.dev', link: 'status.hetops.dev' },
+  { key: 'status', name: 'Status', icon: '/assets/brand/status-icon.webp', status: 'Live', text: 'Live status for every HetOps service: response times, incidents and backup checks, watched from outside too.', url: 'https://status.hetops.dev', link: 'status.hetops.dev' },
   { key: 'tools', name: 'Dev Toolkit', icon: '/assets/brand/tools-icon.webp', status: 'Live', text: '100+ developer utilities: encoders, formatters, generators and converters.', url: 'https://tools.hetops.dev', link: 'tools.hetops.dev' },
 ];
 window.HETOPS = { PRODUCTS, track };
