@@ -47,6 +47,7 @@
     <nav class="nav-links" aria-label="Sections">
       <a href="#experience" data-nav="experience">Experience</a>
       <a href="#work" data-nav="work">Work</a>
+      <a href="#live" data-nav="live">Live</a>
       <a href="#how-i-ship" data-nav="how-i-ship">How I ship</a>
       <a href="#contact" data-nav="contact">Contact</a>
     </nav>
@@ -61,6 +62,7 @@
     <nav aria-label="Menu">
       <a href="#experience">Experience</a>
       <a href="#work">Work</a>
+      <a href="#live">Live</a>
       <a href="#how-i-ship">How I ship</a>
       <a href="#writing">Writing</a>
       <a href="#contact">Contact</a>
@@ -219,7 +221,7 @@
         <figure class="lens"><img src="/assets/img/dns-report.webp?v=2" width="1600" height="1075" loading="lazy" alt="DNS Intelligence report for github.com: health score 87, grade A."></figure>
       </article>
 
-      <article class="case flip" style="--tint: 229,72,77">
+      <article class="case flip" id="radar" style="--tint: 229,72,77">
         <div class="case-text">
           <img class="p-icon" src="/assets/brand/radar-icon.webp" width="56" height="56" alt="">
           <h3>Retirement Radar</h3>
@@ -233,10 +235,25 @@
             <a href="https://www.npmjs.com/package/retirement-radar" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="radar-npm">npm <i class="ph ph-arrow-up-right"></i></a>
           </div>
         </div>
-        <figure class="lens zoom"><img src="/assets/img/radar-output.webp" width="1600" height="1050" loading="lazy" alt="Retirement Radar output: resources marked retired, on paid extended support, soon or upcoming, with dates and the monthly EKS extended support cost."></figure>
+        <figure class="lens"><img src="/assets/img/radar-cloud-console.webp" width="1600" height="1033" loading="lazy" alt="Radar Cloud dashboard: an account's monthly extended-support bill on the left, the deadline radar in the centre with resources plotted by region and days to end of support, and the selected finding with the next deadline on the right."></figure>
       </article>
 
-      <article class="case" style="--tint: 74,120,230">
+      <article class="case" id="restore-drill" style="--tint: 191,57,143">
+        <div class="case-text">
+          <img class="p-icon" src="/assets/brand/restoredrill-icon.webp" width="56" height="56" alt="">
+          <h3>Restore Drill</h3>
+          <p class="problem">A backup job that says "success" proves nothing. You only learn the file is empty, stale or corrupt on the day you need it.</p>
+          <p>Every six hours it pulls the newest offsite backup of each database, restores it into a throwaway copy (SQLite, or a PostgreSQL server it starts for the test), checks integrity, row counts and freshness, then destroys the copy. It alerts by Slack, Discord or email when a drill starts failing.</p>
+          <p>It drills the DNS Intelligence, Radar Cloud and Analytics databases today, and its evidence page is public.</p>
+          <div class="links">
+            <a href="https://drill.hetops.dev" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="drill-live">Live evidence <i class="ph ph-arrow-up-right"></i></a>
+            <a href="https://github.com/Het101/restore-drill" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="drill-source">Source <i class="ph ph-arrow-up-right"></i></a>
+          </div>
+        </div>
+        <figure class="lens"><img src="/assets/img/restore-drill-evidence.webp" width="1600" height="1050" loading="lazy" alt="Restore Drill evidence page: 3 of 3 backups restored, a verified stamp, and the four steps of the last drill: find, restore, prove, destroy."></figure>
+      </article>
+
+      <article class="case flip" style="--tint: 74,120,230">
         <div class="case-text">
           <img class="p-icon" src="/assets/brand/tallybank-icon.svg" width="56" height="56" alt="">
           <h3>Tallybank</h3>
@@ -292,6 +309,58 @@
             <a class="check-full" id="checkFull" href="https://dns.hetops.dev" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="check-full-report">Full report: 26 checks <i class="ph ph-arrow-up-right" aria-hidden="true"></i></a>
           </div>
         </div>
+      </div>
+    </section>
+
+    <!-- The estate: the production I run myself, live -->
+    <section class="estate wrap" id="live" data-section="estate" aria-labelledby="estate-h">
+      <header class="head">
+        <h2 id="estate-h">Production I run myself</h2>
+        <p class="sub">Six services on one server I pay for, held to the bar I keep at work: watched from outside, backed up offsite, and every backup restored and checked every six hours. The numbers below are live.</p>
+      </header>
+      <div class="estate-board" id="estate">
+        <div class="tier">
+          <p class="tier-k"><b>01</b>Watched</p>
+          <div class="watchers">
+            <a class="watcher" href="https://status.hetops.dev" target="_blank" rel="noopener" data-umami-event="outbound" data-umami-event-target="estate-status">
+              <img src="/assets/brand/status-icon.webp" width="40" height="40" alt="">
+              <span><b>Status</b><small>Probes every service from outside, every 60 seconds</small></span>
+            </a>
+            <span class="watch-link" aria-hidden="true"><i></i>watched by</span>
+            <div class="watcher">
+              <span class="watcher-ic"><i class="ph ph-terminal-window" aria-hidden="true"></i></span>
+              <span><b>Watchdog</b><small>GitHub Actions checks Status itself every 10 minutes</small></span>
+            </div>
+          </div>
+        </div>
+        <div class="tier">
+          <p class="tier-k"><b>02</b>Serving <span class="tier-n" id="estUp"></span></p>
+          <ul class="svcs">
+            <li class="svc" data-svc="hetops.dev"><i class="led"></i><b>hetops.dev</b><span data-ms>&nbsp;</span></li>
+            <li class="svc" data-svc="DNS Intelligence"><i class="led"></i><b>DNS Intelligence</b><span data-ms>&nbsp;</span><em>restore-tested</em></li>
+            <li class="svc" data-svc="Radar Cloud"><i class="led"></i><b>Radar Cloud</b><span data-ms>&nbsp;</span><em>restore-tested</em></li>
+            <li class="svc" data-svc="Dev Toolkit"><i class="led"></i><b>Dev Toolkit</b><span data-ms>&nbsp;</span></li>
+            <li class="svc" data-svc="Status"><i class="led"></i><b>Status</b><span data-ms>&nbsp;</span></li>
+            <li class="svc" data-svc="Analytics"><i class="led"></i><b>Analytics</b><span data-ms>&nbsp;</span><em>restore-tested</em></li>
+          </ul>
+        </div>
+        <div class="tier">
+          <p class="tier-k"><b>03</b>Restored</p>
+          <ol class="drills">
+            <li class="drill" data-drill="DNS Intelligence"><header><b>DNS Intelligence</b><span>SQLite</span><i class="stamp" data-k="stamp"></i></header>
+              <dl><div><dt>Backup age</dt><dd data-k="age">&nbsp;</dd></div><div><dt>Restored in</dt><dd data-k="restore">&nbsp;</dd></div><div><dt>Checks</dt><dd data-k="checks">&nbsp;</dd></div></dl>
+              <p data-k="when">Waiting for the drill</p></li>
+            <li class="drill" data-drill="Radar Cloud"><header><b>Radar Cloud</b><span>SQLite</span><i class="stamp" data-k="stamp"></i></header>
+              <dl><div><dt>Backup age</dt><dd data-k="age">&nbsp;</dd></div><div><dt>Restored in</dt><dd data-k="restore">&nbsp;</dd></div><div><dt>Checks</dt><dd data-k="checks">&nbsp;</dd></div></dl>
+              <p data-k="when">Waiting for the drill</p></li>
+            <li class="drill" data-drill="Analytics (Umami)"><header><b>Analytics</b><span>PostgreSQL</span><i class="stamp" data-k="stamp"></i></header>
+              <dl><div><dt>Backup age</dt><dd data-k="age">&nbsp;</dd></div><div><dt>Restored in</dt><dd data-k="restore">&nbsp;</dd></div><div><dt>Checks</dt><dd data-k="checks">&nbsp;</dd></div></dl>
+              <p data-k="when">Waiting for the drill</p></li>
+          </ol>
+        </div>
+        <p class="estate-foot"><span id="estAt">Live from the HetOps watch and Restore Drill APIs.</span>
+          <a href="https://drill.hetops.dev" target="_blank" rel="noopener" data-umami-event="outbound" data-umami-event-target="estate-drill">Drill evidence <i class="ph ph-arrow-up-right"></i></a>
+          <a href="https://status.hetops.dev" target="_blank" rel="noopener" data-umami-event="outbound" data-umami-event-target="estate-status-foot">Status page <i class="ph ph-arrow-up-right"></i></a></p>
       </div>
     </section>
 
@@ -391,6 +460,8 @@
       <div class="shipped">
         <h3>Shipped recently</h3>
         <ol class="shipped-list">
+          <li><time datetime="2026-10-07">7 Oct 2026</time><span class="shipped-tag radar">Radar Cloud</span><span>Dashboard rebuilt around the deadline radar: what each account costs, the radar centre stage, and every finding one click from its blip.</span></li>
+          <li><time datetime="2026-10-07">7 Oct 2026</time><span class="shipped-tag drill">Restore Drill</span><span>0.3.0: alerts by Slack, Discord, webhook or email when a drill fails, recovers, or stays broken. Results are <a href="#live">live on this page</a>.</span></li>
           <li><time datetime="2026-10-07">7 Oct 2026</time><span class="shipped-tag drill">Restore Drill</span><span>0.2.0: PostgreSQL dumps restored into a throwaway server started inside the agent, no Docker socket needed.</span></li>
           <li><time datetime="2026-10-07">7 Oct 2026</time><span class="shipped-tag drill">Restore Drill</span><span>Live at <a href="https://drill.hetops.dev" target="_blank" rel="noopener">drill.hetops.dev</a> and <a href="https://github.com/Het101/restore-drill" target="_blank" rel="noopener">open source</a>: every few hours the newest offsite backup of DNS Intelligence and Radar Cloud is restored into a throwaway copy and checked.</span></li>
           <li><time datetime="2026-10-06">6 Oct 2026</time><span class="shipped-tag radar">Radar Cloud</span><span>Live at <a href="https://radar.hetops.dev" target="_blank" rel="noopener">radar.hetops.dev</a>: scheduled scans through a read-only IAM role, alerts by email and Slack, Free, Pro and Team plans.</span></li>

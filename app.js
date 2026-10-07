@@ -79,6 +79,7 @@ const ACTIONS = [
   { group: 'Sections', icon: 'ph-eye', label: 'Experience: read the chart', run: go('experience') },
   { group: 'Sections', icon: 'ph-magnifying-glass-plus', label: 'Work: under the lens', run: go('work') },
   { group: 'Sections', icon: 'ph-globe-hemisphere-west', label: 'Check a domain', run: go('check') },
+  { group: 'Sections', icon: 'ph-seal-check', label: 'Live: production I run myself', run: go('live') },
   { group: 'Sections', icon: 'ph-circle-notch', label: 'How I ship', run: go('how-i-ship') },
   { group: 'Sections', icon: 'ph-pen-nib', label: 'Writing', run: go('writing') },
   { group: 'Sections', icon: 'ph-envelope-simple', label: 'Contact', run: go('contact') },
@@ -320,6 +321,43 @@ Promise.all(['threadvault', 'retirement-radar'].map((pkg) => getJSON(`https://ap
   for (const [date, n] of sorted) cells.push(`<i data-l="${level(n)}" title="${n} on ${date}"></i>`);
   heat.innerHTML = cells.join('');
   if (hasGsap) ScrollTrigger.refresh();
+})();
+
+// ── The estate: every service's health and every backup drill, live ──
+(() => {
+  const board = $('#estate'); if (!board) return;
+  const ago = (iso) => {
+    const m = Math.max(0, Math.round((Date.now() - Date.parse(iso)) / 60000));
+    return m < 1 ? 'just now' : m < 60 ? `${m} min ago` : m < 48 * 60 ? `${Math.round(m / 60)} h ago` : `${Math.round(m / 1440)} days ago`;
+  };
+  const ms = (n) => (n < 1 ? "<1 ms" : n < 1000 ? `${n} ms` : `${(n / 1000).toFixed(1)} s`);
+  async function load() {
+    const [watch, drill] = await Promise.all([
+      getJSON('https://dns.hetops.dev/api/watch'),
+      getJSON('https://drill.hetops.dev/api/health'),
+    ]);
+    if (watch?.services) {
+      for (const s of watch.services) {
+        const el = board.querySelector(`[data-svc="${CSS.escape(s.name)}"]`); if (!el) continue;
+        el.dataset.state = s.up ? 'up' : 'down';
+        el.querySelector('[data-ms]').textContent = s.up ? ms(s.ms) : 'down';
+      }
+      $('#estUp').textContent = `${watch.up}/${watch.total} up`;
+      $('#estAt').textContent = `Checked ${ago(watch.checkedAt)}. Drills run every ${drill?.every || '6 h'}.`;
+    }
+    for (const d of drill?.drills || []) {
+      const el = board.querySelector(`[data-drill="${CSS.escape(d.name)}"]`); if (!el || d.pending) continue;
+      const k = (key) => el.querySelector(`[data-k="${key}"]`);
+      const passed = (d.checks || []).filter((c) => c.ok).length;
+      el.dataset.state = d.ok ? 'pass' : 'fail';
+      k('stamp').textContent = d.ok ? 'Pass' : 'Fail';
+      k('age').textContent = d.backup?.age || 'none';
+      k('restore').textContent = d.restoreMs != null ? ms(d.restoreMs) : 'n/a';
+      k('checks').textContent = `${passed} of ${(d.checks || []).length}`;
+      k('when').textContent = `Restored and checked ${ago(d.at)}`;
+    }
+  }
+  load(); setInterval(() => { if (!document.hidden) load(); }, 120000);
 })();
 
 // ── Live domain check: the real DNS Intelligence API ────────────
