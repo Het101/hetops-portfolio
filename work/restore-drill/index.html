@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Restore Drill: proof that backups actually restore · Het Patel</title>
+  <meta name="description" content="Every six hours, the newest offsite backup of each HetOps database is restored into a throwaway copy, proven and destroyed. How it works and the decisions behind it.">
+  <link rel="canonical" href="https://hetops.dev/work/restore-drill/">
+  <meta name="theme-color" content="#08090a">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://hetops.dev/work/restore-drill/">
+  <meta property="og:title" content="Restore Drill: proof that backups actually restore · Het Patel">
+  <meta property="og:description" content="Every six hours, the newest offsite backup of each HetOps database is restored into a throwaway copy, proven and destroyed.">
+  <meta property="og:image" content="https://hetops.dev/assets/og/og-restore-drill.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:image" content="https://hetops.dev/assets/og/og-restore-drill.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preload" href="/assets/fonts/Archivo.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/styles.css">
+  <script defer src="https://analytics.hetops.dev/script.js" data-website-id="3b6004b2-abef-471c-a807-fdacd7981321" data-domains="hetops.dev"></script>
+</head>
+<body class="cs">
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="nav scrolled">
+    <a class="brand" href="/" aria-label="HetOps home"><svg class="brand-mark" aria-hidden="true" viewBox="10 22 80 56"><rect x="10" y="22" width="24" height="56" rx="5"/><rect x="66" y="22" width="24" height="56" rx="5"/><rect x="33" y="46" width="34" height="8"/><circle cx="50" cy="50" r="11"/></svg><span>HetOps</span></a>
+    <nav class="nav-links" aria-label="Case studies">
+      <a href="/work/threadvault/">Threadvault</a>
+      <a href="/work/dns-intelligence/">DNS Intelligence</a>
+      <a href="/work/retirement-radar/">Retirement Radar</a>
+      <a href="/work/restore-drill/" aria-current="page">Restore Drill</a>
+    </nav>
+    <div class="nav-actions">
+      <a class="nav-cv" href="/Het_Patel_Resume.pdf" target="_blank" rel="noopener" data-umami-event="resume-download" data-umami-event-from="case-restore-drill">Résumé</a>
+    </div>
+  </header>
+  <main id="main" class="cs-main wrap">
+    <section class="cs-hero">
+      <a class="cs-back" href="/#work"><i class="ph ph-arrow-left" aria-hidden="true"></i>All work</a>
+      <svg class="cs-eye" viewBox="0 0 160 80" aria-hidden="true"><defs><clipPath id="csClip"><path/></clipPath></defs><g clip-path="url(#csClip)"><circle class="cs-iris" cx="80" cy="40" r="27"/><circle class="cs-pupil" cx="80" cy="40" r="10"/></g><path class="cs-lid"/><path class="cs-lid low"/></svg>
+      <img class="p-icon" src="/assets/brand/restoredrill-icon.webp" width="64" height="64" alt="">
+      <h1>Restore Drill</h1>
+      <p class="cs-lede">A backup that has never been restored is a hope, not a backup. Every six hours this agent restores the newest offsite backup of each HetOps database into a throwaway copy, proves it, and destroys it.</p>
+      <dl class="cs-meta"><div><dt>Role</dt><dd>Author and operator</dd></div><div><dt>Stack</dt><dd>Node.js, SQLite, PostgreSQL 17, S3-compatible storage</dd></div><div><dt>Status</dt><dd>Open source, live at drill.hetops.dev, 0.3.0</dd></div></dl>
+      <div class="links"><a href="https://drill.hetops.dev" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="case-restore-drill-live">Live evidence <i class="ph ph-arrow-up-right"></i></a><a href="https://github.com/Het101/restore-drill" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="case-restore-drill">Source <i class="ph ph-arrow-up-right"></i></a></div>
+    </section>
+    <section class="cs-sec">
+      <h2>The problem</h2>
+      <p>Every HetOps product runs on one server, and every night its database goes offsite to Cloudflare R2. A backup job that exits with success proves only that it ran. The file can still be empty, weeks old because the job quietly stopped, or missing the table that matters, and the usual place to find out is the day you need it.</p>
+    </section>
+    <section class="cs-sec">
+      <h2>How it works</h2>
+      <ol class="cs-flow"><li><b>Find</b><span>the newest backup; fail if too old</span></li><li><b>Restore</b><span>temp SQLite file or throwaway Postgres 17</span></li><li><b>Prove</b><span>integrity, tables, rows, freshness</span></li><li><b>Destroy</b><span>then record the result and time</span></li><li><b>Tell</b><span>evidence page, health API, alerts</span></li></ol>
+      <figure class="cs-shot"><img src="/assets/img/restore-drill-evidence.webp" width="1600" height="1050" loading="lazy" alt="The live evidence page: 3 of 3 backups restored, a verified stamp, and the four steps of the last drill."><figcaption>The evidence page at <a href="https://drill.hetops.dev" target="_blank" rel="noopener">drill.hetops.dev</a>. The <a href="/#live">live section on the home page</a> reads the same API.</figcaption></figure>
+    </section>
+    <section class="cs-sec">
+      <h2>Decisions that matter</h2>
+      <ul class="cs-list">
+        <li>Never near the live database. PostgreSQL dumps restore into a server the agent starts with <code>initdb</code> in a temporary directory, listening on a Unix socket only, with no TCP port. It needs no Docker socket: a container that can reach it can control the host.</li>
+        <li>A read-only key scoped to one bucket. The agent can list and download; it cannot delete or overwrite a backup.</li>
+        <li>No AWS SDK. The whole storage client, Signature V4 signing included, is about seventy hand-written lines, tested against the example signatures AWS publishes, so the whole agent has three runtime dependencies.</li>
+        <li>Alerts on change, not on every pass: when a drill starts failing, when it recovers, and once a day while it stays broken. The last state survives a redeploy, so a deploy never re-alerts.</li>
+        <li>Public proof, private detail. The page shows pass or fail, check names, restore times and backup age. Row counts, query results and storage URLs stay in the agent's logs.</li>
+      </ul>
+    </section>
+    <section class="cs-sec">
+      <h2>What it caught</h2>
+      <ol class="cs-time">
+        <li><b>Day one</b><p>The first DNS Intelligence drill failed, correctly. It expected a <code>watches</code> table that the real schema calls <code>alerts</code>. The backup was fine and the assumption was wrong, which is exactly the kind of assumption nobody checks until a restore.</p></li>
+        <li><b>A false alarm</b><p>After a redeploy, the status page reported the backups down for ten minutes: the last backup result lived only in memory. DNS Intelligence and Radar Cloud now keep it on disk next to the snapshots, so health is right from the first second after a deploy.</p></li>
+        <li><b>Every six hours since</b><p>Three databases, two engines, restored and checked. The Umami PostgreSQL dump goes from download to a verified server in under two seconds.</p></li>
+      </ol>
+    </section>
+    <section class="cs-next">
+      <h2>Got a production problem worth solving?</h2>
+      <div class="ctas">
+        <a class="btn btn-gold" href="mailto:patel.x.het@gmail.com" data-umami-event="email-click" data-umami-event-from="case-restore-drill"><i class="ph ph-envelope-simple" aria-hidden="true"></i>Email me</a>
+        <a class="btn btn-line" href="/#work"><i class="ph ph-arrow-left" aria-hidden="true"></i>All work</a>
+      </div>
+    </section>
+  </main>
+  <footer class="footer wrap">
+    <span class="brand"><svg class="brand-mark" aria-hidden="true" viewBox="10 22 80 56"><rect x="10" y="22" width="24" height="56" rx="5"/><rect x="66" y="22" width="24" height="56" rx="5"/><rect x="33" y="46" width="34" height="8"/><circle cx="50" cy="50" r="11"/></svg><span>HetOps</span></span>
+    <nav aria-label="HetOps tools"><a href="https://dns.hetops.dev">DNS</a><a href="https://tools.hetops.dev">Tools</a><a href="https://status.hetops.dev">Status</a></nav>
+    <span class="copyright">© 2026 Het Patel</span>
+  </footer>
+  <script src="/case.js" defer></script>
+</body>
+</html>

@@ -850,6 +850,10 @@ html.intro-landed .hero-copy > :nth-child(4) { transition-delay: 0.36s; }
 .cs-sec > p { font-size: 18px; line-height: 1.65; color: var(--text-2); max-width: 66ch; }
 .cs-sec > p + p { margin-top: 16px; }
 .cs-list { display: grid; gap: 14px; max-width: 66ch; }
+.cs-shot { margin: 40px 0 0; }
+.cs-shot img { width: 100%; border-radius: 14px; border: 1px solid var(--line); }
+.cs-shot figcaption { margin-top: 12px; font-size: 14px; color: var(--text-3); }
+.cs-shot figcaption a { color: var(--moss-text); text-decoration: underline; text-underline-offset: 3px; }
 .cs-list li { position: relative; padding-left: 26px; font-size: 18px; line-height: 1.55; color: var(--text-2); }
 .cs-list li::before { content: ""; position: absolute; left: 0; top: 0.62em; width: 10px; height: 10px; rotate: 45deg; border: 1.5px solid var(--gold); }
 .cs-time { position: relative; display: grid; gap: 0; padding-left: 30px; border-left: 1px solid var(--line-2); }
