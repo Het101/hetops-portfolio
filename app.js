@@ -351,6 +351,7 @@ Promise.all(['threadvault', 'retirement-radar'].map((pkg) => getJSON(`https://ap
       for (const s of watch.services) {
         const el = board.querySelector(`[data-svc="${CSS.escape(s.name)}"]`); if (!el) continue;
         el.dataset.state = s.up ? 'up' : 'down';
+        document.querySelectorAll(`.wiring [data-svc="${CSS.escape(s.name)}"]`).forEach((w) => { w.dataset.state = s.up ? 'up' : 'down'; });
         el.querySelector('[data-ms]').textContent = s.up ? ms(s.ms) : 'down';
       }
       $('#estUp').textContent = `${watch.up}/${watch.total} up`;

@@ -231,6 +231,7 @@
           <p>Or let it run for you: <a href="https://radar.hetops.dev" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="radar-cloud">Radar Cloud</a> connects through a read-only role and scans every account on a schedule (weekly free, daily on paid), with email and Slack alerts and the monthly cost of each finding.</p>
           <div class="links">
             <a class="case-link" href="/work/retirement-radar/" data-umami-event="project-link" data-umami-event-project="case-retirement-radar">Case study <i class="ph ph-arrow-right"></i></a>
+            <a class="case-link" href="/work/radar-cloud/" data-umami-event="project-link" data-umami-event-project="case-radar-cloud">Radar Cloud case <i class="ph ph-arrow-right"></i></a>
                 <a href="https://github.com/Het101/retirement-radar" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="radar-source">Source <i class="ph ph-arrow-up-right"></i></a>
             <a href="https://www.npmjs.com/package/retirement-radar" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="radar-npm">npm <i class="ph ph-arrow-up-right"></i></a>
           </div>
@@ -362,6 +363,32 @@
         <p class="estate-foot"><span id="estAt">Live from the HetOps watch and Restore Drill APIs.</span>
           <a href="https://drill.hetops.dev" target="_blank" rel="noopener" data-umami-event="outbound" data-umami-event-target="estate-drill">Drill evidence <i class="ph ph-arrow-up-right"></i></a>
           <a href="https://status.hetops.dev" target="_blank" rel="noopener" data-umami-event="outbound" data-umami-event-target="estate-status-foot">Status page <i class="ph ph-arrow-up-right"></i></a></p>
+      </div>
+      <div class="wiring" aria-labelledby="wiring-h">
+        <h3 id="wiring-h">How it's wired</h3>
+        <div class="wire-grid">
+          <div class="wnode w-visit"><b>Visitors</b><small>HTTPS to *.hetops.dev</small></div>
+          <div class="wnode w-dns"><b>Cloudflare DNS</b><small>every hostname points at one server</small></div>
+          <div class="wlink w-a1" aria-hidden="true"><span>HTTPS</span></div>
+          <div class="wbox w-host">
+            <p class="wbox-k">One Oracle Cloud VM · Coolify · TLS at the proxy</p>
+            <ul>
+              <li data-svc="hetops.dev"><i class="led"></i>hetops.dev</li>
+              <li data-svc="DNS Intelligence"><i class="led"></i>DNS Intelligence<small>SQLite</small></li>
+              <li data-svc="Radar Cloud"><i class="led"></i>Radar Cloud<small>SQLite</small></li>
+              <li data-svc="Dev Toolkit"><i class="led"></i>Dev Toolkit</li>
+              <li data-svc="Analytics"><i class="led"></i>Analytics<small>Umami + PostgreSQL</small></li>
+              <li data-svc="Status"><i class="led"></i>Status<small>Uptime Kuma, every 60 s</small></li>
+              <li class="w-drill"><i class="led"></i>Restore Drill<small>restores every 6 h</small></li>
+            </ul>
+          </div>
+          <div class="wlink w-a2" aria-hidden="true"><span>backups, daily</span></div>
+          <div class="wlink w-a3 back" aria-hidden="true"><span>read-only restore</span></div>
+          <div class="wnode w-r2"><b>Cloudflare R2</b><small>offsite copies of every database</small></div>
+          <div class="wlink w-a4 back" aria-hidden="true"><span>deploy · watchdog</span></div>
+          <div class="wnode w-gh"><b>GitHub</b><small>CI on every PR; Actions checks Status every 10 min from outside</small></div>
+        </div>
+        <p class="sr">Visitors reach every HetOps hostname over HTTPS through Cloudflare DNS, all on one Oracle Cloud VM run by Coolify. Each database is backed up daily to Cloudflare R2, Restore Drill restores those backups with a read-only key every six hours, Uptime Kuma probes every service every minute, and a GitHub Actions watchdog checks the status page every ten minutes from outside.</p>
       </div>
     </section>
 
