@@ -388,6 +388,34 @@ a.watcher:hover { border-color: var(--line-2); }
 .drill dt { font-size: 12px; color: var(--text-3); }
 .drill dd { margin: 3px 0 0; font: 500 17px var(--mono); letter-spacing: -0.02em; color: var(--text); font-variant-numeric: tabular-nums; }
 .drill p { font-size: 13px; color: var(--text-3); }
+/* How it's wired: visitors and DNS on the left, the one server in the middle, R2 and GitHub on the right. */
+.wiring { margin-top: 18px; padding: 34px 44px 30px; border: 1px solid var(--line); border-radius: 22px; background: var(--ink-2); }
+.wiring h3 { font-size: 19px; margin-bottom: 26px; }
+.wire-grid { display: grid; grid-template-columns: minmax(0, 0.9fr) 110px minmax(0, 1.5fr) 130px minmax(0, 0.9fr);
+  grid-template-areas: "visit a1 host a2 r2" "dns . host a3 r2" ". . host a4 gh"; gap: 12px 0; align-items: center; }
+.w-visit { grid-area: visit; } .w-dns { grid-area: dns; } .w-host { grid-area: host; } .w-r2 { grid-area: r2; } .w-gh { grid-area: gh; }
+.w-a1 { grid-area: a1; } .w-a2 { grid-area: a2; } .w-a3 { grid-area: a3; } .w-a4 { grid-area: a4; }
+.wnode { display: grid; gap: 4px; padding: 14px 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--ink); }
+.wnode b { font-size: 15px; }
+.wnode small { font-size: 12.5px; color: var(--text-3); line-height: 1.45; }
+.w-r2 { align-self: stretch; align-content: center; border-color: rgba(227, 169, 68, 0.35); }
+.wbox { padding: 16px; border: 1px dashed var(--line-2); border-radius: 16px; background: rgba(239, 233, 221, 0.02); }
+.wbox-k { margin-bottom: 12px; font: 500 11.5px var(--mono); color: var(--text-3); letter-spacing: 0.04em; }
+.wbox ul { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.wbox li { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 10px; align-items: center; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--ink); font-size: 14px; font-weight: 600; }
+.wbox li small { grid-column: 2; font: 500 11px var(--mono); color: var(--text-3); }
+.wbox li[data-state="up"] .led { background: var(--moss); opacity: 1; box-shadow: 0 0 0 3px rgba(69, 184, 141, 0.16); }
+.wbox li[data-state="down"] .led { background: var(--err); opacity: 1; }
+.wbox .w-drill { grid-column: 1 / -1; border-color: rgba(224, 123, 189, 0.4); }
+.w-drill .led { background: #e07bbd; opacity: 1; }
+/* A wire: a dashed line with an arrowhead and a label; .back points left. */
+.wlink { position: relative; height: 34px; }
+.wlink::before { content: ''; position: absolute; left: 8px; right: 8px; top: 50%; height: 1px; background: repeating-linear-gradient(90deg, var(--gold) 0 5px, transparent 5px 9px); }
+.wlink::after { content: ''; position: absolute; right: 6px; top: calc(50% - 4px); border: 4px solid transparent; border-left: 6px solid var(--gold); border-right: 0; }
+.wlink.back::after { right: auto; left: 6px; border-left: 0; border-right: 6px solid var(--gold); }
+.wlink span { position: absolute; left: 0; right: 0; bottom: 60%; text-align: center; font: 500 11px var(--mono); color: var(--text-3); white-space: nowrap; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
 .estate-foot { display: flex; flex-wrap: wrap; gap: 10px 24px; align-items: center; padding: 22px 0 0 198px; border-top: 1px solid var(--line); font-size: 13px; color: var(--text-3); }
 .estate-foot span { margin-right: auto; }
 .estate-foot a { display: inline-flex; align-items: center; gap: 5px; color: var(--moss-text); }
@@ -538,6 +566,14 @@ a.watcher:hover { border-color: var(--line-2); }
   .watch-link { padding-left: 18px; }
   .watch-link i { width: 1px; height: 18px; background: repeating-linear-gradient(var(--line-2) 0 4px, transparent 4px 8px); }
   .estate-foot { padding-left: 0; }
+  .wiring { padding: 24px 18px; }
+  .wire-grid { grid-template-columns: minmax(0, 1fr); grid-template-areas: "visit" "dns" "a1" "host" "a2" "r2" "a3" "a4" "gh"; gap: 8px; }
+  .w-a3, .w-a4 { display: none; }
+  .wlink { height: 40px; }
+  .wlink::before { left: 50%; right: auto; top: 4px; bottom: 6px; width: 1px; height: auto; background: repeating-linear-gradient(var(--gold) 0 5px, transparent 5px 9px); }
+  .wlink::after { right: auto; left: calc(50% - 4px); top: auto; bottom: 2px; border: 4px solid transparent; border-top: 6px solid var(--gold); border-bottom: 0; }
+  .wlink span { left: calc(50% + 12px); bottom: auto; top: 12px; text-align: left; }
+  .wbox ul { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 760px) {
   .wrap { padding: 0 20px; }
