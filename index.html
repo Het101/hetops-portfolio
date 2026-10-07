@@ -226,7 +226,7 @@
           <p class="problem">AWS bills automatically for running old versions. EKS extended support alone is about $365 a month per cluster.</p>
           <p>A read-only CLI that scans every region for EKS, RDS, ElastiCache, OpenSearch, MSK and Lambda versions at or near end of support, with the AWS source for every date.<span data-live-hide hidden> <span data-live="npmRadar"></span> npm installs last month.</span></p>
           <p class="cmd"><code>npx retirement-radar scan</code></p>
-          <p>Or let it run for you: <a href="https://radar.hetops.dev" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="radar-cloud">Radar Cloud</a> connects through a read-only role and scans every account daily, with email and Slack alerts and the monthly cost of each finding.</p>
+          <p>Or let it run for you: <a href="https://radar.hetops.dev" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="radar-cloud">Radar Cloud</a> connects through a read-only role and scans every account on a schedule (weekly free, daily on paid), with email and Slack alerts and the monthly cost of each finding.</p>
           <div class="links">
             <a class="case-link" href="/work/retirement-radar/" data-umami-event="project-link" data-umami-event-project="case-retirement-radar">Case study <i class="ph ph-arrow-right"></i></a>
                 <a href="https://github.com/Het101/retirement-radar" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="radar-source">Source <i class="ph ph-arrow-up-right"></i></a>
@@ -391,7 +391,8 @@
       <div class="shipped">
         <h3>Shipped recently</h3>
         <ol class="shipped-list">
-          <li><time datetime="2026-10-06">6 Oct 2026</time><span class="shipped-tag radar">Radar Cloud</span><span>Live at <a href="https://radar.hetops.dev" target="_blank" rel="noopener">radar.hetops.dev</a>: daily scans through a read-only IAM role, alerts by email and Slack, Free, Pro and Team plans.</span></li>
+          <li><time datetime="2026-10-07">7 Oct 2026</time><span class="shipped-tag drill">Restore Drill</span><span>New and <a href="https://github.com/Het101/restore-drill" target="_blank" rel="noopener">open source</a>: every few hours the newest offsite backup of DNS Intelligence and Radar Cloud is restored into a throwaway copy and checked.</span></li>
+          <li><time datetime="2026-10-06">6 Oct 2026</time><span class="shipped-tag radar">Radar Cloud</span><span>Live at <a href="https://radar.hetops.dev" target="_blank" rel="noopener">radar.hetops.dev</a>: scheduled scans through a read-only IAM role, alerts by email and Slack, Free, Pro and Team plans.</span></li>
           <li><time datetime="2026-10-05">5 Oct 2026</time><span class="shipped-tag radar">Retirement Radar</span><span>0.3.0: ElastiCache, OpenSearch and MSK; every date re-checked against AWS.</span></li>
           <li><time datetime="2026-10-05">5 Oct 2026</time><span class="shipped-tag dns">DNS</span><span>SPF lookups counted through nested includes, a <a href="https://dns.hetops.dev/spf-checker" target="_blank" rel="noopener">public SPF checker</a>, and alerts when a domain crosses the limit.</span></li>
           <li><time datetime="2026-10-05">5 Oct 2026</time><span class="shipped-tag dns">DNS</span><span>Security pass: 62 code-scanning alerts to 0, SSRF checks on every outbound hop, credentials hashed at rest.</span></li>

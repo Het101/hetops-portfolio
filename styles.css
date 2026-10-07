@@ -404,6 +404,7 @@ h3 { font-size: 24px; font-stretch: 108%; }
 .shipped-tag { justify-self: start; padding: 2px 10px; border-radius: 999px; border: 1px solid currentColor; font-size: 12px; font-weight: 600; white-space: nowrap; }
 .shipped-tag.radar { color: #f08a8d; }
 .shipped-tag.dns { color: #6cc8de; }
+.shipped-tag.drill { color: #e07bbd; }
 
 /* ── Writing ──────────────────────────────────────────── */
 .writing { padding-top: 160px; }
