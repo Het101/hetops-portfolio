@@ -334,12 +334,54 @@ Promise.all(['threadvault', 'retirement-radar'].map((pkg) => getJSON(`https://ap
   if (hasGsap) ScrollTrigger.refresh();
 })();
 
+// ── Work index: the case you are reading lights up; tapping one jumps to it ──
+(() => {
+  const idx = $('#workIndex'); if (!idx) return;
+  const links = $$('a', idx);
+  const cases = links.map((a) => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+  const io = new IntersectionObserver((entries) => {
+    for (const e of entries) if (e.isIntersecting) {
+      links.forEach((a) => a.classList.toggle('on', a.getAttribute('href') === '#' + e.target.id));
+      const on = idx.querySelector('a.on');
+      if (on) idx.scrollTo({ left: on.offsetLeft - 16, behavior: 'smooth' });
+    }
+  }, { rootMargin: '-40% 0px -55% 0px' });
+  cases.forEach((c) => io.observe(c));
+})();
+
+// ── The docked eye steps aside on phones while you read, and comes back when you scroll up ──
+(() => {
+  if (!matchMedia('(max-width: 760px)').matches) return;
+  let last = scrollY;
+  addEventListener('scroll', () => {
+    const body = document.getElementById('eyeBody'); if (!body) return;
+    const y = scrollY;
+    if (y > last + 6) body.classList.add('resting');
+    else if (y < last - 6) body.classList.remove('resting');
+    last = y;
+  }, { passive: true });
+})();
+
 // ── The estate: every service's health and every backup drill, live ──
 (() => {
   const board = $('#estate'); if (!board) return;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const ago = (iso) => {
     const m = Math.max(0, Math.round((Date.now() - Date.parse(iso)) / 60000));
     return m < 1 ? 'just now' : m < 60 ? `${m} min ago` : m < 48 * 60 ? `${Math.round(m / 60)} h ago` : `${Math.round(m / 1440)} days ago`;
+  };
+  const counted = new WeakSet();
+  const show = (el, text) => {
+    const m = /^(\d+(?:\.\d+)?)(.*)$/.exec(text);
+    if (reduce || counted.has(el) || !m) { el.textContent = text; return; }
+    counted.add(el);
+    const to = parseFloat(m[1]), dp = (m[1].split('.')[1] || '').length, t0 = performance.now();
+    const step = (now) => {
+      const k = Math.min(1, (now - t0) / 700), v = to * (1 - Math.pow(1 - k, 3));
+      el.textContent = v.toFixed(dp) + m[2];
+      if (k < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
   };
   const ms = (n) => (n < 1 ? "<1 ms" : n < 1000 ? `${n} ms` : `${(n / 1000).toFixed(1)} s`);
   async function load() {
@@ -352,9 +394,11 @@ Promise.all(['threadvault', 'retirement-radar'].map((pkg) => getJSON(`https://ap
         const el = board.querySelector(`[data-svc="${CSS.escape(s.name)}"]`); if (!el) continue;
         el.dataset.state = s.up ? 'up' : 'down';
         document.querySelectorAll(`.wiring [data-svc="${CSS.escape(s.name)}"]`).forEach((w) => { w.dataset.state = s.up ? 'up' : 'down'; });
-        el.querySelector('[data-ms]').textContent = s.up ? ms(s.ms) : 'down';
+        show(el.querySelector('[data-ms]'), s.up ? ms(s.ms) : 'down');
       }
       $('#estUp').textContent = `${watch.up}/${watch.total} up`;
+      const up = $('[data-proof="up"]');
+      if (up) { up.hidden = false; up.dataset.state = watch.up === watch.total ? 'ok' : 'bad'; up.querySelector('b').textContent = `${watch.up}/${watch.total}`; }
       $('#estAt').textContent = `Checked ${ago(watch.checkedAt)}. Drills run every ${drill?.every || '6 h'}.`;
     }
     for (const d of drill?.drills || []) {
@@ -363,10 +407,18 @@ Promise.all(['threadvault', 'retirement-radar'].map((pkg) => getJSON(`https://ap
       const passed = (d.checks || []).filter((c) => c.ok).length;
       el.dataset.state = d.ok ? 'pass' : 'fail';
       k('stamp').textContent = d.ok ? 'Pass' : 'Fail';
-      k('age').textContent = d.backup?.age || 'none';
-      k('restore').textContent = d.restoreMs != null ? ms(d.restoreMs) : 'n/a';
-      k('checks').textContent = `${passed} of ${(d.checks || []).length}`;
+      show(k('age'), d.backup?.age || 'none');
+      show(k('restore'), d.restoreMs != null ? ms(d.restoreMs) : 'n/a');
+      show(k('checks'), `${passed} of ${(d.checks || []).length}`);
       k('when').textContent = `Restored and checked ${ago(d.at)}`;
+    }
+    const done = (drill?.drills || []).filter((d) => !d.pending);
+    const pr = $('[data-proof="drill"]');
+    if (pr && done.length) {
+      const newest = done.map((d) => d.at).sort().pop();
+      pr.hidden = false; pr.dataset.state = done.every((d) => d.ok) ? 'ok' : 'bad';
+      pr.querySelector('b').textContent = `${done.filter((d) => d.ok).length}/${done.length}`;
+      pr.querySelector('span').textContent = ago(newest);
     }
   }
   load(); setInterval(() => { if (!document.hidden) load(); }, 120000);
