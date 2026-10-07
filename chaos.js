@@ -65,9 +65,14 @@
     mLat.textContent = Math.round(80 + Math.max(0, state.traffic * 3 / ups - 1) * 520) + ' ms';
     root.classList.toggle('alarm', err > 0.05);
     if (running) mTime.textContent = ((now - started) / 1000).toFixed(1) + 's';
-    requestAnimationFrame(tick);
+    if (onScreen) requestAnimationFrame(tick);
   }
-  if (!reduce) requestAnimationFrame(tick);
+  // Only simulate while the section is on screen; off screen it would burn CPU for nothing.
+  let onScreen = false;
+  if (!reduce) new IntersectionObserver(([e]) => {
+    const was = onScreen; onScreen = e.isIntersecting;
+    if (onScreen && !was) { last = performance.now(); requestAnimationFrame(tick); }
+  }, { rootMargin: '100px 0px' }).observe(root);
 
   // Incident log.
   const log = (text, kind = '') => {

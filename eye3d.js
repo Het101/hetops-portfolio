@@ -28,16 +28,19 @@ const OUTER = [
   { label: 'Prometheus' },
 ];
 
+// Phones and small screens get a lighter eye: fewer polygons and no antialiasing (a dense screen
+// hides the jaggies). The eye looks the same at that size.
+const lite = matchMedia('(max-width: 760px), (pointer: coarse)').matches;
 let renderer;
 try {
-  renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
+  renderer = new THREE.WebGLRenderer({ canvas, antialias: !lite, alpha: true, powerPreference: 'high-performance' });
 } catch (e) {
   stage.classList.add('no-gl');
 }
 
 if (renderer) {
   stage.classList.add('gl');
-  renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 1.75));
+  renderer.setPixelRatio(Math.min(devicePixelRatio || 1, lite ? 1.5 : 1.75));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.05;
@@ -109,7 +112,7 @@ if (renderer) {
   // ── Eye: a gaze group (eyeball, cornea, pupil) inside fixed lids ─
   const head = new THREE.Group(); scene.add(head);
   const gaze = new THREE.Group(); head.add(gaze);
-  const ballGeo = new THREE.SphereGeometry(1, 128, 96); ballGeo.rotateX(Math.PI / 2);
+  const ballGeo = new THREE.SphereGeometry(1, lite ? 72 : 128, lite ? 54 : 96); ballGeo.rotateX(Math.PI / 2);
   const irisTex = eyeTexture();
   const ballMat = new THREE.MeshPhysicalMaterial({ map: irisTex, roughness: 0.42, clearcoat: 1, clearcoatRoughness: 0.05, envMapIntensity: 0.8, emissive: 0x000000, emissiveMap: irisTex });
   gaze.add(new THREE.Mesh(ballGeo, ballMat));
@@ -124,12 +127,12 @@ if (renderer) {
   };
   setPupil(P);
   // Cornea: a clear bulge over the iris that catches the light.
-  const corneaGeo = new THREE.SphereGeometry(0.66, 96, 48, 0, Math.PI * 2, 0, 1.05); corneaGeo.rotateX(Math.PI / 2);
+  const corneaGeo = new THREE.SphereGeometry(0.66, lite ? 56 : 96, lite ? 28 : 48, 0, Math.PI * 2, 0, 1.05); corneaGeo.rotateX(Math.PI / 2);
   const cornea = new THREE.Mesh(corneaGeo, new THREE.MeshPhysicalMaterial({ color: 0xffffff, roughness: 0, metalness: 0, transparent: true, opacity: 0.1, clearcoat: 1, clearcoatRoughness: 0, envMapIntensity: 2.6, depthWrite: false }));
   cornea.position.z = 0.46; gaze.add(cornea);
 
   const lidMat = new THREE.MeshStandardMaterial({ color: 0x0f1012, roughness: 0.9, metalness: 0, side: THREE.DoubleSide, envMapIntensity: 0.12 });
-  const lidGeo = new THREE.SphereGeometry(1.07, 128, 48, 0, Math.PI * 2, 0, Math.PI / 2);
+  const lidGeo = new THREE.SphereGeometry(1.07, lite ? 72 : 128, lite ? 28 : 48, 0, Math.PI * 2, 0, Math.PI / 2);
   const upper = new THREE.Mesh(lidGeo, lidMat), lower = new THREE.Mesh(lidGeo, lidMat);
   lower.rotation.z = Math.PI; // the same hemisphere, flipped to cover the bottom
   head.add(upper, lower);
