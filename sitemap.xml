@@ -7,4 +7,5 @@
   <url><loc>https://hetops.dev/writing/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://hetops.dev/writing/acs-chat-migration/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://hetops.dev/writing/aws-extended-support/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://hetops.dev/work/restore-drill/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
 </urlset>
