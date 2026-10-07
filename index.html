@@ -92,6 +92,11 @@
           <a class="btn btn-gold" href="mailto:patel.x.het@gmail.com" data-umami-event="email-click" data-umami-event-from="hero"><i class="ph ph-envelope-simple" aria-hidden="true"></i>Email me</a>
           <a class="btn btn-line" href="/Het_Patel_Resume.pdf" target="_blank" rel="noopener" data-umami-event="resume-download" data-umami-event-from="hero"><i class="ph ph-file-text" aria-hidden="true"></i>Résumé (PDF)</a>
         </div>
+        <ul class="proof" aria-label="Live from production">
+          <li data-proof="up" hidden><a href="#live"><i class="led"></i><b></b> services up</a></li>
+          <li data-proof="drill" hidden><a href="#live"><i class="led"></i><b></b> backups restored <span></span></a></li>
+          <li data-live-hide hidden><a href="#work"><b data-live="npmAll"></b> npm installs last month</a></li>
+        </ul>
         <p class="eye-caption" id="eyeCaption" aria-live="polite">The eye watches what I run. Point at a tool on its inner orbit.</p>
       </div>
       <div class="eye-stage" id="eyeStage">
@@ -156,6 +161,13 @@
         <h2>Under the lens</h2>
         <p class="sub">Every tool here started as a real problem. Look closely; the screenshots are the real thing.</p>
       </header>
+      <nav class="work-index" id="workIndex" aria-label="Projects in this section">
+        <a href="#story"><img src="/assets/brand/threadvault-icon.webp" width="20" height="20" alt="">Threadvault<small>npm</small></a>
+        <a href="#dns"><img src="/assets/brand/dns-icon.svg" width="20" height="20" alt="">DNS Intelligence<small>live</small></a>
+        <a href="#radar"><img src="/assets/brand/radar-icon.webp" width="20" height="20" alt="">Retirement Radar<small>npm · live</small></a>
+        <a href="#restore-drill"><img src="/assets/brand/restoredrill-icon.webp" width="20" height="20" alt="">Restore Drill<small>live</small></a>
+        <a href="#tallybank"><img src="/assets/brand/tallybank-icon.svg" width="20" height="20" alt="">Tallybank<small>private</small></a>
+      </nav>
 
       <article class="story" id="story" data-section="story">
         <div class="story-intro">
@@ -204,7 +216,7 @@
         </div>
       </article>
 
-      <article class="case" style="--tint: 63,182,211">
+      <article class="case" id="dns" style="--tint: 63,182,211">
         <div class="case-text">
           <img class="p-icon" src="/assets/brand/dns-icon.svg" width="56" height="56" alt="">
           <h3>DNS Intelligence</h3>
@@ -255,7 +267,7 @@
         <figure class="lens"><img src="/assets/img/restore-drill-evidence.webp" width="1600" height="1050" loading="lazy" alt="Restore Drill evidence page: 3 of 3 backups restored, a verified stamp, and the four steps of the last drill: find, restore, prove, destroy."></figure>
       </article>
 
-      <article class="case flip" style="--tint: 74,120,230">
+      <article class="case flip" id="tallybank" style="--tint: 74,120,230">
         <div class="case-text">
           <img class="p-icon" src="/assets/brand/tallybank-icon.svg" width="56" height="56" alt="">
           <h3>Tallybank</h3>
@@ -369,7 +381,7 @@
         <div class="wire-grid">
           <div class="wnode w-visit"><b>Visitors</b><small>HTTPS to *.hetops.dev</small></div>
           <div class="wnode w-dns"><b>Cloudflare DNS</b><small>every hostname points at one server</small></div>
-          <div class="wlink w-a1" aria-hidden="true"><span>HTTPS</span></div>
+          <div class="wlink w-a1" aria-hidden="true"><i></i><span>HTTPS</span></div>
           <div class="wbox w-host">
             <p class="wbox-k">One Oracle Cloud VM · Coolify · TLS at the proxy</p>
             <ul>
@@ -382,10 +394,10 @@
               <li class="w-drill"><i class="led"></i>Restore Drill<small>restores every 6 h</small></li>
             </ul>
           </div>
-          <div class="wlink w-a2" aria-hidden="true"><span>backups, daily</span></div>
-          <div class="wlink w-a3 back" aria-hidden="true"><span>read-only restore</span></div>
+          <div class="wlink w-a2" aria-hidden="true"><i></i><span>backups, daily</span></div>
+          <div class="wlink w-a3 back" aria-hidden="true"><i></i><span>read-only restore</span></div>
           <div class="wnode w-r2"><b>Cloudflare R2</b><small>offsite copies of every database</small></div>
-          <div class="wlink w-a4 back" aria-hidden="true"><span>deploy · watchdog</span></div>
+          <div class="wlink w-a4 back" aria-hidden="true"><i></i><span>deploy · watchdog</span></div>
           <div class="wnode w-gh"><b>GitHub</b><small>CI on every PR; Actions checks Status every 10 min from outside</small></div>
         </div>
         <p class="sr">Visitors reach every HetOps hostname over HTTPS through Cloudflare DNS, all on one Oracle Cloud VM run by Coolify. Each database is backed up daily to Cloudflare R2, Restore Drill restores those backups with a read-only key every six hours, Uptime Kuma probes every service every minute, and a GitHub Actions watchdog checks the status page every ten minutes from outside.</p>
@@ -535,13 +547,44 @@
   </main>
 
   <footer class="footer wrap">
-    <span class="brand"><svg class="brand-mark" aria-hidden="true" viewBox="10 22 80 56"><rect x="10" y="22" width="24" height="56" rx="5"/><rect x="66" y="22" width="24" height="56" rx="5"/><rect x="33" y="46" width="34" height="8"/><circle cx="50" cy="50" r="11"/></svg><span>HetOps</span></span>
-    <nav aria-label="HetOps tools">
-      <a href="https://dns.hetops.dev">DNS</a>
-      <a href="https://tools.hetops.dev">Tools</a>
-      <a href="https://status.hetops.dev">Status</a>
-    </nav>
-    <span class="copyright">© 2026 Het Patel</span>
+    <div class="foot-top">
+      <div class="foot-brand">
+        <span class="brand"><svg class="brand-mark" aria-hidden="true" viewBox="10 22 80 56"><rect x="10" y="22" width="24" height="56" rx="5"/><rect x="66" y="22" width="24" height="56" rx="5"/><rect x="33" y="46" width="34" height="8"/><circle cx="50" cy="50" r="11"/></svg><span>HetOps</span></span>
+        <p>Het Patel, DevOps engineer in Mumbai. I turn production incidents into tools.</p>
+        <a class="watch-pill" href="https://status.hetops.dev" target="_blank" rel="noopener" data-watch hidden data-umami-event="outbound" data-umami-event-target="status-footer"><i></i><span></span></a>
+      </div>
+      <nav aria-label="Products">
+        <h2>Products</h2>
+        <a href="https://dns.hetops.dev" target="_blank" rel="noopener">DNS Intelligence</a>
+        <a href="https://radar.hetops.dev" target="_blank" rel="noopener">Radar Cloud</a>
+        <a href="https://drill.hetops.dev" target="_blank" rel="noopener">Restore Drill</a>
+        <a href="https://status.hetops.dev" target="_blank" rel="noopener">Status</a>
+        <a href="https://tools.hetops.dev" target="_blank" rel="noopener">Dev Toolkit</a>
+        <a href="https://www.npmjs.com/package/threadvault" target="_blank" rel="noopener">Threadvault on npm</a>
+        <a href="https://www.npmjs.com/package/retirement-radar" target="_blank" rel="noopener">Retirement Radar on npm</a>
+      </nav>
+      <nav aria-label="Case studies">
+        <h2>Case studies</h2>
+        <a href="/work/threadvault/">Threadvault</a>
+        <a href="/work/dns-intelligence/">DNS Intelligence</a>
+        <a href="/work/retirement-radar/">Retirement Radar</a>
+        <a href="/work/radar-cloud/">Radar Cloud</a>
+        <a href="/work/restore-drill/">Restore Drill</a>
+        <a href="/writing/">Writing</a>
+      </nav>
+      <nav aria-label="Elsewhere">
+        <h2>Elsewhere</h2>
+        <a href="https://github.com/Het101" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.linkedin.com/in/het11/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://medium.com/@het101" target="_blank" rel="noopener">Medium</a>
+        <a href="/Het_Patel_Resume.pdf" target="_blank" rel="noopener" data-umami-event="resume-download" data-umami-event-from="footer">Résumé (PDF)</a>
+        <a href="mailto:patel.x.het@gmail.com" data-umami-event="email-click" data-umami-event-from="footer">patel.x.het@gmail.com</a>
+      </nav>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Het Patel</span>
+      <span>Hand-written HTML, CSS and JavaScript, served by nginx from the server in the diagram above.</span>
+    </div>
   </footer>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
