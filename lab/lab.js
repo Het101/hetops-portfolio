@@ -146,6 +146,9 @@ function renderPods(snap) {
         n = { g, title: svgEl('title', {}, g), circle: svgEl('circle', { r: 16 }, g) };
         svgEl('text', { class: 'lab-pod-app', y: 3.5, 'text-anchor': 'middle' }, g).textContent = shortApp(p.app);
         nodes.set(p.name, n);
+        // Born at the pupil, then slides out to its ring; never from the SVG's top-left corner.
+        g.style.transform = `translate(${C}px, ${C}px)`;
+        g.getBoundingClientRect();
       }
       n.g.style.transform = `translate(${p.x}px, ${p.y}px)`;
       n.x = p.x; n.y = p.y; n.app = p.app;
@@ -190,6 +193,7 @@ function onProbes(batch) {
     const pt = (r) => `translate(${(C + r * Math.cos(a)).toFixed(1)}px, ${(C + r * Math.sin(a)).toFixed(1)}px)`;
     const dot = svgEl('circle', { r: 4, class: ok ? 'lab-ok' : 'lab-down' }, dotsG);
     dot.style.opacity = 0;
+    dot.style.transform = pt(46); // while it waits for its turn it sits, hidden, at the pupil, not at (0, 0)
     const anim = dot.animate(
       ok ? [{ transform: pt(46), opacity: 1 }, { transform: pt(end), opacity: 1 }]
         : [{ transform: pt(46), opacity: 1 }, { transform: pt(end), opacity: 0 }],
