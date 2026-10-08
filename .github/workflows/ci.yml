@@ -90,7 +90,7 @@ jobs:
               echo "::error::$p is in the repo but the image returns $code (missing from the Dockerfile COPY?)"
               exit 1
             fi
-          done < "$RUNNER_TEMP/paths"
+          done < <(cat "$RUNNER_TEMP/paths"; echo /lab/lab.js; echo /lab/core.js)   # the lab page loads these two as modules
           echo "image serves the page and every local path"
 
           # The headers are the site's own security posture; a DevOps portfolio that

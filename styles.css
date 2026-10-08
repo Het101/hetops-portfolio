@@ -1055,6 +1055,7 @@ html.intro-landed .hero-copy > :nth-child(4) { transition-delay: 0.36s; }
 .lab-pupil { fill: var(--ink); stroke: var(--line-2); stroke-width: 1.2; transform-box: fill-box; transform-origin: center; transition: transform 0.9s var(--ease); }
 .lab-busy .lab-pupil { transform: scale(1.22); }
 .lab-pupil-label { font: 500 11px var(--mono); fill: var(--text-3); }
+.lab-stage-clock { margin-top: 14px; text-align: center; font-family: var(--mono); font-size: 14px; color: var(--text); }
 .lab-argo-state { margin-top: 18px; text-align: center; font-size: 15px; font-weight: 600; color: var(--text-2); }
 .lab-probe-line { margin-top: 4px; text-align: center; font: 13px/1.5 var(--mono); color: var(--text-3); }
 .lab-probe-line.lab-down { color: var(--err); }

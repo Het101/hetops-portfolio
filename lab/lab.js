@@ -13,6 +13,7 @@ const $ = (s, root = document) => root.querySelector(s);
 const scene = $('#lab-scene');
 const podsG = $('.lab-pods', scene), dotsG = $('.lab-dots', scene), arc = $('.lab-arc', scene);
 const modeEl = $('#lab-mode'), feed = $('#lab-feed'), log = $('#lab-incidents .lab-log');
+const stageClock = $('#lab-stage-clock'); // a copy of the clock under the scene, so it stays in view while you scroll the buttons
 const timerEl = $('#lab-timer'), targetEl = $('#lab-target'), verdictEl = $('#lab-verdict');
 
 const svgEl = (tag, attrs, parent) => {
@@ -57,7 +58,8 @@ function startClock(exp) {
   targetEl.hidden = !a;
   verdictEl.hidden = true;
   scene.classList.add('lab-busy');
-  const draw = () => { timerEl.textContent = formatMs(Math.max(0, Date.now() - skew - exp.startedAt)); };
+  const draw = () => { timerEl.textContent = formatMs(Math.max(0, Date.now() - skew - exp.startedAt)); stageClock.textContent = `${exp.title || exp.action} · ${timerEl.textContent}`; };
+  stageClock.hidden = false;
   draw();
   if (reduce) tick = setInterval(draw, 1000);
   else { const loop = () => { draw(); tick = requestAnimationFrame(loop); }; tick = requestAnimationFrame(loop); }
@@ -76,6 +78,7 @@ function finishClock(exp) {
   scene.classList.remove('lab-busy');
   const ms = exp.recoveryMs ?? (exp.endedAt ? exp.endedAt - exp.startedAt : Date.now() - skew - exp.startedAt);
   timerEl.textContent = formatMs(ms);
+  stageClock.hidden = true;
   const a = ACTIONS[exp.action];
   if (a) {
     const v = verdict(exp);
@@ -282,6 +285,7 @@ let prev = null, live = false;
 function enterSim(es) {
   es.close();
   $('#lab-sim').hidden = false;
+  $('.lab-lede').textContent = 'The live cluster on my server cannot be reached right now, so here are four of the failures as a simulation in your browser. Come back later to break the real one.';
   setMode('sim', 'Simulation');
   track('lab-sim');
 }

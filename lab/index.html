@@ -69,6 +69,7 @@
           <circle class="lab-pupil" cx="360" cy="360" r="46"/>
           <text class="lab-pupil-label" x="360" y="424" text-anchor="middle">ingress</text>
         </svg>
+        <p id="lab-stage-clock" class="lab-stage-clock" aria-hidden="true" hidden></p>
         <p id="lab-argo-state" class="lab-argo-state">Argo CD: Synced · Healthy</p>
         <p id="lab-probe-line" class="lab-probe-line">Waiting for the first requests…</p>
       </div>
@@ -110,7 +111,7 @@
     <section class="chaos wrap" id="chaos" data-section="chaos" aria-labelledby="chaos-h">
       <header class="head">
         <h2 id="chaos-h">Break production</h2>
-        <p class="sub">Simulation: the live lab is offline right now, so this runs the same scenarios in your browser.</p>
+        <p class="sub">A simulation, running in your browser. Pick a failure and watch it get noticed, contained and healed.</p>
       </header>
       <div class="chaos-grid">
         <div class="chaos-board">
