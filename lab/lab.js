@@ -1,6 +1,6 @@
 // hetops.dev/lab: a live view of the real chaos lab, or the in-browser simulation when the lab is offline.
 // Network data only ever reaches the page through textContent and setAttribute, never innerHTML.
-import { GROUPS, ACTIONS, tone, livePods, ringLayout, diffSnapshots, probeSummary, verdict, formatMs, apiBase } from './core.js';
+import { GROUPS, ACTIONS, tone, livePods, ringLayout, diffSnapshots, probeSummary, verdict, formatMs, refusalText, apiBase } from './core.js';
 
 const API = apiBase(location.search);
 const NS = 'http://www.w3.org/2000/svg';
@@ -85,6 +85,7 @@ function finishClock(exp) {
     verdictEl.hidden = false;
   }
   addIncident(exp, true);
+  if (enabled) say('');
   setButtons();
 }
 
@@ -222,9 +223,58 @@ function renderActions(list) {
   }
 }
 
+// A button works only with a fresh Turnstile token, no experiment running, the kill switch on, and no press in flight.
+let token = null, enabled = false, pending = false;
+const say = (text) => { $('#lab-say').textContent = text; };
+
 function setButtons() {
-  for (const b of buttons) b.disabled = true; // Task 5 wires them up
+  const off = !token || !!running || !enabled || pending;
+  for (const b of buttons) b.disabled = off;
 }
+
+function loadTurnstile() {
+  const el = $('#lab-check');
+  const s = document.createElement('script');
+  s.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+  s.async = true;
+  s.onload = () => window.turnstile.render('#lab-check', {
+    sitekey: el.dataset.sitekey,
+    appearance: 'interaction-only',
+    callback: (t) => { token = t; setButtons(); },
+    'expired-callback': () => { token = null; setButtons(); },
+  });
+  s.onerror = () => say('The human check could not load, so the buttons are off. You can still watch the cluster.');
+  document.head.append(s);
+}
+
+async function press(id) {
+  if (!token || pending) return;
+  pending = true;
+  setButtons();
+  say('');
+  track('lab-break', { action: id });
+  try {
+    const r = await fetch(API + '/chaos/actions/' + encodeURIComponent(id), {
+      method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ turnstileToken: token }),
+    });
+    if (r.status !== 202) {
+      const body = await r.json().catch(() => ({}));
+      say(refusalText(body.reason, body.retryAfterMs));
+    }
+  } catch {
+    say(refusalText());
+  } finally {
+    token = null;
+    pending = false;
+    if (window.turnstile) window.turnstile.reset('#lab-check');
+    setButtons();
+  }
+}
+
+$('#lab-actions').addEventListener('click', (e) => {
+  const b = e.target.closest('button.lab-act');
+  if (b && !b.disabled) press(b.dataset.action);
+});
 
 // ── Connection ─────────────────────────────────────────────────
 let prev = null, live = false;
@@ -251,9 +301,12 @@ async function enterLive() {
   if (actions.status === 'fulfilled' && Array.isArray(actions.value)) renderActions(actions.value);
   if (incidents.status === 'fulfilled' && Array.isArray(incidents.value)) incidents.value.slice(0, 10).forEach((x) => addIncident(x, false));
   if (status.status === 'fulfilled' && status.value) {
+    enabled = status.value.enabled === true;
     const exp = status.value.experiment;
     if (exp && exp.status === 'running' && !running) startClock(exp);
   }
+  if (!enabled) say(refusalText('disabled'));
+  else loadTurnstile();
   setButtons();
 }
 

@@ -26,7 +26,7 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 // A rough imitation of each healing, enough to see every state the page draws.
 async function play(id, exp) {
   const victim = state.pods.find((p) => p.app === 'api');
-  if (id === 'nuke-namespace') { state.exists = false; state.argo = 'OutOfSync'; await wait(6000); state.exists = true; }
+  if (id === 'nuke-namespace') { state.exists = false; state.argo = 'OutOfSync'; await wait(6000); state.exists = true; state.argo = 'Synced'; }
   else if (['scale-zero', 'delete-web', 'delete-api-svc', 'bad-release', 'delete-secret', 'rogue-netpol'].includes(id)) {
     if (id === 'scale-zero' || id === 'delete-web') state.pods = state.pods.filter((p) => p.app !== 'web');
     state.argo = 'OutOfSync'; await wait(4000);
