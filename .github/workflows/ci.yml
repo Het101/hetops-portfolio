@@ -58,6 +58,12 @@ jobs:
       - name: app.js parses
         run: node --check app.js
 
+      - name: lab console logic
+        run: |
+          node --check lab/core.js
+          node --check lab/lab.js
+          node --test tests/*.test.mjs
+
       # The Dockerfile copies files by name, so a new file that the HTML links
       # to can exist in the repo and still be missing from the image. Build the
       # image Coolify will build, serve it, and ask it for the page and for
@@ -84,7 +90,7 @@ jobs:
               echo "::error::$p is in the repo but the image returns $code (missing from the Dockerfile COPY?)"
               exit 1
             fi
-          done < "$RUNNER_TEMP/paths"
+          done < <(cat "$RUNNER_TEMP/paths"; echo /lab/lab.js; echo /lab/core.js)   # the lab page loads these two as modules
           echo "image serves the page and every local path"
 
           # The headers are the site's own security posture; a DevOps portfolio that
