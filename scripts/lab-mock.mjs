@@ -5,7 +5,7 @@ const ids = ['kill-pod', 'evict-api', 'delete-api-pods', 'crash', 'leak', 'hang'
   'bad-release', 'delete-secret', 'rogue-netpol', 'kill-postgres', 'traffic-spike', 'nuke-namespace'];
 const titles = ['Kill a pod', 'Evict every API pod', 'Delete every API pod', 'Crash the process', 'Memory leak', 'Hang the app',
   'Scale the web tier to 0', 'Delete the web Deployment', 'Delete the api Service', 'Ship a bad release by hand',
-  'Delete the database Secret', 'Inject a rogue deny-all NetworkPolicy', 'Kill Postgres', 'Traffic spike', 'Nuke the clinic namespace'];
+  'Delete the database Secret', 'Delete the api network allow rule', 'Kill Postgres', 'Traffic spike', 'Nuke the clinic namespace'];
 const heavy = new Set(['traffic-spike', 'nuke-namespace']);
 
 let n = 0;
