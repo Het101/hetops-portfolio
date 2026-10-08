@@ -58,6 +58,11 @@ jobs:
       - name: app.js parses
         run: node --check app.js
 
+      - name: lab console logic
+        run: |
+          node --check lab/core.js
+          node --test tests/*.test.mjs
+
       # The Dockerfile copies files by name, so a new file that the HTML links
       # to can exist in the repo and still be missing from the image. Build the
       # image Coolify will build, serve it, and ask it for the page and for
