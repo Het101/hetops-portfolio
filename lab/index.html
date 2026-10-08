@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Break my Kubernetes lab · Het Patel</title>
+  <meta name="description" content="A real Kubernetes cluster you can break. Pick a failure and watch Kubernetes and Argo CD heal it, live.">
+  <link rel="canonical" href="https://hetops.dev/lab/">
+  <meta name="theme-color" content="#08090a">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://hetops.dev/lab/">
+  <meta property="og:title" content="Break my Kubernetes lab · Het Patel">
+  <meta property="og:description" content="A real Kubernetes cluster you can break. Pick a failure and watch Kubernetes and Argo CD heal it, live.">
+  <meta property="og:image" content="https://hetops.dev/assets/og/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:image" content="https://hetops.dev/assets/og/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preload" href="/assets/fonts/Archivo.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/styles.css">
+  <script defer src="https://analytics.hetops.dev/script.js" data-website-id="3b6004b2-abef-471c-a807-fdacd7981321" data-domains="hetops.dev"></script>
+</head>
+<body class="cs">
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="nav scrolled">
+    <a class="brand" href="/" aria-label="HetOps home"><svg class="brand-mark" aria-hidden="true" viewBox="10 22 80 56"><rect x="10" y="22" width="24" height="56" rx="5"/><rect x="66" y="22" width="24" height="56" rx="5"/><rect x="33" y="46" width="34" height="8"/><circle cx="50" cy="50" r="11"/></svg><span>HetOps</span></a>
+    <nav class="nav-links" aria-label="Case studies">
+      <a href="/work/threadvault/">Threadvault</a>
+      <a href="/work/dns-intelligence/">DNS Intelligence</a>
+      <a href="/work/retirement-radar/">Retirement Radar</a>
+      <a href="/work/radar-cloud/">Radar Cloud</a>
+      <a href="/work/restore-drill/">Restore Drill</a>
+    </nav>
+    <div class="nav-actions">
+      <a class="nav-cv" href="/Het_Patel_Resume.pdf" target="_blank" rel="noopener" data-umami-event="resume-download" data-umami-event-from="lab">Résumé</a>
+    </div>
+  </header>
+  <main id="main" class="lab-main wrap">
+    <section class="lab-hero">
+      <h1>Break my Kubernetes lab</h1>
+      <p class="lab-lede">A real cluster on my server, not a simulation. Pick a failure below and watch Kubernetes and Argo CD put it back. Every request you see is real.</p>
+      <p id="lab-mode" class="lab-mode" data-state="wait" aria-live="polite">Connecting…</p>
+    </section>
+
+    <section id="lab-live" class="lab-live" hidden aria-label="The live cluster">
+      <div class="lab-stage">
+        <svg id="lab-scene" class="lab-scene" viewBox="0 0 720 720" role="img" aria-label="Live cluster: namespaces as rings, pods as nodes, requests as dots">
+          <defs>
+            <path id="lab-path-data" d="M210 360 A150 150 0 1 1 510 360 A150 150 0 1 1 210 360"/>
+            <path id="lab-path-clinic" d="M90 360 A270 270 0 1 1 630 360 A270 270 0 1 1 90 360"/>
+          </defs>
+          <g class="lab-iris" aria-hidden="true"></g>
+          <g class="lab-rings">
+            <circle class="lab-ring" data-ns="clinic-data" cx="360" cy="360" r="150"/>
+            <circle class="lab-ring" data-ns="clinic" cx="360" cy="360" r="270"/>
+            <text class="lab-ring-label" data-ns="clinic-data" dy="28"><textPath href="#lab-path-data" startOffset="6%">clinic-data</textPath></text>
+            <text class="lab-ring-label" data-ns="clinic" dy="28"><textPath href="#lab-path-clinic" startOffset="10%">clinic</textPath></text>
+          </g>
+          <g class="lab-argo">
+            <circle class="lab-argo-ticks" cx="360" cy="360" r="312" aria-hidden="true"/>
+            <circle class="lab-arc lab-synced" cx="360" cy="360" r="300"/>
+            <path class="lab-callout" d="M576 576 L606 606" aria-hidden="true"/>
+            <text class="lab-argo-label" x="612" y="626">Argo CD</text>
+          </g>
+          <g class="lab-pods"></g>
+          <g class="lab-dots" aria-hidden="true"></g>
+          <circle class="lab-pupil" cx="360" cy="360" r="46"/>
+          <text class="lab-pupil-label" x="360" y="424" text-anchor="middle">ingress</text>
+        </svg>
+        <p id="lab-argo-state" class="lab-argo-state">Argo CD: Synced · Healthy</p>
+        <p id="lab-probe-line" class="lab-probe-line">Waiting for the first requests…</p>
+      </div>
+
+      <div class="lab-side">
+        <div id="lab-clock" class="lab-clock">
+          <p class="lab-clock-title">Nothing is broken right now.</p>
+          <p id="lab-timer" class="lab-timer" role="timer">0.0 s</p>
+          <p class="lab-clock-meta"><span id="lab-target" class="lab-target" hidden>target 30 s</span> <span id="lab-verdict" class="lab-verdict" hidden></span></p>
+        </div>
+
+        <div id="lab-actions" class="lab-actions">
+          <h2>Break something</h2>
+          <div class="lab-groups"></div>
+          <div id="lab-check" class="lab-check" data-sitekey="1x00000000000000000000AA"></div>
+          <p id="lab-say" class="lab-say" aria-live="polite"></p>
+        </div>
+
+        <div id="lab-story" class="lab-story">
+          <h2>What just happened</h2>
+          <p class="lab-explain">Pick a failure. This is where you will read what the cluster did about it.</p>
+          <details class="lab-kubectl" hidden>
+            <summary>The kubectl an engineer would run</summary>
+            <code></code>
+          </details>
+          <ol id="lab-feed" class="lab-feed" aria-live="polite" aria-label="Cluster events, newest first"></ol>
+        </div>
+
+        <div id="lab-incidents" class="lab-incidents">
+          <h2>Recent experiments</h2>
+          <ol class="lab-log"></ol>
+          <p class="lab-empty">None yet. Yours could be the first.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="lab-sim" class="lab-sim" hidden>
+    <!-- Break production: a simulation visitors can break and watch heal -->
+    <section class="chaos wrap" id="chaos" data-section="chaos" aria-labelledby="chaos-h">
+      <header class="head">
+        <h2 id="chaos-h">Break production</h2>
+        <p class="sub">Simulation: the live lab is offline right now, so this runs the same scenarios in your browser.</p>
+      </header>
+      <div class="chaos-grid">
+        <div class="chaos-board">
+          <svg viewBox="0 50 720 280" role="img" aria-label="Simulated system: users, load balancer, pods and database, with requests flowing"></svg>
+          <dl class="chaos-metrics">
+            <div><dt>Availability</dt><dd data-m="avail">100.00%</dd></div>
+            <div><dt>Error rate</dt><dd data-m="err">0.0%</dd></div>
+            <div><dt>p95 latency</dt><dd data-m="lat">80 ms</dd></div>
+            <div><dt>Incident clock</dt><dd data-m="mttr">0.0s</dd></div>
+          </dl>
+        </div>
+        <div class="chaos-side">
+          <div class="chaos-btns">
+            <button class="chaos-btn" type="button" data-break="pod"><i class="ph ph-skull" aria-hidden="true"></i>Kill a pod</button>
+            <button class="chaos-btn" type="button" data-break="spike"><i class="ph ph-trend-up" aria-hidden="true"></i>Traffic spike</button>
+            <button class="chaos-btn" type="button" data-break="cert"><i class="ph ph-lock-key-open" aria-hidden="true"></i>Expire the TLS cert</button>
+            <button class="chaos-btn" type="button" data-break="release"><i class="ph ph-rocket-launch" aria-hidden="true"></i>Ship a bad release</button>
+          </div>
+          <ol class="chaos-log" aria-live="polite" aria-label="Incident log"></ol>
+        </div>
+      </div>
+    </section>
+    </section>
+
+    <section class="cs-next">
+      <h2>Got a production problem worth solving?</h2>
+      <div class="ctas">
+        <a class="btn btn-gold" href="mailto:patel.x.het@gmail.com" data-umami-event="email-click" data-umami-event-from="lab"><i class="ph ph-envelope-simple" aria-hidden="true"></i>Email me</a>
+        <a class="btn btn-line" href="/#work"><i class="ph ph-arrow-left" aria-hidden="true"></i>All work</a>
+      </div>
+    </section>
+  </main>
+  <footer class="footer wrap">
+    <span class="brand"><svg class="brand-mark" aria-hidden="true" viewBox="10 22 80 56"><rect x="10" y="22" width="24" height="56" rx="5"/><rect x="66" y="22" width="24" height="56" rx="5"/><rect x="33" y="46" width="34" height="8"/><circle cx="50" cy="50" r="11"/></svg><span>HetOps</span></span>
+    <nav aria-label="HetOps tools"><a href="https://dns.hetops.dev">DNS</a><a href="https://tools.hetops.dev">Tools</a><a href="https://status.hetops.dev">Status</a></nav>
+    <span class="copyright">© 2026 Het Patel</span>
+  </footer>
+  <script src="/chaos.js" defer></script>
+  <script type="module" src="/lab/lab.js"></script>
+</body>
+</html>

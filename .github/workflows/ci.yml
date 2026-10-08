@@ -61,6 +61,7 @@ jobs:
       - name: lab console logic
         run: |
           node --check lab/core.js
+          node --check lab/lab.js
           node --test tests/*.test.mjs
 
       # The Dockerfile copies files by name, so a new file that the HTML links
