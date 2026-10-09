@@ -1048,6 +1048,7 @@ html.intro-landed .hero-copy > :nth-child(4) { transition-delay: 0.36s; }
 .lab-pod circle.lab-ok { fill: var(--moss); }
 .lab-pod circle.lab-starting { fill: var(--ink); stroke: var(--gold); stroke-width: 1.5; }
 .lab-pod circle.lab-down { fill: var(--err); }
+.lab-pod circle.lab-ping { fill: none; stroke: var(--moss-text); stroke-width: 2; pointer-events: none; }
 .lab-pod-app { font: 600 9.5px var(--mono); fill: var(--ink); pointer-events: none; }
 .lab-pod[data-tone="starting"] .lab-pod-app { fill: var(--text-2); }
 .lab-dots circle.lab-ok { fill: var(--moss-text); }
