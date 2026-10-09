@@ -303,8 +303,25 @@ function renderActions(list) {
 let token = null, enabled = false, pending = false;
 const say = (text) => { $('#lab-say').textContent = text; };
 
+// Each visitor waits 60 s between experiments (chaos-api enforces it); show the countdown where it is seen first.
+let waitUntil = 0, waitTick = 0;
+function startWait(ms) {
+  waitUntil = Date.now() + ms;
+  const el = $('#lab-wait');
+  const draw = () => {
+    const left = Math.ceil((waitUntil - Date.now()) / 1000);
+    if (left <= 0) { clearInterval(waitTick); el.hidden = true; setButtons(); return; }
+    el.textContent = `Your next experiment in ${Math.floor(left / 60)}:${String(left % 60).padStart(2, '0')}`;
+  };
+  clearInterval(waitTick);
+  el.hidden = false;
+  draw();
+  waitTick = setInterval(draw, 1000);
+  setButtons();
+}
+
 function setButtons() {
-  const off = !token || !!running || !enabled || pending;
+  const off = !token || !!running || !enabled || pending || Date.now() < waitUntil;
   for (const b of buttons) b.disabled = off;
 }
 
@@ -333,9 +350,11 @@ async function press(id) {
     const r = await fetch(API + '/chaos/actions/' + encodeURIComponent(id), {
       method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ turnstileToken: token }),
     });
-    if (r.status !== 202) {
+    if (r.status === 202) startWait(60_000);
+    else {
       const body = await r.json().catch(() => ({}));
-      say(refusalText(body.reason, body.retryAfterMs));
+      if (body.reason === 'cooldown') startWait(body.retryAfterMs);
+      else say(refusalText(body.reason, body.retryAfterMs));
     }
   } catch {
     say(refusalText());
