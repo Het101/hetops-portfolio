@@ -176,31 +176,46 @@ function narrate(lines) {
 // ── Requests ───────────────────────────────────────────────────
 const shortPod = (name) => { const s = name.split('-'); return s.length > 2 ? `${s[0]}-…${s[s.length - 1]}` : name; };
 
+// Ready api pods right now: the ones a request can actually reach.
+const readyApiPods = () => [...nodes.values()].filter((n) => n.app === 'api' && n.g.dataset.tone === 'ok').length;
+
 function onProbes(batch) {
   if (!Array.isArray(batch)) return;
   const s = probeSummary(batch);
   const line = $('#lab-probe-line');
-  line.textContent = `Last second: ${s.ok} of ${batch.length} requests answered` + (s.pods.length ? ` (${s.pods.map(shortPod).join(', ')})` : '');
+  // Only api pods serve /api/whoami; web, worker and postgres never get these requests, so they get no dots.
+  line.textContent = `Last second: ${s.ok} of ${batch.length} requests to /api answered`
+    + (s.pods.length ? `, by ${s.pods.length} of the ${readyApiPods()} api pods` : '');
+  line.title = s.pods.join(', '); // hover for the pod names
   line.classList.toggle('lab-down', s.failed > 0);
   if (reduce || document.hidden) return;
-  batch.forEach((p, i) => {
-    const n = p.pod && nodes.get(p.pod);
-    // A failed request heads for the outer ring and dies 40% of the way out.
-    const a = n ? Math.atan2(n.y - C, n.x - C) : (i / batch.length) * Math.PI * 2 - Math.PI / 2;
-    const dist = n ? Math.hypot(n.x - C, n.y - C) - 18 : 270;
-    const ok = p.ok && n;
-    const end = ok ? dist : 46 + (dist - 46) * 0.4;
-    const pt = (r) => `translate(${(C + r * Math.cos(a)).toFixed(1)}px, ${(C + r * Math.sin(a)).toFixed(1)}px)`;
-    const dot = svgEl('circle', { r: 4, class: ok ? 'lab-ok' : 'lab-down' }, dotsG);
-    dot.style.opacity = 0;
-    dot.style.transform = pt(46); // while it waits for its turn it sits, hidden, at the pupil, not at (0, 0)
-    const anim = dot.animate(
-      ok ? [{ transform: pt(46), opacity: 1 }, { transform: pt(end), opacity: 1 }]
-        : [{ transform: pt(46), opacity: 1 }, { transform: pt(end), opacity: 0 }],
-      { duration: ok ? 650 : 520, delay: i * 200, easing: 'cubic-bezier(0.4, 0, 0.2, 1)' });
-    anim.onfinish = () => dot.remove();
-    anim.oncancel = () => dot.remove();
-  });
+  // One dot every 200 ms, aimed when it launches: pods may have moved (or been added) since the batch arrived.
+  batch.forEach((p, i) => setTimeout(() => fly(p, i, batch.length), i * 200));
+}
+
+function fly(p, i, count) {
+  if (document.hidden) return;
+  const n = p.pod && nodes.get(p.pod);
+  const ok = p.ok && n;
+  // A failed request heads for the outer ring and dies 40% of the way out.
+  const a = n ? Math.atan2(n.y - C, n.x - C) : (i / count) * Math.PI * 2 - Math.PI / 2;
+  const dist = n ? Math.hypot(n.x - C, n.y - C) - 18 : 270;
+  const end = ok ? dist : 46 + (dist - 46) * 0.4;
+  const pt = (r) => `translate(${(C + r * Math.cos(a)).toFixed(1)}px, ${(C + r * Math.sin(a)).toFixed(1)}px)`;
+  const dot = svgEl('circle', { r: 4, class: ok ? 'lab-ok' : 'lab-down' }, dotsG);
+  dot.style.transform = pt(46);
+  const anim = dot.animate(
+    [{ transform: pt(46), opacity: 1 }, { transform: pt(end), opacity: ok ? 1 : 0 }],
+    { duration: ok ? 650 : 520, easing: 'cubic-bezier(0.4, 0, 0.2, 1)' });
+  anim.onfinish = () => { dot.remove(); if (ok && n.g.isConnected) ping(n); };
+  anim.oncancel = () => dot.remove();
+}
+
+// The pod that answered gives a small ring: you can see which pod took the request.
+function ping(n) {
+  const ring = svgEl('circle', { r: 16, class: 'lab-ping' }, n.g);
+  ring.animate([{ transform: 'scale(1)', opacity: 0.9 }, { transform: 'scale(1.7)', opacity: 0 }], { duration: 450, easing: 'ease-out' })
+    .onfinish = () => ring.remove();
 }
 
 // ── Buttons ────────────────────────────────────────────────────
