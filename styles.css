@@ -1102,6 +1102,7 @@ html.intro-landed .hero-copy > :nth-child(4) { transition-delay: 0.36s; }
 .lab-heavy { font: 500 11px var(--mono); color: var(--text-3); }
 .lab-check { margin-top: 16px; }
 .lab-check:empty, .lab-say:empty { display: none; }
+.lab-wait { display: inline-block; margin: 0 0 18px; padding: 7px 16px; border: 1px solid var(--line-2); border-radius: 999px; font: 600 14px/1.2 var(--sans); color: var(--text); font-variant-numeric: tabular-nums; }
 .lab-say { margin-top: 16px; font-size: 15px; color: var(--text-2); max-width: 46ch; }
 
 .lab-explain { margin-top: 14px; font-size: 16px; color: var(--text-2); max-width: 58ch; }
