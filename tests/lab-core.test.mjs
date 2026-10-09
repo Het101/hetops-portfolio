@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { ACTIONS, GROUPS, tone, livePods, ringLayout, diffSnapshots, refusalText, formatMs, verdict, apiBase,
-  layoutOf, tierOf, tiers, placePods, planVisit, visitLine, route, cut } from '../lab/core.js';
+  tierOf, hueOf, tiers, placePods, planVisit, visitLine, route, cut } from '../lab/core.js';
 
 const IDS = ['kill-pod', 'evict-api', 'delete-api-pods', 'crash', 'leak', 'hang', 'scale-zero', 'delete-web', 'delete-api-svc',
   'bad-release', 'delete-secret', 'rogue-netpol', 'kill-postgres', 'traffic-spike', 'nuke-namespace'];
@@ -84,30 +84,21 @@ test('only a localhost api override is honoured', () => {
   assert.equal(apiBase('?api=https://evil.example'), 'https://lab.hetops.dev');
 });
 
-test('layout comes from ?layout=, default a', () => {
-  assert.equal(layoutOf(''), 'a');
-  assert.equal(layoutOf('?layout=c&api=x'), 'c');
-  assert.equal(layoutOf('?layout=zzz'), 'a');
-});
-
 test('pods go by tier, not namespace; postgres leads the data tier', () => {
-  assert.deepEqual(['web', 'api', 'worker', 'postgres', 'whatever'].map((app) => tierOf({ app })), ['web', 'api', 'data', 'data', 'api']);
+  const apps = ['web', 'api', 'worker', 'nightly-report', 'postgres', 'whatever'];
+  assert.deepEqual(apps.map((app) => tierOf({ app })), ['web', 'api', 'data', 'data', 'data', 'api']);
+  assert.deepEqual(apps.map((app) => hueOf({ app })), ['web', 'api', 'jobs', 'jobs', 'data', 'api']);
   const t = tiers({ clinic: { exists: true, pods: [pod('worker-a'), pod('web-a'), pod('api-a'), pod('migrate-x', { state: 'Completed' })] },
     'clinic-data': { exists: true, pods: [pod('postgres-0')] } });
   assert.deepEqual([t.web, t.api, t.data].map((l) => l.map((p) => p.name)), [['web-a'], ['api-a'], ['postgres-0', 'worker-a']]);
   assert.deepEqual(tiers({ clinic: { exists: false, pods: [] }, 'clinic-data': { exists: true, pods: [] } }).gone, { web: true, api: true, data: false });
 });
 
-test('placement: layout a rings out from the pupil, layout c puts postgres in it', () => {
+test('placement: rings out from the pupil, postgres at the bottom with the worker beside it', () => {
   const t = { web: [pod('web-a'), pod('web-b')], api: [pod('api-a')], data: [pod('postgres-0'), pod('worker-a')] };
-  const c = { cx: 0, cy: 0 };
-  const a = Object.fromEntries(placePods(t, { id: 'a', rings: { web: 100, api: 200, data: 300 } }, c).map((p) => [p.name, p]));
+  const a = Object.fromEntries(placePods(t, { web: 100, api: 200, data: 300 }, { cx: 0, cy: 0 }).map((p) => [p.name, p]));
   assert.deepEqual([a['web-a'].x, a['web-a'].y, a['api-a'].y, a['postgres-0'].y], [0, -100, -200, 300]);
   assert.ok(Math.hypot(a['worker-a'].x - a['postgres-0'].x, a['worker-a'].y - a['postgres-0'].y) < 100, 'worker beside postgres');
-  const cc = Object.fromEntries(placePods(t, { id: 'c', rings: { web: 250, api: 175 }, worker: 110 }, c).map((p) => [p.name, p]));
-  assert.deepEqual([cc['postgres-0'].x, cc['postgres-0'].y], [0, 0]);
-  assert.notEqual(cc['web-a'].x, 0, 'no web pod at 12, where the ingress mark is');
-  assert.equal(Math.round(Math.hypot(cc['worker-a'].x, cc['worker-a'].y)), 110);
 });
 
 test('a visit: page hop and back, api hop, then postgres', () => {
@@ -120,6 +111,7 @@ test('a visit: page hop and back, api hop, then postgres', () => {
   assert.deepEqual(hops({ ok: true, status: 200, pod: 'api-a', web: { ok: false, pod: null } }), ['web:dies@0.4', 'api:ok', 'db:ok']);
   // The api pod answered 503: the database is down.
   assert.deepEqual(hops({ ok: false, status: 503, pod: 'api-a' }), ['api:ok', 'db:dies@0.5']);
+  assert.deepEqual(hops({ ok: false, status: 500, pod: 'api-a' }), ['api:ok', 'db:dies@0.5']);
   // Nothing answered.
   assert.deepEqual(hops({ ok: false, status: 0, pod: null }), ['api:dies@0.4']);
   assert.deepEqual(hops({ ok: false, status: 503, pod: null }), ['api:dies@0.4']);
@@ -132,7 +124,10 @@ test('status line', () => {
   const ok5 = ['api-a', 'api-b', 'api-c', 'api-a', 'api-b'].map((a, i) => v(a, { ok: true, pod: i % 2 ? 'web-a' : 'web-b' }));
   assert.equal(visitLine(ok5, 3), 'Last second: 5 visits · page 5/5 (2 web pods) · api 5/5 (3 of 3 api pods) · database 5/5');
   const down = [v(null, { ok: false, pod: null }, { ok: false, status: 0 }), v('api-a', { ok: true, pod: 'web-a' }, { ok: false, status: 503 })];
-  assert.equal(visitLine(down, 1), 'Last second: 2 visits · page 1/2 (1 web pod) · api 0/2 · database 0/1');
+  assert.equal(visitLine(down, 1), 'Last second: 2 visits · page 1/2 (1 web pod) · api 1/2 (1 of 1 api pod) · database 0/1');
+  // Postgres down: every api pod still answers, with a 503, and no request reaches the database.
+  const pgDown = ok5.map((x) => ({ ...x, ok: false, status: 503 }));
+  assert.equal(visitLine(pgDown, 3), 'Last second: 5 visits · page 5/5 (2 web pods) · api 5/5 (3 of 3 api pods) · database 0/5');
   assert.match(visitLine([v('api-a', { ok: true, pod: 'web-a' })], 0), /(1 of 1 api pod)/);
   assert.equal(visitLine([v(null, undefined, { ok: false, status: 0 })], 0), 'Last second: 1 visit · api 0/1 · database not reached');
 });

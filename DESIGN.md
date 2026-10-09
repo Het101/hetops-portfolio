@@ -101,6 +101,9 @@ The voice is precise and calm, not neon. The palette comes from a hazel iris on 
 - **Rules** are sclera at 0.10 and 0.18.
 - **Alert** `#ef7a64` is used only for errors and failed states.
 
+### Lab tiers (/lab only)
+- Each means only "this tier, healthy": web `#8fc0ff`, api Iris Moss, data `#9573ee`, jobs (worker, nightly report) a quiet sand `#7f7a72`. Their lightness differs so they stay apart under red-green colour blindness. Broken is still Alert, starting is hollow, and gold is still only the Argo CD arc.
+
 ### Named Rules
 - **One Pupil Rule.** The pupil is exactly the ground colour, so the dive lands on the page itself with no seam.
 - **Gold Means Look Here.** Gold marks one thing per region: a number, an action, or a progress mark. Never a fill for decoration.

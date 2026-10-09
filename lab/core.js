@@ -58,9 +58,12 @@ const at = (p, { cx, cy }, r, a) => ({ ...p, r, a, x: Math.round(cx + r * Math.c
 // A visit is three real hops: the page from a web pod, /api/whoami from an api pod, and that pod's query to postgres.
 // Pods are drawn by tier, the hop they serve, not by namespace.
 
-export const layoutOf = (search) => (new URLSearchParams(search).get('layout') === 'c' ? 'c' : 'a');
+const JOBS = new Set(['worker', 'nightly-report', 'migrate']); // background work that only talks to postgres
 
-export const tierOf = (pod) => (pod.app === 'web' ? 'web' : pod.app === 'postgres' || pod.app === 'worker' ? 'data' : 'api');
+export const tierOf = (pod) => (pod.app === 'web' ? 'web' : pod.app === 'postgres' || JOBS.has(pod.app) ? 'data' : 'api');
+
+// The colour a pod is drawn in: its tier, except jobs, which sit on the data ring but stay quiet.
+export const hueOf = (pod) => (JOBS.has(pod.app) ? 'jobs' : tierOf(pod));
 
 // Live pods by tier, postgres first in data so the worker sits beside it. A tier is gone when its namespace is.
 export function tiers(snap) {
@@ -72,26 +75,17 @@ export function tiers(snap) {
   return out;
 }
 
-// Where each pod sits. a: rings out from the ingress pupil (web, api, data); c: postgres is the pupil, web outermost.
-export function placePods(t, L, c) {
-  const out = [];
-  const add = (list) => out.push(...list);
-  if (L.id === 'a') {
-    add(ringLayout(t.web, { ...c, r: L.rings.web }));
-    add(ringLayout(t.api, { ...c, r: L.rings.api }));
-    t.data.forEach((p, i) => out.push(at(p, c, L.rings.data, Math.PI / 2 + i * 0.26))); // postgres at 6 o'clock, worker beside it
-  } else {
-    // Web pods sit off 12 o'clock so the ingress mark on the rim has room.
-    add(ringLayout(t.web, { ...c, r: L.rings.web, a0: -Math.PI / 2 + Math.PI / Math.max(1, t.web.length) }));
-    add(ringLayout(t.api, { ...c, r: L.rings.api }));
-    let k = 0;
-    for (const p of t.data) out.push(p.app === 'postgres' ? at(p, c, 0, 0) : at(p, c, L.worker, (3 * Math.PI) / 4 + 0.32 * k++));
-  }
-  return out;
+// Where each pod sits: rings out from the ingress pupil in hop order, web, api, data.
+export function placePods(t, rings, c) {
+  return [
+    ...ringLayout(t.web, { ...c, r: rings.web }),
+    ...ringLayout(t.api, { ...c, r: rings.api }),
+    ...t.data.map((p, i) => at(p, c, rings.data, Math.PI / 2 + i * 0.26)), // postgres at 6 o'clock, jobs beside it
+  ];
 }
 
 // The legs of one visit, in order. known(name) says whether that pod is on screen.
-// A failed hop dies 40% of the way; a 5xx the api pod answered (the database is down) dies halfway to postgres.
+// A failed hop dies 40% of the way; an error an api pod answered (the database is down) dies halfway to postgres.
 export function planVisit(p, known) {
   const legs = [];
   if (p.web) {
@@ -101,7 +95,7 @@ export function planVisit(p, known) {
   }
   const pod = p.pod && known(p.pod) ? p.pod : null;
   if (p.ok) { if (pod) legs.push({ hop: 'api', ok: true, pod }, { hop: 'db', ok: true, pod }); }
-  else if (pod && p.status >= 500) legs.push({ hop: 'api', ok: true, pod }, { hop: 'db', ok: false, pod, die: 0.5 });
+  else if (pod) legs.push({ hop: 'api', ok: true, pod }, { hop: 'db', ok: false, pod, die: 0.5 });
   else legs.push({ hop: 'api', ok: false, pod, die: 0.4 });
   return legs;
 }
@@ -110,18 +104,17 @@ const plural = (n, word) => `${n} ${word}${n === 1 ? '' : 's'}`;
 
 // "Last second: 5 visits · page 5/5 (2 web pods) · api 5/5 (3 of 3 api pods) · database 5/5"
 export function visitLine(batch, readyApi) {
-  const distinct = (list) => new Set(list.filter((x) => x.ok && x.pod).map((x) => x.pod)).size;
   const parts = [`Last second: ${plural(batch.length, 'visit')}`];
   const pages = batch.filter((p) => p.web).map((p) => p.web);
   if (pages.length) {
-    const n = distinct(pages);
+    const n = new Set(pages.filter((w) => w.ok && w.pod).map((w) => w.pod)).size;
     parts.push(`page ${pages.filter((w) => w.ok).length}/${pages.length}` + (n ? ` (${plural(n, 'web pod')})` : ''));
   }
-  const n = distinct(batch), of = Math.max(n, readyApi); // a pod can answer the second before the snapshot shows it Ready
-  parts.push(`api ${batch.filter((p) => p.ok).length}/${batch.length}` + (n ? ` (${n} of ${of} api pod${of === 1 ? '' : 's'})` : ''));
-  // Only a request an api pod answered reached the database: 2xx means it did, a 5xx with a pod means it did not.
-  const tried = batch.filter((p) => p.ok || (p.pod && p.status >= 500));
-  parts.push(tried.length ? `database ${tried.filter((p) => p.ok).length}/${tried.length}` : 'database not reached');
+  // The api answered when a pod did, whatever the status; the database only counts on a 2xx.
+  const answered = batch.filter((p) => p.pod);
+  const n = new Set(answered.map((p) => p.pod)).size, of = Math.max(n, readyApi); // a pod can answer the second before the snapshot shows it Ready
+  parts.push(`api ${answered.length}/${batch.length}` + (n ? ` (${n} of ${of} api pod${of === 1 ? '' : 's'})` : ''));
+  parts.push(answered.length ? `database ${answered.filter((p) => p.ok).length}/${answered.length}` : 'database not reached');
   return parts.join(' · ');
 }
 

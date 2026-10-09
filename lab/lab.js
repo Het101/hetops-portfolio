@@ -1,24 +1,19 @@
 // hetops.dev/lab: a live view of the real chaos lab, or the in-browser simulation when the lab is offline.
 // Network data only ever reaches the page through textContent and setAttribute, never innerHTML.
-import { GROUPS, ACTIONS, tone, diffSnapshots, verdict, formatMs, refusalText, apiBase, layoutOf, tiers, placePods, planVisit, visitLine, route, cut } from './core.js';
+import { GROUPS, ACTIONS, tone, diffSnapshots, verdict, formatMs, refusalText, apiBase, hueOf, tiers, placePods, planVisit, visitLine, route, cut } from './core.js';
 
 const API = apiBase(location.search);
 const NS = 'http://www.w3.org/2000/svg';
 const C = 360; // scene centre
-// Two layouts to compare, ?layout=a (default) or ?layout=c. Rings are tiers, the hop a pod serves.
-// a: the pupil is the ingress and the rings run out in hop order, web, api, data.
-// c: the pupil is postgres, the data at the heart; web is outermost and visits enter at a mark on the rim.
-const L = layoutOf(location.search) === 'c'
-  ? { id: 'c', rings: { web: 252, api: 176 }, worker: 112, rim: 284 }
-  : { id: 'a', rings: { web: 128, api: 204, data: 268 } };
+// Rings are tiers, the hop a pod serves. The pupil is the ingress and the rings run out in hop order, web, api, data.
+const RINGS = { web: 128, api: 204, data: 268 };
 const PUPIL = 46;
-const SHORT = { postgres: 'pg', worker: 'wkr' };
+const SHORT = { postgres: 'pg', worker: 'wkr', 'nightly-report': 'rpt' };
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 const $ = (s, root = document) => root.querySelector(s);
 const scene = $('#lab-scene');
 const podsG = $('.lab-pods', scene), dotsG = $('.lab-dots', scene), trailsG = $('.lab-trails', scene), arc = $('.lab-arc', scene);
-const pupil = $('.lab-pupil', scene), pupilLabel = $('.lab-pupil-label', scene);
 const modeEl = $('#lab-mode'), feed = $('#lab-feed'), log = $('#lab-incidents .lab-log');
 const stageClock = $('#lab-stage-clock'); // a copy of the clock under the scene, so it stays in view while you scroll the buttons
 const timerEl = $('#lab-timer'), targetEl = $('#lab-target'), verdictEl = $('#lab-verdict');
@@ -50,24 +45,18 @@ function setMode(state, text) { modeEl.dataset.state = state; modeEl.textContent
   }
 })();
 
-// The tier rings, their labels, the worker's link to postgres, and in layout c the ingress mark on the rim.
+// The tier rings, their labels, and the worker's link to postgres. data-tier picks the tier's colour in CSS.
 const ringEls = {};
 const link = svgEl('line', { class: 'lab-link' }, $('.lab-rings', scene));
 (function drawTiers() {
   const defs = $('defs', scene), g = $('.lab-rings', scene);
-  for (const [tier, r] of Object.entries(L.rings)) {
+  for (const [tier, r] of Object.entries(RINGS)) {
     svgEl('path', { id: `lab-path-${tier}`, d: `M${C - r} ${C} A${r} ${r} 0 1 1 ${C + r} ${C} A${r} ${r} 0 1 1 ${C - r} ${C}` }, defs);
-    const ring = svgEl('circle', { class: 'lab-ring', cx: C, cy: C, r }, g);
-    const label = svgEl('text', { class: 'lab-ring-label', dy: 30 }, g);
+    const ring = svgEl('circle', { class: 'lab-ring', 'data-tier': tier, cx: C, cy: C, r }, g);
+    const label = svgEl('text', { class: 'lab-ring-label', 'data-tier': tier, dy: 30 }, g);
     const tp = svgEl('textPath', { href: `#lab-path-${tier}`, startOffset: '3%' }, label);
     tp.textContent = tier;
     ringEls[tier] = { ring, label, tp };
-  }
-  if (L.id === 'c') {
-    svgEl('circle', { class: 'lab-entry', cx: C, cy: C - L.rim, r: 7 }, g);
-    svgEl('text', { class: 'lab-entry-label', x: C + 14, y: C - L.rim + 18 }, g).textContent = 'ingress';
-    pupilLabel.textContent = 'postgres';
-    podsG.before(pupil, pupilLabel); // postgres sits in the pupil, so the pupil goes under the pods
   }
 })();
 
@@ -165,18 +154,13 @@ function renderPods(snap) {
     el.label.classList.toggle('lab-gone', t.gone[tier]);
     el.tp.textContent = t.gone[tier] ? `${tier}: namespace deleted` : tier;
   }
-  if (L.id === 'c') {
-    pupil.classList.toggle('lab-gone', t.gone.data);
-    pupilLabel.classList.toggle('lab-gone', t.gone.data);
-    pupilLabel.textContent = t.gone.data ? 'postgres: namespace deleted' : 'postgres';
-  }
   const seen = new Set();
-  for (const p of placePods(t, L, { cx: C, cy: C })) {
+  for (const p of placePods(t, RINGS, { cx: C, cy: C })) {
     seen.add(p.name);
     const tn = tone(p);
     let n = nodes.get(p.name);
     if (!n) {
-      const g = svgEl('g', { class: 'lab-pod' }, podsG);
+      const g = svgEl('g', { class: 'lab-pod', 'data-tier': hueOf(p) }, podsG);
       n = { g, title: svgEl('title', {}, g), circle: svgEl('circle', { r: 16 }, g) };
       svgEl('text', { class: 'lab-pod-app', y: 3.5, 'text-anchor': 'middle' }, g).textContent = shortApp(p.app);
       nodes.set(p.name, n);
@@ -195,8 +179,8 @@ function renderPods(snap) {
   const w = [...nodes.values()].find((n) => n.app === 'worker'), pg = pgNode();
   link.style.display = w && pg ? '' : 'none';
   if (w && pg) {
-    const d = Math.hypot(pg.x - w.x, pg.y - w.y) || 1, ux = (pg.x - w.x) / d, uy = (pg.y - w.y) / d, end = L.id === 'c' ? PUPIL : 18;
-    const ends = { x1: w.x + ux * 18, y1: w.y + uy * 18, x2: pg.x - ux * end, y2: pg.y - uy * end };
+    const d = Math.hypot(pg.x - w.x, pg.y - w.y) || 1, ux = (pg.x - w.x) / d, uy = (pg.y - w.y) / d;
+    const ends = { x1: w.x + ux * 18, y1: w.y + uy * 18, x2: pg.x - ux * 18, y2: pg.y - uy * 18 };
     for (const k in ends) link.setAttribute(k, ends[k].toFixed(1));
   }
 }
@@ -223,7 +207,7 @@ function onProbes(batch) {
   const line = $('#lab-probe-line');
   // Each part stays on one line when the status wraps on a phone.
   line.textContent = visitLine(batch, readyApiPods()).split(' · ').map((s) => s.replaceAll(' ', ' ')).join(' · ');
-  line.title = [...new Set(batch.flatMap((p) => [p.web?.ok && p.web.pod, p.ok && p.pod]).filter(Boolean))].sort().join(', '); // hover for the pod names
+  line.title = [...new Set(batch.flatMap((p) => [p.web?.ok && p.web.pod, p.pod]).filter(Boolean))].sort().join(', '); // hover for the pod names
   line.classList.toggle('lab-down', batch.some((p) => !p.ok || (p.web && !p.web.ok)));
   if (reduce || document.hidden) return;
   // One visit every 200 ms; each leg is aimed when it launches, since pods may have moved since the batch arrived.
@@ -240,14 +224,14 @@ function legRoute(leg, i, count) {
   const n = leg.pod && nodes.get(leg.pod), o = { cx: C, cy: C, trim: 18 };
   if (leg.hop === 'db') {
     const pg = pgNode();
-    if (!n || !pg) return null;
-    return L.id === 'a' ? route({ r: n.r + 18, a: n.a }, { r: pg.r, a: pg.a }, pg.r, o) // out to the data ring, round to postgres
-      : route({ r: n.r - 18, a: n.a }, { r: PUPIL, a: n.a }, PUPIL, { cx: C, cy: C }); // in to the core
+    return n && pg ? route({ r: n.r + 18, a: n.a }, { r: pg.r, a: pg.a }, pg.r, o) : null; // out to the data ring, round to postgres
   }
-  const to = n ? { r: n.r, a: n.a } : { r: L.rings[leg.hop === 'back' ? 'web' : leg.hop], a: (i / count) * 2 * Math.PI - Math.PI / 2 };
-  const pts = L.id === 'a' ? route({ r: PUPIL, a: to.a }, to, PUPIL, o) : route({ r: L.rim, a: -Math.PI / 2 }, to, L.rim, o);
+  const to = n ? { r: n.r, a: n.a } : { r: RINGS[leg.hop === 'back' ? 'web' : leg.hop], a: (i / count) * 2 * Math.PI - Math.PI / 2 };
+  const pts = route({ r: PUPIL, a: to.a }, to, PUPIL, o);
   return leg.hop === 'back' ? pts.reverse() : pts;
 }
+
+const HOP_TIER = { web: 'web', back: 'web', api: 'api', db: 'data' };
 
 // Flies one leg; resolves true when the visit should go on to its next leg.
 function fly(leg, i, count) {
@@ -259,14 +243,15 @@ function fly(leg, i, count) {
     let len = 0;
     for (let k = 1; k < pts.length; k++) len += Math.hypot(pts[k][0] - pts[k - 1][0], pts[k][1] - pts[k - 1][1]);
     const duration = Math.min(1000, 220 + len * 0.8), cls = leg.ok ? 'lab-ok' : 'lab-down';
+    const tier = HOP_TIER[leg.hop]; // a dot takes the colour of the tier it is heading to; a failure stays red
     // A faint trace of each leg, so the shape of a visit stays readable after its dot has gone.
     if (leg.hop !== 'back') {
-      const trail = svgEl('polyline', { class: 'lab-trail ' + cls, points: pts.map((p) => p.map((v) => v.toFixed(1)).join(',')).join(' ') }, trailsG);
+      const trail = svgEl('polyline', { class: 'lab-trail ' + cls, 'data-tier': tier, points: pts.map((p) => p.map((v) => v.toFixed(1)).join(',')).join(' ') }, trailsG);
       trail.animate([{ opacity: 0.16 }, { opacity: 0 }], { duration: duration + 700, easing: 'ease-out' }).onfinish = () => trail.remove();
     }
     const fade = !leg.ok || leg.hop === 'back'; // the dot dies, or dims on its way back for the next request
     const tf = ([x, y]) => `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px)`;
-    const dot = svgEl('circle', { r: 4, class: cls }, dotsG);
+    const dot = svgEl('circle', { r: 4, class: cls, 'data-tier': tier }, dotsG);
     dot.style.transform = tf(pts[0]);
     const anim = dot.animate(pts.map((p, k) => ({ transform: tf(p), opacity: fade ? 1 - (k / (pts.length - 1)) * (leg.ok ? 0.6 : 1) : 1 })),
       { duration, easing: 'cubic-bezier(0.4, 0, 0.2, 1)' });

@@ -27,6 +27,13 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 async function play(id, exp) {
   const victim = state.pods.find((p) => p.app === 'api');
   if (id === 'kill-postgres') { state.pg = 'Terminating'; await wait(1500); state.pg = 'ContainerCreating'; await wait(2500); state.pg = 'Running'; }
+  else if (id === 'traffic-spike') { // the autoscaler adds two api pods, then scales back down
+    const extra = [mk('api'), mk('api')].map((p) => Object.assign(p, { ready: false, state: 'ContainerCreating' }));
+    state.pods.push(...extra); await wait(3000);
+    for (const p of extra) Object.assign(p, { ready: true, state: 'Running' }); await wait(6000);
+    for (const p of extra) p.state = 'Terminating'; await wait(1500);
+    state.pods = state.pods.filter((p) => !extra.includes(p));
+  }
   else if (id === 'nuke-namespace') { state.exists = false; state.argo = 'OutOfSync'; await wait(6000); state.exists = true; state.argo = 'Synced'; }
   else if (['scale-zero', 'delete-web', 'delete-api-svc', 'bad-release', 'delete-secret', 'rogue-netpol'].includes(id)) {
     if (id === 'scale-zero' || id === 'delete-web') state.pods = state.pods.filter((p) => p.app !== 'web');
