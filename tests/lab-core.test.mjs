@@ -1,6 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { ACTIONS, GROUPS, tone, livePods, ringLayout, diffSnapshots, probeSummary, refusalText, formatMs, verdict, apiBase } from '../lab/core.js';
+import { ACTIONS, GROUPS, tone, livePods, ringLayout, diffSnapshots, refusalText, formatMs, verdict, apiBase,
+  tierOf, hueOf, tiers, placePods, planVisit, visitLine, route, cut } from '../lab/core.js';
 
 const IDS = ['kill-pod', 'evict-api', 'delete-api-pods', 'crash', 'leak', 'hang', 'scale-zero', 'delete-web', 'delete-api-svc',
   'bad-release', 'delete-secret', 'rogue-netpol', 'kill-postgres', 'traffic-spike', 'nuke-namespace'];
@@ -62,11 +63,6 @@ test('narration: Argo CD drift, revert and a vanished namespace', () => {
   assert.deepEqual(diffSnapshots(null, ok), []);
 });
 
-test('probe summary', () => {
-  assert.deepEqual(probeSummary([{ ok: true, pod: 'api-a' }, { ok: true, pod: 'api-b' }, { ok: true, pod: 'api-a' }, { ok: false, pod: null }]),
-    { ok: 3, failed: 1, pods: ['api-a', 'api-b'] });
-});
-
 test('refusals become plain sentences', () => {
   assert.equal(refusalText('cooldown', 41_200), 'You can break something again in 42 s.');
   assert.match(refusalText('busy'), /Someone else/);
@@ -86,4 +82,67 @@ test('only a localhost api override is honoured', () => {
   assert.equal(apiBase(''), 'https://lab.hetops.dev');
   assert.equal(apiBase('?api=http://localhost:8787'), 'http://localhost:8787');
   assert.equal(apiBase('?api=https://evil.example'), 'https://lab.hetops.dev');
+});
+
+test('pods go by tier, not namespace; postgres leads the data tier', () => {
+  const apps = ['web', 'api', 'worker', 'nightly-report', 'postgres', 'whatever'];
+  assert.deepEqual(apps.map((app) => tierOf({ app })), ['web', 'api', 'data', 'data', 'data', 'api']);
+  assert.deepEqual(apps.map((app) => hueOf({ app })), ['web', 'api', 'jobs', 'jobs', 'data', 'api']);
+  const t = tiers({ clinic: { exists: true, pods: [pod('worker-a'), pod('web-a'), pod('api-a'), pod('migrate-x', { state: 'Completed' })] },
+    'clinic-data': { exists: true, pods: [pod('postgres-0')] } });
+  assert.deepEqual([t.web, t.api, t.data].map((l) => l.map((p) => p.name)), [['web-a'], ['api-a'], ['postgres-0', 'worker-a']]);
+  assert.deepEqual(tiers({ clinic: { exists: false, pods: [] }, 'clinic-data': { exists: true, pods: [] } }).gone, { web: true, api: true, data: false });
+});
+
+test('placement: rings out from the pupil, postgres at the bottom with the worker beside it', () => {
+  const t = { web: [pod('web-a'), pod('web-b')], api: [pod('api-a')], data: [pod('postgres-0'), pod('worker-a')] };
+  const a = Object.fromEntries(placePods(t, { web: 100, api: 200, data: 300 }, { cx: 0, cy: 0 }).map((p) => [p.name, p]));
+  assert.deepEqual([a['web-a'].x, a['web-a'].y, a['api-a'].y, a['postgres-0'].y], [0, -100, -200, 300]);
+  assert.ok(Math.hypot(a['worker-a'].x - a['postgres-0'].x, a['worker-a'].y - a['postgres-0'].y) < 100, 'worker beside postgres');
+});
+
+test('a visit: page hop and back, api hop, then postgres', () => {
+  const all = () => true;
+  const hops = (p, known = all) => planVisit(p, known).map((l) => `${l.hop}:${l.ok ? 'ok' : `dies@${l.die}`}`);
+  assert.deepEqual(hops({ ok: true, status: 200, pod: 'api-a', web: { ok: true, pod: 'web-a' } }), ['web:ok', 'back:ok', 'api:ok', 'db:ok']);
+  // No web field (today's chaos-api): skip the page hop.
+  assert.deepEqual(hops({ ok: true, status: 200, pod: 'api-a' }), ['api:ok', 'db:ok']);
+  // No web pods: the page dies, the api call still happens.
+  assert.deepEqual(hops({ ok: true, status: 200, pod: 'api-a', web: { ok: false, pod: null } }), ['web:dies@0.4', 'api:ok', 'db:ok']);
+  // The api pod answered 503: the database is down.
+  assert.deepEqual(hops({ ok: false, status: 503, pod: 'api-a' }), ['api:ok', 'db:dies@0.5']);
+  assert.deepEqual(hops({ ok: false, status: 500, pod: 'api-a' }), ['api:ok', 'db:dies@0.5']);
+  // Nothing answered.
+  assert.deepEqual(hops({ ok: false, status: 0, pod: null }), ['api:dies@0.4']);
+  assert.deepEqual(hops({ ok: false, status: 503, pod: null }), ['api:dies@0.4']);
+  // A pod the page has not drawn yet gets no dot rather than a false red one.
+  assert.deepEqual(hops({ ok: true, status: 200, pod: 'api-new', web: { ok: true, pod: 'web-new' } }, () => false), []);
+});
+
+test('status line', () => {
+  const v = (pod, web, over = {}) => ({ ok: true, status: 200, pod, web, ...over });
+  const ok5 = ['api-a', 'api-b', 'api-c', 'api-a', 'api-b'].map((a, i) => v(a, { ok: true, pod: i % 2 ? 'web-a' : 'web-b' }));
+  assert.equal(visitLine(ok5, 3), 'Last second: 5 visits · page 5/5 (2 web pods) · api 5/5 (3 of 3 api pods) · database 5/5');
+  const down = [v(null, { ok: false, pod: null }, { ok: false, status: 0 }), v('api-a', { ok: true, pod: 'web-a' }, { ok: false, status: 503 })];
+  assert.equal(visitLine(down, 1), 'Last second: 2 visits · page 1/2 (1 web pod) · api 1/2 (1 of 1 api pod) · database 0/1');
+  // Postgres down: every api pod still answers, with a 503, and no request reaches the database.
+  const pgDown = ok5.map((x) => ({ ...x, ok: false, status: 503 }));
+  assert.equal(visitLine(pgDown, 3), 'Last second: 5 visits · page 5/5 (2 web pods) · api 5/5 (3 of 3 api pods) · database 0/5');
+  assert.match(visitLine([v('api-a', { ok: true, pod: 'web-a' })], 0), /(1 of 1 api pod)/);
+  assert.equal(visitLine([v(null, undefined, { ok: false, status: 0 })], 0), 'Last second: 1 visit · api 0/1 · database not reached');
+});
+
+test('a route runs along the spoke, round the ring the short way, and in', () => {
+  const near = (p, q) => Math.hypot(p[0] - q[0], p[1] - q[1]) < 1e-9;
+  const spoke = route({ r: 46, a: 0 }, { r: 120, a: 0 }, 46);
+  assert.ok(near(spoke[0], [46, 0]) && near(spoke.at(-1), [120, 0]));
+  assert.ok(spoke.every(([, y]) => Math.abs(y) < 1e-9));
+  // From 12 o'clock to 3 o'clock is a quarter turn clockwise, not three quarters the other way.
+  const arc = route({ r: 300, a: -Math.PI / 2 }, { r: 200, a: 0 }, 300, { step: 5 });
+  assert.ok(arc.every(([x]) => x > -1e-9));
+  assert.ok(near(arc.at(-1), [200, 0]));
+  const trimmed = route({ r: 46, a: 0 }, { r: 146, a: 0 }, 46, { trim: 18 });
+  assert.ok(trimmed.at(-1)[0] <= 128 && trimmed.at(-1)[0] >= 118);
+  assert.equal(cut(spoke, 0.5).length, Math.round((spoke.length - 1) / 2) + 1);
+  assert.equal(cut(spoke, 0).length, 2);
 });

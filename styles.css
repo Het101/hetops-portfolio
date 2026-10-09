@@ -1014,9 +1014,21 @@ html.intro-landed .hero-copy > :nth-child(4) { transition-delay: 0.36s; }
 }
 
 /* lab console */
-/* hetops.dev/lab: the watching eye turned on a real cluster. Namespaces are rings of the iris, pods sit on
-   them, requests leave the pupil, and the gold limbal ring is Argo CD holding the cluster to git. */
-.lab-main { padding-top: calc(var(--nav-h) + 72px); }
+/* hetops.dev/lab: the watching eye turned on a real cluster. Tiers (web, api, data) are rings of the iris, pods
+   sit on them, each visit travels through them as a dot, and the gold limbal ring is Argo CD holding the cluster to git. */
+/* Tier colours, each meaning only "this tier, healthy". Red stays broken, gold stays Argo CD, hollow stays starting.
+   Lightness is spread (web lightest, jobs darkest) so blue/violet and moss/sand still part under red-green colour blindness. */
+.lab-main {
+  --lab-web: #8fc0ff;
+  --lab-api: var(--moss);
+  --lab-data: #9573ee;
+  --lab-jobs: #7f7a72; /* worker, nightly report: a quiet sand, solid so the pod stays opaque */
+  padding-top: calc(var(--nav-h) + 72px);
+}
+.lab-scene [data-tier="web"] { --tier: var(--lab-web); }
+.lab-scene [data-tier="api"] { --tier: var(--lab-api); }
+.lab-scene [data-tier="data"] { --tier: var(--lab-data); }
+.lab-scene [data-tier="jobs"] { --tier: var(--lab-jobs); }
 .lab-hero h1 { font-size: clamp(2.8rem, 6vw, 5rem); font-stretch: 112%; font-weight: 760; letter-spacing: -0.045em; line-height: 0.98; max-width: 14ch; }
 .lab-lede { margin-top: 22px; font-size: clamp(19px, 2vw, 23px); line-height: 1.45; color: var(--text); max-width: 46ch; font-stretch: 104%; }
 .lab-mode { display: inline-flex; align-items: center; gap: 9px; margin-top: 26px; padding: 6px 14px; border: 1px solid var(--line-2); border-radius: 999px; font-size: 13px; font-weight: 600; color: var(--text-2); }
@@ -1033,10 +1045,14 @@ html.intro-landed .hero-copy > :nth-child(4) { transition-delay: 0.36s; }
 .lab-fibre-moss { stroke: rgba(69, 184, 141, 0.3); }
 .lab-fibre-long { stroke: rgba(69, 184, 141, 0.12); }
 .lab-collarette { fill: none; stroke: var(--line-2); stroke-dasharray: 2 5; }
-.lab-ring { fill: none; stroke: var(--line-2); stroke-width: 1.2; transition: stroke 0.4s; }
-.lab-ring.lab-gone { stroke: var(--err); stroke-dasharray: 6 8; }
-.lab-ring-label { font: 500 12px var(--mono); letter-spacing: 0.04em; fill: var(--text-3); }
+.lab-ring { fill: none; stroke: var(--tier); stroke-opacity: 0.3; stroke-width: 1.2; transition: stroke 0.4s; }
+.lab-ring.lab-gone { stroke: var(--err); stroke-opacity: 1; stroke-dasharray: 6 8; }
+.lab-ring-label { font: 650 12.5px var(--sans); letter-spacing: 0.16em; text-transform: uppercase; fill: var(--tier); }
 .lab-ring-label.lab-gone { fill: var(--err); }
+.lab-link { stroke: var(--text-3); stroke-width: 1.2; stroke-dasharray: 2 4; }
+.lab-trail { fill: none; stroke-width: 1.2; stroke-linejoin: round; opacity: 0; pointer-events: none; }
+.lab-trail.lab-ok { stroke: var(--tier); }
+.lab-trail.lab-down { stroke: var(--err); }
 .lab-argo-ticks { fill: none; stroke: var(--line); stroke-width: 6; stroke-dasharray: 1 15.34; }
 .lab-arc { fill: none; stroke: var(--gold); stroke-width: 2; }
 .lab-arc.lab-drift { stroke-dasharray: 10 10; animation: labBreathe 1.2s ease-in-out infinite; }
@@ -1045,13 +1061,13 @@ html.intro-landed .hero-copy > :nth-child(4) { transition-delay: 0.36s; }
 .lab-pod { transition: transform 0.9s var(--ease), opacity 0.5s; }
 @starting-style { .lab-pod { opacity: 0; } }
 .lab-pod circle { stroke: var(--ink); stroke-width: 3; transition: fill 0.3s, stroke 0.3s; }
-.lab-pod circle.lab-ok { fill: var(--moss); }
-.lab-pod circle.lab-starting { fill: var(--ink); stroke: var(--gold); stroke-width: 1.5; }
-.lab-pod circle.lab-down { fill: var(--err); }
-.lab-pod circle.lab-ping { fill: none; stroke: var(--moss-text); stroke-width: 2; pointer-events: none; }
+.lab-pod circle.lab-ok { fill: var(--tier); }
+.lab-pod circle.lab-starting { fill: var(--ink); stroke: var(--tier); stroke-width: 1.5; }
+.lab-pod circle.lab-down { fill: var(--err); stroke: var(--tier); stroke-width: 2.5; }
+.lab-pod circle.lab-ping { fill: none; stroke: var(--tier); stroke-width: 2; pointer-events: none; }
 .lab-pod-app { font: 600 9.5px var(--mono); fill: var(--ink); pointer-events: none; }
 .lab-pod[data-tone="starting"] .lab-pod-app { fill: var(--text-2); }
-.lab-dots circle.lab-ok { fill: var(--moss-text); }
+.lab-dots circle.lab-ok { fill: var(--tier); }
 .lab-dots circle.lab-down { fill: var(--err); }
 .lab-pupil { fill: var(--ink); stroke: var(--line-2); stroke-width: 1.2; transform-box: fill-box; transform-origin: center; transition: transform 0.9s var(--ease); }
 .lab-busy .lab-pupil { transform: scale(1.22); }
@@ -1120,7 +1136,8 @@ html.intro-landed .hero-copy > :nth-child(4) { transition-delay: 0.36s; }
   .lab-main { padding-top: calc(var(--nav-h) + 40px); }
   .lab-live, .lab-sim { margin-top: 40px; padding-top: 28px; }
   /* The scene draws at half size on a phone; grow its type so it stays readable. */
-  .lab-ring-label { font-size: 17px; }
+  .lab-ring-label { font-size: 21px; }
+  .lab-trail { stroke-width: 2.2; }
   .lab-argo-label { font-size: 22px; }
   .lab-pupil-label { font-size: 19px; }
   .lab-pod-app { display: none; }
@@ -1129,5 +1146,6 @@ html.intro-landed .hero-copy > :nth-child(4) { transition-delay: 0.36s; }
 @media (prefers-reduced-motion: reduce) {
   .lab-mode::before, .lab-arc.lab-drift { animation: none !important; }
   .lab-pod, .lab-pupil, .lab-ring, .lab-pod circle, .lab-act { transition: none !important; }
+  .lab-trails, .lab-dots { display: none; }
   .lab-feed li { animation: none; }
 }

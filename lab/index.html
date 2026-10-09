@@ -46,24 +46,17 @@
 
     <section id="lab-live" class="lab-live" hidden aria-label="The live cluster">
       <div class="lab-stage">
-        <svg id="lab-scene" class="lab-scene" viewBox="0 0 720 720" role="img" aria-label="Live cluster: namespaces as rings, pods as nodes, requests as dots">
-          <defs>
-            <path id="lab-path-data" d="M210 360 A150 150 0 1 1 510 360 A150 150 0 1 1 210 360"/>
-            <path id="lab-path-clinic" d="M90 360 A270 270 0 1 1 630 360 A270 270 0 1 1 90 360"/>
-          </defs>
+        <svg id="lab-scene" class="lab-scene" viewBox="0 0 720 720" role="img" aria-label="Live cluster: the web, api and data tiers as rings, pods as nodes, each visit as a dot moving through them">
+          <defs></defs>
           <g class="lab-iris" aria-hidden="true"></g>
-          <g class="lab-rings">
-            <circle class="lab-ring" data-ns="clinic-data" cx="360" cy="360" r="150"/>
-            <circle class="lab-ring" data-ns="clinic" cx="360" cy="360" r="270"/>
-            <text class="lab-ring-label" data-ns="clinic-data" dy="28"><textPath href="#lab-path-data" startOffset="6%">clinic-data</textPath></text>
-            <text class="lab-ring-label" data-ns="clinic" dy="28"><textPath href="#lab-path-clinic" startOffset="10%">clinic</textPath></text>
-          </g>
+          <g class="lab-rings"></g>
           <g class="lab-argo">
             <circle class="lab-argo-ticks" cx="360" cy="360" r="312" aria-hidden="true"/>
             <circle class="lab-arc lab-synced" cx="360" cy="360" r="300"/>
             <path class="lab-callout" d="M576 576 L606 606" aria-hidden="true"/>
             <text class="lab-argo-label" x="612" y="626">Argo CD</text>
           </g>
+          <g class="lab-trails" aria-hidden="true"></g>
           <g class="lab-pods"></g>
           <g class="lab-dots" aria-hidden="true"></g>
           <circle class="lab-pupil" cx="360" cy="360" r="46"/>
@@ -71,7 +64,7 @@
         </svg>
         <p id="lab-stage-clock" class="lab-stage-clock" aria-hidden="true" hidden></p>
         <p id="lab-argo-state" class="lab-argo-state">Argo CD: Synced · Healthy</p>
-        <p id="lab-probe-line" class="lab-probe-line">Waiting for the first requests…</p>
+        <p id="lab-probe-line" class="lab-probe-line">Waiting for the first visits…</p>
       </div>
 
       <div class="lab-side">
