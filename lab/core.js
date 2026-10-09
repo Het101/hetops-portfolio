@@ -47,12 +47,106 @@ export const tone = (pod) => (DOWN.test(pod.state) ? 'down' : pod.ready ? 'ok' :
 // Finished Job pods (migrations, reports) are history, not the running cluster.
 export const livePods = (pods) => pods.filter((p) => p.state !== 'Completed' && p.state !== 'Succeeded');
 
-export function ringLayout(pods, { cx, cy, r }) {
-  return pods.map((p, i) => {
-    const a = -Math.PI / 2 + (2 * Math.PI * i) / pods.length;
-    return { ...p, x: Math.round(cx + r * Math.cos(a)), y: Math.round(cy + r * Math.sin(a)) };
-  });
+// Pods spaced evenly round a ring, the first at angle a0 (default 12 o'clock). r and a are kept for routing dots.
+export function ringLayout(pods, { cx, cy, r, a0 = -Math.PI / 2 }) {
+  return pods.map((p, i) => at(p, { cx, cy }, r, a0 + (2 * Math.PI * i) / pods.length));
 }
+
+const at = (p, { cx, cy }, r, a) => ({ ...p, r, a, x: Math.round(cx + r * Math.cos(a)), y: Math.round(cy + r * Math.sin(a)) });
+
+// ── The visit's journey ──
+// A visit is three real hops: the page from a web pod, /api/whoami from an api pod, and that pod's query to postgres.
+// Pods are drawn by tier, the hop they serve, not by namespace.
+
+export const layoutOf = (search) => (new URLSearchParams(search).get('layout') === 'c' ? 'c' : 'a');
+
+export const tierOf = (pod) => (pod.app === 'web' ? 'web' : pod.app === 'postgres' || pod.app === 'worker' ? 'data' : 'api');
+
+// Live pods by tier, postgres first in data so the worker sits beside it. A tier is gone when its namespace is.
+export function tiers(snap) {
+  const out = { web: [], api: [], data: [] };
+  for (const ns of ['clinic', 'clinic-data']) for (const p of livePods(snap[ns]?.pods ?? [])) out[tierOf(p)].push(p);
+  out.data.sort((a, b) => (a.app === 'postgres' ? 0 : 1) - (b.app === 'postgres' ? 0 : 1));
+  const clinicGone = snap.clinic?.exists === false;
+  out.gone = { web: clinicGone, api: clinicGone, data: snap['clinic-data']?.exists === false };
+  return out;
+}
+
+// Where each pod sits. a: rings out from the ingress pupil (web, api, data); c: postgres is the pupil, web outermost.
+export function placePods(t, L, c) {
+  const out = [];
+  const add = (list) => out.push(...list);
+  if (L.id === 'a') {
+    add(ringLayout(t.web, { ...c, r: L.rings.web }));
+    add(ringLayout(t.api, { ...c, r: L.rings.api }));
+    t.data.forEach((p, i) => out.push(at(p, c, L.rings.data, Math.PI / 2 + i * 0.26))); // postgres at 6 o'clock, worker beside it
+  } else {
+    // Web pods sit off 12 o'clock so the ingress mark on the rim has room.
+    add(ringLayout(t.web, { ...c, r: L.rings.web, a0: -Math.PI / 2 + Math.PI / Math.max(1, t.web.length) }));
+    add(ringLayout(t.api, { ...c, r: L.rings.api }));
+    let k = 0;
+    for (const p of t.data) out.push(p.app === 'postgres' ? at(p, c, 0, 0) : at(p, c, L.worker, (3 * Math.PI) / 4 + 0.32 * k++));
+  }
+  return out;
+}
+
+// The legs of one visit, in order. known(name) says whether that pod is on screen.
+// A failed hop dies 40% of the way; a 5xx the api pod answered (the database is down) dies halfway to postgres.
+export function planVisit(p, known) {
+  const legs = [];
+  if (p.web) {
+    const pod = p.web.pod && known(p.web.pod) ? p.web.pod : null;
+    if (!p.web.ok) legs.push({ hop: 'web', ok: false, pod, die: 0.4 });
+    else if (pod) legs.push({ hop: 'web', ok: true, pod }, { hop: 'back', ok: true, pod });
+  }
+  const pod = p.pod && known(p.pod) ? p.pod : null;
+  if (p.ok) { if (pod) legs.push({ hop: 'api', ok: true, pod }, { hop: 'db', ok: true, pod }); }
+  else if (pod && p.status >= 500) legs.push({ hop: 'api', ok: true, pod }, { hop: 'db', ok: false, pod, die: 0.5 });
+  else legs.push({ hop: 'api', ok: false, pod, die: 0.4 });
+  return legs;
+}
+
+const plural = (n, word) => `${n} ${word}${n === 1 ? '' : 's'}`;
+
+// "Last second: 5 visits · page 5/5 (2 web pods) · api 5/5 (3 of 3 api pods) · database 5/5"
+export function visitLine(batch, readyApi) {
+  const distinct = (list) => new Set(list.filter((x) => x.ok && x.pod).map((x) => x.pod)).size;
+  const parts = [`Last second: ${plural(batch.length, 'visit')}`];
+  const pages = batch.filter((p) => p.web).map((p) => p.web);
+  if (pages.length) {
+    const n = distinct(pages);
+    parts.push(`page ${pages.filter((w) => w.ok).length}/${pages.length}` + (n ? ` (${plural(n, 'web pod')})` : ''));
+  }
+  const n = distinct(batch), of = Math.max(n, readyApi); // a pod can answer the second before the snapshot shows it Ready
+  parts.push(`api ${batch.filter((p) => p.ok).length}/${batch.length}` + (n ? ` (${n} of ${of} api pod${of === 1 ? '' : 's'})` : ''));
+  // Only a request an api pod answered reached the database: 2xx means it did, a 5xx with a pod means it did not.
+  const tried = batch.filter((p) => p.ok || (p.pod && p.status >= 500));
+  parts.push(tried.length ? `database ${tried.filter((p) => p.ok).length}/${tried.length}` : 'database not reached');
+  return parts.join(' · ');
+}
+
+// The points a dot follows, about `step` px apart: out or in along its spoke to arcR, round that ring the short way,
+// then along the target's spoke. Polar in ({ r, a }), scene coordinates out. trim drops the last px (the pod's edge).
+export function route(from, to, arcR, { cx = 0, cy = 0, step = 10, trim = 0 } = {}) {
+  const da = ((((to.a - from.a) % (2 * Math.PI)) + 3 * Math.PI) % (2 * Math.PI)) - Math.PI;
+  const segs = [[from.r, arcR, from.a, from.a], [arcR, arcR, from.a, from.a + da], [arcR, to.r, from.a + da, from.a + da]];
+  const xy = (r, a) => [cx + r * Math.cos(a), cy + r * Math.sin(a)];
+  const pts = [xy(from.r, from.a)];
+  for (const [r0, r1, a0, a1] of segs) {
+    const len = Math.abs(r1 - r0) + arcR * Math.abs(a1 - a0);
+    if (len < 0.5) continue;
+    const n = Math.ceil(len / step);
+    for (let i = 1; i <= n; i++) pts.push(xy(r0 + ((r1 - r0) * i) / n, a0 + ((a1 - a0) * i) / n));
+  }
+  for (let left = trim; left > 0 && pts.length > 2; pts.pop()) {
+    const [[x0, y0], [x1, y1]] = pts.slice(-2);
+    left -= Math.hypot(x1 - x0, y1 - y0);
+  }
+  return pts;
+}
+
+// The first fraction f of a route: how far a failed hop gets before it dies.
+export const cut = (pts, f) => pts.slice(0, Math.max(2, Math.round((pts.length - 1) * f) + 1));
 
 function diffPods(prev, next, out) {
   const before = new Map(livePods(prev).map((p) => [p.name, p]));
@@ -80,11 +174,6 @@ export function diffSnapshots(prev, next) {
   if (prev.argo.sync === 'Synced' && next.argo.sync === 'OutOfSync') out.push({ text: 'Argo CD: drift detected, reverting to git', tone: 'warn' });
   if (prev.argo.sync !== 'Synced' && next.argo.sync === 'Synced') out.push({ text: 'Argo CD: back in sync with git', tone: 'ok' });
   return out;
-}
-
-export function probeSummary(batch) {
-  const ok = batch.filter((p) => p.ok).length;
-  return { ok, failed: batch.length - ok, pods: [...new Set(batch.filter((p) => p.ok && p.pod).map((p) => p.pod))].sort() };
 }
 
 const REFUSALS = {
