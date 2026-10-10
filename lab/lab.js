@@ -1,6 +1,6 @@
 // hetops.dev/lab: a live view of the real chaos lab, or the in-browser simulation when the lab is offline.
 // Network data only ever reaches the page through textContent and setAttribute, never innerHTML.
-import { GROUPS, ACTIONS, tone, diffSnapshots, verdict, formatMs, refusalText, apiBase, hueOf, tiers, placePods, planVisit, visitLine, route, cut } from './core.js';
+import { GROUPS, ACTIONS, tone, diffSnapshots, verdict, formatMs, refusalText, budgetView, costText, apiBase, hueOf, tiers, placePods, planVisit, visitLine, route, cut } from './core.js';
 
 const API = apiBase(location.search);
 const NS = 'http://www.w3.org/2000/svg';
@@ -104,8 +104,10 @@ function finishClock(exp) {
     verdictEl.className = 'lab-verdict ' + (v.within ? 'lab-ok' : 'lab-down');
     verdictEl.hidden = false;
   }
+  const cost = costText(exp.cost);
+  if (cost) narrate([{ text: `This experiment ${cost}.`, tone: 'warn' }]);
   addIncident(exp, true);
-  if (enabled) say('');
+  if (enabled && !frozen) say('');
   setButtons();
 }
 
@@ -136,6 +138,8 @@ function addIncident(exp, first) {
   li.dataset.t = exp.endedAt || exp.startedAt;
   li.append(make('span', 'lab-log-title', exp.title || exp.action), make('span', 'lab-log-v ' + (v.within ? 'lab-ok' : 'lab-down'), v.label),
     make('span', 'lab-log-target', `target ${targetText(a.target)}`), make('time', 'lab-log-when', ago(+li.dataset.t)));
+  const cost = costText(exp.cost);
+  if (cost) li.append(make('span', 'lab-log-cost', cost));
   if (first) log.prepend(li); else log.append(li);
   while (log.children.length > 10) log.lastElementChild.remove();
   $('#lab-incidents .lab-empty').hidden = log.children.length > 0;
@@ -303,6 +307,32 @@ function renderActions(list) {
 let token = null, enabled = false, pending = false;
 const say = (text) => { $('#lab-say').textContent = text; };
 
+// The error budget: chaos-api reads it from Prometheus every 30 s. Frozen means the budget is spent and visitor
+// experiments are refused (423) until 5% is back.
+let frozen = false;
+const budgetEl = $('#lab-budget');
+function renderBudget(slo) {
+  const v = budgetView(slo);
+  budgetEl.dataset.state = v.state;
+  $('.lab-meter-fill', budgetEl).style.width = `${Math.round(v.meter * 100)}%`;
+  $('.lab-meter', budgetEl).setAttribute('aria-valuenow', String(Math.round(v.meter * 100)));
+  $('.lab-meter', budgetEl).setAttribute('aria-valuetext', v.label);
+  $('.lab-budget-label', budgetEl).textContent = v.label;
+  $('.lab-budget-sli', budgetEl).textContent = v.sli;
+  $('.lab-budget-burn', budgetEl).textContent = v.burn;
+  const was = frozen;
+  frozen = v.state === 'frozen';
+  $('#lab-check').hidden = frozen;
+  if (frozen && !was && enabled) say(refusalText('budget-spent'));
+  else if (was && !frozen && enabled) say('');
+  setButtons();
+}
+$('.lab-budget-why').addEventListener('click', (e) => {
+  const help = $('#lab-budget-help');
+  help.hidden = !help.hidden;
+  e.currentTarget.setAttribute('aria-expanded', String(!help.hidden));
+});
+
 // Each visitor waits 60 s between experiments (chaos-api enforces it); show the countdown where it is seen first.
 let waitUntil = 0, waitTick = 0;
 function startWait(ms) {
@@ -321,7 +351,7 @@ function startWait(ms) {
 }
 
 function setButtons() {
-  const off = !token || !!running || !enabled || pending || Date.now() < waitUntil;
+  const off = !token || !!running || !enabled || pending || frozen || Date.now() < waitUntil;
   for (const b of buttons) b.disabled = off;
 }
 
@@ -355,6 +385,7 @@ async function press(id) {
       const body = await r.json().catch(() => ({}));
       if (body.reason === 'cooldown') startWait(body.retryAfterMs);
       else say(refusalText(body.reason, body.retryAfterMs));
+      if (body.reason === 'budget-spent') { frozen = true; setButtons(); }
     }
   } catch {
     say(refusalText());
@@ -400,6 +431,7 @@ async function enterLive() {
     enabled = status.value.enabled === true;
     const exp = status.value.experiment;
     if (exp && exp.status === 'running' && !running) startClock(exp);
+    if ('slo' in status.value) renderBudget(status.value.slo);
   }
   if (!enabled) say(refusalText('disabled'));
   else loadTurnstile();
@@ -422,6 +454,7 @@ function connect() {
   });
   es.addEventListener('probes', (e) => onProbes(parse(e)));
   es.addEventListener('experiment', (e) => onExperiment(parse(e)));
+  es.addEventListener('slo', (e) => renderBudget(parse(e)));
   es.addEventListener('error', () => {
     if (!live) { clearTimeout(giveUp); enterSim(es); return; }
     if (es.readyState === EventSource.CONNECTING) setMode('wait', 'Reconnecting…');
