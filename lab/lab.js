@@ -385,7 +385,7 @@ async function press(id) {
       const body = await r.json().catch(() => ({}));
       if (body.reason === 'cooldown') startWait(body.retryAfterMs);
       else say(refusalText(body.reason, body.retryAfterMs));
-      if (body.reason === 'budget-spent') { frozen = true; setButtons(); }
+      if (body.reason === 'budget-spent') { frozen = true; budgetEl.dataset.state = 'frozen'; $('#lab-check').hidden = true; setButtons(); }
     }
   } catch {
     say(refusalText());
