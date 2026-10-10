@@ -206,7 +206,10 @@ export function budgetView(slo) {
   return {
     state: slo.frozen ? 'frozen' : slo.budget <= 0 ? 'spent' : slo.budget < 0.25 ? 'low' : 'ok',
     meter: Math.max(0, Math.min(1, slo.budget)),
-    label: slo.budget <= 0 ? 'Spent: no error budget left this week' : `${Math.round(slo.budget * 100)}% of this week's error budget left`,
+    label: slo.budget <= 0 ? 'Spent: no error budget left this week'
+      // Frozen above 0 means the 0-5% band: the lab waits for 5% before it reopens (chaos-api's REOPEN_AT default).
+      : slo.frozen ? `Frozen: ${Math.round(slo.budget * 100)}% left, reopens at 5%`
+      : `${Math.round(slo.budget * 100)}% of this week's error budget left`,
     sli: `${(slo.sli7d * 100).toFixed(2)}% of visits good over 7 days · target 99%`,
     // 5 m shows an incident as it happens; otherwise the steadier 1 h pace.
     burn: slo.burn5m >= 2 ? `Burning ${x(slo.burn5m)} right now (1 h: ${x(slo.burn1h)})` : `Burning ${x(slo.burn1h)} budget pace`,
@@ -214,7 +217,7 @@ export function budgetView(slo) {
 }
 
 export function costText(cost) {
-  if (typeof cost !== 'number') return '';
+  if (!Number.isFinite(cost)) return '';
   if (cost === 0) return 'cost no error budget';
   const pct = cost * 100;
   return `cost ${pct < 0.01 ? '<0.01' : pct.toFixed(2)}% of the weekly budget`;

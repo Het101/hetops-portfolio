@@ -178,3 +178,13 @@ test('costText prices an experiment', () => {
 test('a frozen lab explains itself', () => {
   assert.match(refusalText('budget-spent'), /^Error budget spent\. The lab is frozen until reliability recovers\./);
 });
+
+test('a frozen lab with budget left says so, and when it reopens', () => {
+  assert.equal(budgetView({ budget: 0.03, sli7d: 0.9997, burn5m: 0, burn1h: 0, frozen: true }).label, 'Frozen: 3% left, reopens at 5%');
+  assert.equal(budgetView({ budget: -0.1, sli7d: 0.989, burn5m: 0, burn1h: 0, frozen: true }).label, 'Spent: no error budget left this week');
+});
+
+test('costText ignores numbers that are not finite', () => {
+  assert.equal(costText(NaN), '');
+  assert.equal(costText(Infinity), '');
+});
