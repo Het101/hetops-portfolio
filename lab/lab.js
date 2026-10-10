@@ -107,7 +107,7 @@ function finishClock(exp) {
   const cost = costText(exp.cost);
   if (cost) narrate([{ text: `This experiment ${cost}.`, tone: 'warn' }]);
   addIncident(exp, true);
-  if (enabled) say('');
+  if (enabled && !frozen) say('');
   setButtons();
 }
 
@@ -322,7 +322,7 @@ function renderBudget(slo) {
   const was = frozen;
   frozen = v.state === 'frozen';
   $('#lab-check').hidden = frozen;
-  if (frozen) say(refusalText('budget-spent'));
+  if (frozen && enabled) say(refusalText('budget-spent'));
   else if (was && enabled) say('');
   setButtons();
 }
