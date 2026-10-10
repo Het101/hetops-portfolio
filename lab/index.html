@@ -75,6 +75,15 @@
           <p class="lab-clock-meta"><span id="lab-target" class="lab-target" hidden>target 30 s</span> <span id="lab-verdict" class="lab-verdict" hidden></span></p>
         </div>
 
+        <div id="lab-budget" class="lab-budget" data-state="none">
+          <h2>Error budget <button type="button" class="lab-budget-why" aria-expanded="false" aria-controls="lab-budget-help" title="What is this?">?</button></h2>
+          <p id="lab-budget-help" class="lab-budget-help" hidden>The lab promises that 99% of visits are good over any 7 days. The other 1% is the error budget: about 100 minutes of failed visits a week. Every experiment spends some of it. 1× burn spends it in exactly 7 days. If it runs out, experiments freeze until it recovers.</p>
+          <div class="lab-meter" role="meter" aria-label="Error budget left this week" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span class="lab-meter-fill"></span></div>
+          <p class="lab-budget-label">Budget unavailable right now</p>
+          <p class="lab-budget-sli"></p>
+          <p class="lab-budget-burn"></p>
+        </div>
+
         <div id="lab-actions" class="lab-actions">
           <h2>Break something</h2>
           <div class="lab-groups"></div>

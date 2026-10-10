@@ -7,6 +7,10 @@ const titles = ['Kill a pod', 'Evict every API pod', 'Delete every API pod', 'Cr
   'Scale the web tier to 0', 'Delete the web Deployment', 'Delete the api Service', 'Ship a bad release by hand',
   'Delete the database Secret', 'Delete the api network allow rule', 'Kill Postgres', 'Traffic spike', 'Nuke the clinic namespace'];
 const heavy = new Set(['traffic-spike', 'nuke-namespace']);
+// node scripts/lab-mock.mjs [ok|frozen|none]: the error budget state to show.
+const sloMode = process.argv[2] ?? 'ok';
+const slo = { budget: sloMode === 'frozen' ? -0.04 : 0.71, sli7d: sloMode === 'frozen' ? 0.9896 : 0.99712, burn5m: 0.3, burn1h: 0.3, frozen: sloMode === 'frozen' };
+const sloNow = () => (sloMode === 'none' ? null : { ...slo });
 
 let n = 0;
 const mk = (app) => ({ name: `${app}-7f9c${(n++).toString(36).padStart(3, '0')}`, app, state: 'Running', ready: true, restarts: 0, lastReason: null });
@@ -53,12 +57,16 @@ async function play(id, exp) {
   await wait(2500);
   for (const p of state.pods) Object.assign(p, { ready: true, state: 'Running' });
   Object.assign(exp, { status: 'recovered', recoveryMs: Date.now() - exp.startedAt, endedAt: Date.now() });
+  exp.cost = id === 'nuke-namespace' ? 0.0193 : id === 'kill-postgres' ? 0.0122 : 0.0011;
+  slo.budget -= exp.cost; slo.burn5m = 12.5; slo.burn1h = 1.0;
+  setTimeout(() => { slo.burn5m = 0.3; slo.burn1h = 0.4; }, 20_000);
   incidents.unshift({ ...exp });
   state.running = null;
   send('experiment', exp);
 }
 
 setInterval(() => send('snapshot', snapshot()), 1000);
+setInterval(() => send('slo', sloNow()), 5000); // the real chaos-api sends every 30 s; faster here to see changes
 // Each visit: the page from a web pod (round-robin, like the Service), then /api/whoami, which reads postgres.
 let visits = 0;
 setInterval(() => {
@@ -81,14 +89,19 @@ createServer((req, res) => {
   if (req.url === '/chaos/stream') {
     res.writeHead(200, { 'content-type': 'text/event-stream', 'cache-control': 'no-cache', 'access-control-allow-origin': '*' });
     res.write(`event: snapshot\ndata: ${JSON.stringify(snapshot())}\n\n`);
+    res.write(`event: slo
+data: ${JSON.stringify(sloNow())}
+
+`);
     clients.add(res); req.on('close', () => clients.delete(res)); return;
   }
   if (req.url === '/chaos/actions') return json(200, ids.map((id, i) => ({ id, title: titles[i], heavy: heavy.has(id) })));
   if (req.url === '/chaos/incidents') return json(200, incidents);
-  if (req.url === '/chaos/status') return json(200, { enabled: true, experiment: state.running });
+  if (req.url === '/chaos/status') return json(200, { enabled: true, experiment: state.running, slo: sloNow() });
   const m = req.url.match(/^\/chaos\/actions\/([a-z-]+)$/);
   if (req.method === 'POST' && m) {
     if (!ids.includes(m[1])) return json(404, { reason: 'unknown-action' });
+    if (sloNow()?.frozen) return json(423, { ok: false, reason: 'budget-spent' });
     if (state.running) return json(409, { reason: 'busy' });
     const exp = { id: crypto.randomUUID(), action: m[1], title: titles[ids.indexOf(m[1])], startedAt: Date.now(), status: 'running' };
     state.running = exp; send('experiment', exp); play(m[1], exp);
