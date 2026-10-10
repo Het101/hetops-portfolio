@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { ACTIONS, GROUPS, tone, livePods, ringLayout, diffSnapshots, refusalText, formatMs, verdict, apiBase,
-  tierOf, hueOf, tiers, placePods, planVisit, visitLine, route, cut } from '../lab/core.js';
+  tierOf, hueOf, tiers, placePods, planVisit, visitLine, route, cut, budgetView, costText } from '../lab/core.js';
 
 const IDS = ['kill-pod', 'evict-api', 'delete-api-pods', 'crash', 'leak', 'hang', 'scale-zero', 'delete-web', 'delete-api-svc',
   'bad-release', 'delete-secret', 'rogue-netpol', 'kill-postgres', 'traffic-spike', 'nuke-namespace'];
@@ -145,4 +145,35 @@ test('a route runs along the spoke, round the ring the short way, and in', () =>
   assert.ok(trimmed.at(-1)[0] <= 128 && trimmed.at(-1)[0] >= 118);
   assert.equal(cut(spoke, 0.5).length, Math.round((spoke.length - 1) / 2) + 1);
   assert.equal(cut(spoke, 0).length, 2);
+});
+
+test('budgetView turns the SLO into the panel text', () => {
+  assert.deepEqual(budgetView(null), { state: 'none', meter: 0, label: 'Budget unavailable right now', sli: '', burn: '' });
+  const calm = budgetView({ budget: 0.714, sli7d: 0.99697, burn5m: 0.4, burn1h: 0.32, frozen: false });
+  assert.equal(calm.state, 'ok');
+  assert.equal(calm.meter, 0.714);
+  assert.equal(calm.label, '71% of this week\'s error budget left');
+  assert.equal(calm.sli, '99.70% of visits good over 7 days · target 99%');
+  assert.equal(calm.burn, 'Burning 0.3× budget pace');
+  const hot = budgetView({ budget: 0.2, sli7d: 0.998, burn5m: 12.5, burn1h: 1, frozen: false });
+  assert.equal(hot.state, 'low');
+  assert.equal(hot.burn, 'Burning 12.5× right now (1 h: 1.0×)');
+  const spent = budgetView({ budget: -0.1, sli7d: 0.989, burn5m: 0, burn1h: 0, frozen: true });
+  assert.equal(spent.state, 'frozen');
+  assert.equal(spent.meter, 0);
+  assert.equal(spent.label, 'Spent: no error budget left this week');
+  assert.equal(budgetView({ budget: -0.1, sli7d: 0.989, burn5m: 0, burn1h: 0, frozen: false }).state, 'spent');
+  assert.equal(budgetView({ budget: 1.3, sli7d: 1, burn5m: 0, burn1h: 0, frozen: false }).meter, 1);
+});
+
+test('costText prices an experiment', () => {
+  assert.equal(costText(undefined), '');
+  assert.equal(costText(0), 'cost no error budget');
+  assert.equal(costText(302 / 30240), 'cost 1.00% of the weekly budget');
+  assert.equal(costText(0.0012), 'cost 0.12% of the weekly budget');
+  assert.equal(costText(0.00001), 'cost <0.01% of the weekly budget');
+});
+
+test('a frozen lab explains itself', () => {
+  assert.match(refusalText('budget-spent'), /^Error budget spent\. The lab is frozen until reliability recovers\./);
 });

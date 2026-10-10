@@ -177,6 +177,7 @@ const REFUSALS = {
   'node-memory': 'The server is short on memory right now. Try again in a minute.',
   turnstile: 'The human check did not pass. Try again.',
   'busy-stream': 'Too many people are watching right now. Try again shortly.',
+  'budget-spent': 'Error budget spent. The lab is frozen until reliability recovers. Reopens as older incidents age out of the 7-day window.',
 };
 
 export const refusalText = (reason, retryAfterMs) =>
@@ -196,4 +197,25 @@ export function verdict(exp) {
 export function apiBase(search) {
   const api = new URLSearchParams(search).get('api') ?? '';
   return /^http:\/\/localhost:\d+$/.test(api) ? api : 'https://lab.hetops.dev';
+}
+
+// The error budget panel: everything as plain text, set with textContent.
+export function budgetView(slo) {
+  if (!slo) return { state: 'none', meter: 0, label: 'Budget unavailable right now', sli: '', burn: '' };
+  const x = (n) => `${n.toFixed(1)}×`;
+  return {
+    state: slo.frozen ? 'frozen' : slo.budget <= 0 ? 'spent' : slo.budget < 0.25 ? 'low' : 'ok',
+    meter: Math.max(0, Math.min(1, slo.budget)),
+    label: slo.budget <= 0 ? 'Spent: no error budget left this week' : `${Math.round(slo.budget * 100)}% of this week's error budget left`,
+    sli: `${(slo.sli7d * 100).toFixed(2)}% of visits good over 7 days · target 99%`,
+    // 5 m shows an incident as it happens; otherwise the steadier 1 h pace.
+    burn: slo.burn5m >= 2 ? `Burning ${x(slo.burn5m)} right now (1 h: ${x(slo.burn1h)})` : `Burning ${x(slo.burn1h)} budget pace`,
+  };
+}
+
+export function costText(cost) {
+  if (typeof cost !== 'number') return '';
+  if (cost === 0) return 'cost no error budget';
+  const pct = cost * 100;
+  return `cost ${pct < 0.01 ? '<0.01' : pct.toFixed(2)}% of the weekly budget`;
 }
