@@ -316,14 +316,15 @@ function renderBudget(slo) {
   budgetEl.dataset.state = v.state;
   $('.lab-meter-fill', budgetEl).style.width = `${Math.round(v.meter * 100)}%`;
   $('.lab-meter', budgetEl).setAttribute('aria-valuenow', String(Math.round(v.meter * 100)));
+  $('.lab-meter', budgetEl).setAttribute('aria-valuetext', v.label);
   $('.lab-budget-label', budgetEl).textContent = v.label;
   $('.lab-budget-sli', budgetEl).textContent = v.sli;
   $('.lab-budget-burn', budgetEl).textContent = v.burn;
   const was = frozen;
   frozen = v.state === 'frozen';
   $('#lab-check').hidden = frozen;
-  if (frozen && enabled) say(refusalText('budget-spent'));
-  else if (was && enabled) say('');
+  if (frozen && !was && enabled) say(refusalText('budget-spent'));
+  else if (was && !frozen && enabled) say('');
   setButtons();
 }
 $('.lab-budget-why').addEventListener('click', (e) => {

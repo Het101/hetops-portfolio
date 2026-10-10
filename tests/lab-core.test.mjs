@@ -165,6 +165,7 @@ test('budgetView turns the SLO into the panel text', () => {
   assert.equal(budgetView({ budget: -0.1, sli7d: 0.989, burn5m: 0, burn1h: 0, frozen: false }).state, 'spent');
   assert.equal(budgetView({ budget: 1.3, sli7d: 1, burn5m: 0, burn1h: 0, frozen: false }).meter, 1);
 });
+test('budgetView treats malformed data as unknown', () => { assert.deepEqual(budgetView({ budget: 'x' }), budgetView(null)); });
 
 test('costText prices an experiment', () => {
   assert.equal(costText(undefined), '');

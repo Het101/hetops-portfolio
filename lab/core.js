@@ -201,7 +201,7 @@ export function apiBase(search) {
 
 // The error budget panel: everything as plain text, set with textContent.
 export function budgetView(slo) {
-  if (!slo) return { state: 'none', meter: 0, label: 'Budget unavailable right now', sli: '', burn: '' };
+  if (!slo || ![slo.budget, slo.sli7d, slo.burn5m, slo.burn1h].every(Number.isFinite)) return { state: 'none', meter: 0, label: 'Budget unavailable right now', sli: '', burn: '' };
   const x = (n) => `${n.toFixed(1)}×`;
   return {
     state: slo.frozen ? 'frozen' : slo.budget <= 0 ? 'spent' : slo.budget < 0.25 ? 'low' : 'ok',
