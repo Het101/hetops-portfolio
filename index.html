@@ -47,6 +47,7 @@
     <nav class="nav-links" aria-label="Sections">
       <a href="#experience" data-nav="experience">Experience</a>
       <a href="#work" data-nav="work">Work</a>
+      <a href="#lab" data-nav="lab">Lab</a>
       <a href="#live" data-nav="live">Live</a>
       <a href="#how-i-ship" data-nav="how-i-ship">How I ship</a>
       <a href="#contact" data-nav="contact">Contact</a>
@@ -62,6 +63,7 @@
     <nav aria-label="Menu">
       <a href="#experience">Experience</a>
       <a href="#work">Work</a>
+      <a href="#lab">Lab</a>
       <a href="#live">Live</a>
       <a href="#how-i-ship">How I ship</a>
       <a href="#writing">Writing</a>
@@ -94,6 +96,7 @@
         </div>
         <ul class="proof" aria-label="Live from production">
           <li data-proof="up" hidden><a href="#live"><i class="led"></i><b></b> services up</a></li>
+          <li data-proof="lab" hidden><a href="#lab"><i class="led"></i>Kubernetes lab <span></span></a></li>
           <li data-proof="drill" hidden><a href="#live"><i class="led"></i><b></b> backups restored <span></span></a></li>
           <li data-live-hide hidden><a href="#work"><b data-live="npmAll"></b> npm installs last month</a></li>
         </ul>
@@ -143,16 +146,16 @@
         <li style="--s: 1"><span class="acuity">20/200</span><span class="row">$2M SAVED</span><span class="fine">a year, by finding idle cloud resources and right-sizing the rest</span></li>
         <li style="--s: 0.74"><span class="acuity">20/100</span><span class="row">10K DEPLOYS</span><span class="fine">canary releases with automated rollback, through GitOps</span></li>
         <li style="--s: 0.56"><span class="acuity">20/70</span><span class="row">100+ NODES · 3 CLOUDS</span><span class="fine">one control plane across AWS, GCP and Azure, with automated failover</span></li>
-        <li style="--s: 0.43"><span class="acuity">20/50</span><span class="row">60% FASTER DEPLOYS · 99.9% UPTIME</span><span class="fine">CI/CD, Kubernetes workloads and observability at Datagrok</span></li>
+        <li style="--s: 0.43"><span class="acuity">20/50</span><span class="row">60% FASTER DEPLOYS · 99.9% UPTIME</span><span class="fine">CI/CD, Kubernetes workloads and observability at DataGrokr</span></li>
         <li style="--s: 0.33"><span class="acuity">20/40</span><span class="row">62 → 0 OPEN SECURITY ALERTS</span><span class="fine">one triage pass on DNS Intelligence, every dismissal written down</span></li>
         <li style="--s: 0.25"><span class="acuity">20/20</span><span class="row">7,200 THREADS · HISTORY KEPT · AUTHORS RESTORED</span><span class="fine">the chat migration that became Threadvault</span></li>
       </ol>
       <ol class="roles">
         <li><span class="when">Aug 2025 to now</span><h3>DevOps Engineer II <span>Techdome</span></h3><p>Multi-cloud Kubernetes, cloud cost automation and GitOps delivery for production workloads.</p></li>
-        <li><span class="when">2023 to 2025</span><h3>DevOps Engineer <span>Datagrok</span></h3><p>CI/CD pipelines, Kubernetes workloads and observability. Cut deployment time by 60% and kept services at 99.9% uptime.</p></li>
-        <li><span class="when">2019 to 2023</span><h3>B.Tech, Computer Engineering <span>CHARUSAT University</span></h3><p>Currently working toward AWS Solutions Architect Associate and CKA.</p></li>
+        <li><span class="when">2023 to 2025</span><h3>DevOps Engineer <span>DataGrokr</span></h3><p>CI/CD pipelines, Kubernetes workloads and observability. Cut deployment time by 60% and kept services at 99.9% uptime.</p></li>
+        <li><span class="when">2019 to 2023</span><h3>B.Tech, Computer Engineering <span>CHARUSAT University</span></h3><p>Aiming to master DevOps end to end, by running every tool in production myself: service mesh, SIEM, runtime detection, GitOps. <a href="#lab">The Kubernetes lab below</a> is where that happens.</p></li>
       </ol>
-      <p class="stackline"><b>Works with</b> Kubernetes, Terraform, Helm, Argo CD, GitHub Actions, Prometheus, Grafana, Ansible, Vault, Traefik, Cloudflare, OpenTelemetry and n8n, on AWS, GCP, Azure and Oracle Cloud, in Python, TypeScript and Bash.</p>
+      <p class="stackline"><b>Works with</b> Kubernetes, Terraform, Helm, Argo CD, Linkerd, GitHub Actions, Prometheus, Grafana, Elasticsearch and Kibana, Falco, CrowdSec, Sealed Secrets, Trivy, Semgrep, CodeQL, OWASP ZAP, Ansible, Vault, Traefik, Cloudflare, OpenTelemetry and n8n, on AWS, GCP, Azure and Oracle Cloud, in Python, TypeScript and Bash.</p>
     </section>
 
     <!-- Work: each tool under the lens -->
@@ -437,32 +440,62 @@
       </div>
     </section>
 
-    <!-- Break production: a simulation visitors can break and watch heal -->
-    <section class="chaos wrap" id="chaos" data-section="chaos" aria-labelledby="chaos-h">
+    <!-- The real Kubernetes lab: defence in depth drawn as an iris, live numbers from the cluster -->
+    <section class="home-lab wrap" id="lab" data-section="lab" aria-labelledby="lab-h">
       <header class="head">
-        <h2 id="chaos-h">Break production</h2>
-        <p class="sub">Go on. Pick a failure and watch the system notice, contain and heal it. A simulation, built the way I run the real thing. <a class="more" href="/lab/" data-umami-event="lab-open" data-umami-event-from="home-chaos">Break the real one <i class="ph ph-arrow-right" aria-hidden="true"></i></a></p>
+        <h2 id="lab-h">Break my real Kubernetes lab</h2>
+        <p class="sub">Not a simulation. A real cluster on my server that anyone can break, and the layers that watch it, each one tested by attacking it.</p>
       </header>
-      <div class="chaos-grid">
-        <div class="chaos-board">
-          <svg viewBox="0 50 720 280" role="img" aria-label="Simulated system: users, load balancer, pods and database, with requests flowing"></svg>
-          <dl class="chaos-metrics">
-            <div><dt>Availability</dt><dd data-m="avail">100.00%</dd></div>
-            <div><dt>Error rate</dt><dd data-m="err">0.0%</dd></div>
-            <div><dt>p95 latency</dt><dd data-m="lat">80 ms</dd></div>
-            <div><dt>Incident clock</dt><dd data-m="mttr">0.0s</dd></div>
+      <div class="hl-grid">
+        <figure class="hl-iris">
+          <svg viewBox="0 0 440 440" role="list" aria-label="Every request passes these layers, from the edge inwards">
+            <g class="hl-ring" data-layer="edge" tabindex="0" role="listitem" aria-label="Edge: Cloudflare · CrowdSec">
+              <circle cx="220" cy="220" r="200"/>
+              <text x="220" y="35" text-anchor="middle"><tspan class="hl-ring-k">Edge</tspan> Cloudflare · CrowdSec</text>
+            </g>
+            <g class="hl-ring" data-layer="ingress" tabindex="0" role="listitem" aria-label="Ingress: ingress-nginx · real IPs">
+              <circle cx="220" cy="220" r="164"/>
+              <text x="220" y="71" text-anchor="middle"><tspan class="hl-ring-k">Ingress</tspan> ingress-nginx · real IPs</text>
+            </g>
+            <g class="hl-ring" data-layer="mesh" tabindex="0" role="listitem" aria-label="Mesh: Linkerd mTLS">
+              <circle cx="220" cy="220" r="128"/>
+              <text x="220" y="107" text-anchor="middle"><tspan class="hl-ring-k">Mesh</tspan> Linkerd mTLS</text>
+            </g>
+            <g class="hl-ring" data-layer="runtime" tabindex="0" role="listitem" aria-label="Runtime: Falco · audit log">
+              <circle cx="220" cy="220" r="92"/>
+              <text x="220" y="143" text-anchor="middle"><tspan class="hl-ring-k">Runtime</tspan> Falco · audit log</text>
+            </g>
+            <g class="hl-ring" data-layer="data" tabindex="0" role="listitem" aria-label="Data: Postgres · 4 identities">
+              <circle cx="220" cy="220" r="58"/>
+              <text x="220" y="177" text-anchor="middle"><tspan class="hl-ring-k">Data</tspan> Postgres · 4 identities</text>
+            </g>
+            <circle class="hl-pupil" cx="220" cy="220" r="24"/>
+            <text class="hl-pupil-k" x="220" y="224" text-anchor="middle">request</text>
+          </svg>
+          <figcaption>Every request crosses these rings, from Cloudflare&rsquo;s edge to the database.</figcaption>
+        </figure>
+        <div class="hl-side">
+          <dl class="hl-live" hidden>
+            <div data-k="state"><dt>Right now</dt><dd></dd></div>
+            <div data-k="budget"><dt>Error budget left this week</dt><dd></dd></div>
+            <div data-k="last"><dt>Last experiment</dt><dd></dd></div>
           </dl>
-        </div>
-        <div class="chaos-side">
-          <div class="chaos-btns">
-            <button class="chaos-btn" type="button" data-break="pod"><i class="ph ph-skull" aria-hidden="true"></i>Kill a pod</button>
-            <button class="chaos-btn" type="button" data-break="spike"><i class="ph ph-trend-up" aria-hidden="true"></i>Traffic spike</button>
-            <button class="chaos-btn" type="button" data-break="cert"><i class="ph ph-lock-key-open" aria-hidden="true"></i>Expire the TLS cert</button>
-            <button class="chaos-btn" type="button" data-break="release"><i class="ph ph-rocket-launch" aria-hidden="true"></i>Ship a bad release</button>
+          <div class="ctas">
+            <a class="btn btn-gold" href="/lab/" data-umami-event="lab-open" data-umami-event-from="home-lab"><i class="ph ph-skull" aria-hidden="true"></i>Break it</a>
+            <a class="btn btn-line" href="https://github.com/Het101/hetops-k8s-lab" target="_blank" rel="noopener" data-umami-event="outbound" data-umami-event-target="lab-repo">The GitOps repo<i class="ph ph-arrow-up-right" aria-hidden="true"></i></a>
           </div>
-          <ol class="chaos-log" aria-live="polite" aria-label="Incident log"></ol>
         </div>
       </div>
+      <ul class="lab-watch-list hl-list">
+        <li><span class="lab-watch-k">GitOps</span><p>Argo CD makes git the only way in. Delete a deployment by hand and it is recreated from git within a minute.</p></li>
+        <li><span class="lab-watch-k">SLO</span><p>99% of visits must succeed over any 7 days. When the error budget is spent, experiments freeze until it recovers.</p></li>
+        <li data-layers="mesh data"><span class="lab-watch-k">mTLS</span><p>Linkerd encrypts every hop from the ingress to the database. Postgres accepts four named identities only: a pod that passed the network rules was still refused.</p></li>
+        <li data-layers="ingress"><span class="lab-watch-k">Logs</span><p>Every request, from ingress to database, lands in Elasticsearch on one timeline.</p></li>
+        <li data-layers="runtime"><span class="lab-watch-k">Audit</span><p>The Kubernetes audit log records who did what. A shell opened in a pod raises an alert mapped to MITRE ATT&amp;CK.</p></li>
+        <li data-layers="runtime"><span class="lab-watch-k">Runtime</span><p>Falco watches system calls on the node and reports what actually ran inside a container, down to the command.</p></li>
+        <li data-layers="edge"><span class="lab-watch-k">Edge</span><p>CrowdSec spots scanners in the access logs, and their IP is blocked at Cloudflare&rsquo;s edge within two minutes.</p></li>
+        <li><span class="lab-watch-k">Images</span><p>Every running image is scanned weekly. The first scan found 75 high and critical CVEs; today it finds none.</p></li>
+      </ul>
     </section>
 
     <!-- Testimonials -->
@@ -479,7 +512,7 @@
         </figure>
         <figure class="quote">
           <blockquote>“Het's communication and writing skills make him stand out from the crowd.”</blockquote>
-          <figcaption><b>Iliyas Maner</b> Lead Cloud Engineer, Datagrok</figcaption>
+          <figcaption><b>Iliyas Maner</b> Lead Cloud Engineer, DataGrokr</figcaption>
         </figure>
       </div>
       <a class="more" href="https://www.linkedin.com/in/het11/details/recommendations/" target="_blank" rel="noopener" data-umami-event="outbound" data-umami-event-target="linkedin-recommendations">All recommendations on LinkedIn <i class="ph ph-arrow-up-right"></i></a>
@@ -595,6 +628,6 @@
   <script src="/app.js" defer></script>
   <script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/" } }</script>
   <script type="module" src="/eye3d.js"></script>
-  <script src="/chaos.js" defer></script>
+  <script type="module" src="/home-lab.js"></script>
 </body>
 </html>

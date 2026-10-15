@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { ACTIONS, GROUPS, tone, livePods, ringLayout, diffSnapshots, refusalText, formatMs, verdict, apiBase,
-  tierOf, hueOf, tiers, placePods, planVisit, visitLine, route, cut, budgetView, costText } from '../lab/core.js';
+  tierOf, hueOf, tiers, placePods, planVisit, visitLine, route, cut, budgetView, costText, lastRun } from '../lab/core.js';
 
 const IDS = ['kill-pod', 'evict-api', 'delete-api-pods', 'crash', 'leak', 'hang', 'scale-zero', 'delete-web', 'delete-api-svc',
   'bad-release', 'delete-secret', 'rogue-netpol', 'kill-postgres', 'traffic-spike', 'nuke-namespace'];
@@ -187,4 +187,15 @@ test('a frozen lab with budget left says so, and when it reopens', () => {
 test('costText ignores numbers that are not finite', () => {
   assert.equal(costText(NaN), '');
   assert.equal(costText(Infinity), '');
+});
+
+test('the homepage names the newest finished experiment', () => {
+  assert.equal(lastRun(null), null);
+  assert.equal(lastRun([{ action: 'kill-pod', status: 'running' }]), null);
+  assert.deepEqual(lastRun([
+    { action: 'kill-pod', title: 'Kill a pod', status: 'running' },
+    { action: 'crash', title: 'Crash the process', status: 'recovered', recoveryMs: 8597 },
+  ]), { title: 'Crash the process', healed: true, time: '8.6 s' });
+  assert.deepEqual(lastRun([{ action: 'hang', title: 'Freeze the app', status: 'timeout' }]), { title: 'Freeze the app', healed: false, time: '' });
+  assert.equal(lastRun([{ action: 'not-a-real-action', status: 'recovered', recoveryMs: 1 }]), null);
 });

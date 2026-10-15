@@ -78,6 +78,7 @@ const open = (url) => () => window.open(url, '_blank', 'noopener');
 const ACTIONS = [
   { group: 'Sections', icon: 'ph-eye', label: 'Experience: read the chart', run: go('experience') },
   { group: 'Sections', icon: 'ph-magnifying-glass-plus', label: 'Work: under the lens', run: go('work') },
+  { group: 'Sections', icon: 'ph-skull', label: 'Lab: break my real Kubernetes cluster', run: go('lab') },
   { group: 'Sections', icon: 'ph-globe-hemisphere-west', label: 'Check a domain', run: go('check') },
   { group: 'Sections', icon: 'ph-seal-check', label: 'Live: production I run myself', run: go('live') },
   { group: 'Sections', icon: 'ph-circle-notch', label: 'How I ship', run: go('how-i-ship') },
