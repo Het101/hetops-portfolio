@@ -26,6 +26,8 @@ const OUTER = [
   { label: 'GitHub Actions' },
   { big: '99.9%', small: 'uptime kept' },
   { label: 'Prometheus' },
+  { big: '75 → 0', small: 'image CVEs' },
+  { label: 'Linkerd · mTLS' },
 ];
 
 // Phones and small screens get a lighter eye: fewer polygons and no antialiasing (a dense screen

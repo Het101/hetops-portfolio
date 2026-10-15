@@ -1,6 +1,6 @@
 # hetops.dev
 
-Personal site of Het Patel, DevOps Engineer II at Techdome (Mumbai), previously Datagrok.
+Personal site of Het Patel, DevOps Engineer II at Techdome (Mumbai), previously DataGrokr.
 
 - **Primary visitor:** hiring managers and recruiters (decided 2026-10-05). Secondary: engineers evaluating his tools.
 - **Job of the site:** prove he runs production well and turns incidents into tools; get an email or a résumé download.

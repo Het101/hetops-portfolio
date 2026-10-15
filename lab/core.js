@@ -194,6 +194,14 @@ export function verdict(exp) {
   return { label: formatMs(exp.recoveryMs), within: exp.recoveryMs <= ACTIONS[exp.action].target * 1000 };
 }
 
+// The homepage's line about the lab: the newest finished experiment and how it ended.
+export function lastRun(incidents) {
+  const x = (Array.isArray(incidents) ? incidents : []).find((i) => i && i.status !== 'running' && ACTIONS[i.action]);
+  if (!x) return null;
+  const healed = x.status === 'recovered' && Number.isFinite(x.recoveryMs);
+  return { title: String(x.title || x.action), healed, time: healed ? formatMs(x.recoveryMs) : '' };
+}
+
 export function apiBase(search) {
   const api = new URLSearchParams(search).get('api') ?? '';
   return /^http:\/\/localhost:\d+$/.test(api) ? api : 'https://lab.hetops.dev';

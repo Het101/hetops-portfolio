@@ -756,6 +756,36 @@ html.intro .intro-overlay.gone { opacity: 0; pointer-events: none; }
 }
 
 /* ── Break production ─────────────────────────────────────────── */
+/* Home: the real lab. Defence in depth drawn as an iris; hover a ring to light the rows that guard it. */
+.home-lab { padding-top: 180px; }
+.hl-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 48px; align-items: center; margin-top: 40px; }
+.hl-iris { margin: 0; }
+.hl-iris svg { width: 100%; max-width: 460px; height: auto; display: block; margin-inline: auto; overflow: visible; }
+.hl-ring circle { fill: rgba(239, 233, 221, 0.015); stroke: var(--line-2); stroke-width: 1; transition: fill 0.25s var(--ease), stroke 0.25s var(--ease); }
+.hl-ring:nth-child(odd) circle { fill: rgba(69, 184, 141, 0.035); }
+.hl-ring text { font: 500 11px var(--mono); fill: var(--text-3); letter-spacing: 0.02em; pointer-events: none; transition: fill 0.25s var(--ease); }
+.hl-ring .hl-ring-k { fill: var(--gold); text-transform: uppercase; letter-spacing: 0.08em; }
+.hl-ring { cursor: default; outline: none; }
+.hl-ring.on circle, .hl-ring:focus-visible circle { fill: rgba(227, 169, 68, 0.12); stroke: var(--gold); }
+.hl-ring.on text { fill: var(--text); }
+.hl-pupil { fill: #050505; stroke: var(--moss); stroke-width: 1.5; }
+.hl-pupil-k { font: 600 9px var(--mono); fill: var(--moss-text); text-transform: uppercase; letter-spacing: 0.08em; }
+.hl-iris figcaption { margin-top: 14px; text-align: center; font-size: 14px; color: var(--text-3); }
+.hl-live { margin: 0 0 28px; display: grid; gap: 0; }
+.hl-live div { display: grid; gap: 2px; padding: 14px 0; border-top: 1px solid var(--line); }
+.hl-live div[hidden] { display: none; }
+.hl-live dt { font: 500 12px var(--mono); color: var(--text-3); text-transform: uppercase; letter-spacing: 0.06em; }
+.hl-live dd { margin: 0; font-size: 20px; font-weight: 600; color: var(--text); font-variant-numeric: tabular-nums; }
+.hl-live [data-state="ok"] dd { color: var(--moss-text); }
+.hl-live [data-state="bad"] dd { color: var(--warn); }
+.hl-live [data-state="off"] dd { color: var(--text-2); }
+.lab-watch-list.hl-list { margin-top: 56px; }
+.hl-list li { transition: background 0.25s var(--ease); }
+.hl-list li.on { background: rgba(227, 169, 68, 0.06); }
+.hl-list li.on p { color: var(--text); }
+@media (max-width: 860px) { .hl-grid { grid-template-columns: minmax(0, 1fr); gap: 28px; } .hl-iris svg { max-width: 380px; } }
+@media (max-width: 760px) { .home-lab { padding-top: 112px; } .hl-ring text { font-size: 14px; } }
+@media (prefers-reduced-motion: reduce) { .hl-ring circle, .hl-ring text, .hl-list li { transition: none; } }
 .chaos { padding-top: 180px; }
 .chaos-grid { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 40px; align-items: start; }
 .chaos-board { border-top: 1px solid var(--line-2); padding-top: 20px; }
