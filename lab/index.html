@@ -109,6 +109,21 @@
       </div>
     </section>
 
+    <section class="lab-watch" aria-labelledby="lab-watch-h">
+      <h2 id="lab-watch-h">What else is watching</h2>
+      <p class="lab-watch-sub">Breaking it is the part you can see. Underneath run the layers a regulated platform needs, and each one was tested by attacking it.</p>
+      <ul class="lab-watch-list">
+        <li><span class="lab-watch-k">GitOps</span><p>Argo CD makes git the only way in. Delete a deployment by hand and it is recreated from git within a minute.</p></li>
+        <li><span class="lab-watch-k">SLO</span><p>99% of visits must succeed over any 7 days. When the error budget is spent, experiments freeze until it recovers.</p></li>
+        <li><span class="lab-watch-k">mTLS</span><p>Linkerd encrypts every hop from the ingress to the database. Postgres accepts four named identities only: a pod that passed the network rules was still refused.</p></li>
+        <li><span class="lab-watch-k">Logs</span><p>Every request, from ingress to database, lands in Elasticsearch on one timeline.</p></li>
+        <li><span class="lab-watch-k">Audit</span><p>The Kubernetes audit log records who did what. A shell opened in a pod raises an alert mapped to MITRE ATT&amp;CK.</p></li>
+        <li><span class="lab-watch-k">Runtime</span><p>Falco watches system calls on the node and reports what actually ran inside a container, down to the command.</p></li>
+        <li><span class="lab-watch-k">Edge</span><p>CrowdSec spots scanners in the access logs, and their IP is blocked at Cloudflare&rsquo;s edge within two minutes.</p></li>
+        <li><span class="lab-watch-k">Images</span><p>Every running image is scanned weekly. The first scan found 75 high and critical CVEs; today it finds none.</p></li>
+      </ul>
+    </section>
+
     <section id="lab-sim" class="lab-sim" hidden>
     <!-- Break production: a simulation visitors can break and watch heal -->
     <section class="chaos wrap" id="chaos" data-section="chaos" aria-labelledby="chaos-h">

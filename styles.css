@@ -1116,6 +1116,15 @@ html.intro-landed .hero-copy > :nth-child(4) { transition-delay: 0.36s; }
 .lab-budget-sli, .lab-budget-burn { margin: 0; font: 13px var(--mono); color: var(--text-3); font-variant-numeric: tabular-nums; }
 .lab-log-cost { grid-column: 1 / -1; font: 13px var(--mono); color: var(--text-3); }
 @media (prefers-reduced-motion: reduce) { .lab-meter-fill { transition: none; } }
+.lab-watch { margin-top: 96px; padding-top: 40px; border-top: 1px solid var(--line-2); }
+.lab-watch h2 { font-size: clamp(2rem, 4vw, 3rem); font-stretch: 108%; letter-spacing: -0.03em; }
+.lab-watch-sub { margin-top: 14px; font-size: 18px; color: var(--text-2); max-width: 56ch; }
+.lab-watch-list { list-style: none; margin: 36px 0 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 48px; }
+.lab-watch-list li { display: grid; grid-template-columns: 6.5rem minmax(0, 1fr); gap: 16px; padding: 18px 0; border-top: 1px solid var(--line); }
+.lab-watch-k { font: 500 13px/1.7 var(--mono); color: var(--gold); text-transform: uppercase; letter-spacing: 0.06em; }
+.lab-watch-list p { margin: 0; color: var(--text-2); }
+@media (max-width: 860px) { .lab-watch-list { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 420px) { .lab-watch-list li { grid-template-columns: minmax(0, 1fr); gap: 4px; } }
 .lab-say { margin-top: 16px; font-size: 15px; color: var(--text-2); max-width: 46ch; }
 
 .lab-explain { margin-top: 14px; font-size: 16px; color: var(--text-2); max-width: 58ch; }
