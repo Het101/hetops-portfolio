@@ -132,13 +132,16 @@ if (renderer) {
   cornea.position.z = 0.46; gaze.add(cornea);
 
   const lidMat = new THREE.MeshStandardMaterial({ color: 0x0f1012, roughness: 0.9, metalness: 0, side: THREE.DoubleSide, envMapIntensity: 0.12 });
-  const lidGeo = new THREE.SphereGeometry(1.07, lite ? 72 : 128, lite ? 28 : 48, 0, Math.PI * 2, 0, Math.PI / 2);
-  const upper = new THREE.Mesh(lidGeo, lidMat), lower = new THREE.Mesh(lidGeo, lidMat);
+  // The lids sit clear of the cornea (its front reaches 0.46 + 0.66 = 1.12), or it pokes through them.
+  // The lower lid is a hair smaller so the upper one can close over it without flickering.
+  const LID_R = 1.15, LOW_R = LID_R - 0.005;
+  const lidGeo = (r) => new THREE.SphereGeometry(r, lite ? 72 : 128, lite ? 28 : 48, 0, Math.PI * 2, 0, Math.PI / 2);
+  const upper = new THREE.Mesh(lidGeo(LID_R), lidMat), lower = new THREE.Mesh(lidGeo(LOW_R), lidMat);
   lower.rotation.z = Math.PI; // the same hemisphere, flipped to cover the bottom
   head.add(upper, lower);
   // Lashes: tapered ribbons that leave the lid edge pointing out, then curl. Longest at the
   // centre, splaying towards the corners, with a little randomness so no two match.
-  function lashGeometry(count, lenMin, lenMax, seed) {
+  function lashGeometry(count, lenMin, lenMax, seed, r, thin = 1) {
     let sd = seed; const rnd = () => ((sd = (sd * 16807) % 2147483647) / 2147483647);
     const pos = [], idx = [], SEG = 8, up = new THREE.Vector3(0, 1, 0);
     for (let i = 0; i < count; i++) {
@@ -148,8 +151,8 @@ if (renderer) {
       const row = i % 2 ? -0.012 : 0.004;
       const out = new THREE.Vector3(Math.sin(phi), 0, Math.cos(phi));
       const side = new THREE.Vector3(Math.cos(phi), 0, -Math.sin(phi));
-      const base = out.clone().multiplyScalar(1.07 + row).add(new THREE.Vector3(0, -0.004, 0));
-      const splay = phi * 0.42 + (rnd() - 0.5) * 0.12, w0 = 0.011 + rnd() * 0.004;
+      const base = out.clone().multiplyScalar(r + row).add(new THREE.Vector3(0, -0.004, 0));
+      const splay = phi * 0.42 + (rnd() - 0.5) * 0.12, w0 = (0.011 + rnd() * 0.004) * thin;
       const start = pos.length / 3;
       for (let k = 0; k <= SEG; k++) {
         const t = k / SEG, w = w0 * Math.pow(1 - t, 0.85) + 0.0012;
@@ -165,13 +168,16 @@ if (renderer) {
     g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.setIndex(idx); g.computeVertexNormals();
     return g;
   }
-  const lashMat = new THREE.MeshStandardMaterial({ color: 0x2b2119, roughness: 0.5, metalness: 0, side: THREE.DoubleSide });
-  upper.add(new THREE.Mesh(lashGeometry(130, 0.13, 0.3, 7), lashMat));
-  lower.add(new THREE.Mesh(lashGeometry(54, 0.04, 0.1, 19), lashMat));
+  const lashMat = new THREE.MeshStandardMaterial({ color: 0x2b2119, roughness: 0.8, metalness: 0, envMapIntensity: 0.3, side: THREE.DoubleSide });
+  // Lower lashes face the gold under-light; a dark matte finish keeps them from reading as white specks.
+  const lowLashMat = new THREE.MeshStandardMaterial({ color: 0x15100c, roughness: 0.95, metalness: 0, envMapIntensity: 0.15, side: THREE.DoubleSide });
+  upper.add(new THREE.Mesh(lashGeometry(130, 0.13, 0.3, 7, LID_R), lashMat));
+  lower.add(new THREE.Mesh(lashGeometry(40, 0.04, 0.09, 19, LOW_R, 0.7), lowLashMat));
 
   // Lid openness 0 = closed, 1 = open. Upper swings further than lower, like a real eye.
   const lid = { o: 0 };
   const OPEN_UP = 0.6, OPEN_LOW = 0.38;
+  const SHUT = 0.05; // closed, the upper lid comes a little past the middle and over the lower one
 
   // ── Orbits ───────────────────────────────────────────────────
   const orbitDefs = [
@@ -226,7 +232,7 @@ if (renderer) {
     const fit = docked ? 1.25 : Math.max((W < 560 ? 3 : 2.5) / camera.aspect, 1.6);
     camera.position.z = fit / Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
     camera.updateProjectionMatrix();
-    eyeR = (H / 2) / (camera.position.z * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2))) * 1.07;
+    eyeR = (H / 2) / (camera.position.z * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2))) * LID_R;
   }
   new ResizeObserver(() => { resize(); draw(); }).observe(body); resize();
 
@@ -265,9 +271,9 @@ if (renderer) {
     gaze.rotation.y = look.x * 0.42; gaze.rotation.x = look.y * 0.3;
     // Docked, the watcher falls asleep as the page ends: lids close over the last screen.
     const left = docked ? document.documentElement.scrollHeight - (scrollY + innerHeight) : 1e9;
-    sleepy += (Math.min(1, Math.max(0.02, left / 520)) - sleepy) * Math.min(1, dt * 6);
+    sleepy += (Math.min(1, Math.max(0, left / 520)) - sleepy) * Math.min(1, dt * 6);
     const open = lid.o * (docked ? sleepy : 1);
-    upper.rotation.x = -open * (OPEN_UP + Math.min(0, look.y) * -0.18);
+    upper.rotation.x = SHUT - open * (OPEN_UP + SHUT + Math.min(0, look.y) * -0.18);
     lower.rotation.x = open * OPEN_LOW;
     // Pupil dilates while a tool is picked.
     // Live health: a calm eye when everything is up; a tinted, narrowed one when something is down.
