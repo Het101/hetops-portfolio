@@ -698,6 +698,8 @@ html.intro .intro-overlay.gone { opacity: 0; pointer-events: none; }
 
 /* ── The watcher: the eye docks in the corner past the hero ───── */
 .eye-body { position: absolute; inset: 0; }
+/* Flashlight easter egg: a burst of light over the eye (eye3d.js animates its opacity). */
+.eye-flash { position: absolute; inset: 20%; border-radius: 50%; pointer-events: none; opacity: 0; background: radial-gradient(circle, rgba(255, 252, 240, 0.95), rgba(255, 244, 214, 0.35) 45%, transparent 70%); mix-blend-mode: screen; }
 .eye-body.docked {
   position: fixed; inset: auto 24px 24px auto; width: 128px; height: 128px; z-index: 45; border-radius: 50%;
   transition: opacity 0.4s var(--ease), translate 0.4s var(--ease);

@@ -61,6 +61,10 @@ if (renderer) {
   // ── Eyeball texture ──────────────────────────────────────────
   // Equirectangular: the top row is the front pole, so the iris's radial fibres are vertical strokes.
   const P = 0.17, I = 0.56, Lb = 0.64; // pupil, iris, limbus as angles from the front (radians)
+  // Easter-egg state. 3 a.m. on-call: between midnight and 5 a.m. local time the eye is tired.
+  const tired = new Date().getHours() < 5;
+  if (tired && caption) caption.textContent = 'Paged at 3 a.m. again? Go to sleep. I’ll watch production.';
+  let flash = 0, dizzyUntil = 0, staring = false, stareStart = 0, busy = false;
   function eyeTexture() {
     const W = 2048, H = 1024, c = document.createElement('canvas'); c.width = W; c.height = H;
     const g = c.getContext('2d'), row = (t) => (t / Math.PI) * H;
@@ -70,9 +74,9 @@ if (renderer) {
     gr.addColorStop(0, '#e4ddcf'); gr.addColorStop(0.35, '#cfc6b5'); gr.addColorStop(1, '#7b746a');
     g.fillStyle = gr; g.fillRect(0, 0, W, H);
     // Veins: thin red branches creeping towards the iris.
-    for (let i = 0; i < 70; i++) {
+    for (let i = 0; i < (tired ? 170 : 70); i++) {
       let x = rnd() * W, y = row(1.25 + rnd() * 0.9); const toward = row(Lb + 0.05 + rnd() * 0.25);
-      g.strokeStyle = `rgba(150,40,34,${(0.12 + rnd() * 0.22).toFixed(2)})`; g.lineWidth = 0.6 + rnd() * 1.6;
+      g.strokeStyle = `rgba(150,40,34,${((tired ? 0.22 : 0.12) + rnd() * 0.22).toFixed(2)})`; g.lineWidth = 0.6 + rnd() * 1.6;
       g.beginPath(); g.moveTo(x, y);
       while (y > toward) { x += (rnd() - 0.5) * 26; y -= 8 + rnd() * 14; g.lineTo(x, y); }
       g.stroke();
@@ -117,6 +121,7 @@ if (renderer) {
   const ballGeo = new THREE.SphereGeometry(1, lite ? 72 : 128, lite ? 54 : 96); ballGeo.rotateX(Math.PI / 2);
   const irisTex = eyeTexture();
   const ballMat = new THREE.MeshPhysicalMaterial({ map: irisTex, roughness: 0.42, clearcoat: 1, clearcoatRoughness: 0.05, envMapIntensity: 0.8, emissive: 0x000000, emissiveMap: irisTex });
+  if (tired) ballMat.color.setHex(0xffe6e0); // a little bloodshot
   gaze.add(new THREE.Mesh(ballGeo, ballMat));
   // Pupil cap: a separate black cap so it can dilate.
   const pupilMat = new THREE.MeshBasicMaterial({ color: 0x030303 });
@@ -155,13 +160,16 @@ if (renderer) {
       const side = new THREE.Vector3(Math.cos(phi), 0, -Math.sin(phi));
       const base = out.clone().multiplyScalar(r + row).add(new THREE.Vector3(0, -0.004, 0));
       const splay = phi * 0.42 + (rnd() - 0.5) * 0.12, w0 = (0.011 + rnd() * 0.004) * thin;
+      const curl = 0.7 + rnd() * 0.6;
+      // Real lashes clump: each group of three leans its tips towards the group's middle lash.
+      const lean = (-1.2 + ((Math.floor(i / 3) * 3 + 1) / (count - 1)) * 2.4 - phi) * r * 0.55;
       const start = pos.length / 3;
       for (let k = 0; k <= SEG; k++) {
-        const t = k / SEG, w = w0 * Math.pow(1 - t, 0.85) + 0.0012;
+        const t = k / SEG, w = w0 * Math.pow(1 - t, 1.25) + 0.0006;
         const pt = base.clone()
-          .addScaledVector(out, len * (0.78 * t - 0.22 * t * t))
-          .addScaledVector(up, len * (0.12 * t + 0.88 * t * t))
-          .addScaledVector(side, len * splay * t);
+          .addScaledVector(out, len * (0.78 * t - 0.22 * t * t * curl))
+          .addScaledVector(up, len * (0.12 * t + 0.88 * t * t * curl))
+          .addScaledVector(side, len * splay * t + lean * t * t);
         pos.push(pt.x - side.x * w / 2, pt.y, pt.z - side.z * w / 2, pt.x + side.x * w / 2, pt.y, pt.z + side.z * w / 2);
         if (k) { const a = start + (k - 1) * 2; idx.push(a, a + 1, a + 2, a + 1, a + 3, a + 2); }
       }
@@ -173,7 +181,7 @@ if (renderer) {
   const lashMat = new THREE.MeshStandardMaterial({ color: 0x2b2119, roughness: 0.8, metalness: 0, envMapIntensity: 0.3, side: THREE.DoubleSide });
   // Lower lashes face the gold under-light; a dark matte finish keeps them from reading as white specks.
   const lowLashMat = new THREE.MeshStandardMaterial({ color: 0x15100c, roughness: 0.95, metalness: 0, envMapIntensity: 0.15, side: THREE.DoubleSide });
-  upper.add(new THREE.Mesh(lashGeometry(130, 0.13, 0.3, 7, LID_R), lashMat));
+  upper.add(new THREE.Mesh(lashGeometry(170, 0.13, 0.3, 7, LID_R), lashMat));
   lower.add(new THREE.Mesh(lashGeometry(40, 0.04, 0.09, 19, LOW_R, 0.7), lowLashMat));
 
   // Lid openness 0 = closed, 1 = open. Upper swings further than lower, like a real eye.
@@ -253,7 +261,11 @@ if (renderer) {
   // ── Tiny tween runner (the render loop drives it) ─────────────
   const tweens = [];
   const easeOutExpo = (t) => (t === 1 ? 1 : 1 - Math.pow(2, -10 * t)), easeIn = (t) => t * t, easeOut = (t) => 1 - (1 - t) * (1 - t);
-  const tween = (to, dur, ease = easeOut) => new Promise((done) => tweens.push({ from: lid.o, to, dur, ease, t: 0, done }));
+  // With the loop paused (eye off screen, tab hidden) a tween would never finish, so it jumps to its end.
+  const tween = (to, dur, ease = easeOut) => new Promise((done) => {
+    if (!running) { lid.o = to; done(); return; }
+    tweens.push({ from: lid.o, to, dur, ease, t: 0, done });
+  });
   const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
   // ── Frame ────────────────────────────────────────────────────
@@ -269,13 +281,18 @@ if (renderer) {
     // Where to look: the picked tool, else the pointer.
     let tx = aim.x, ty = aim.y;
     if (picked && picked.sx != null && !docked) { tx = (picked.sx - W / 2) / (W * 0.35); ty = (picked.sy - H / 2) / (H * 0.35); }
+    const dizzy = now < dizzyUntil, dz = dizzy ? (dizzyUntil - now) / 2500 : 0;
+    if (dizzy) { tx = Math.sin(now / 120) * 0.8 * dz; ty = Math.cos(now / 120) * 0.6 * dz; }
     look.x += (tx - look.x) * Math.min(1, dt * 5); look.y += (ty - look.y) * Math.min(1, dt * 5);
     gaze.rotation.y = look.x * 0.42; gaze.rotation.x = look.y * 0.3;
+    gaze.rotation.z = dizzy ? Math.sin(now / 70) * 0.3 * dz : 0; // the iris swirls
     // Docked, the watcher falls asleep as the page ends: lids close over the last screen.
     const left = docked ? document.documentElement.scrollHeight - (scrollY + innerHeight) : 1e9;
     sleepy += (Math.min(1, Math.max(0, left / 520)) - sleepy) * Math.min(1, dt * 6);
-    const open = lid.o * (docked ? sleepy : 1);
-    upper.rotation.x = SHUT - open * (OPEN_UP + SHUT + Math.min(0, look.y) * -0.18);
+    const open = lid.o * (docked ? sleepy : 1) * (tired ? 0.72 : 1);
+    // Staring contest: after 3 s the upper lid starts to twitch.
+    const twitch = staring && now - stareStart > 3000 && Math.sin(now / 310) > 0.3 ? 0.05 * Math.abs(Math.sin(now / 47)) : 0;
+    upper.rotation.x = SHUT + twitch - open * (OPEN_UP + SHUT + Math.min(0, look.y) * -0.18);
     lower.rotation.x = open * OPEN_LOW;
     // Pupil dilates while a tool is picked.
     // Live health: a calm eye when everything is up; a tinted, narrowed one when something is down.
@@ -283,8 +300,12 @@ if (renderer) {
       const pulse = 0.5 + 0.5 * Math.sin(now / 260);
       ballMat.emissive.setHex(health === 'down' ? 0xef7a64 : 0xe3a944); ballMat.emissiveIntensity = 0.18 + pulse * 0.3;
     } else ballMat.emissiveIntensity = 0;
-    const want = (picked || glancing ? P * 1.32 : P) * (health === 'down' ? 0.7 : health === 'degraded' ? 0.85 : 1);
-    if (Math.abs(want - pupilSize) > 0.002) setPupil(pupilSize + (want - pupilSize) * Math.min(1, dt * 6));
+    let want = (picked || glancing ? P * 1.32 : P) * (health === 'down' ? 0.7 : health === 'degraded' ? 0.85 : 1);
+    if (flash > 0) { want *= 1 - 0.55 * flash; flash = Math.max(0, flash - dt / 2.4); } // the light reflex
+    if (!reduce) want *= 1 + 0.03 * Math.sin(now / 1900) + 0.015 * Math.sin(now / 730 + 1.3); // hippus: never quite still
+    if (dizzy) want *= 1 + 0.18 * Math.sin(now / 90);
+    // A real pupil constricts fast and dilates slowly.
+    if (Math.abs(want - pupilSize) > 0.0015) setPupil(pupilSize + (want - pupilSize) * Math.min(1, dt * (want < pupilSize ? 9 : 1.6)));
 
     for (const o of orbits) {
       o.speedNow += ((picked && picked.o === o ? 0 : o.speed) - o.speedNow) * Math.min(1, dt * 4);
@@ -312,7 +333,7 @@ if (renderer) {
   }
   function draw() { if (!running) { running = true; frame(performance.now()); running = false; } }
   const start = () => { if (!running && (visible || docked) && !document.hidden) { running = true; last = performance.now(); requestAnimationFrame(frame); } };
-  const stop = () => { running = false; };
+  const stop = () => { running = false; for (const tw of tweens.splice(0)) { lid.o = tw.to; tw.done(); } };
   new IntersectionObserver(([e]) => { visible = e.isIntersecting; if (visible) start(); else if (!docked) stop(); }).observe(stage);
 
   // ── Dock: past the hero the eye shrinks into the corner and keeps watching ─
@@ -387,6 +408,64 @@ if (renderer) {
   // At the end of the page the watcher closes its eyes rather than leaving (see sleepy in the frame loop).
   document.addEventListener('visibilitychange', () => (document.hidden ? stop() : start()));
 
+  // ── Easter eggs: flashlight, staring contest, dizzy, and the 3 a.m. eye above ─
+  let sayTimer;
+  function say(text) {
+    clearTimeout(sayTimer);
+    if (docked) {
+      note.textContent = text; body.classList.add('say');
+      sayTimer = setTimeout(() => { body.classList.remove('say'); note.textContent = noteDefault; }, 4000);
+    } else if (caption) {
+      caption.textContent = text;
+      sayTimer = setTimeout(() => { if (!picked) caption.innerHTML = defaultCaption; }, 4000);
+    }
+  }
+  const blinkTwice = async () => { for (let i = 0; i < 2; i++) { await tween(0.02, 0.08, easeIn); await tween(1, 0.18, easeOut); } };
+  // Is the pointer over the iris? frac is a share of the eye's screen radius (the iris is about 0.46).
+  const irisAt = new THREE.Vector3();
+  function overIris(x, y, frac) {
+    const r = canvas.getBoundingClientRect();
+    irisAt.set(0, 0, 1).applyMatrix4(gaze.matrixWorld).project(camera);
+    return Math.hypot(x - (r.left + (irisAt.x * 0.5 + 0.5) * r.width), y - (r.top + (-irisAt.y * 0.5 + 0.5) * r.height)) < eyeR * frac;
+  }
+  const flashEl = document.createElement('span'); flashEl.className = 'eye-flash'; flashEl.setAttribute('aria-hidden', 'true'); body.append(flashEl);
+
+  // Flashlight: click the iris. The pupil snaps small, the eye squints and blinks, then slowly opens up again.
+  body.addEventListener('click', (e) => {
+    if (reduce || docked || busy || !overIris(e.clientX, e.clientY, 0.46)) return;
+    busy = true; staring = false; flash = 1; track('eye-egg', { egg: 'flashlight' });
+    flashEl.animate([{ opacity: 0.9 }, { opacity: 0 }], { duration: 450, easing: 'ease-out' });
+    // The lids are animated; the caption and the end of the egg run on timers, so a paused loop can't strand them.
+    tween(0.45, 0.08, easeOut).then(() => wait(380)).then(() => tween(0.02, 0.09, easeIn)).then(() => tween(1, 0.6, easeOut));
+    setTimeout(() => { say('Bright. I’ll be seeing spots for a while.'); busy = false; }, 1200);
+  });
+
+  // Staring contest (rest the pointer on the pupil) and dizzy (shake the pointer).
+  let stareAt = null, stareTimer, lastX = 0, lastDir = 0, flips = [];
+  if (!reduce) addEventListener('pointermove', (e) => {
+    const now = performance.now(), dx = e.clientX - lastX; lastX = e.clientX;
+    if (Math.abs(dx) > 12 && Math.sign(dx) !== lastDir) {
+      lastDir = Math.sign(dx); flips = flips.filter((t) => now - t < 1200); flips.push(now);
+      if (flips.length >= 6 && !busy && (visible || docked)) {
+        busy = true; staring = false; clearTimeout(stareTimer); flips = [];
+        dizzyUntil = now + 2500; track('eye-egg', { egg: 'dizzy' });
+        say('Whoa. Slow down, I’m only one eye.');
+        setTimeout(() => { blinkTwice(); busy = false; }, 2500);
+        return;
+      }
+    }
+    if (docked || busy) return;
+    const on = overIris(e.clientX, e.clientY, 0.2);
+    if (on && stareAt && Math.hypot(e.clientX - stareAt.x, e.clientY - stareAt.y) < 10) return; // still staring
+    clearTimeout(stareTimer); staring = false; stareAt = null;
+    if (!on) return;
+    stareAt = { x: e.clientX, y: e.clientY }; staring = true; stareStart = now;
+    stareTimer = setTimeout(() => {
+      staring = false; stareAt = null; track('eye-egg', { egg: 'stare' });
+      blinkTwice(); say('You win. I blinked first. Want to work together?');
+    }, 5000);
+  }, { passive: true });
+
   // ── Wake up: a beat closed, a sleepy flutter, then open; blink now and then ─
   if (reduce) {
     lid.o = 1; stage.classList.add('awake'); draw();
@@ -397,7 +476,7 @@ if (renderer) {
     const awake = () => stage.classList.add('awake');
     if (document.documentElement.classList.contains('intro')) window.addEventListener('intro:done', awake, { once: true }); else awake();
     const blink = async () => {
-      if (running) { await tween(0.02, 0.09, easeIn); await tween(1, 0.22, easeOut); }
+      if (running && !busy && !staring) { await tween(0.02, tired ? 0.16 : 0.09, easeIn); await tween(1, tired ? 0.45 : 0.22, easeOut); }
       setTimeout(blink, 4800 + Math.random() * 5200);
     };
     setTimeout(blink, 5200);
@@ -411,7 +490,7 @@ if (renderer) {
       stage.classList.add('awake');
       await tween(1, 1.2, easeOutExpo);
       const blink = async () => {
-        if (running) { await tween(0.02, 0.09, easeIn); await tween(1, 0.22, easeOut); }
+        if (running && !busy && !staring) { await tween(0.02, tired ? 0.16 : 0.09, easeIn); await tween(1, tired ? 0.45 : 0.22, easeOut); }
         setTimeout(blink, 4800 + Math.random() * 5200);
       };
       setTimeout(blink, 5200);
