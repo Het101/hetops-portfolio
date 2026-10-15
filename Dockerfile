@@ -1,6 +1,6 @@
 FROM nginx:alpine
 
-COPY index.html 404.html gate.js styles.css app.js eye3d.js intro.js inside.js chaos.js case.js robots.txt sitemap.xml Het_Patel_Resume.pdf \
+COPY index.html 404.html gate.js styles.css app.js eye3d.js home-lab.js intro.js inside.js chaos.js case.js robots.txt sitemap.xml Het_Patel_Resume.pdf \
      favicon.ico favicon.svg apple-touch-icon.png icon-192.png icon-512.png site.webmanifest /usr/share/nginx/html/
 COPY assets /usr/share/nginx/html/assets
 COPY work /usr/share/nginx/html/work
