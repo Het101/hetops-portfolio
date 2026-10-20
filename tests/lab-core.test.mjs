@@ -199,3 +199,41 @@ test('the homepage names the newest finished experiment', () => {
   assert.deepEqual(lastRun([{ action: 'hang', title: 'Freeze the app', status: 'timeout' }]), { title: 'Freeze the app', healed: false, time: '' });
   assert.equal(lastRun([{ action: 'not-a-real-action', status: 'recovered', recoveryMs: 1 }]), null);
 });
+
+// ── What changed (Change Timeline) ──
+import { timelineRows, pinnedAlert, mergeEvents } from '../lab/core.js';
+
+const tev = (o) => ({ id: o.id, at: o.at, source: o.source || 'k8s', kind: o.kind || 'restart', subject: o.subject || 'clinic/api', summary: o.summary || 'pod restarted', severity: o.severity || 'info', ref: o.ref || {} });
+
+test('timelineRows: bursts collapse, "you" marks your experiment, filters work', () => {
+  const events = [
+    tev({ id: 'r3', at: '2026-10-20T12:03:00Z', severity: 'warn' }),
+    tev({ id: 'r2', at: '2026-10-20T12:02:00Z' }),
+    tev({ id: 'r1', at: '2026-10-20T12:01:00Z' }),
+    tev({ id: 'x1', at: '2026-10-20T12:00:30Z', source: 'chaos', kind: 'experiment', summary: 'A visitor ran "Kill a pod"', ref: { experimentId: 'e-mine' } }),
+    tev({ id: 'a1', at: '2026-10-20T12:00:10Z', source: 'alert', kind: 'firing', subject: 'lab/LabSLOFastBurn', summary: 'Burning fast', severity: 'crit' }),
+  ];
+  const rows = timelineRows(events, { mine: new Set(['e-mine']) });
+  assert.deepEqual(rows.map((r) => r.text), ['3 restarts in clinic/api', 'A visitor ran "Kill a pod"', 'Burning fast']);
+  assert.equal(rows[0].tone, 'warn');
+  assert.equal(rows[1].you, true);
+  assert.equal(rows[2].tone, 'down');
+  assert.deepEqual(timelineRows(events, { filter: 'alerts' }).map((r) => r.id), ['a1']);
+  assert.deepEqual(timelineRows(events, { filter: 'changes' }).map((r) => r.id), ['r3', 'x1']);
+});
+
+test('pinnedAlert: the newest unresolved alert with its likely causes', () => {
+  const x = tev({ id: 'x1', at: '2026-10-20T12:00:00Z', source: 'chaos', kind: 'experiment', summary: 'A visitor ran "Kill Postgres"' });
+  const firing = tev({ id: 'a1', at: '2026-10-20T12:01:00Z', source: 'alert', kind: 'firing', summary: 'Burning fast', ref: { alertname: 'LabSLOFastBurn', suspects: ['x1', 'gone'] } });
+  const p = pinnedAlert([firing, x]);
+  assert.equal(p.text, 'Burning fast');
+  assert.deepEqual(p.causes.map((c) => c.text), ['A visitor ran "Kill Postgres"']);
+  const resolved = tev({ id: 'a2', at: '2026-10-20T12:05:00Z', source: 'alert', kind: 'resolved', ref: { alertname: 'LabSLOFastBurn' } });
+  assert.equal(pinnedAlert([resolved, firing, x]), null);
+});
+
+test('mergeEvents: newest first, no duplicates, nothing outside the window', () => {
+  const now = Date.parse('2026-10-20T12:00:00Z');
+  const a = tev({ id: 'a', at: '2026-10-20T11:59:00Z' }), b = tev({ id: 'b', at: '2026-10-20T11:58:00Z' }), old = tev({ id: 'o', at: '2026-10-20T09:00:00Z' });
+  assert.deepEqual(mergeEvents([b, old], [a, b], { now }).map((e) => e.id), ['a', 'b']);
+});

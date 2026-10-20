@@ -101,6 +101,24 @@
           <ol id="lab-feed" class="lab-feed" aria-live="polite" aria-label="Cluster events, newest first"></ol>
         </div>
 
+        <div id="lab-timeline" class="lab-timeline">
+          <h2>What changed</h2>
+          <p class="lab-explain">Every change and alert in the lab over the last 2 hours, from the <a href="https://github.com/Het101/hetops-k8s-lab/blob/main/docs/superpowers/specs/2026-10-20-change-timeline-design.md" target="_blank" rel="noopener">Change Timeline</a>.</p>
+          <div class="lab-tl-filters" role="group" aria-label="Show">
+            <button type="button" data-filter="all" aria-pressed="true">All</button>
+            <button type="button" data-filter="changes" aria-pressed="false">Changes</button>
+            <button type="button" data-filter="alerts" aria-pressed="false">Alerts</button>
+          </div>
+          <div class="lab-tl-pin" role="status" hidden>
+            <p><b>Alert firing:</b> <span class="lab-tl-pin-text"></span></p>
+            <p class="lab-tl-pin-k">Changes just before this alert (a ranking, not a diagnosis)</p>
+            <ol class="lab-tl-causes"></ol>
+            <p class="lab-tl-nocause" hidden>No changes in the 30 minutes before it.</p>
+          </div>
+          <ol class="lab-tl-list" aria-label="Changes, newest first"></ol>
+          <p class="lab-tl-note">Loading…</p>
+        </div>
+
         <div id="lab-incidents" class="lab-incidents">
           <h2>Recent experiments</h2>
           <ol class="lab-log"></ol>

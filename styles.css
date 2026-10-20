@@ -1164,6 +1164,31 @@ html.intro-landed .hero-copy > :nth-child(4) { transition-delay: 0.36s; }
 .lab-kubectl summary { cursor: pointer; font-size: 14px; font-weight: 600; color: var(--text-2); }
 .lab-kubectl summary:hover { color: var(--text); }
 .lab-kubectl code { display: block; margin-top: 10px; padding: 12px 14px; overflow-x: auto; white-space: pre; border-radius: 10px; border: 1px solid var(--line); background: var(--ink-2); font: 13px/1.5 var(--mono); color: var(--text); }
+/* What changed: the Change Timeline panel. */
+.lab-tl-filters { display: flex; gap: 6px; margin-top: 14px; }
+.lab-tl-filters button { padding: 5px 12px; border: 1px solid var(--line-2); border-radius: 999px; background: none; font-size: 13px; color: var(--text-2); cursor: pointer; }
+.lab-tl-filters button[aria-pressed="true"] { background: var(--ink-3); color: var(--text); border-color: var(--text-3); }
+.lab-tl-pin { margin-top: 14px; padding: 12px 14px; border: 1px solid rgba(239, 122, 100, 0.45); border-radius: 12px; background: rgba(239, 122, 100, 0.06); font-size: 14px; }
+.lab-tl-pin b { color: var(--err); }
+.lab-tl-pin-k { margin-top: 8px; font: 12px var(--mono); color: var(--text-3); }
+.lab-tl-causes { margin-top: 6px; }
+.lab-tl-causes li { padding: 3px 0; font: 13px/1.5 var(--mono); color: var(--text-2); overflow-wrap: anywhere; }
+.lab-tl-nocause { margin-top: 6px; font-size: 13px; color: var(--text-3); }
+.lab-tl-list { margin-top: 14px; max-height: 420px; overflow-y: auto; }
+.lab-tl-list li { display: grid; grid-template-columns: auto auto minmax(0, 1fr) auto; gap: 10px; align-items: baseline; padding: 7px 0; border-bottom: 1px solid var(--line);
+  font: 13px/1.5 var(--mono); color: var(--text-2); overflow-wrap: anywhere; animation: logIn 0.4s var(--ease); }
+.lab-tl-list time { color: var(--text-3); }
+.lab-tl-src { padding: 0 7px; border: 1px solid currentColor; border-radius: 999px; font-size: 11px; color: var(--text-3); }
+.lab-tl-list li[data-source="chaos"] .lab-tl-src { color: var(--gold); }
+.lab-tl-list li[data-source="alert"] .lab-tl-src { color: var(--err); }
+.lab-tl-list li[data-source="argo"] .lab-tl-src { color: var(--moss-text); }
+.lab-tl-list li[data-source="budget"] .lab-tl-src { color: var(--warn); }
+.lab-tl-list li.lab-down .lab-tl-text { color: var(--text); }
+.lab-tl-list li.lab-tl-cause { background: rgba(239, 122, 100, 0.07); }
+.lab-tl-you { padding: 0 7px; border-radius: 999px; background: var(--gold); color: var(--gold-ink); font-size: 11px; font-weight: 600; }
+.lab-tl-note { margin-top: 12px; font-size: 14px; color: var(--text-3); }
+@media (max-width: 760px) { .lab-tl-list li { grid-template-columns: auto minmax(0, 1fr) auto; } .lab-tl-src { display: none; } }
+@media (prefers-reduced-motion: reduce) { .lab-tl-list li { animation: none; } }
 .lab-feed { margin-top: 18px; }
 .lab-feed li { display: flex; gap: 10px; padding: 7px 0; border-bottom: 1px solid var(--line); font: 13px/1.5 var(--mono); color: var(--text-2); overflow-wrap: anywhere; animation: logIn 0.4s var(--ease); }
 .lab-feed li::before { content: ""; flex: none; width: 6px; height: 6px; margin-top: 0.55em; border-radius: 50%; background: var(--text-3); }

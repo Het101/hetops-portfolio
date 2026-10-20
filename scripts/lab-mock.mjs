@@ -25,11 +25,38 @@ const snapshot = () => ({
   argo: { sync: state.argo, health: state.argo === 'Synced' ? 'Healthy' : 'Progressing', operation: state.argo === 'Synced' ? null : 'Running' },
 });
 const send = (event, data) => { for (const res of clients) res.write(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`); };
+
+// A fake Change Timeline (lab.hetops.dev/timeline): a seeded past incident, then live events from each button press.
+const tlClients = new Set();
+const ago = (min) => new Date(Date.now() - min * 60000).toISOString();
+const tlEv = (o) => ({ id: crypto.randomUUID(), at: new Date().toISOString(), severity: 'info', ref: {}, actor: 'kubernetes', ...o });
+const timeline = [
+  tlEv({ at: ago(41), source: 'argo', kind: 'sync', subject: 'clinic/clinic', summary: 'Argo CD synced clinic to 46fc651: feat(api): one log line per request', actor: 'argocd' }),
+  tlEv({ at: ago(25), source: 'chaos', kind: 'experiment', subject: 'clinic-data/postgres', summary: 'A visitor ran "Kill Postgres"', severity: 'warn', actor: 'a visitor' }),
+];
+timeline.unshift(
+  tlEv({ at: ago(24.8), source: 'k8s', kind: 'delete', subject: 'clinic-data/postgres', summary: 'pod postgres-0 deleted' }),
+  tlEv({ at: ago(24.5), source: 'k8s', kind: 'warning', subject: 'clinic/api-7f9c001', summary: 'Unhealthy: Readiness probe failed: HTTP probe failed with statuscode: 503', severity: 'warn', actor: 'kubelet' }),
+  tlEv({ at: ago(24.4), source: 'alert', kind: 'firing', subject: 'lab/LabSLOFastBurn', summary: 'The lab is burning its error budget 14× too fast', severity: 'crit', actor: 'alertmanager', ref: { alertname: 'LabSLOFastBurn', suspects: [timeline[1].id, timeline[0].id] } }),
+  tlEv({ at: ago(24.2), source: 'chaos', kind: 'experiment', subject: 'clinic-data/postgres', summary: '"Kill Postgres" recovered in 31.4 s · cost 1.22% of the weekly budget', actor: 'a visitor' }),
+  tlEv({ at: ago(19), source: 'alert', kind: 'resolved', subject: 'lab/LabSLOFastBurn', summary: 'Resolved: The lab is burning its error budget 14× too fast', actor: 'alertmanager', ref: { alertname: 'LabSLOFastBurn' } }),
+);
+timeline.sort((a, b) => (a.at < b.at ? 1 : -1));
+const tl = (o) => { const e = tlEv(o); timeline.unshift(e); for (const res of tlClients) res.write(`event: change\ndata: ${JSON.stringify(e)}\n\n`); return e; };
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
 // A rough imitation of each healing, enough to see every state the page draws.
 async function play(id, exp) {
+  const start = tl({ source: 'chaos', kind: 'experiment', subject: id === 'kill-postgres' ? 'clinic-data/postgres' : 'clinic/api', summary: `A visitor ran "${exp.title}"`, severity: 'warn', actor: 'a visitor', ref: { experimentId: exp.id, action: id } });
   const victim = state.pods.find((p) => p.app === 'api');
+  if (victim) setTimeout(() => {
+    tl({ source: 'k8s', kind: id === 'crash' || id === 'leak' ? 'restart' : 'delete', subject: 'clinic/api', summary: id === 'leak' ? `pod ${victim.name}: api restarted (OOMKilled)` : `pod ${victim.name} deleted`, severity: id === 'leak' ? 'crit' : 'info' });
+    tl({ source: 'k8s', kind: 'warning', subject: 'clinic/api', summary: 'Unhealthy: Readiness probe failed', severity: 'warn', actor: 'kubelet' });
+  }, 1200);
+  if (id === 'kill-postgres') setTimeout(() => {
+    tl({ source: 'alert', kind: 'firing', subject: 'lab/LabSLOFastBurn', summary: 'The lab is burning its error budget 14× too fast', severity: 'crit', actor: 'alertmanager', ref: { alertname: 'LabSLOFastBurn', suspects: [start.id] } });
+    setTimeout(() => tl({ source: 'alert', kind: 'resolved', subject: 'lab/LabSLOFastBurn', summary: 'Resolved: The lab is burning its error budget 14× too fast', actor: 'alertmanager', ref: { alertname: 'LabSLOFastBurn' } }), 15_000);
+  }, 2500);
   if (id === 'kill-postgres') { state.pg = 'Terminating'; await wait(1500); state.pg = 'ContainerCreating'; await wait(2500); state.pg = 'Running'; }
   else if (id === 'traffic-spike') { // the autoscaler adds two api pods, then scales back down
     const extra = [mk('api'), mk('api')].map((p) => Object.assign(p, { ready: false, state: 'ContainerCreating' }));
@@ -63,6 +90,7 @@ async function play(id, exp) {
   incidents.unshift({ ...exp });
   state.running = null;
   send('experiment', exp);
+  tl({ source: 'chaos', kind: 'experiment', subject: start.subject, summary: `"${exp.title}" recovered in ${(exp.recoveryMs / 1000).toFixed(1)} s · cost ${(exp.cost * 100).toFixed(2)}% of the weekly budget`, actor: 'a visitor', ref: { experimentId: exp.id, action: id } });
 }
 
 setInterval(() => send('snapshot', snapshot()), 1000);
@@ -94,6 +122,15 @@ data: ${JSON.stringify(sloNow())}
 
 `);
     clients.add(res); req.on('close', () => clients.delete(res)); return;
+  }
+  if (req.url.startsWith('/timeline')) {
+    if (process.argv.includes('notimeline')) return json(503, { error: 'down' });
+    if (req.url === '/timeline/stream') {
+      res.writeHead(200, { 'content-type': 'text/event-stream', 'cache-control': 'no-cache', 'access-control-allow-origin': '*' });
+      res.write(': connected\n\n');
+      tlClients.add(res); req.on('close', () => tlClients.delete(res)); return;
+    }
+    return json(200, timeline.slice(0, 500));
   }
   if (req.url === '/chaos/actions') return json(200, ids.map((id, i) => ({ id, title: titles[i], heavy: heavy.has(id) })));
   if (req.url === '/chaos/incidents') return json(200, incidents);
