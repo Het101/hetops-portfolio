@@ -785,6 +785,9 @@ html.intro .intro-overlay.gone { opacity: 0; pointer-events: none; }
 .hl-list li { transition: background 0.25s var(--ease); }
 .hl-list li.on { background: rgba(227, 169, 68, 0.06); }
 .hl-list li.on p { color: var(--text); }
+.hl-list li.hl-span { grid-column: 1 / -1; }   /* the ninth item ties the layers together: a full row */
+.hl-list li a { color: var(--text); text-decoration: underline; text-decoration-color: rgba(227, 169, 68, 0.45); text-underline-offset: 4px; text-decoration-thickness: 1px; }
+.hl-list li a:hover { text-decoration-color: var(--gold); }
 @media (max-width: 860px) { .hl-grid { grid-template-columns: minmax(0, 1fr); gap: 28px; } .hl-iris svg { max-width: 380px; } }
 @media (max-width: 760px) { .home-lab { padding-top: 112px; } .hl-ring text { font-size: 14px; } }
 @media (prefers-reduced-motion: reduce) { .hl-ring circle, .hl-ring text, .hl-list li { transition: none; } }
