@@ -1,6 +1,7 @@
 // hetops.dev/lab: a live view of the real chaos lab, or the in-browser simulation when the lab is offline.
 // Network data only ever reaches the page through textContent and setAttribute, never innerHTML.
-import { GROUPS, ACTIONS, tone, diffSnapshots, verdict, formatMs, refusalText, budgetView, costText, apiBase, hueOf, tiers, placePods, planVisit, visitLine, route, cut } from './core.js';
+import { GROUPS, ACTIONS, tone, diffSnapshots, verdict, formatMs, refusalText, budgetView, costText, apiBase, hueOf, tiers, placePods, planVisit, visitLine, route, cut,
+  timelineRows, pinnedAlert, mergeEvents } from './core.js';
 
 const API = apiBase(location.search);
 const NS = 'http://www.w3.org/2000/svg';
@@ -380,7 +381,11 @@ async function press(id) {
     const r = await fetch(API + '/chaos/actions/' + encodeURIComponent(id), {
       method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ turnstileToken: token }),
     });
-    if (r.status === 202) startWait(60_000);
+    if (r.status === 202) {
+      const body = await r.json().catch(() => ({}));
+      if (body.id) tl.mine.add(body.id); // so the timeline can mark it "you"
+      startWait(60_000);
+    }
     else {
       const body = await r.json().catch(() => ({}));
       if (body.reason === 'cooldown') startWait(body.retryAfterMs);
@@ -400,6 +405,74 @@ async function press(id) {
 $('#lab-actions').addEventListener('click', (e) => {
   const b = e.target.closest('button.lab-act');
   if (b && !b.disabled) press(b.dataset.action);
+});
+
+// ── What changed: the Change Timeline (lab.hetops.dev/timeline) ──
+// Its own fetch and stream, separate from chaos-api: if the timeline is down, the rest of the page carries on.
+const tl = { events: [], filter: 'all', mine: new Set(), state: 'loading', started: false };
+const tlEl = $('#lab-timeline');
+const hhmm = (iso) => new Date(iso).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+function renderTimeline() {
+  const list = $('.lab-tl-list', tlEl), pin = $('.lab-tl-pin', tlEl), note = $('.lab-tl-note', tlEl);
+  const alert = pinnedAlert(tl.events);
+  const causeIds = new Set(alert ? alert.causes.map((c) => c.id) : []);
+  const rows = timelineRows(tl.events, { mine: tl.mine, filter: tl.filter });
+  list.replaceChildren(...rows.map((r) => {
+    const li = make('li', 'lab-' + r.tone + (r.ids.some((id) => causeIds.has(id)) ? ' lab-tl-cause' : ''));
+    li.dataset.source = r.source;
+    const t = make('time', null, hhmm(r.at));
+    t.dateTime = r.at;
+    li.append(t, make('span', 'lab-tl-src', r.source), make('span', 'lab-tl-text', r.text));
+    if (r.you) li.append(make('span', 'lab-tl-you', 'you'));
+    return li;
+  }));
+  pin.hidden = !alert;
+  if (alert) {
+    $('.lab-tl-pin-text', pin).textContent = alert.text;
+    $('.lab-tl-causes', pin).replaceChildren(...alert.causes.map((c) => make('li', null, `${hhmm(c.at)}  ${c.text}`)));
+    $('.lab-tl-nocause', pin).hidden = alert.causes.length > 0;
+  }
+  const empty = tl.filter === 'alerts' ? 'No alerts in the last 2 hours.' : 'Nothing changed in the last 2 hours. Break something.';
+  note.textContent = tl.state === 'down' ? 'Timeline unavailable right now.' : tl.state === 'loading' ? 'Loading…' : rows.length ? '' : empty;
+  note.hidden = note.textContent === '';
+}
+
+async function loadTimeline() {
+  try {
+    const r = await fetch(API + '/timeline?since=2h');
+    if (!r.ok) throw new Error(String(r.status));
+    const list = await r.json();
+    tl.events = mergeEvents(tl.events, Array.isArray(list) ? list : []);
+    tl.state = 'ok';
+  } catch {
+    tl.state = tl.events.length ? 'ok' : 'down';
+  }
+  renderTimeline();
+}
+
+function startTimeline() {
+  if (tl.started || !tlEl) return;
+  tl.started = true;
+  loadTimeline();
+  const es = new EventSource(API + '/timeline/stream');
+  es.addEventListener('change', (e) => {
+    const ev = parse(e);
+    if (!ev || !ev.id) return;
+    tl.events = mergeEvents(tl.events, [ev]);
+    tl.state = 'ok';
+    renderTimeline();
+  });
+  es.addEventListener('open', () => { if (tl.state === 'down') loadTimeline(); }); // back after an outage: catch up
+  setInterval(() => { tl.events = mergeEvents(tl.events, []); renderTimeline(); }, 60_000); // age rows out of the 2 h window
+}
+
+$('.lab-tl-filters', tlEl).addEventListener('click', (e) => {
+  const b = e.target.closest('button[data-filter]');
+  if (!b) return;
+  tl.filter = b.dataset.filter;
+  for (const x of $('.lab-tl-filters', tlEl).children) x.setAttribute('aria-pressed', String(x === b));
+  renderTimeline();
 });
 
 // ── Connection ─────────────────────────────────────────────────
@@ -422,6 +495,7 @@ async function getJSON(path) {
 async function enterLive() {
   live = true;
   $('#lab-live').hidden = false;
+  startTimeline();
   setMode('live', 'Live');
   track('lab-live');
   const [actions, incidents, status] = await Promise.allSettled([getJSON('/chaos/actions'), getJSON('/chaos/incidents'), getJSON('/chaos/status')]);

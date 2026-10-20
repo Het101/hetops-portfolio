@@ -230,3 +230,56 @@ export function costText(cost) {
   const pct = cost * 100;
   return `cost ${pct < 0.01 ? '<0.01' : pct.toFixed(2)}% of the weekly budget`;
 }
+
+// ── What changed (the Change Timeline) ──────────────────────────
+// Events arrive newest first: { id, at, source, kind, subject, summary, severity, ref }.
+const CHANGE_SOURCES = new Set(['chaos', 'k8s', 'argo', 'budget']);
+const PLURAL = { restart: 'restarts', delete: 'deletions', warning: 'warnings', scale: 'scaling changes', rollout: 'rollout steps', sync: 'syncs', health: 'health changes' };
+export const TIMELINE_FILTERS = { all: () => true, changes: (e) => CHANGE_SOURCES.has(e.source), alerts: (e) => e.source === 'alert' };
+
+// Consecutive events of the same kind on the same subject collapse into one row ("3 restarts in clinic/api").
+// `mine` holds this visitor's experiment ids, so their own experiment reads "you".
+export function timelineRows(events, { mine = new Set(), filter = 'all' } = {}) {
+  const keep = TIMELINE_FILTERS[filter] || TIMELINE_FILTERS.all;
+  const rows = [];
+  for (const e of events.filter(keep)) {
+    const last = rows[rows.length - 1];
+    if (last && PLURAL[e.kind] && last.kind === e.kind && last.subject === e.subject && last.source === e.source) {
+      last.ids.push(e.id);
+      last.text = `${last.ids.length} ${PLURAL[e.kind]} in ${e.subject}`;
+      last.from = e.at;
+      continue;
+    }
+    rows.push({ id: e.id, ids: [e.id], at: e.at, from: e.at, source: e.source, kind: e.kind, subject: e.subject,
+      text: e.summary, tone: e.severity === 'crit' ? 'down' : e.severity === 'warn' ? 'warn' : 'ok',
+      you: e.source === 'chaos' && mine.has(e.ref && e.ref.experimentId) });
+  }
+  return rows;
+}
+
+// The newest alert still firing (no later "resolved" with the same alert name), with its likely causes.
+export function pinnedAlert(events) {
+  const resolvedAfter = new Map(); // alertname -> newest resolved time
+  for (const e of events) if (e.kind === 'resolved') {
+    const n = e.ref && e.ref.alertname;
+    if (n && !(resolvedAfter.get(n) > e.at)) resolvedAfter.set(n, e.at);
+  }
+  const firing = events.find((e) => e.kind === 'firing' && !(resolvedAfter.get(e.ref && e.ref.alertname) >= e.at));
+  if (!firing) return null;
+  const byId = new Map(events.map((e) => [e.id, e]));
+  const causes = ((firing.ref && firing.ref.suspects) || []).map((id) => byId.get(id)).filter(Boolean);
+  return { id: firing.id, at: firing.at, text: firing.summary, causes: causes.map((c) => ({ id: c.id, at: c.at, text: c.summary, source: c.source })) };
+}
+
+// Keep the newest, drop duplicates and anything older than the window.
+export function mergeEvents(list, incoming, { now = Date.now(), windowMs = 2 * 3600_000, max = 300 } = {}) {
+  const seen = new Set();
+  const out = [];
+  for (const e of [...incoming, ...list].sort((a, b) => (a.at < b.at ? 1 : a.at > b.at ? -1 : 0))) {
+    if (!e || seen.has(e.id) || now - Date.parse(e.at) > windowMs) continue;
+    seen.add(e.id);
+    out.push(e);
+    if (out.length >= max) break;
+  }
+  return out;
+}
