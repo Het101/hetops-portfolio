@@ -1160,6 +1160,16 @@ html.intro-landed .hero-copy > :nth-child(4) { transition-delay: 0.36s; }
 .lab-watch-list p { margin: 0; color: var(--text-2); }
 @media (max-width: 860px) { .lab-watch-list { grid-template-columns: minmax(0, 1fr); } }
 @media (max-width: 420px) { .lab-watch-list li { grid-template-columns: minmax(0, 1fr); gap: 4px; } }
+/* Below Kubernetes: three figures read like a CI receipt, mono and ruled, then the layers as in "watching". */
+.lab-bedrock-proof { margin: 36px 0 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 48px; border-top: 1px solid var(--line-2); }
+.lab-bedrock-proof > div { padding: 20px 0 22px; border-bottom: 1px solid var(--line); }
+.lab-bedrock-proof dt { font: 500 13px/1.5 var(--mono); color: var(--text-2); text-transform: uppercase; letter-spacing: 0.06em; }
+.lab-bedrock-proof dd { margin: 10px 0 0; font: 500 clamp(2rem, 4vw, 2.75rem)/1 var(--mono); color: var(--text); letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.lab-bedrock-proof dd a { color: inherit; font-size: 0.62em; text-decoration: underline; text-decoration-color: rgba(227, 169, 68, 0.45); text-underline-offset: 6px; text-decoration-thickness: 1px; }
+.lab-bedrock-proof dd a:hover { text-decoration-color: var(--gold); }
+.lab-bedrock-src { margin-top: 20px; font: 500 13px/1.6 var(--mono); color: var(--text-2); }
+.lab-bedrock-src a { color: var(--text); text-decoration: underline; text-decoration-color: rgba(227, 169, 68, 0.45); text-underline-offset: 4px; }
+@media (max-width: 860px) { .lab-bedrock-proof { grid-template-columns: minmax(0, 1fr); } }
 .lab-say { margin-top: 16px; font-size: 15px; color: var(--text-2); max-width: 46ch; }
 
 .lab-explain { margin-top: 14px; font-size: 16px; color: var(--text-2); max-width: 58ch; }

@@ -283,3 +283,22 @@ export function mergeEvents(list, incoming, { now = Date.now(), windowMs = 2 * 3
   }
   return out;
 }
+
+// ── Below Kubernetes: Bedrock's rebuild job, from GitHub's public Actions API ──
+// The job's own step times are the proof: a blank machine to a Ready cluster, then a second run that
+// must change nothing, then a pod and the audit log. Null unless the whole job passed.
+const BEDROCK_STEPS = { build: 'First run, from a blank machine', again: 'Second run changes nothing', smoke: 'The cluster runs a pod' };
+export function rebuildView(job) {
+  const step = (name) => (job?.steps || []).find((s) => s.name.startsWith(name));
+  const build = step(BEDROCK_STEPS.build);
+  if (!job || job.conclusion !== 'success' || !build || build.conclusion !== 'success') return null;
+  const seconds = Math.round((Date.parse(build.completed_at) - Date.parse(build.started_at)) / 1000);
+  if (!Number.isFinite(seconds) || seconds <= 0) return null;
+  return {
+    seconds,
+    idempotent: step(BEDROCK_STEPS.again)?.conclusion === 'success',
+    smoke: step(BEDROCK_STEPS.smoke)?.conclusion === 'success',
+    at: Date.parse(job.completed_at),
+    url: job.html_url,
+  };
+}

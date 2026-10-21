@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { ACTIONS, GROUPS, tone, livePods, ringLayout, diffSnapshots, refusalText, formatMs, verdict, apiBase,
-  tierOf, hueOf, tiers, placePods, planVisit, visitLine, route, cut, budgetView, costText, lastRun } from '../lab/core.js';
+  tierOf, hueOf, tiers, placePods, planVisit, visitLine, route, cut, budgetView, costText, lastRun, rebuildView } from '../lab/core.js';
 
 const IDS = ['kill-pod', 'evict-api', 'delete-api-pods', 'crash', 'leak', 'hang', 'scale-zero', 'delete-web', 'delete-api-svc',
   'bad-release', 'delete-secret', 'rogue-netpol', 'kill-postgres', 'traffic-spike', 'nuke-namespace'];
@@ -236,4 +236,20 @@ test('mergeEvents: newest first, no duplicates, nothing outside the window', () 
   const now = Date.parse('2026-10-20T12:00:00Z');
   const a = tev({ id: 'a', at: '2026-10-20T11:59:00Z' }), b = tev({ id: 'b', at: '2026-10-20T11:58:00Z' }), old = tev({ id: 'o', at: '2026-10-20T09:00:00Z' });
   assert.deepEqual(mergeEvents([b, old], [a, b], { now }).map((e) => e.id), ['a', 'b']);
+});
+
+test('rebuildView: the rebuild job step times, or nothing unless it all passed', () => {
+  const step = (name, a, b, conclusion = 'success') => ({ name, conclusion, started_at: a, completed_at: b });
+  const job = { conclusion: 'success', completed_at: '2026-10-21T15:29:56Z', html_url: 'https://github.com/x/run/1', steps: [
+    step('Install Ansible (and the Kubernetes client for kubernetes.core)', '2026-10-21T15:27:24Z', '2026-10-21T15:28:01Z'),
+    step('First run, from a blank machine', '2026-10-21T15:28:02Z', '2026-10-21T15:29:32Z'),
+    step('Second run changes nothing', '2026-10-21T15:29:32Z', '2026-10-21T15:29:54Z'),
+    step('The cluster runs a pod, and the audit log is being written', '2026-10-21T15:29:54Z', '2026-10-21T15:29:55Z'),
+  ] };
+  assert.deepEqual(rebuildView(job), { seconds: 90, idempotent: true, smoke: true, at: Date.parse('2026-10-21T15:29:56Z'), url: 'https://github.com/x/run/1' });
+  assert.equal(rebuildView({ ...job, conclusion: 'failure' }), null, 'a failed job proves nothing');
+  assert.equal(rebuildView({ ...job, steps: job.steps.slice(0, 1) }), null, 'no build step, no number');
+  assert.equal(rebuildView(undefined), null);
+  const flaky = { ...job, steps: job.steps.map((s) => (s.name.startsWith('Second') ? { ...s, conclusion: 'failure' } : s)) };
+  assert.equal(rebuildView(flaky).idempotent, false);
 });
