@@ -1,7 +1,7 @@
 // hetops.dev/lab: a live view of the real chaos lab, or the in-browser simulation when the lab is offline.
 // Network data only ever reaches the page through textContent and setAttribute, never innerHTML.
 import { GROUPS, ACTIONS, tone, diffSnapshots, verdict, formatMs, refusalText, budgetView, costText, apiBase, hueOf, tiers, placePods, planVisit, visitLine, route, cut,
-  timelineRows, pinnedAlert, mergeEvents } from './core.js';
+  timelineRows, pinnedAlert, mergeEvents, rebuildView } from './core.js';
 
 const API = apiBase(location.search);
 const NS = 'http://www.w3.org/2000/svg';
@@ -537,5 +537,26 @@ function connect() {
   });
 }
 
+// ── Below Kubernetes: the latest passing Bedrock rebuild, from GitHub's public API (no token). The HTML
+// carries real figures from 21 Oct, so a rate limit or an outage leaves an honest, older page.
+async function showRebuild() {
+  const gh = 'https://api.github.com/repos/Het101/hetops-k8s-lab/actions';
+  try {
+    const runs = await (await fetch(`${gh}/workflows/bedrock.yml/runs?branch=main&status=success&per_page=1`)).json();
+    const run = runs.workflow_runs && runs.workflow_runs[0];
+    if (!run) return;
+    const jobs = await (await fetch(`${gh}/runs/${run.id}/jobs`)).json();
+    const view = rebuildView((jobs.jobs || []).find((j) => j.name === 'rebuild'));
+    if (!view) return;
+    $('#lab-bedrock-secs').textContent = `${view.seconds} s`;
+    $('#lab-bedrock-again').textContent = view.idempotent ? '0' : 'not proven';
+    const link = $('#lab-bedrock-run');
+    link.textContent = ago(view.at);
+    link.setAttribute('href', view.url);
+    link.setAttribute('title', new Date(view.at).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' }));
+  } catch { /* keep the figures already in the page */ }
+}
+
 setInterval(() => { for (const li of log.children) $('time', li).textContent = ago(+li.dataset.t); }, 30000);
 connect();
+showRebuild();
