@@ -154,7 +154,7 @@
       <ul class="lab-watch-list">
         <li><span class="lab-watch-k">OS</span><p>SSH takes keys only, three tries, and drops dead sessions. A pending reboot is reported, never done: the same server runs every live site.</p></li>
         <li><span class="lab-watch-k">Runtime</span><p>One containerd runs both the cluster and the sites, so it is pinned and held. A routine upgrade can no longer restart everything at once.</p></li>
-        <li><span class="lab-watch-k">Upgrades</span><p>The audit settings live in kubeadm&rsquo;s own config, so the next Kubernetes upgrade keeps them. Before, it would have switched audit logging off without a word.</p></li>
+        <li><span class="lab-watch-k">Upgrades</span><p>Kubernetes went from 1.31 to 1.32 after a rehearsal on a throwaway cluster. The first live try failed safely and rolled back; the rehearsal then reproduced that exact half-upgraded state before the second try. Audit logging survived, and 16 of 16 experiments still healed afterwards.</p></li>
         <li><span class="lab-watch-k">Rebuild</span><p>The first rebuild found what the live server quietly depended on: a directory SSH creates on first login, a package nobody listed, a second copy of Ansible. Each is now in code.</p></li>
       </ul>
       <p class="lab-bedrock-src">Ansible, in <a href="https://github.com/Het101/hetops-k8s-lab/tree/main/bedrock" target="_blank" rel="noopener">bedrock/</a> of the lab repo.</p>
