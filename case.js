@@ -32,7 +32,7 @@
   }
   if (reduce || !('IntersectionObserver' in window)) return;
   const els = [...document.querySelectorAll('.cs-sec, .cs-next')];
-  els.forEach((el) => el.classList.add('rise')); // the one entrance: a short rise, readable all the way
+  els.forEach((el) => el.classList.add('pre-focus'));
   const io = new IntersectionObserver((entries) => entries.forEach((e) => {
     if (e.isIntersecting) { e.target.classList.add('focused'); io.unobserve(e.target); }
   }), { rootMargin: '0px 0px -12% 0px', threshold: 0.12 });

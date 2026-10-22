@@ -20,27 +20,7 @@ const hasGsap = !!(window.gsap && window.ScrollTrigger) && !reduce;
 if (hasGsap) gsap.registerPlugin(ScrollTrigger);
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 
-// Short hops glide. A long jump cuts instead (a quick fade, then there), so "Contact" does not scrub every
-// scene on the way down.
-const scrollToId = (id) => {
-  window.HETOPS?.openTool?.(id);
-  const el = document.getElementById(id);
-  if (!el) return;
-  if (reduce || Math.abs(el.getBoundingClientRect().top) < innerHeight * 2.5) { el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' }); return; }
-  const root = document.documentElement;
-  root.classList.add('cut');
-  setTimeout(() => { el.scrollIntoView({ behavior: 'instant' }); requestAnimationFrame(() => root.classList.remove('cut')); }, 160);
-};
-// Deep links (hetops.dev/#work from a résumé or LinkedIn): the browser jumps before the scenes above the
-// target have their height, and lands short. Land again once the page settles, unless the visitor has moved.
-(() => {
-  const el = location.hash.length > 1 && document.getElementById(decodeURIComponent(location.hash.slice(1)));
-  if (!el) return;
-  let moved = false;
-  for (const ev of ['wheel', 'touchstart', 'keydown', 'pointerdown']) addEventListener(ev, () => { moved = true; }, { once: true, passive: true });
-  const land = () => { if (!moved) el.scrollIntoView({ behavior: 'instant' }); };
-  addEventListener('load', () => { land(); setTimeout(land, 700); setTimeout(land, 1800); }, { once: true });
-})();
+const scrollToId = (id) => { const el = document.getElementById(id); if (el) el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' }); };
 document.addEventListener('click', (e) => {
   const a = e.target.closest('a[href^="#"]');
   if (!a) return;
@@ -63,8 +43,8 @@ const spy = new IntersectionObserver((entries) => {
 navLinks.forEach((a) => { const el = document.getElementById(a.dataset.nav); if (el) spy.observe(el); });
 
 const menu = $('#menu'), menuBtn = $('#menuBtn');
-function closeMenu() { if (!menu || menu.hidden) return; menu.hidden = true; menuBtn.setAttribute('aria-expanded', 'false'); menuBtn.querySelector('i').className = 'ph ph-list'; }
-if (menuBtn) menuBtn.addEventListener('click', () => {
+function closeMenu() { if (menu.hidden) return; menu.hidden = true; menuBtn.setAttribute('aria-expanded', 'false'); menuBtn.querySelector('i').className = 'ph ph-list'; }
+menuBtn.addEventListener('click', () => {
   const open = menu.hidden;
   menu.hidden = !open; menuBtn.setAttribute('aria-expanded', String(open));
   menuBtn.querySelector('i').className = open ? 'ph ph-x' : 'ph ph-list';
@@ -93,16 +73,15 @@ window.HETOPS = { PRODUCTS, track };
 
 // ── Command palette ─────────────────────────────────────────────
 const palette = $('#palette'), pInput = $('#paletteInput'), pList = $('#paletteList');
-if (palette) {
 const go = (id) => () => scrollToId(id);
 const open = (url) => () => window.open(url, '_blank', 'noopener');
 const ACTIONS = [
   { group: 'Sections', icon: 'ph-eye', label: 'Experience: read the chart', run: go('experience') },
   { group: 'Sections', icon: 'ph-magnifying-glass-plus', label: 'Work: under the lens', run: go('work') },
   { group: 'Sections', icon: 'ph-skull', label: 'Lab: break my real Kubernetes cluster', run: go('lab') },
-  { group: 'Sections', icon: 'ph-seal-check', label: 'Live: production I run myself', run: () => { location.href = '/live/'; } },
-  { group: 'Sections', icon: 'ph-circle-notch', label: 'Now: how I ship, what shipped lately', run: () => { location.href = '/now/'; } },
-  { group: 'Projects', icon: 'ph-globe-hemisphere-west', label: 'Check a domain', hint: 'dns.hetops.dev', run: open('https://dns.hetops.dev') },
+  { group: 'Sections', icon: 'ph-globe-hemisphere-west', label: 'Check a domain', run: go('check') },
+  { group: 'Sections', icon: 'ph-seal-check', label: 'Live: production I run myself', run: go('live') },
+  { group: 'Sections', icon: 'ph-circle-notch', label: 'How I ship', run: go('how-i-ship') },
   { group: 'Sections', icon: 'ph-pen-nib', label: 'Writing', run: go('writing') },
   { group: 'Sections', icon: 'ph-envelope-simple', label: 'Contact', run: go('contact') },
   ...PRODUCTS.filter((p) => p.url.startsWith('http')).map((p) => ({ group: 'Projects', img: p.icon, label: p.name, hint: p.link, run: open(p.url) })),
@@ -145,25 +124,38 @@ addEventListener('keydown', (e) => {
   if ((e.key === 'k' && (e.metaKey || e.ctrlKey)) || (e.key === '/' && !typing)) { e.preventDefault(); openPalette(); track('palette-open', { from: 'keyboard' }); }
 });
 if (/Mac|iPhone|iPad/.test(navigator.platform)) $('#paletteBtn kbd').textContent = '⌘K';
-}
 
-// ── Callout: a rectangular magnifier over each screenshot, for reading the fine print ──
-if (finePointer) $$('.vf-glass').forEach((glass) => {
-  const img = $('img', glass), box = Object.assign(document.createElement('span'), { className: 'callout' });
-  box.setAttribute('aria-hidden', 'true'); glass.appendChild(box);
-  const Z = 2.2, BW = 300, BH = 180;
-  glass.addEventListener('pointermove', (e) => {
-    const r = glass.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
-    box.style.left = clamp(x - BW / 2, 8, r.width - BW - 8) + 'px'; box.style.top = clamp(y - BH - 18, 8, r.height - BH - 8) + 'px';
-    box.style.backgroundImage = `url("${img.currentSrc || img.src}")`;
-    box.style.backgroundSize = `${r.width * Z}px auto`;
-    box.style.backgroundPosition = `${-(x * Z - BW / 2)}px ${-(y * Z - BH / 2)}px`;
+// ── Story: the active step drives the round stage ───────────────
+const steps = $$('.step'), panels = $$('.panel'), stageProg = $('#stageProg');
+const showStep = (i) => {
+  steps.forEach((s, j) => s.classList.toggle('is-active', j === i));
+  panels.forEach((p, j) => p.classList.toggle('is-active', j === i));
+  stageProg.style.strokeDashoffset = 100 - (i + 1) * 25;
+};
+showStep(0);
+const storyObs = new IntersectionObserver((entries) => {
+  for (const e of entries) if (e.isIntersecting) { const i = +e.target.dataset.step; showStep(i); track('story-step', { step: i + 1 }); }
+}, { rootMargin: '-40% 0px -55% 0px' });
+steps.forEach((s) => storyObs.observe(s));
+addEventListener('beforeprint', () => panels.forEach((p) => p.classList.add('is-active')));
+
+// ── Lens: a loupe over each screenshot, for reading the fine print ─
+if (finePointer) $$('.lens').forEach((lens) => {
+  const img = $('img', lens), loupe = Object.assign(document.createElement('span'), { className: 'loupe' });
+  loupe.setAttribute('aria-hidden', 'true'); lens.appendChild(loupe);
+  const Z = 2.4;
+  lens.addEventListener('pointermove', (e) => {
+    const r = lens.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+    loupe.style.left = x + 'px'; loupe.style.top = y + 'px';
+    loupe.style.backgroundImage = `url("${img.currentSrc || img.src}")`;
+    loupe.style.backgroundSize = `${r.width * Z}px auto`;
+    loupe.style.backgroundPosition = `${-(x * Z - 95)}px ${-(y * Z - 95)}px`;
   });
 });
 
 // Tallybank rule wires draw in when visible.
 $$('.rule-wire').forEach((w) => w.style.setProperty('--w', reduce ? 1 : 0));
-if ($('.rule')) new IntersectionObserver(([e], ob) => {
+new IntersectionObserver(([e], ob) => {
   if (!e.isIntersecting) return; ob.disconnect();
   $$('.rule-wire').forEach((w, i) => setTimeout(() => w.style.setProperty('--w', 1), 150 * i));
 }, { threshold: 0.4 }).observe($('.rule'));
@@ -171,7 +163,6 @@ if ($('.rule')) new IntersectionObserver(([e], ob) => {
 // ── Release ring: the stages run in order, only while visible ───
 (() => {
   const pipe = $('#pipe'), ring = $('.ring'), prog = $('#ringProg');
-  if (!pipe) return;
   const items = $$('li', pipe), n = items.length;
   const labels = items.map((li, i) => {
     const s = document.createElement('span'); s.className = 'ring-stage'; s.style.setProperty('--a', `${(i / n) * 360}deg`);
@@ -194,7 +185,6 @@ if ($('.rule')) new IntersectionObserver(([e], ob) => {
 // ── Contact: a small eye that closes as the page ends ───────────
 (() => {
   const up = $('#miniUp'), low = $('#miniLow'), clip = $('#miniClipPath'), pupil = $('#miniPupil');
-  if (!up) return;
   const st = { o: 1 };
   const draw = () => {
     const uy = 48 - 50.7 * st.o, ly = 48 + 50.7 * st.o * 0.85;
@@ -219,26 +209,23 @@ if ($('.rule')) new IntersectionObserver(([e], ob) => {
   $('#contactEmail').addEventListener('pointerleave', () => pupil.setAttribute('r', 13));
 })();
 
-// ── Reveals: round things open through a round aperture, screenshots open like a shutter, and headings are
-// simply there (no blur-in). The eye still glances at each heading as it arrives.
+// ── Focus: things come into focus as the eye reaches them ──────
+// Headings and chart rows sharpen from a blur; screenshots open through a round aperture.
 if (!reduce && 'IntersectionObserver' in window) {
-  const headings = $$('main h2'), lenses = $$('.ring');
+  const focusables = $$('.head h2, .words > h2, .writing > h2, .activity-head h2, .check-copy h2, .contact h2');
+  const rows = $$('.chart li'), lenses = $$('.lens, .stage, .rule, .ring');
+  [...focusables, ...rows].forEach((el) => el.classList.add('pre-focus'));
   lenses.forEach((el) => el.classList.add('pre-aperture'));
-  // Screenshots are rectangles: two blades part instead of a circle opening (no rectangle is ever cut round).
-  const shutters = $$('.vf-glass');
-  shutters.forEach((el) => el.classList.add('shut'));
-  const so = new IntersectionObserver((entries) => entries.forEach((e) => { if (e.isIntersecting) { so.unobserve(e.target); e.target.classList.add('open'); } }), { threshold: 0.25 });
-  shutters.forEach((el) => so.observe(el));
   // A shape clipped to nothing never "intersects", so apertures are watched through their parent.
   const watched = new Map(lenses.map((el) => [el.parentElement, el]));
   const io = new IntersectionObserver((entries) => entries.forEach((e) => {
     if (!e.isIntersecting) return;
     io.unobserve(e.target);
-    const el = watched.get(e.target) || e.target;
-    if (el.classList.contains('pre-aperture')) el.classList.add('apertured');
+    const el = watched.get(e.target) || e.target, i = rows.indexOf(el);
+    setTimeout(() => el.classList.add(el.classList.contains('pre-aperture') ? 'apertured' : 'focused'), i > 0 ? i * 140 : 0);
     window.dispatchEvent(new CustomEvent('eye:glance', { detail: el }));
   }), { rootMargin: '0px 0px -18% 0px', threshold: 0.2 });
-  [...headings, ...watched.keys()].forEach((el) => io.observe(el));
+  [...focusables, ...rows, ...watched.keys()].forEach((el) => io.observe(el));
 }
 
 // ── Easter egg: type `sudo hire het` anywhere ──────────────────
@@ -292,18 +279,15 @@ const depth = new IntersectionObserver((entries) => {
 }, { threshold: 0.3 });
 $$('[data-section]').forEach((el) => depth.observe(el));
 
-// ── The aperture: past the hero the iris opens and you fall through the pupil. The pupil is the page's own
-// ground colour, so the experience section arrives with no seam. --p runs 0 → 1 across the section.
+// ── Inside the eye: its 3D scene loads on the first scroll or once the page is idle, so the
+// hero eye gets the main thread first. The import map in index.html resolves 'three'.
 (() => {
-  const ap = $('#inside'); if (!ap || reduce) return;
-  let queued = false;
-  const set = () => {
-    queued = false;
-    const r = ap.getBoundingClientRect(), span = Math.max(1, r.height - innerHeight);
-    ap.style.setProperty('--p', clamp(-r.top / span, 0, 1).toFixed(4));
-  };
-  addEventListener('scroll', () => { if (!queued) { queued = true; requestAnimationFrame(set); } }, { passive: true });
-  addEventListener('resize', set); set();
+  if (!$('#inside')) return;
+  let done = false;
+  const load = () => { if (done) return; done = true; import('/inside.js'); };
+  addEventListener('scroll', load, { once: true, passive: true });
+  const idle = window.requestIdleCallback || ((f) => setTimeout(f, 1500));
+  addEventListener('load', () => setTimeout(() => idle(load), 2500), { once: true });
 })();
 
 // ── Live numbers (public, unauthenticated sources only) ─────────
@@ -325,7 +309,6 @@ Promise.all(['threadvault', 'retirement-radar'].map((pkg) => getJSON(`https://ap
   });
 
 (async () => {
-  if (!$('#heatmap')) return;
   // ponytail: contributions come from a third-party public API; move to a server-side job if it disappears.
   const per = await Promise.all(ACCOUNTS.map(async (u) => {
     const [cal, repos, prs] = await Promise.all([
@@ -352,34 +335,24 @@ Promise.all(['threadvault', 'retirement-radar'].map((pkg) => getJSON(`https://ap
   if (hasGsap) ScrollTrigger.refresh();
 })();
 
-// ── Work: one instrument. A tab per tool, arrow keys move between them, and a link to a tool
-// (#dns, a case link, the eye's orbit) opens its panel first.
+// ── Work index: the case you are reading lights up; tapping one jumps to it ──
 (() => {
-  const tabs = $$('#work [role="tab"]'); if (!tabs.length) return;
-  const panelOf = (t) => document.getElementById(t.getAttribute('aria-controls'));
-  const show = (tab, focus) => {
-    tabs.forEach((t) => { const on = t === tab; t.setAttribute('aria-selected', String(on)); t.tabIndex = on ? 0 : -1; panelOf(t).hidden = !on; });
-    if (focus) tab.focus();
-    // A panel that just appeared opens its shutter on the next frame (a visibility observer would not fire again).
-    requestAnimationFrame(() => requestAnimationFrame(() => $$('.vf-glass.shut', panelOf(tab)).forEach((g) => g.classList.add('open'))));
-  };
-  tabs.forEach((t, i) => {
-    t.addEventListener('click', () => { show(t); track('work-tab', { tool: t.getAttribute('aria-controls') }); });
-    t.addEventListener('keydown', (e) => {
-      const step = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 }[e.key];
-      const to = step ? tabs[(i + step + tabs.length) % tabs.length] : e.key === 'Home' ? tabs[0] : e.key === 'End' ? tabs.at(-1) : null;
-      if (to) { e.preventDefault(); show(to, true); }
-    });
-  });
-  const open = (id) => { const t = tabs.find((x) => x.getAttribute('aria-controls') === id); if (t) show(t); return !!t; };
-  window.HETOPS.openTool = open;
-  if (location.hash.length > 1) open(decodeURIComponent(location.hash.slice(1)));
+  const idx = $('#workIndex'); if (!idx) return;
+  const links = $$('a', idx);
+  const cases = links.map((a) => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+  const io = new IntersectionObserver((entries) => {
+    for (const e of entries) if (e.isIntersecting) {
+      links.forEach((a) => a.classList.toggle('on', a.getAttribute('href') === '#' + e.target.id));
+      const on = idx.querySelector('a.on');
+      if (on) idx.scrollTo({ left: on.offsetLeft - 16, behavior: 'smooth' });
+    }
+  }, { rootMargin: '-40% 0px -55% 0px' });
+  cases.forEach((c) => io.observe(c));
 })();
 
-// ── The docked eye steps aside while you read wherever the page has no margin for it (phones and any
-// screen narrower than the content plus the eye), and comes back when you scroll up ──
+// ── The docked eye steps aside on phones while you read, and comes back when you scroll up ──
 (() => {
-  if (!matchMedia('(max-width: 1419px)').matches) return;
+  if (!matchMedia('(max-width: 760px)').matches) return;
   let last = scrollY;
   addEventListener('scroll', () => {
     const body = document.getElementById('eyeBody'); if (!body) return;
@@ -392,8 +365,7 @@ Promise.all(['threadvault', 'retirement-radar'].map((pkg) => getJSON(`https://ap
 
 // ── The estate: every service's health and every backup drill, live ──
 (() => {
-  const board = $('#estate');
-  if (!board && !$('[data-proof]')) return;
+  const board = $('#estate'); if (!board) return;
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const ago = (iso) => {
     const m = Math.max(0, Math.round((Date.now() - Date.parse(iso)) / 60000));
@@ -419,18 +391,18 @@ Promise.all(['threadvault', 'retirement-radar'].map((pkg) => getJSON(`https://ap
       getJSON('https://drill.hetops.dev/api/health'),
     ]);
     if (watch?.services) {
-      if (board) for (const s of watch.services) {
+      for (const s of watch.services) {
         const el = board.querySelector(`[data-svc="${CSS.escape(s.name)}"]`); if (!el) continue;
         el.dataset.state = s.up ? 'up' : 'down';
         document.querySelectorAll(`.wiring [data-svc="${CSS.escape(s.name)}"]`).forEach((w) => { w.dataset.state = s.up ? 'up' : 'down'; });
         show(el.querySelector('[data-ms]'), s.up ? ms(s.ms) : 'down');
       }
-      if (board) $('#estUp').textContent = `${watch.up}/${watch.total} up`;
+      $('#estUp').textContent = `${watch.up}/${watch.total} up`;
       const up = $('[data-proof="up"]');
       if (up) { up.hidden = false; up.dataset.state = watch.up === watch.total ? 'ok' : 'bad'; up.querySelector('b').textContent = `${watch.up}/${watch.total}`; }
-      if (board) $('#estAt').textContent = `Checked ${ago(watch.checkedAt)}. Drills run every ${drill?.every || '6 h'}.`;
+      $('#estAt').textContent = `Checked ${ago(watch.checkedAt)}. Drills run every ${drill?.every || '6 h'}.`;
     }
-    if (board) for (const d of drill?.drills || []) {
+    for (const d of drill?.drills || []) {
       const el = board.querySelector(`[data-drill="${CSS.escape(d.name)}"]`); if (!el || d.pending) continue;
       const k = (key) => el.querySelector(`[data-k="${key}"]`);
       const passed = (d.checks || []).filter((c) => c.ok).length;
