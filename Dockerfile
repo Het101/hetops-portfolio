@@ -6,6 +6,8 @@ COPY assets /usr/share/nginx/html/assets
 COPY work /usr/share/nginx/html/work
 COPY writing /usr/share/nginx/html/writing
 COPY lab /usr/share/nginx/html/lab
+COPY live /usr/share/nginx/html/live
+COPY now /usr/share/nginx/html/now
 COPY .well-known /usr/share/nginx/html/.well-known
 # Headers, compression, caching and the custom 404 (see nginx/default.conf).
 COPY nginx/default.conf /etc/nginx/conf.d/default.conf
