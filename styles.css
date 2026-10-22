@@ -1387,3 +1387,86 @@ html.intro-landed .hero-copy > :nth-child(4) { transition-delay: 0.36s; }
 }
 @keyframes twinkle { from { opacity: 0.35; } to { opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { .hero::before, .hero::after { animation: none; opacity: 0.7; } }
+
+/* ── Work as a console (22 Oct): pick a tool on the left, it opens in the one viewer on the right. Every screenshot sits
+   in the same 16:10 glass, anchored top left, so no two tools ever show at different sizes. ── */
+.console { display: grid; grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr); gap: 40px; align-items: start; }
+.console-list { display: grid; gap: 6px; }
+.tool-item { border-radius: 18px; transition: background var(--t-base) var(--ease), box-shadow var(--t-base) var(--ease); scroll-margin-top: calc(var(--nav-h) + 24px); }
+.tool-item.on { background: linear-gradient(180deg, var(--plate-2), var(--plate)); box-shadow: var(--raised); }
+.tool-tab {
+  display: grid; grid-template-columns: 30px minmax(0, 1fr) auto; gap: 14px; align-items: center; width: 100%; min-height: 64px; padding: 14px 18px;
+  border: 0; border-radius: 18px; background: none; color: var(--text-2); font: inherit; text-align: left; cursor: pointer; transition: color var(--t-base) var(--ease), background var(--t-base) var(--ease);
+}
+.tool-tab img { width: 30px; height: 30px; border-radius: 8px; }
+.tool-tab b { display: block; font-size: 17px; font-weight: 650; color: inherit; }
+.tool-tab small { display: block; margin-top: 1px; font-size: 13px; color: var(--text-3); }
+.tool-item:not(.on) .tool-tab:hover { color: var(--text); background: rgba(255, 255, 255, 0.025); }
+.tool-item.on .tool-tab { color: var(--text); }
+.chip-k { font: 600 12px var(--mono); font-style: normal; color: var(--text-3); padding: 4px 8px; border-radius: 999px; background: var(--well); box-shadow: var(--inset); white-space: nowrap; }
+.tool-tab .led, .vurl .led { opacity: 1; width: 9px; height: 9px; background: radial-gradient(circle at 35% 30%, #b7f3d8, var(--moss) 55%, #1f6b50); box-shadow: 0 0 0 3px rgba(69, 184, 141, 0.12), 0 0 9px rgba(69, 184, 141, 0.45); }
+.tool-body { display: none; padding: 0 22px 22px 62px; }
+.tool-item.on .tool-body { display: block; animation: tool-in var(--t-enter) var(--ease); }
+@keyframes tool-in { from { opacity: 0; transform: translateY(6px); } }
+.tool-body .problem { margin: 0; font-size: 17px; line-height: 1.45; }
+.tool-body p:not(.problem) { margin-top: 10px; font-size: 15px; color: var(--text-2); max-width: 56ch; }
+.tool-body p a { color: var(--moss-text); }
+.tool-body .cmd code { margin-top: 0; }
+.beats { display: grid; gap: 12px; margin: 14px 0 0; padding: 0 0 0 16px; border-left: 1px solid var(--line-2); list-style: none; }
+.beats li { position: relative; font-size: 14.5px; line-height: 1.5; color: var(--text-2); }
+.beats li::before { content: ""; position: absolute; left: -20px; top: 6px; width: 7px; height: 7px; border-radius: 50%; background: var(--text-3); }
+.beats li.bad::before { background: var(--err); }
+.beats li.good::before { background: var(--gold); box-shadow: 0 0 8px rgba(227, 169, 68, 0.6); }
+.beats b { display: block; font-size: 14.5px; color: var(--text); }
+.beats code { font-size: 12.5px; color: var(--err); }
+.tool-keys { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+.tool-keys .btn { height: 40px; padding: 0 16px; font-size: 14px; }
+
+.viewer { position: sticky; top: calc(var(--nav-h) + 24px); }
+.vwin { position: relative; padding: 10px; border-radius: 20px; background: linear-gradient(180deg, var(--plate-2), var(--plate)); box-shadow: var(--raised), 0 40px 80px -40px rgba(0, 0, 0, 0.9); }
+/* Which tool of five: a gold line along the top edge of the frame. */
+.vwin::before { content: ""; position: absolute; left: 20px; right: 20px; top: 0; height: 2px; border-radius: 2px; background: var(--gold); box-shadow: 0 0 8px rgba(227, 169, 68, 0.6);
+  transform-origin: left; transform: scaleX(var(--pos, 0.2)); transition: transform var(--t-enter) var(--ease); }
+.vbar { display: flex; align-items: center; gap: 10px; padding: 2px 4px 10px; }
+.vdots { display: flex; gap: 6px; } .vdots i { width: 9px; height: 9px; border-radius: 50%; background: #2a2e30; }
+.vurl { display: inline-flex; align-items: center; gap: 8px; min-width: 0; padding: 6px 12px; border-radius: 9px; background: var(--well); box-shadow: var(--inset); font: 500 13px var(--mono); color: var(--text-2); white-space: nowrap; overflow: hidden; }
+.vurl .led[hidden] { display: none; }
+.vbar .chip-k { margin-left: auto; }
+.vglass { position: relative; aspect-ratio: 16 / 10; overflow: hidden; border-radius: 12px; background: var(--glass); box-shadow: inset 0 3px 10px #000, 0 0 0 1px rgba(255, 255, 255, 0.04); cursor: zoom-in; }
+.vshot { position: absolute; inset: 0; margin: 0; opacity: 0; transform: translateX(3%) scale(1.02); pointer-events: none;
+  transition: opacity var(--t-enter) var(--ease), transform 0.7s var(--ease); }
+.vshot.was { transform: translateX(-3%) scale(0.99); }
+.vshot.on { opacity: 1; transform: none; pointer-events: auto; }
+.vshot img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top left; }
+.vshot.term { background: #0e1117; }
+.vshot.term img { object-fit: contain; object-position: center; }
+.vshot.vrule { display: grid; place-items: center; padding: 6%; background: radial-gradient(120% 90% at 50% 0%, #131719, var(--glass) 70%); cursor: default; }
+.vshot.vrule .rule { width: min(100%, 480px); }
+/* Each switch, a faint gold scan sweeps the glass, like an instrument refreshing. */
+.vglass::after { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 22%; z-index: 3; pointer-events: none; opacity: 0;
+  background: linear-gradient(transparent, rgba(227, 169, 68, 0.16), transparent); transform: translateY(-100%); }
+.vglass.sweep::after { animation: vsweep 0.8s var(--ease); }
+@keyframes vsweep { 0% { opacity: 1; transform: translateY(-100%); } 100% { opacity: 0; transform: translateY(460%); } }
+.vglass .loupe { z-index: 4; }
+.vglass:hover .loupe:not([hidden]) { opacity: 1; scale: 1; }
+.vthumbs { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; margin-top: 12px; padding: 8px; border-radius: 16px; background: var(--well); box-shadow: var(--inset); }
+.vthumbs button { display: grid; gap: 6px; padding: 0; border: 0; background: none; color: var(--text-3); font: 600 12px var(--sans); cursor: pointer; transition: color var(--t-base) var(--ease); }
+.vthumbs img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; object-position: top left; border-radius: 7px; opacity: 0.45; outline: 2px solid transparent; outline-offset: 2px; transition: opacity var(--t-base) var(--ease), outline-color var(--t-base) var(--ease); }
+.vthumbs .vt-rule img { object-fit: contain; padding: 16%; background: var(--plate); }
+.vthumbs button:hover img { opacity: 0.8; }
+.vthumbs button.on { color: var(--text); }
+.vthumbs button.on img { opacity: 1; outline-color: var(--gold); }
+
+@media (max-width: 960px) {
+  .console { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+  .viewer { order: -1; top: calc(var(--nav-h) + 8px); z-index: 5; }
+  .vthumbs { display: none; }
+  .vwin { padding: 8px; border-radius: 16px; }
+  .vdots { display: none; }
+  .tool-body { padding: 0 18px 18px; }
+  .vglass { cursor: default; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vshot, .vwin::before { transition: none; }
+  .vglass.sweep::after, .tool-item.on .tool-body { animation: none; }
+}

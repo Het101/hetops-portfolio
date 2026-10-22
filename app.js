@@ -127,6 +127,7 @@ if (/Mac|iPhone|iPad/.test(navigator.platform)) $('#paletteBtn kbd').textContent
 
 // ── Story: the active step drives the round stage ───────────────
 const steps = $$('.step'), panels = $$('.panel'), stageProg = $('#stageProg');
+if (stageProg) {
 const showStep = (i) => {
   steps.forEach((s, j) => s.classList.toggle('is-active', j === i));
   panels.forEach((p, j) => p.classList.toggle('is-active', j === i));
@@ -138,6 +139,7 @@ const storyObs = new IntersectionObserver((entries) => {
 }, { rootMargin: '-40% 0px -55% 0px' });
 steps.forEach((s) => storyObs.observe(s));
 addEventListener('beforeprint', () => panels.forEach((p) => p.classList.add('is-active')));
+}
 
 // ── Lens: a loupe over each screenshot, for reading the fine print ─
 if (finePointer) $$('.lens').forEach((lens) => {
@@ -479,4 +481,56 @@ Promise.all(['threadvault', 'retirement-radar'].map((pkg) => getJSON(`https://ap
   }
   form.addEventListener('submit', (e) => { e.preventDefault(); const d = clean(input.value); input.value = d; run(d); });
   $$('[data-try]').forEach((b) => b.addEventListener('click', () => { input.value = b.dataset.try; run(b.dataset.try); }));
+})();
+
+// ── Work console: one viewer, five tools. Tabs (click, arrows, Home/End), thumbnails and #hash links all choose. ─
+(() => {
+  const root = $('#console'); if (!root) return;
+  const items = $$('.tool-item', root), tabs = items.map((it) => $('.tool-tab', it));
+  const shots = $$('.vshot', root), thumbs = $$('.vthumbs button', root);
+  const viewer = $('#viewer'), url = $('#vUrl'), tag = $('#vTag'), led = $('.vurl .led', root), glass = $('#vGlass');
+  let cur = 0;
+  const open = (i, focus) => {
+    items.forEach((it, k) => it.classList.toggle('on', k === i));
+    tabs.forEach((t, k) => { t.setAttribute('aria-selected', String(k === i)); t.tabIndex = k === i ? 0 : -1; });
+    shots.forEach((s, k) => { s.classList.toggle('on', k === i); s.classList.toggle('was', k === cur && k !== i); });
+    thumbs.forEach((t, k) => t.classList.toggle('on', k === i));
+    url.textContent = items[i].dataset.url; tag.textContent = items[i].dataset.tag;
+    led.hidden = !items[i].hasAttribute('data-live-led');
+    viewer.setAttribute('aria-labelledby', tabs[i].id);
+    root.style.setProperty('--pos', String((i + 1) / items.length));
+    if (i !== cur) { glass.classList.remove('sweep'); void glass.offsetWidth; glass.classList.add('sweep'); track('work-tool', { tool: items[i].id }); }
+    if (focus) tabs[i].focus();
+    cur = i;
+  };
+  tabs.forEach((t, i) => t.addEventListener('click', () => open(i)));
+  thumbs.forEach((t, i) => t.addEventListener('click', () => open(i)));
+  root.addEventListener('keydown', (e) => {
+    const k = tabs.indexOf(document.activeElement); if (k < 0) return;
+    const n = { ArrowDown: k + 1, ArrowRight: k + 1, ArrowUp: k - 1, ArrowLeft: k - 1, Home: 0, End: tabs.length - 1 }[e.key];
+    if (n === undefined) return;
+    e.preventDefault(); open((n + tabs.length) % tabs.length, true);
+  });
+  const fromHash = () => { const i = items.findIndex((it) => '#' + it.id === location.hash); if (i >= 0) open(i); };
+  addEventListener('hashchange', fromHash); fromHash();
+  open(cur);
+
+  // A rectangular magnifier over the screenshot in view, for reading the fine print (fine pointers only).
+  if (!finePointer) return;
+  const loupe = Object.assign(document.createElement('span'), { className: 'loupe' });
+  loupe.setAttribute('aria-hidden', 'true'); glass.appendChild(loupe);
+  const Z = 2.2;
+  glass.addEventListener('pointermove', (e) => {
+    const img = $('img', shots[cur]); loupe.hidden = !img; if (!img || !img.naturalWidth) return;
+    // Where the image really sits inside the glass: cover is anchored top left, contain is centred.
+    const r = glass.getBoundingClientRect(), nr = img.naturalWidth / img.naturalHeight, fit = getComputedStyle(img).objectFit;
+    let w = r.width, h = r.height;
+    if (fit === 'cover' ? r.width / r.height < nr : r.width / r.height > nr) w = h * nr; else h = w / nr;
+    const x0 = fit === 'cover' ? 0 : (r.width - w) / 2, y0 = fit === 'cover' ? 0 : (r.height - h) / 2;
+    const x = e.clientX - r.left, y = e.clientY - r.top;
+    loupe.style.left = x + 'px'; loupe.style.top = y + 'px';
+    loupe.style.backgroundImage = `url("${img.currentSrc || img.src}")`;
+    loupe.style.backgroundSize = `${w * Z}px ${h * Z}px`;
+    loupe.style.backgroundPosition = `${-((x - x0) * Z - 140)}px ${-((y - y0) * Z - 85)}px`; // half the 280x170 window
+  });
 })();
