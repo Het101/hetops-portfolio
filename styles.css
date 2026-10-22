@@ -1251,7 +1251,7 @@ html.cut main { opacity: 0; transition-duration: 0.16s; }
 
 /* A key: the secondary control, raised. */
 .key {
-  display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 16px; border-radius: 999px;
+  display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 16px; border: 0; border-radius: 999px; font-family: inherit; cursor: pointer;
   background: var(--plate-2); box-shadow: var(--raised); color: var(--text); font-size: 14px; font-weight: 600; white-space: nowrap;
   transition: box-shadow 0.32s var(--ease), translate 0.32s var(--ease);
 }
@@ -1317,3 +1317,105 @@ html.cut main { opacity: 0; transition-duration: 0.16s; }
 @media (prefers-reduced-motion: reduce) {
   .vf-glass.shut::before, .vf-glass.shut::after { display: none; }
 }
+
+/* ── Controls and motion (22 Oct). Three durations, one curve: 120 ms press in, 320 ms release and hover,
+   600 ms the one entrance a thing gets. Things you press are raised; things that report are set in. ── */
+:root { --t-press: 0.12s; --t-base: 0.32s; --t-enter: 0.6s; }
+
+.btn { border: 0; transition: background var(--t-base) var(--ease), box-shadow var(--t-base) var(--ease), translate var(--t-base) var(--ease); }
+.btn:active, .btn-gold:active, .btn-line:active { transform: none; translate: 0 1px; transition-duration: var(--t-press); }
+.btn-gold:hover, .btn-line:hover { transform: none; translate: 0 -1px; }
+.btn-gold {
+  background: linear-gradient(180deg, #f0bd5e, var(--gold) 55%, #d39a3a);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.45) inset, 0 -2px 0 rgba(0, 0, 0, 0.18) inset, 0 12px 24px -12px rgba(227, 169, 68, 0.55), 0 2px 4px -1px rgba(0, 0, 0, 0.62);
+}
+.btn-gold:hover { background: linear-gradient(180deg, #f5c86e, var(--gold-hi) 55%, #dba443); }
+.btn-gold:active { background: linear-gradient(180deg, #d39a3a, var(--gold)); box-shadow: inset 0 3px 7px rgba(70, 40, 0, 0.55), 0 1px 0 rgba(255, 255, 255, 0.055); }
+.btn-line { background: var(--plate-2); color: var(--text); box-shadow: var(--raised); }
+.btn-line:hover { background: #202528; }
+.btn-line:active { box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.8), 0 1px 0 rgba(255, 255, 255, 0.055); }
+
+/* Nav: a recessed rail; the section you are in is a raised key. */
+.nav-links { gap: 2px; padding: 5px; border-radius: 999px; background: var(--well); box-shadow: var(--inset); }
+.nav-links a { padding: 8px 14px; border-radius: 999px; transition: color var(--t-base) var(--ease), background var(--t-base) var(--ease), box-shadow var(--t-base) var(--ease); }
+.nav-links a::after { display: none; }
+.nav-links a.active, .nav-links a[aria-current="page"] { background: var(--plate-2); box-shadow: var(--raised); color: var(--text); }
+.nav-btn { border: 0; background: var(--plate-2); box-shadow: var(--raised); }
+.nav-btn:active { box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.8); }
+.nav-cv { border: 0; background: var(--plate-2); box-shadow: var(--raised); }
+.nav-cv:hover { background: #20252b; }
+
+/* Feedback: a toast is a small raised plate. */
+.toast { background: var(--plate-2); color: var(--text); box-shadow: var(--raised); font-weight: 600; padding: 12px 18px; border-radius: 14px; }
+
+/* The palette: a raised plate, the query in a well, the chosen row a raised key. */
+.palette-box { background: var(--plate); border: 0; box-shadow: var(--raised), 0 40px 80px -30px rgba(0, 0, 0, 0.9); }
+.palette-search { margin: 12px 12px 4px; padding: 12px 14px; border: 0; border-radius: 12px; background: var(--well); box-shadow: var(--inset); }
+.palette-item { transition: background var(--t-base) var(--ease), box-shadow var(--t-base) var(--ease); }
+.palette-item[aria-selected="true"] { background: var(--plate-2); box-shadow: var(--raised); }
+.palette-item[aria-selected="true"] i { color: var(--gold); }
+
+/* Experience: roles as plates on a rail, numbers beside the job; trust in the same view. */
+.exp-grid { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: 56px; align-items: start; }
+.exp-side { position: sticky; top: calc(var(--nav-h) + 40px); }
+.exp-side h2 { font-size: clamp(2.2rem, 3.6vw, 3.2rem); line-height: 1; }
+.exp-side .sub { margin-top: 14px; }
+.exp-side .quote.lead { margin-top: 32px; padding: 22px 24px; border: 0; border-radius: 18px; background: var(--well); box-shadow: var(--inset); }
+.exp-side .quote.lead blockquote { font-size: clamp(19px, 1.7vw, 23px); font-weight: 500; line-height: 1.4; max-width: none; letter-spacing: -0.01em; }
+.rail { position: relative; display: grid; gap: 16px; padding-left: 36px; list-style: none; }
+.rail::before { content: ""; position: absolute; left: 10px; top: 10px; bottom: 10px; width: 6px; border-radius: 6px; background: var(--well); box-shadow: var(--inset); }
+.role { position: relative; padding: 20px 22px; border-radius: 18px; background: linear-gradient(180deg, var(--plate-2), var(--plate)); box-shadow: var(--raised); }
+.role::before { content: ""; position: absolute; left: -32px; top: 26px; width: 14px; height: 14px; border-radius: 50%; background: var(--plate-2); box-shadow: var(--raised); }
+.role.now::before { background: radial-gradient(circle at 40% 30%, #f0bd5e, var(--gold)); box-shadow: 0 0 10px rgba(227, 169, 68, 0.45); }
+.role header { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
+.role h3 { font-size: 19px; }
+.role h3 span { margin-left: 6px; font-weight: 500; color: var(--text-3); }
+.role .when { flex: none; font: 500 13px var(--mono); color: var(--text-3); }
+.role p { margin-top: 8px; color: var(--text-2); font-size: 15px; }
+.role p a { color: var(--moss-text); }
+.metrics { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; padding: 0; list-style: none; }
+.metrics li { padding: 7px 12px; border-radius: 999px; background: var(--well); box-shadow: var(--inset); font-size: 13.5px; color: var(--text-2); }
+.metrics b { margin-right: 4px; font: 700 14px var(--mono); color: var(--gold); font-variant-numeric: tabular-nums; }
+.exp .quotes { grid-template-columns: repeat(2, minmax(0, 1fr)) auto; align-items: end; gap: 32px; margin-top: 64px; }
+.exp .quote { border-top: 1px solid var(--line); padding-top: 22px; }
+.exp .quote blockquote { font-size: 18px; }
+.exp .stackline { margin-top: 40px; }
+
+/* Contact: one recessed field holds the address, Copy and the gold key. */
+.copybox { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; width: fit-content; max-width: 100%; margin-top: 36px; padding: 8px 8px 8px 22px; border-radius: 999px; background: var(--well); box-shadow: var(--inset); }
+.copybox .addr { margin-right: 10px; font: 500 16px var(--mono); color: var(--text); }
+.copybox .btn { height: 44px; padding: 0 20px; }
+.social { gap: 10px; margin-top: 18px; }
+.social a.key { color: var(--text); text-decoration: none; font-size: 14px; }
+
+/* Phones: a dock within thumb reach on every page. */
+.dock { display: none; }
+@media (max-width: 760px) {
+  .dock {
+    position: fixed; left: 12px; right: 12px; bottom: max(12px, env(safe-area-inset-bottom)); z-index: 60;
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; padding: 5px; border-radius: 999px;
+    background: rgba(12, 14, 15, 0.92); backdrop-filter: blur(10px); box-shadow: var(--inset), 0 10px 30px -10px rgba(0, 0, 0, 0.9);
+  }
+  .dock a { display: grid; place-items: center; height: 46px; border-radius: 999px; color: var(--text-2); font-size: 14px; font-weight: 600; }
+  .dock a[aria-current="page"] { background: var(--plate-2); box-shadow: var(--raised); color: var(--text); }
+  .dock .dock-mail { color: var(--gold-ink); background: linear-gradient(180deg, #f0bd5e, var(--gold)); }
+  body { padding-bottom: 84px; }
+  .eye-body.docked { bottom: 88px; }
+  .toast { bottom: 88px; }
+  .exp-grid { grid-template-columns: 1fr; gap: 28px; }
+  .exp-side { position: static; }
+  .rail { padding-left: 30px; }
+  .rail::before { left: 6px; }
+  .role::before { left: -28px; }
+  .role header { flex-direction: column; gap: 4px; }
+  .exp .quotes { grid-template-columns: 1fr; gap: 24px; margin-top: 40px; }
+  .copybox { border-radius: 22px; padding: 14px; }
+  .copybox .addr { flex-basis: 100%; margin: 0 0 4px 6px; font-size: 15px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .btn, .key, .nav-links a, .picker [role="tab"] { transition: none; }
+}
+
+/* The one entrance a section gets on case pages: it rises into place, readable throughout. */
+.rise { translate: 0 16px; transition: translate var(--t-enter) var(--ease); }
+.rise.focused { translate: 0 0; }
