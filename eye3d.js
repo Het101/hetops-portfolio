@@ -1,5 +1,5 @@
-// hetops.dev hero: a 3D eye in a lens housing that wakes up, looks at what you point at, and is
-// circled by one orbit: the tools I built. Results live in the experience section, once each.
+// hetops.dev hero: a 3D eye that wakes up, looks at what you point at, and is circled by
+// two orbits: the tools I built (inner) and results and stack (outer).
 // three.js comes from the import map in index.html. Without WebGL the CSS fallback eye shows.
 import * as THREE from 'three';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
@@ -13,6 +13,22 @@ const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const fine = matchMedia('(pointer: fine)').matches;
 const { PRODUCTS = [], track = () => {} } = window.HETOPS || {};
 
+const OUTER = [
+  { big: '$2M+', small: 'saved a year' },
+  { label: 'Kubernetes' },
+  { big: '10k+', small: 'canary deploys' },
+  { label: 'Terraform' },
+  { big: '100+', small: 'node clusters' },
+  { label: 'Argo CD' },
+  { big: '62 → 0', small: 'security alerts' },
+  { label: 'AWS · GCP · Azure' },
+  { big: '7,200', small: 'threads repaired' },
+  { label: 'GitHub Actions' },
+  { big: '99.9%', small: 'uptime kept' },
+  { label: 'Prometheus' },
+  { big: '75 → 0', small: 'image CVEs' },
+  { label: 'Linkerd · mTLS' },
+];
 
 // Phones and small screens get a lighter eye: fewer polygons and no antialiasing (a dense screen
 // hides the jaggies). The eye looks the same at that size.
@@ -176,6 +192,7 @@ if (renderer) {
   // ── Orbits ───────────────────────────────────────────────────
   const orbitDefs = [
     { r: 1.72, tiltX: 1.08, tiltZ: -0.22, speed: 0.13, items: PRODUCTS.map((p, i) => ({ tool: i })) },
+    { r: 2.4, tiltX: 1.2, tiltZ: 0.34, speed: -0.06, items: matchMedia('(max-width: 760px)').matches ? OUTER.filter((o) => o.big) : OUTER },
   ];
   const orbits = orbitDefs.map((d) => {
     const pivot = new THREE.Object3D(); pivot.rotation.set(d.tiltX, 0, d.tiltZ); scene.add(pivot);
@@ -196,6 +213,9 @@ if (renderer) {
       btn.addEventListener('click', () => pick(it.tool, true));
       btn.addEventListener('focus', () => pick(it.tool, false));
       if (fine) { btn.addEventListener('pointerenter', () => pick(it.tool, false)); btn.addEventListener('pointerleave', () => unpick()); }
+    } else {
+      li.className = 'orb ' + (it.big ? 'orb-num' : 'orb-tag');
+      li.innerHTML = it.big ? `<b>${it.big}</b><span>${it.small}</span>` : `<span>${it.label}</span>`;
     }
     list.appendChild(li);
     els.push({ li, o, angle: (k / o.items.length) * Math.PI * 2 + oi * 0.4, tool: it.tool });
@@ -218,12 +238,11 @@ if (renderer) {
   function resize() {
     W = body.clientWidth; H = body.clientHeight;
     renderer.setSize(W, H, false); camera.aspect = W / H;
-    // Keep the orbit inside the stage on any aspect; docked, frame just the eye.
-    const fit = docked ? 1.25 : Math.max((W < 560 ? 2.25 : 2.05) / camera.aspect, 1.6);
+    // Keep the outer orbit inside the stage on any aspect; docked, frame just the eye.
+    const fit = docked ? 1.25 : Math.max((W < 560 ? 3 : 2.5) / camera.aspect, 1.6);
     camera.position.z = fit / Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
     camera.updateProjectionMatrix();
     eyeR = (H / 2) / (camera.position.z * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2))) * LID_R;
-    body.style.setProperty('--eye-r', eyeR.toFixed(1) + 'px'); // the housing is drawn around this radius
   }
   new ResizeObserver(() => { resize(); draw(); }).observe(body); resize();
 
