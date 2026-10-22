@@ -304,15 +304,18 @@ const depth = new IntersectionObserver((entries) => {
 }, { threshold: 0.3 });
 $$('[data-section]').forEach((el) => depth.observe(el));
 
-// ── Inside the eye: its 3D scene loads on the first scroll or once the page is idle, so the
-// hero eye gets the main thread first. The import map in index.html resolves 'three'.
+// ── The aperture: past the hero the iris opens and you fall through the pupil. The pupil is the page's own
+// ground colour, so the experience section arrives with no seam. --p runs 0 → 1 across the section.
 (() => {
-  if (!$('#inside')) return;
-  let done = false;
-  const load = () => { if (done) return; done = true; import('/inside.js'); };
-  addEventListener('scroll', load, { once: true, passive: true });
-  const idle = window.requestIdleCallback || ((f) => setTimeout(f, 1500));
-  addEventListener('load', () => setTimeout(() => idle(load), 2500), { once: true });
+  const ap = $('#inside'); if (!ap || reduce) return;
+  let queued = false;
+  const set = () => {
+    queued = false;
+    const r = ap.getBoundingClientRect(), span = Math.max(1, r.height - innerHeight);
+    ap.style.setProperty('--p', clamp(-r.top / span, 0, 1).toFixed(4));
+  };
+  addEventListener('scroll', () => { if (!queued) { queued = true; requestAnimationFrame(set); } }, { passive: true });
+  addEventListener('resize', set); set();
 })();
 
 // ── Live numbers (public, unauthenticated sources only) ─────────
