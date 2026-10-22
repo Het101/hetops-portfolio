@@ -219,12 +219,10 @@ if ($('.rule')) new IntersectionObserver(([e], ob) => {
   $('#contactEmail').addEventListener('pointerleave', () => pupil.setAttribute('r', 13));
 })();
 
-// ── Focus: things come into focus as the eye reaches them ──────
-// Headings and chart rows sharpen from a blur; screenshots open through a round aperture.
+// ── Reveals: round things open through a round aperture, screenshots open like a shutter, and headings are
+// simply there (no blur-in). The eye still glances at each heading as it arrives.
 if (!reduce && 'IntersectionObserver' in window) {
-  const focusables = $$('.head h2, .words > h2, .writing > h2, .activity-head h2, .check-copy h2, .contact h2');
-  const rows = $$('.chart li'), lenses = $$('.ring');
-  [...focusables, ...rows].forEach((el) => el.classList.add('pre-focus'));
+  const headings = $$('main h2'), lenses = $$('.ring');
   lenses.forEach((el) => el.classList.add('pre-aperture'));
   // Screenshots are rectangles: two blades part instead of a circle opening (no rectangle is ever cut round).
   const shutters = $$('.vf-glass');
@@ -236,11 +234,11 @@ if (!reduce && 'IntersectionObserver' in window) {
   const io = new IntersectionObserver((entries) => entries.forEach((e) => {
     if (!e.isIntersecting) return;
     io.unobserve(e.target);
-    const el = watched.get(e.target) || e.target, i = rows.indexOf(el);
-    setTimeout(() => el.classList.add(el.classList.contains('pre-aperture') ? 'apertured' : 'focused'), i > 0 ? i * 140 : 0);
+    const el = watched.get(e.target) || e.target;
+    if (el.classList.contains('pre-aperture')) el.classList.add('apertured');
     window.dispatchEvent(new CustomEvent('eye:glance', { detail: el }));
   }), { rootMargin: '0px 0px -18% 0px', threshold: 0.2 });
-  [...focusables, ...rows, ...watched.keys()].forEach((el) => io.observe(el));
+  [...headings, ...watched.keys()].forEach((el) => io.observe(el));
 }
 
 // ── Easter egg: type `sudo hire het` anywhere ──────────────────

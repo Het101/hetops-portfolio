@@ -120,36 +120,42 @@
       </div>
     </section>
 
-    <!-- Experience as an eye chart: the closer you look, the finer the print -->
+    <!-- Experience: each role on a rail with its numbers beside it, each number once, and the people who saw the work -->
     <section class="exp wrap" id="experience" data-section="experience">
-      <header class="head">
-        <h2>Read the chart</h2>
-        <p class="sub">Three years of keeping production running. The closer you look, the finer the print.</p>
-      </header>
-      <ol class="chart">
-        <li style="--s: 1"><span class="acuity">20/200</span><span class="row">$2M SAVED</span><span class="fine">a year, by finding idle cloud resources and right-sizing the rest</span></li>
-        <li style="--s: 0.74"><span class="acuity">20/100</span><span class="row">10K DEPLOYS</span><span class="fine">canary releases with automated rollback, through GitOps</span></li>
-        <li style="--s: 0.56"><span class="acuity">20/70</span><span class="row">100+ NODES · 3 CLOUDS</span><span class="fine">one control plane across AWS, GCP and Azure, with automated failover</span></li>
-        <li style="--s: 0.43"><span class="acuity">20/50</span><span class="row">60% FASTER DEPLOYS · 99.9% UPTIME</span><span class="fine">CI/CD, Kubernetes workloads and observability at DataGrokr</span></li>
-        <li style="--s: 0.33"><span class="acuity">20/40</span><span class="row">62 → 0 OPEN SECURITY ALERTS</span><span class="fine">one triage pass on DNS Intelligence, every dismissal written down</span></li>
-        <li style="--s: 0.25"><span class="acuity">20/20</span><span class="row">7,200 THREADS · HISTORY KEPT · AUTHORS RESTORED</span><span class="fine">the chat migration that became Threadvault</span></li>
-      </ol>
-      <ol class="roles">
-        <li><span class="when">Aug 2025 to now</span><h3>DevOps Engineer II <span>Techdome</span></h3><p>Multi-cloud Kubernetes, cloud cost automation and GitOps delivery for production workloads.</p></li>
-        <li><span class="when">2023 to 2025</span><h3>DevOps Engineer <span>DataGrokr</span></h3><p>CI/CD pipelines, Kubernetes workloads and observability. Cut deployment time by 60% and kept services at 99.9% uptime.</p></li>
-        <li><span class="when">2019 to 2023</span><h3>B.Tech, Computer Engineering <span>CHARUSAT University</span></h3><p>Aiming to master DevOps end to end, by running every tool in production myself: service mesh, SIEM, runtime detection, GitOps. <a href="#lab">The Kubernetes lab below</a> is where that happens.</p></li>
-      </ol>
-      <p class="stackline"><b>Works with</b> Kubernetes, Terraform, Helm, Argo CD, Linkerd, GitHub Actions, Prometheus, Grafana, Elasticsearch and Kibana, Falco, CrowdSec, Sealed Secrets, Trivy, Semgrep, CodeQL, OWASP ZAP, Ansible, Vault, Traefik, Cloudflare, OpenTelemetry and n8n, on AWS, GCP, Azure and Oracle Cloud, in Python, TypeScript and Bash.</p>
-    </section>
-
-    <!-- Testimonials -->
-    <section class="words wrap" data-section="testimonials" aria-labelledby="words-h">
-      <h2 id="words-h">From people I've worked with</h2>
-      <div class="quotes">
-        <figure class="quote lead">
-          <blockquote>“What sets Het apart is their ability to accelerate deployments while simultaneously strengthening security measures.”</blockquote>
-          <figcaption><b>Yashvardhan Singh Nathawat</b> DevOps Engineer, Certa.ai</figcaption>
-        </figure>
+      <div class="exp-grid">
+        <div class="exp-side">
+          <h2>Three years of keeping production running</h2>
+          <p class="sub">Each number sits next to the job it came from, once.</p>
+          <figure class="quote lead">
+            <blockquote>“What sets Het apart is their ability to accelerate deployments while simultaneously strengthening security measures.”</blockquote>
+            <figcaption><b>Yashvardhan Singh Nathawat</b> DevOps Engineer, Certa.ai</figcaption>
+          </figure>
+        </div>
+        <ol class="rail">
+          <li class="role now">
+            <header><h3>DevOps Engineer&nbsp;II <span>Techdome</span></h3><span class="when">Aug 2025 to now</span></header>
+            <p>Multi-cloud Kubernetes, cloud cost automation and GitOps delivery for production workloads.</p>
+            <ul class="metrics" aria-label="Results at Techdome">
+              <li><b>$2M</b> a year saved: idle cloud found and right-sized</li>
+              <li><b>10k</b> canary deploys with automatic rollback</li>
+              <li><b>100+</b> nodes on AWS, GCP and Azure, one control plane</li>
+            </ul>
+          </li>
+          <li class="role">
+            <header><h3>DevOps Engineer <span>DataGrokr</span></h3><span class="when">2023 to 2025</span></header>
+            <p>CI/CD pipelines, Kubernetes workloads and observability.</p>
+            <ul class="metrics" aria-label="Results at DataGrokr">
+              <li><b>60%</b> faster deployments</li>
+              <li><b>99.9%</b> uptime kept</li>
+            </ul>
+          </li>
+          <li class="role">
+            <header><h3>B.Tech, Computer Engineering <span>CHARUSAT University</span></h3><span class="when">2019 to 2023</span></header>
+            <p>Aiming to master DevOps end to end, by running every tool in production myself: service mesh, SIEM, runtime detection, GitOps. <a href="#lab">The Kubernetes lab below</a> is where that happens.</p>
+          </li>
+        </ol>
+      </div>
+      <div class="quotes" data-section="testimonials" aria-label="From people I've worked with">
         <figure class="quote">
           <blockquote>“Proactive and really intelligent about his approach to development and documentation.”</blockquote>
           <figcaption><b>Dillon Omane</b> Senior Software Engineer, Verisk</figcaption>
@@ -158,8 +164,9 @@
           <blockquote>“Het's communication and writing skills make him stand out from the crowd.”</blockquote>
           <figcaption><b>Iliyas Maner</b> Lead Cloud Engineer, DataGrokr</figcaption>
         </figure>
+        <a class="key" href="https://www.linkedin.com/in/het11/details/recommendations/" target="_blank" rel="noopener" data-umami-event="outbound" data-umami-event-target="linkedin-recommendations"><i class="ph ph-linkedin-logo" aria-hidden="true"></i>All recommendations</a>
       </div>
-      <a class="more" href="https://www.linkedin.com/in/het11/details/recommendations/" target="_blank" rel="noopener" data-umami-event="outbound" data-umami-event-target="linkedin-recommendations">All recommendations on LinkedIn <i class="ph ph-arrow-up-right"></i></a>
+      <p class="stackline"><b>Works with</b> Kubernetes, Terraform, Helm, Argo CD, Linkerd, GitHub Actions, Prometheus, Grafana, Elasticsearch and Kibana, Falco, CrowdSec, Sealed Secrets, Trivy, Semgrep, CodeQL, OWASP ZAP, Ansible, Vault, Traefik, Cloudflare, OpenTelemetry and n8n, on AWS, GCP, Azure and Oracle Cloud, in Python, TypeScript and Bash.</p>
     </section>
 
     <!-- Work: one instrument. Pick a tool on the left; it opens in the viewer on the right. -->
@@ -332,15 +339,16 @@
       <svg class="mini-eye" id="miniEye" viewBox="0 0 240 96" aria-hidden="true"><defs><clipPath id="miniClip"><path id="miniClipPath"/></clipPath></defs><g clip-path="url(#miniClip)"><circle class="mini-iris" cx="120" cy="48" r="34"/><circle class="mini-pupil" id="miniPupil" cx="120" cy="48" r="13"/></g><path class="mini-lid" id="miniUp"/><path class="mini-lid low" id="miniLow"/></svg>
       <h2>Got a production problem worth solving?</h2>
       <p>Infrastructure, migrations, or a tool that should exist. I reply to every email.</p>
-      <div class="contact-row">
-        <a class="btn btn-gold btn-lg" id="contactEmail" href="mailto:patel.x.het@gmail.com" data-umami-event="email-click" data-umami-event-from="contact"><i class="ph ph-envelope-simple" aria-hidden="true"></i>Email me</a>
-        <button class="copy" type="button" data-copy="patel.x.het@gmail.com" data-umami-event="email-copy">patel.x.het@gmail.com <i class="ph ph-copy" aria-hidden="true"></i></button>
+      <div class="copybox">
+        <span class="addr">patel.x.het@gmail.com</span>
+        <button class="key" type="button" data-copy="patel.x.het@gmail.com" data-umami-event="email-copy"><i class="ph ph-copy" aria-hidden="true"></i>Copy</button>
+        <a class="btn btn-gold" id="contactEmail" href="mailto:patel.x.het@gmail.com" data-umami-event="email-click" data-umami-event-from="contact"><i class="ph ph-envelope-simple" aria-hidden="true"></i>Email me</a>
       </div>
       <div class="social">
-        <a href="https://www.linkedin.com/in/het11/" target="_blank" rel="noopener" data-umami-event="outbound" data-umami-event-target="linkedin">LinkedIn</a>
-        <a href="https://github.com/Het101" target="_blank" rel="noopener" data-umami-event="outbound" data-umami-event-target="github">GitHub</a>
-        <a href="https://medium.com/@het101" target="_blank" rel="noopener" data-umami-event="outbound" data-umami-event-target="medium">Medium</a>
-        <a href="/Het_Patel_Resume.pdf" target="_blank" rel="noopener" data-umami-event="resume-download" data-umami-event-from="contact">Résumé</a>
+        <a class="key" href="https://www.linkedin.com/in/het11/" target="_blank" rel="noopener" data-umami-event="outbound" data-umami-event-target="linkedin"><i class="ph ph-linkedin-logo" aria-hidden="true"></i>LinkedIn</a>
+        <a class="key" href="https://github.com/Het101" target="_blank" rel="noopener" data-umami-event="outbound" data-umami-event-target="github"><i class="ph ph-github-logo" aria-hidden="true"></i>GitHub</a>
+        <a class="key" href="https://medium.com/@het101" target="_blank" rel="noopener" data-umami-event="outbound" data-umami-event-target="medium"><i class="ph ph-pen-nib" aria-hidden="true"></i>Medium</a>
+        <a class="key" href="/Het_Patel_Resume.pdf" target="_blank" rel="noopener" data-umami-event="resume-download" data-umami-event-from="contact"><i class="ph ph-file-text" aria-hidden="true"></i>Résumé</a>
       </div>
     </section>
   </main>
@@ -396,5 +404,12 @@
   <script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/" } }</script>
   <script type="module" src="/eye3d.js"></script>
   <script type="module" src="/home-lab.js"></script>
+  <!-- Phones: the four places a visitor goes, within thumb reach on every page -->
+  <nav class="dock" aria-label="Quick links">
+    <a href="#work">Work</a>
+    <a href="/lab/">Lab</a>
+    <a href="/live/">Live</a>
+    <a class="dock-mail" href="mailto:patel.x.het@gmail.com" data-umami-event="email-click" data-umami-event-from="dock">Email</a>
+  </nav>
 </body>
 </html>
