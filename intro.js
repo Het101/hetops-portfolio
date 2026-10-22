@@ -1,5 +1,5 @@
 // hetops.dev intro: a big eye wakes, opens, then shrinks into the 3D eye in the hero.
-// Plays on every load; the inline head script decides (and removes it after 9s no matter what).
+// Plays once per session; gate.js decides (and removes it after 9s no matter what).
 (() => {
   const root = document.documentElement;
   if (!root.classList.contains('intro')) return;
