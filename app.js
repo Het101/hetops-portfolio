@@ -23,6 +23,7 @@ const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 // Short hops glide. A long jump cuts instead (a quick fade, then there), so "Contact" does not scrub every
 // scene on the way down.
 const scrollToId = (id) => {
+  window.HETOPS?.openTool?.(id);
   const el = document.getElementById(id);
   if (!el) return;
   if (reduce || Math.abs(el.getBoundingClientRect().top) < innerHeight * 2.5) { el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' }); return; }
@@ -146,33 +147,17 @@ addEventListener('keydown', (e) => {
 if (/Mac|iPhone|iPad/.test(navigator.platform)) $('#paletteBtn kbd').textContent = '⌘K';
 }
 
-// ── Story: the active step drives the round stage ───────────────
-const steps = $$('.step'), panels = $$('.panel'), stageProg = $('#stageProg');
-if (stageProg) {
-const showStep = (i) => {
-  steps.forEach((s, j) => s.classList.toggle('is-active', j === i));
-  panels.forEach((p, j) => p.classList.toggle('is-active', j === i));
-  stageProg.style.strokeDashoffset = 100 - (i + 1) * 25;
-};
-showStep(0);
-const storyObs = new IntersectionObserver((entries) => {
-  for (const e of entries) if (e.isIntersecting) { const i = +e.target.dataset.step; showStep(i); track('story-step', { step: i + 1 }); }
-}, { rootMargin: '-40% 0px -55% 0px' });
-steps.forEach((s) => storyObs.observe(s));
-addEventListener('beforeprint', () => panels.forEach((p) => p.classList.add('is-active')));
-}
-
-// ── Lens: a loupe over each screenshot, for reading the fine print ─
-if (finePointer) $$('.lens').forEach((lens) => {
-  const img = $('img', lens), loupe = Object.assign(document.createElement('span'), { className: 'loupe' });
-  loupe.setAttribute('aria-hidden', 'true'); lens.appendChild(loupe);
-  const Z = 2.4;
-  lens.addEventListener('pointermove', (e) => {
-    const r = lens.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
-    loupe.style.left = x + 'px'; loupe.style.top = y + 'px';
-    loupe.style.backgroundImage = `url("${img.currentSrc || img.src}")`;
-    loupe.style.backgroundSize = `${r.width * Z}px auto`;
-    loupe.style.backgroundPosition = `${-(x * Z - 95)}px ${-(y * Z - 95)}px`;
+// ── Callout: a rectangular magnifier over each screenshot, for reading the fine print ──
+if (finePointer) $$('.vf-glass').forEach((glass) => {
+  const img = $('img', glass), box = Object.assign(document.createElement('span'), { className: 'callout' });
+  box.setAttribute('aria-hidden', 'true'); glass.appendChild(box);
+  const Z = 2.2, BW = 300, BH = 180;
+  glass.addEventListener('pointermove', (e) => {
+    const r = glass.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+    box.style.left = clamp(x - BW / 2, 8, r.width - BW - 8) + 'px'; box.style.top = clamp(y - BH - 18, 8, r.height - BH - 8) + 'px';
+    box.style.backgroundImage = `url("${img.currentSrc || img.src}")`;
+    box.style.backgroundSize = `${r.width * Z}px auto`;
+    box.style.backgroundPosition = `${-(x * Z - BW / 2)}px ${-(y * Z - BH / 2)}px`;
   });
 });
 
@@ -238,9 +223,14 @@ if ($('.rule')) new IntersectionObserver(([e], ob) => {
 // Headings and chart rows sharpen from a blur; screenshots open through a round aperture.
 if (!reduce && 'IntersectionObserver' in window) {
   const focusables = $$('.head h2, .words > h2, .writing > h2, .activity-head h2, .check-copy h2, .contact h2');
-  const rows = $$('.chart li'), lenses = $$('.lens, .stage, .rule, .ring');
+  const rows = $$('.chart li'), lenses = $$('.ring');
   [...focusables, ...rows].forEach((el) => el.classList.add('pre-focus'));
   lenses.forEach((el) => el.classList.add('pre-aperture'));
+  // Screenshots are rectangles: two blades part instead of a circle opening (no rectangle is ever cut round).
+  const shutters = $$('.vf-glass');
+  shutters.forEach((el) => el.classList.add('shut'));
+  const so = new IntersectionObserver((entries) => entries.forEach((e) => { if (e.isIntersecting) { so.unobserve(e.target); e.target.classList.add('open'); } }), { threshold: 0.25 });
+  shutters.forEach((el) => so.observe(el));
   // A shape clipped to nothing never "intersects", so apertures are watched through their parent.
   const watched = new Map(lenses.map((el) => [el.parentElement, el]));
   const io = new IntersectionObserver((entries) => entries.forEach((e) => {
@@ -364,24 +354,34 @@ Promise.all(['threadvault', 'retirement-radar'].map((pkg) => getJSON(`https://ap
   if (hasGsap) ScrollTrigger.refresh();
 })();
 
-// ── Work index: the case you are reading lights up; tapping one jumps to it ──
+// ── Work: one instrument. A tab per tool, arrow keys move between them, and a link to a tool
+// (#dns, a case link, the eye's orbit) opens its panel first.
 (() => {
-  const idx = $('#workIndex'); if (!idx) return;
-  const links = $$('a', idx);
-  const cases = links.map((a) => document.querySelector(a.getAttribute('href'))).filter(Boolean);
-  const io = new IntersectionObserver((entries) => {
-    for (const e of entries) if (e.isIntersecting) {
-      links.forEach((a) => a.classList.toggle('on', a.getAttribute('href') === '#' + e.target.id));
-      const on = idx.querySelector('a.on');
-      if (on) idx.scrollTo({ left: on.offsetLeft - 16, behavior: 'smooth' });
-    }
-  }, { rootMargin: '-40% 0px -55% 0px' });
-  cases.forEach((c) => io.observe(c));
+  const tabs = $$('#work [role="tab"]'); if (!tabs.length) return;
+  const panelOf = (t) => document.getElementById(t.getAttribute('aria-controls'));
+  const show = (tab, focus) => {
+    tabs.forEach((t) => { const on = t === tab; t.setAttribute('aria-selected', String(on)); t.tabIndex = on ? 0 : -1; panelOf(t).hidden = !on; });
+    if (focus) tab.focus();
+    // A panel that just appeared opens its shutter on the next frame (a visibility observer would not fire again).
+    requestAnimationFrame(() => requestAnimationFrame(() => $$('.vf-glass.shut', panelOf(tab)).forEach((g) => g.classList.add('open'))));
+  };
+  tabs.forEach((t, i) => {
+    t.addEventListener('click', () => { show(t); track('work-tab', { tool: t.getAttribute('aria-controls') }); });
+    t.addEventListener('keydown', (e) => {
+      const step = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 }[e.key];
+      const to = step ? tabs[(i + step + tabs.length) % tabs.length] : e.key === 'Home' ? tabs[0] : e.key === 'End' ? tabs.at(-1) : null;
+      if (to) { e.preventDefault(); show(to, true); }
+    });
+  });
+  const open = (id) => { const t = tabs.find((x) => x.getAttribute('aria-controls') === id); if (t) show(t); return !!t; };
+  window.HETOPS.openTool = open;
+  if (location.hash.length > 1) open(decodeURIComponent(location.hash.slice(1)));
 })();
 
-// ── The docked eye steps aside on phones while you read, and comes back when you scroll up ──
+// ── The docked eye steps aside while you read wherever the page has no margin for it (phones and any
+// screen narrower than the content plus the eye), and comes back when you scroll up ──
 (() => {
-  if (!matchMedia('(max-width: 760px)').matches) return;
+  if (!matchMedia('(max-width: 1419px)').matches) return;
   let last = scrollY;
   addEventListener('scroll', () => {
     const body = document.getElementById('eyeBody'); if (!body) return;

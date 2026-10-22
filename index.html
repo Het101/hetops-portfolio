@@ -162,117 +162,105 @@
       <a class="more" href="https://www.linkedin.com/in/het11/details/recommendations/" target="_blank" rel="noopener" data-umami-event="outbound" data-umami-event-target="linkedin-recommendations">All recommendations on LinkedIn <i class="ph ph-arrow-up-right"></i></a>
     </section>
 
-    <!-- Work: each tool under the lens -->
+    <!-- Work: one instrument. Pick a tool on the left; it opens in the viewer on the right. -->
     <section class="work wrap" id="work" data-section="work">
       <header class="head">
-        <h2>Under the lens</h2>
-        <p class="sub">Every tool here started as a real problem. Look closely; the screenshots are the real thing.</p>
+        <h2>Tools I built from incidents</h2>
+        <p class="sub">Each one started as something that broke. Pick one; the screenshots are the real thing.</p>
       </header>
-      <nav class="work-index" id="workIndex" aria-label="Projects in this section">
-        <a href="#story"><img src="/assets/brand/threadvault-icon.webp" width="20" height="20" alt="">Threadvault<small>npm</small></a>
-        <a href="#dns"><img src="/assets/brand/dns-icon.svg" width="20" height="20" alt="">DNS Intelligence<small>live</small></a>
-        <a href="#radar"><img src="/assets/brand/radar-icon.webp" width="20" height="20" alt="">Retirement Radar<small>npm · live</small></a>
-        <a href="#restore-drill"><img src="/assets/brand/restoredrill-icon.webp" width="20" height="20" alt="">Restore Drill<small>live</small></a>
-      </nav>
-
-      <article class="story" id="story" data-section="story">
-        <div class="story-intro">
-          <img class="p-icon" src="/assets/brand/threadvault-icon.webp" width="56" height="56" alt="">
-          <h3>Threadvault</h3>
-          <p class="problem">A chat migration broke 7,200 threads. The repair became an open-source CLI.</p>
+      <div class="instrument">
+        <div class="picker" role="tablist" aria-label="Tools" aria-orientation="vertical">
+          <button type="button" role="tab" id="tab-story" aria-controls="story" aria-selected="true"><img src="/assets/brand/threadvault-icon.webp" width="32" height="32" alt=""><span><b>Threadvault</b><small>chat migration repair</small></span><i class="chip-k">npm</i></button>
+          <button type="button" role="tab" id="tab-dns" aria-controls="dns" aria-selected="false" tabindex="-1"><img src="/assets/brand/dns-icon.svg" width="32" height="32" alt=""><span><b>DNS Intelligence</b><small>SPF, DMARC, certificates</small></span><i class="led" title="live"></i></button>
+          <button type="button" role="tab" id="tab-radar" aria-controls="radar" aria-selected="false" tabindex="-1"><img src="/assets/brand/radar-icon.webp" width="32" height="32" alt=""><span><b>Retirement Radar</b><small>old AWS versions, deadlines</small></span><i class="led" title="live"></i></button>
+          <button type="button" role="tab" id="tab-restore-drill" aria-controls="restore-drill" aria-selected="false" tabindex="-1"><img src="/assets/brand/restoredrill-icon.webp" width="32" height="32" alt=""><span><b>Restore Drill</b><small>backups, restored and checked</small></span><i class="led" title="live"></i></button>
         </div>
-        <div class="story-grid">
-          <ol class="story-steps">
-            <li class="step" data-step="0"><h4>The move</h4><p>A resource move replayed 7,200 Azure Communication Services chat threads onto a new resource, with participants turned off.</p></li>
-            <li class="step" data-step="1"><h4>The damage</h4><p>7,022 messages showed the wrong author, and every thread rejected replies with <code>CommunicationError Forbidden</code>.</p></li>
-            <li class="step" data-step="2"><h4>The repair</h4><p>Both defects were fixable only because the extract had kept each message's original sender and every participant list.</p></li>
-            <li class="step" data-step="3"><h4>The tool</h4><p>I wrote the post-mortem, then turned the repair into Threadvault: an open-source CLI that finds these failures before a migration does.</p>
-              <div class="links">
-                <a class="case-link" href="/work/threadvault/" data-umami-event="project-link" data-umami-event-project="case-threadvault">Case study <i class="ph ph-arrow-right"></i></a>
-                <a href="https://github.com/Het101/threadvault" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="threadvault-source">Source <i class="ph ph-arrow-up-right"></i></a>
-                <a href="https://github.com/Het101/threadvault/blob/main/docs/postmortem-acs-chat-migration.md" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="threadvault-postmortem">Post-mortem <i class="ph ph-arrow-up-right"></i></a>
-              </div>
-            </li>
+
+        <article class="tool" id="story" role="tabpanel" aria-labelledby="tab-story" tabindex="0">
+          <header class="tool-head">
+            <div><h3>Threadvault</h3><p class="problem">A chat migration broke 7,200 threads. The repair became an open-source CLI.</p></div>
+            <a class="btn btn-gold" href="/work/threadvault/" data-umami-event="project-link" data-umami-event-project="case-threadvault"><i class="ph ph-arrow-right" aria-hidden="true"></i>Case study</a>
+          </header>
+          <ol class="track">
+            <li><span class="knob" aria-hidden="true"><i class="ph ph-truck"></i></span><h4>The move</h4><p>A resource move replayed 7,200 Azure Communication Services chat threads onto a new resource, with participants turned off.</p></li>
+            <li class="alert"><span class="knob" aria-hidden="true"><i class="ph ph-warning"></i></span><h4>The damage</h4><p>7,022 messages showed the wrong author, and every thread rejected replies with <code>CommunicationError Forbidden</code>.</p></li>
+            <li><span class="knob" aria-hidden="true"><i class="ph ph-wrench"></i></span><h4>The repair</h4><p>Both defects were fixable only because the extract had kept each message's original sender and every participant list.</p></li>
+            <li class="ok"><span class="knob" aria-hidden="true"><i class="ph ph-check"></i></span><h4>The tool</h4><p>I wrote the post-mortem, then turned the repair into Threadvault: an open-source CLI that finds these failures before a migration does.</p></li>
           </ol>
-          <div class="stage" aria-hidden="true">
-            <svg class="stage-ring" viewBox="0 0 100 100"><circle cx="50" cy="50" r="48"/><circle class="stage-prog" id="stageProg" cx="50" cy="50" r="48" pathLength="100"/></svg>
-            <div class="panel is-active" data-panel="0">
-              <span class="big">7,200</span><span class="big-lbl">threads replayed</span>
-              <div class="flow"><span class="fnode">Old resource</span><span class="wire"><i></i></span><span class="fnode">New resource</span></div>
-              <span class="tag warn">participants: off</span>
-            </div>
-            <div class="panel" data-panel="1">
-              <span class="big warn">7,022</span><span class="big-lbl">messages with the wrong author</span>
-              <code class="err-line">CommunicationError Forbidden</code>
-              <span class="tag err">every thread, on reply</span>
-            </div>
-            <div class="panel" data-panel="2">
+          <div class="tool-proof">
+            <figure class="term">
+              <figcaption><i></i><i></i><i></i>one message, before and after</figcaption>
               <div class="diff">
                 <div class="del"><span>-</span>author: system</div>
                 <div class="add"><span>+</span>author: original sender</div>
                 <div class="add"><span>+</span>participants: restored</div>
               </div>
-              <span class="big-lbl">history preserved, authors restored</span>
-            </div>
-            <div class="panel" data-panel="3">
-              <figure class="stage-shot"><img src="/assets/img/doctor-output.webp" width="1400" height="806" loading="lazy" alt=""></figure>
-              <p class="stage-foot"><b>Threadvault</b><span data-live-hide hidden><span data-live="npm"></span> npm installs last month</span></p>
-            </div>
+            </figure>
+            <figure class="vf">
+              <div class="vf-glass"><img src="/assets/img/doctor-output.webp" width="1400" height="806" loading="lazy" alt="Threadvault doctor output in a terminal: the checks it runs on a chat export before a migration."></div>
+              <figcaption class="vf-bar"><span class="url">npx threadvault doctor</span><span class="vf-note" data-live-hide hidden><span data-live="npm"></span> npm installs last month</span></figcaption>
+            </figure>
           </div>
-        </div>
-      </article>
-
-      <article class="case" id="dns" style="--tint: 63,182,211">
-        <div class="case-text">
-          <img class="p-icon" src="/assets/brand/dns-icon.svg" width="56" height="56" alt="">
-          <h3>DNS Intelligence</h3>
-          <p class="problem">An SPF record that needs more than 10 DNS lookups fails, and nested includes hide the real count.</p>
-          <p>A domain scanner with 26 checks across DNS, TLS, security headers, DNSSEC, email authentication and reputation. It counts SPF lookups through every nested include, the way mail servers do.</p>
-          <p>Free for one domain. Pro and Team plans, from $5 a month, add monitoring, alerts on certificate, SPF, DMARC, MX and nameserver changes, and automatic DMARC report collection.</p>
-          <div class="links">
-            <a class="case-link" href="/work/dns-intelligence/" data-umami-event="project-link" data-umami-event-project="case-dns-intelligence">Case study <i class="ph ph-arrow-right"></i></a>
-                <a href="https://dns.hetops.dev" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="dns-live">Try it <i class="ph ph-arrow-up-right"></i></a>
-            <a href="https://dns.hetops.dev/spf-checker" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="dns-spf-checker">SPF checker <i class="ph ph-arrow-up-right"></i></a>
-            <a href="https://github.com/Het101/hetops-dns" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="dns-source">Source <i class="ph ph-arrow-up-right"></i></a>
+          <div class="tool-links">
+            <a class="key" href="https://github.com/Het101/threadvault" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="threadvault-source"><i class="ph ph-github-logo" aria-hidden="true"></i>Source</a>
+            <a class="key" href="https://github.com/Het101/threadvault/blob/main/docs/postmortem-acs-chat-migration.md" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="threadvault-postmortem"><i class="ph ph-file-text" aria-hidden="true"></i>Post-mortem</a>
           </div>
-        </div>
-        <figure class="lens"><img src="/assets/img/dns-report.webp?v=2" width="1600" height="1075" loading="lazy" alt="DNS Intelligence report for github.com: health score 87, grade A."></figure>
-      </article>
+        </article>
 
-      <article class="case flip" id="radar" style="--tint: 229,72,77">
-        <div class="case-text">
-          <img class="p-icon" src="/assets/brand/radar-icon.webp" width="56" height="56" alt="">
-          <h3>Retirement Radar</h3>
-          <p class="problem">AWS bills automatically for running old versions. EKS extended support alone is about $365 a month per cluster.</p>
-          <p>A read-only CLI that scans every region for EKS, RDS, ElastiCache, OpenSearch, MSK and Lambda versions at or near end of support, with the AWS source for every date.<span data-live-hide hidden> <span data-live="npmRadar"></span> npm installs last month.</span></p>
-          <p class="cmd"><code>npx retirement-radar scan</code></p>
-          <p>Or let it run for you: <a href="https://radar.hetops.dev" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="radar-cloud">Radar Cloud</a> connects through a read-only role and scans every account on a schedule (weekly free, daily on paid), with email and Slack alerts and the monthly cost of each finding.</p>
-          <div class="links">
-            <a class="case-link" href="/work/retirement-radar/" data-umami-event="project-link" data-umami-event-project="case-retirement-radar">Case study <i class="ph ph-arrow-right"></i></a>
-            <a class="case-link" href="/work/radar-cloud/" data-umami-event="project-link" data-umami-event-project="case-radar-cloud">Radar Cloud case <i class="ph ph-arrow-right"></i></a>
-                <a href="https://github.com/Het101/retirement-radar" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="radar-source">Source <i class="ph ph-arrow-up-right"></i></a>
-            <a href="https://www.npmjs.com/package/retirement-radar" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="radar-npm">npm <i class="ph ph-arrow-up-right"></i></a>
+        <article class="tool" id="dns" role="tabpanel" aria-labelledby="tab-dns" tabindex="0" hidden>
+          <header class="tool-head">
+            <div><h3>DNS Intelligence</h3><p class="problem">An SPF record that needs more than 10 DNS lookups fails, and nested includes hide the real count.</p></div>
+            <a class="btn btn-gold" href="/work/dns-intelligence/" data-umami-event="project-link" data-umami-event-project="case-dns-intelligence"><i class="ph ph-arrow-right" aria-hidden="true"></i>Case study</a>
+          </header>
+          <figure class="vf">
+            <div class="vf-glass"><img src="/assets/img/dns-report.webp?v=2" width="1600" height="1075" loading="lazy" alt="DNS Intelligence report for github.com: health score 87, grade A."></div>
+            <figcaption class="vf-bar"><span class="url"><i class="led"></i>dns.hetops.dev</span>
+              <a class="key" href="https://dns.hetops.dev" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="dns-live"><i class="ph ph-arrow-up-right" aria-hidden="true"></i>Try it</a>
+              <a class="key" href="https://dns.hetops.dev/spf-checker" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="dns-spf-checker"><i class="ph ph-arrow-up-right" aria-hidden="true"></i>SPF checker</a>
+              <a class="key" href="https://github.com/Het101/hetops-dns" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="dns-source"><i class="ph ph-github-logo" aria-hidden="true"></i>Source</a></figcaption>
+          </figure>
+          <div class="tool-body">
+            <p>A domain scanner with 26 checks across DNS, TLS, security headers, DNSSEC, email authentication and reputation. It counts SPF lookups through every nested include, the way mail servers do.</p>
+            <p>Free for one domain. Pro and Team plans, from $5 a month, add monitoring, alerts on certificate, SPF, DMARC, MX and nameserver changes, and automatic DMARC report collection.</p>
           </div>
-        </div>
-        <figure class="lens"><img src="/assets/img/radar-cloud-console.webp" width="1600" height="1033" loading="lazy" alt="Radar Cloud dashboard: an account's monthly extended-support bill on the left, the deadline radar in the centre with resources plotted by region and days to end of support, and the selected finding with the next deadline on the right."></figure>
-      </article>
+        </article>
 
-      <article class="case" id="restore-drill" style="--tint: 191,57,143">
-        <div class="case-text">
-          <img class="p-icon" src="/assets/brand/restoredrill-icon.webp" width="56" height="56" alt="">
-          <h3>Restore Drill</h3>
-          <p class="problem">A backup job that says "success" proves nothing. You only learn the file is empty, stale or corrupt on the day you need it.</p>
-          <p>Every six hours it pulls the newest offsite backup of each database, restores it into a throwaway copy (SQLite, or a PostgreSQL server it starts for the test), checks integrity, row counts and freshness, then destroys the copy. It alerts by Slack, Discord or email when a drill starts failing.</p>
-          <p>It drills the DNS Intelligence, Radar Cloud and Analytics databases today, and its evidence page is public.</p>
-          <div class="links">
-            <a class="case-link" href="/work/restore-drill/" data-umami-event="project-link" data-umami-event-project="case-restore-drill">Case study <i class="ph ph-arrow-right"></i></a>
-            <a href="https://drill.hetops.dev" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="drill-live">Live evidence <i class="ph ph-arrow-up-right"></i></a>
-            <a href="https://github.com/Het101/restore-drill" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="drill-source">Source <i class="ph ph-arrow-up-right"></i></a>
+        <article class="tool" id="radar" role="tabpanel" aria-labelledby="tab-radar" tabindex="0" hidden>
+          <header class="tool-head">
+            <div><h3>Retirement Radar</h3><p class="problem">AWS bills automatically for running old versions. EKS extended support alone is about $365 a month per cluster.</p></div>
+            <a class="btn btn-gold" href="/work/retirement-radar/" data-umami-event="project-link" data-umami-event-project="case-retirement-radar"><i class="ph ph-arrow-right" aria-hidden="true"></i>Case study</a>
+          </header>
+          <figure class="vf">
+            <div class="vf-glass"><img src="/assets/img/radar-cloud-console.webp" width="1600" height="1033" loading="lazy" alt="Radar Cloud dashboard: an account's monthly extended-support bill on the left, the deadline radar in the centre with resources plotted by region and days to end of support, and the selected finding with the next deadline on the right."></div>
+            <figcaption class="vf-bar"><span class="url"><i class="led"></i>radar.hetops.dev</span>
+              <a class="key" href="/work/radar-cloud/" data-umami-event="project-link" data-umami-event-project="case-radar-cloud"><i class="ph ph-arrow-right" aria-hidden="true"></i>Radar Cloud case</a>
+              <a class="key" href="https://github.com/Het101/retirement-radar" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="radar-source"><i class="ph ph-github-logo" aria-hidden="true"></i>Source</a>
+              <a class="key" href="https://www.npmjs.com/package/retirement-radar" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="radar-npm"><i class="ph ph-arrow-up-right" aria-hidden="true"></i>npm</a></figcaption>
+          </figure>
+          <div class="tool-body">
+            <p>A read-only CLI that scans every region for EKS, RDS, ElastiCache, OpenSearch, MSK and Lambda versions at or near end of support, with the AWS source for every date.<span data-live-hide hidden> <span data-live="npmRadar"></span> npm installs last month.</span></p>
+            <p class="cmd"><code>npx retirement-radar scan</code></p>
+            <p>Or let it run for you: <a href="https://radar.hetops.dev" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="radar-cloud">Radar Cloud</a> connects through a read-only role and scans every account on a schedule (weekly free, daily on paid), with email and Slack alerts and the monthly cost of each finding.</p>
           </div>
-        </div>
-        <figure class="lens"><img src="/assets/img/restore-drill-evidence.webp" width="1600" height="1050" loading="lazy" alt="Restore Drill evidence page: 3 of 3 backups restored, a verified stamp, and the four steps of the last drill: find, restore, prove, destroy."></figure>
-      </article>
+        </article>
 
+        <article class="tool" id="restore-drill" role="tabpanel" aria-labelledby="tab-restore-drill" tabindex="0" hidden>
+          <header class="tool-head">
+            <div><h3>Restore Drill</h3><p class="problem">A backup job that says "success" proves nothing. You only learn the file is empty, stale or corrupt on the day you need it.</p></div>
+            <a class="btn btn-gold" href="/work/restore-drill/" data-umami-event="project-link" data-umami-event-project="case-restore-drill"><i class="ph ph-arrow-right" aria-hidden="true"></i>Case study</a>
+          </header>
+          <figure class="vf">
+            <div class="vf-glass"><img src="/assets/img/restore-drill-evidence.webp" width="1600" height="1050" loading="lazy" alt="Restore Drill evidence page: 3 of 3 backups restored, a verified stamp, and the four steps of the last drill: find, restore, prove, destroy."></div>
+            <figcaption class="vf-bar"><span class="url"><i class="led"></i>drill.hetops.dev</span>
+              <a class="key" href="https://drill.hetops.dev" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="drill-live"><i class="ph ph-arrow-up-right" aria-hidden="true"></i>Live evidence</a>
+              <a class="key" href="https://github.com/Het101/restore-drill" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="drill-source"><i class="ph ph-github-logo" aria-hidden="true"></i>Source</a></figcaption>
+          </figure>
+          <div class="tool-body">
+            <p>Every six hours it pulls the newest offsite backup of each database, restores it into a throwaway copy (SQLite, or a PostgreSQL server it starts for the test), checks integrity, row counts and freshness, then destroys the copy. It alerts by Slack, Discord or email when a drill starts failing.</p>
+            <p>It drills the DNS Intelligence, Radar Cloud and Analytics databases today, and its evidence page is <a href="/live/">live on this site</a>.</p>
+          </div>
+        </article>
+      </div>
     </section>
 
     <!-- The real Kubernetes lab: defence in depth drawn as an iris, live numbers from the cluster -->
