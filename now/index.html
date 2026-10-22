@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Now · Het Patel</title>
+  <meta name="description" content="How Het Patel ships, what shipped lately, and what he is building on the side.">
+  <link rel="canonical" href="https://hetops.dev/now/">
+  <meta name="theme-color" content="#08090a">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://hetops.dev/now/">
+  <meta property="og:title" content="Now · Het Patel">
+  <meta property="og:description" content="How Het Patel ships, what shipped lately, and what he is building on the side.">
+  <meta property="og:image" content="https://hetops.dev/assets/og/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:image" content="https://hetops.dev/assets/og/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preload" href="/assets/fonts/Archivo.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/styles.css">
+  <script defer src="https://analytics.hetops.dev/script.js" data-website-id="3b6004b2-abef-471c-a807-fdacd7981321" data-domains="hetops.dev"></script>
+</head>
+<body class="sub-page">
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="nav scrolled" id="nav">
+    <a class="brand" href="/" aria-label="HetOps home"><svg class="brand-mark" aria-hidden="true" viewBox="10 22 80 56"><rect x="10" y="22" width="24" height="56" rx="5"/><rect x="66" y="22" width="24" height="56" rx="5"/><rect x="33" y="46" width="34" height="8"/><circle cx="50" cy="50" r="11"/></svg><span>HetOps</span></a>
+    <nav class="nav-links" aria-label="Sections">
+      <a href="/#experience">Experience</a>
+      <a href="/#work">Work</a>
+      <a href="/lab/">Lab</a>
+      <a href="/live/">Live</a>
+      <a href="/#contact">Contact</a>
+    </nav>
+    <div class="nav-actions">
+      <a class="nav-cv" href="/Het_Patel_Resume.pdf" target="_blank" rel="noopener" data-umami-event="resume-download" data-umami-event-from="now">Résumé</a>
+    </div>
+  </header>
+  <main id="main" class="sub-main">
+    <section class="now-hero wrap">
+      <h1>Now</h1>
+      <p class="sub">How I ship, what shipped lately, and what I am building on the side. The short version lives on the <a href="/">homepage</a>.</p>
+    </section>
+
+    <!-- How I ship: the release ring -->
+    <section class="ship wrap" id="how-i-ship" data-section="how-i-ship">
+      <header class="head">
+        <h2>How I ship</h2>
+        <p class="sub">The same bar for side projects as for production. Nothing reaches main until the ring closes, and nothing reaches npm until I approve it with 2FA.</p>
+      </header>
+      <div class="ship-grid">
+        <div class="ring" aria-hidden="true">
+          <svg viewBox="0 0 400 400"><circle class="ring-track" cx="200" cy="200" r="170"/><circle class="ring-prog" id="ringProg" cx="200" cy="200" r="170" pathLength="100"/></svg>
+          <span class="ring-core">main</span>
+        </div>
+        <ol class="pipe" id="pipe" aria-label="Release pipeline">
+          <li data-s="ok"><b>test</b><span>Node 20, 22 and 24, plus a real run of the built artifact</span></li>
+          <li data-s="ok"><b>hygiene</b><span>workflow audit, secret scan, signed and conventional commits</span></li>
+          <li data-s="ok"><b>analyze</b><span>CodeQL security and quality queries</span></li>
+          <li data-s="ok"><b>stage</b><span>npm publish staged from CI, with provenance</span></li>
+          <li data-s="ok"><b>approve</b><span>a human, with a second factor</span></li>
+        </ol>
+      </div>
+      <div class="ship-notes">
+        <div><h3>Signed, protected main</h3><p>Signed commits, linear history, required checks and no force-push on every repository.</p>
+          <ul class="commits">
+            <li><i class="ph ph-seal-check" role="img" aria-label="Signed"></i>feat(spf): count DNS lookups through nested includes</li>
+            <li><i class="ph ph-seal-check" role="img" aria-label="Signed"></i>fix(security): block IPv4-mapped IPv6 in every written form</li>
+            <li><i class="ph ph-seal-check" role="img" aria-label="Signed"></i>fix(auth): never build sign-in links from request headers</li>
+          </ul>
+        </div>
+        <div><h3>Careful dependencies</h3><p>Dependabot waits 7 days before proposing a release, every Action is pinned to a commit, and new dependencies are reviewed for advisories and licences.</p></div>
+        <div><h3>Least privilege</h3><p>Read-only by design where possible, enforced by tests. Credentials hashed at rest. Releases need no stored token.</p>
+          <a class="more" href="https://github.com/Het101/retirement-radar/blob/main/SECURITY.md" target="_blank" rel="noopener" data-umami-event="outbound" data-umami-event-target="security-md">Read a SECURITY.md <i class="ph ph-arrow-up-right"></i></a></div>
+      </div>
+    </section>
+
+    <!-- Activity -->
+    <section class="activity wrap" data-section="activity" aria-labelledby="activity-h">
+      <div class="activity-head">
+        <h2 id="activity-h">Shipping, most days</h2>
+        <dl class="activity-stats">
+          <div data-live-hide hidden><dt>Public repos</dt><dd data-live="repos"></dd></div>
+          <div data-live-hide hidden><dt>Pull requests</dt><dd data-live="prs"></dd></div>
+          <div data-live-hide hidden><dt>Contributions, 12 months</dt><dd data-live="contributions"></dd></div>
+        </dl>
+      </div>
+      <div class="heatmap" id="heatmap" role="img" aria-label="GitHub contributions over the last year"><p class="heatmap-empty">Loading contributions…</p></div>
+      <p class="activity-note">Combined across github.com/Het101 and github.com/Hetu29.</p>
+      <div class="shipped">
+        <h3>Shipped recently</h3>
+        <ol class="shipped-list">
+          <li><time datetime="2026-10-07">7 Oct 2026</time><span class="shipped-tag radar">Radar Cloud</span><span>Deadline Radar: certificates that will not renew, Reserved Instances, Savings Plans and domains with auto-renew off now sit on the same radar as old versions.</span></li>
+          <li><time datetime="2026-10-07">7 Oct 2026</time><span class="shipped-tag radar">Radar Cloud</span><span>Dashboard rebuilt around the deadline radar: what each account costs, the radar centre stage, and every finding one click from its blip.</span></li>
+          <li><time datetime="2026-10-07">7 Oct 2026</time><span class="shipped-tag drill">Restore Drill</span><span>0.3.0: alerts by Slack, Discord, webhook or email when a drill fails, recovers, or stays broken. Results are <a href="/live/">live on the Live page</a>.</span></li>
+          <li><time datetime="2026-10-07">7 Oct 2026</time><span class="shipped-tag drill">Restore Drill</span><span>0.2.0: PostgreSQL dumps restored into a throwaway server started inside the agent, no Docker socket needed.</span></li>
+          <li><time datetime="2026-10-07">7 Oct 2026</time><span class="shipped-tag drill">Restore Drill</span><span>Live at <a href="https://drill.hetops.dev" target="_blank" rel="noopener">drill.hetops.dev</a> and <a href="https://github.com/Het101/restore-drill" target="_blank" rel="noopener">open source</a>: every few hours the newest offsite backup of DNS Intelligence and Radar Cloud is restored into a throwaway copy and checked.</span></li>
+          <li><time datetime="2026-10-06">6 Oct 2026</time><span class="shipped-tag radar">Radar Cloud</span><span>Live at <a href="https://radar.hetops.dev" target="_blank" rel="noopener">radar.hetops.dev</a>: scheduled scans through a read-only IAM role, alerts by email and Slack, Free, Pro and Team plans.</span></li>
+          <li><time datetime="2026-10-05">5 Oct 2026</time><span class="shipped-tag radar">Retirement Radar</span><span>0.3.0: ElastiCache, OpenSearch and MSK; every date re-checked against AWS.</span></li>
+          <li><time datetime="2026-10-05">5 Oct 2026</time><span class="shipped-tag dns">DNS</span><span>SPF lookups counted through nested includes, a <a href="https://dns.hetops.dev/spf-checker" target="_blank" rel="noopener">public SPF checker</a>, and alerts when a domain crosses the limit.</span></li>
+          <li><time datetime="2026-10-05">5 Oct 2026</time><span class="shipped-tag dns">DNS</span><span>Security pass: 62 code-scanning alerts to 0, SSRF checks on every outbound hop, credentials hashed at rest.</span></li>
+          <li><time datetime="2026-10-04">4 Oct 2026</time><span class="shipped-tag dns">DNS</span><span>Paid Pro and Team plans: monitoring, alerts and automatic DMARC report collection.</span></li>
+          <li><time datetime="2026-10-04">4 Oct 2026</time><span class="shipped-tag radar">Retirement Radar</span><span>First release on npm, then a staged, provenance-signed release pipeline.</span></li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- Side project, private -->
+    <section class="work wrap" data-section="side" aria-labelledby="side-h">
+      <header class="head"><h2 id="side-h">On the side</h2></header>
+      <article class="case flip" id="tallybank" style="--tint: 74,120,230">
+        <div class="case-text">
+          <img class="p-icon" src="/assets/brand/tallybank-icon.svg" width="56" height="56" alt="">
+          <h3>Tallybank</h3>
+          <p class="problem">A guessed ledger misstates the books, and the error surfaces months later inside Tally.</p>
+          <p>Turns HDFC bank statements into Tally ERP 9 vouchers for five family books. Every run must tie to the bank's own totals, and it never guesses. Private; Python and FastAPI.</p>
+        </div>
+        <div class="rule" aria-label="How Tallybank decides a ledger">
+          <p class="rule-title">The candidate-set rule</p>
+          <div class="rule-row"><span class="rule-k">1 ledger fits</span><i class="rule-wire"></i><span class="rule-v ok">post it</span></div>
+          <div class="rule-row"><span class="rule-k">0 fit</span><i class="rule-wire"></i><span class="rule-v">default or Suspense</span></div>
+          <div class="rule-row"><span class="rule-k">2 or more fit</span><i class="rule-wire"></i><span class="rule-v err">block the whole run</span></div>
+        </div>
+      </article>
+    </section>
+
+  </main>
+
+  <footer class="footer wrap">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <span class="brand"><svg class="brand-mark" aria-hidden="true" viewBox="10 22 80 56"><rect x="10" y="22" width="24" height="56" rx="5"/><rect x="66" y="22" width="24" height="56" rx="5"/><rect x="33" y="46" width="34" height="8"/><circle cx="50" cy="50" r="11"/></svg><span>HetOps</span></span>
+        <p>Het Patel, DevOps engineer in Mumbai. I turn production incidents into tools.</p>
+        <a class="watch-pill" href="https://status.hetops.dev" target="_blank" rel="noopener" data-watch hidden data-umami-event="outbound" data-umami-event-target="status-footer"><i></i><span></span></a>
+      </div>
+      <nav aria-label="Products">
+        <h2>Products</h2>
+        <a href="https://dns.hetops.dev" target="_blank" rel="noopener">DNS Intelligence</a>
+        <a href="https://radar.hetops.dev" target="_blank" rel="noopener">Radar Cloud</a>
+        <a href="https://drill.hetops.dev" target="_blank" rel="noopener">Restore Drill</a>
+        <a href="https://status.hetops.dev" target="_blank" rel="noopener">Status</a>
+        <a href="https://tools.hetops.dev" target="_blank" rel="noopener">Dev Toolkit</a>
+        <a href="https://www.npmjs.com/package/threadvault" target="_blank" rel="noopener">Threadvault on npm</a>
+        <a href="https://www.npmjs.com/package/retirement-radar" target="_blank" rel="noopener">Retirement Radar on npm</a>
+      </nav>
+      <nav aria-label="Case studies">
+        <h2>Case studies</h2>
+        <a href="/work/threadvault/">Threadvault</a>
+        <a href="/work/dns-intelligence/">DNS Intelligence</a>
+        <a href="/work/retirement-radar/">Retirement Radar</a>
+        <a href="/work/radar-cloud/">Radar Cloud</a>
+        <a href="/work/restore-drill/">Restore Drill</a>
+        <a href="/writing/">Writing</a>
+        <a href="/live/">Production, live</a>
+        <a href="/now/">Now</a>
+      </nav>
+      <nav aria-label="Elsewhere">
+        <h2>Elsewhere</h2>
+        <a href="https://github.com/Het101" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.linkedin.com/in/het11/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://medium.com/@het101" target="_blank" rel="noopener">Medium</a>
+        <a href="/Het_Patel_Resume.pdf" target="_blank" rel="noopener" data-umami-event="resume-download" data-umami-event-from="footer">Résumé (PDF)</a>
+        <a href="mailto:patel.x.het@gmail.com" data-umami-event="email-click" data-umami-event-from="footer">patel.x.het@gmail.com</a>
+      </nav>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Het Patel</span>
+      <span>Hand-written HTML, CSS and JavaScript, served by nginx from the server on the <a href="/live/">live page</a>.</span>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="/app.js" defer></script>
+</body>
+</html>

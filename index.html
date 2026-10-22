@@ -48,8 +48,7 @@
       <a href="#experience" data-nav="experience">Experience</a>
       <a href="#work" data-nav="work">Work</a>
       <a href="#lab" data-nav="lab">Lab</a>
-      <a href="#live" data-nav="live">Live</a>
-      <a href="#how-i-ship" data-nav="how-i-ship">How I ship</a>
+      <a href="/live/">Live</a>
       <a href="#contact" data-nav="contact">Contact</a>
     </nav>
     <div class="nav-actions">
@@ -64,8 +63,8 @@
       <a href="#experience">Experience</a>
       <a href="#work">Work</a>
       <a href="#lab">Lab</a>
-      <a href="#live">Live</a>
-      <a href="#how-i-ship">How I ship</a>
+      <a href="/live/">Live</a>
+      <a href="/now/">Now</a>
       <a href="#writing">Writing</a>
       <a href="#contact">Contact</a>
     </nav>
@@ -95,9 +94,9 @@
           <a class="btn btn-line" href="/Het_Patel_Resume.pdf" target="_blank" rel="noopener" data-umami-event="resume-download" data-umami-event-from="hero"><i class="ph ph-file-text" aria-hidden="true"></i>Résumé (PDF)</a>
         </div>
         <ul class="proof" aria-label="Live from production">
-          <li data-proof="up" hidden><a href="#live"><i class="led"></i><b></b> services up</a></li>
+          <li data-proof="up" hidden><a href="/live/"><i class="led"></i><b></b> services up</a></li>
           <li data-proof="lab" hidden><a href="#lab"><i class="led"></i>Kubernetes lab <span></span></a></li>
-          <li data-proof="drill" hidden><a href="#live"><i class="led"></i><b></b> backups restored <span></span></a></li>
+          <li data-proof="drill" hidden><a href="/live/"><i class="led"></i><b></b> backups restored <span></span></a></li>
           <li data-live-hide hidden><a href="#work"><b data-live="npmAll"></b> npm installs last month</a></li>
         </ul>
         <p class="eye-caption" id="eyeCaption" aria-live="polite">The eye watches what I run. Point at a tool on its inner orbit.</p>
@@ -158,6 +157,26 @@
       <p class="stackline"><b>Works with</b> Kubernetes, Terraform, Helm, Argo CD, Linkerd, GitHub Actions, Prometheus, Grafana, Elasticsearch and Kibana, Falco, CrowdSec, Sealed Secrets, Trivy, Semgrep, CodeQL, OWASP ZAP, Ansible, Vault, Traefik, Cloudflare, OpenTelemetry and n8n, on AWS, GCP, Azure and Oracle Cloud, in Python, TypeScript and Bash.</p>
     </section>
 
+    <!-- Testimonials -->
+    <section class="words wrap" data-section="testimonials" aria-labelledby="words-h">
+      <h2 id="words-h">From people I've worked with</h2>
+      <div class="quotes">
+        <figure class="quote lead">
+          <blockquote>“What sets Het apart is their ability to accelerate deployments while simultaneously strengthening security measures.”</blockquote>
+          <figcaption><b>Yashvardhan Singh Nathawat</b> DevOps Engineer, Certa.ai</figcaption>
+        </figure>
+        <figure class="quote">
+          <blockquote>“Proactive and really intelligent about his approach to development and documentation.”</blockquote>
+          <figcaption><b>Dillon Omane</b> Senior Software Engineer, Verisk</figcaption>
+        </figure>
+        <figure class="quote">
+          <blockquote>“Het's communication and writing skills make him stand out from the crowd.”</blockquote>
+          <figcaption><b>Iliyas Maner</b> Lead Cloud Engineer, DataGrokr</figcaption>
+        </figure>
+      </div>
+      <a class="more" href="https://www.linkedin.com/in/het11/details/recommendations/" target="_blank" rel="noopener" data-umami-event="outbound" data-umami-event-target="linkedin-recommendations">All recommendations on LinkedIn <i class="ph ph-arrow-up-right"></i></a>
+    </section>
+
     <!-- Work: each tool under the lens -->
     <section class="work wrap" id="work" data-section="work">
       <header class="head">
@@ -169,7 +188,6 @@
         <a href="#dns"><img src="/assets/brand/dns-icon.svg" width="20" height="20" alt="">DNS Intelligence<small>live</small></a>
         <a href="#radar"><img src="/assets/brand/radar-icon.webp" width="20" height="20" alt="">Retirement Radar<small>npm · live</small></a>
         <a href="#restore-drill"><img src="/assets/brand/restoredrill-icon.webp" width="20" height="20" alt="">Restore Drill<small>live</small></a>
-        <a href="#tallybank"><img src="/assets/brand/tallybank-icon.svg" width="20" height="20" alt="">Tallybank<small>private</small></a>
       </nav>
 
       <article class="story" id="story" data-section="story">
@@ -270,174 +288,6 @@
         <figure class="lens"><img src="/assets/img/restore-drill-evidence.webp" width="1600" height="1050" loading="lazy" alt="Restore Drill evidence page: 3 of 3 backups restored, a verified stamp, and the four steps of the last drill: find, restore, prove, destroy."></figure>
       </article>
 
-      <article class="case flip" id="tallybank" style="--tint: 74,120,230">
-        <div class="case-text">
-          <img class="p-icon" src="/assets/brand/tallybank-icon.svg" width="56" height="56" alt="">
-          <h3>Tallybank</h3>
-          <p class="problem">A guessed ledger misstates the books, and the error surfaces months later inside Tally.</p>
-          <p>Turns HDFC bank statements into Tally ERP 9 vouchers for five family books. Every run must tie to the bank's own totals, and it never guesses. Private; Python and FastAPI.</p>
-        </div>
-        <div class="rule" aria-label="How Tallybank decides a ledger">
-          <p class="rule-title">The candidate-set rule</p>
-          <div class="rule-row"><span class="rule-k">1 ledger fits</span><i class="rule-wire"></i><span class="rule-v ok">post it</span></div>
-          <div class="rule-row"><span class="rule-k">0 fit</span><i class="rule-wire"></i><span class="rule-v">default or Suspense</span></div>
-          <div class="rule-row"><span class="rule-k">2 or more fit</span><i class="rule-wire"></i><span class="rule-v err">block the whole run</span></div>
-        </div>
-      </article>
-    </section>
-
-    <!-- Live check -->
-    <section class="check wrap" id="check" data-section="check">
-      <div class="check-grid">
-        <div class="check-copy">
-          <h2>Point it at your domain</h2>
-          <p class="sub">This runs the real DNS Intelligence API: SPF lookups counted through every include, the DMARC policy, and how long the certificate has left.</p>
-          <form class="check-form" id="checkForm" novalidate>
-            <label for="checkInput">Domain</label>
-            <div class="check-row">
-              <input id="checkInput" name="domain" inputmode="url" autocomplete="off" spellcheck="false" placeholder="yourcompany.com" aria-describedby="checkHelp checkErr">
-              <button class="btn btn-gold" id="checkGo" type="submit"><i class="ph ph-eye" aria-hidden="true"></i>Check</button>
-            </div>
-            <p class="check-help" id="checkHelp">Public DNS and TLS only. Nothing is stored.</p>
-            <p class="check-err" id="checkErr" role="alert" hidden></p>
-          </form>
-          <div class="check-try"><span>Try</span>
-            <button type="button" data-try="github.com">github.com</button>
-            <button type="button" data-try="stripe.com">stripe.com</button>
-            <button type="button" data-try="hetops.dev">hetops.dev</button>
-          </div>
-        </div>
-        <div class="check-panel" id="checkPanel" aria-live="polite">
-          <div class="check-state check-empty" data-state="empty">
-            <span class="scope" aria-hidden="true"><i></i></span>
-            <p>SPF, DMARC and certificate results appear here.</p>
-          </div>
-          <div class="check-state check-loading" data-state="loading" hidden>
-            <span class="scope scanning" aria-hidden="true"><i></i></span>
-            <p>Looking at the domain…</p>
-          </div>
-          <div class="check-state check-result" data-state="result" hidden>
-            <p class="check-domain" id="checkDomain"></p>
-            <div class="tiles">
-              <div class="tile" id="tileSpf"><span class="tile-k">SPF lookups</span><span class="tile-v"></span><span class="tile-n"></span><span class="tile-bar"><i></i></span></div>
-              <div class="tile" id="tileDmarc"><span class="tile-k">DMARC policy</span><span class="tile-v"></span><span class="tile-n"></span></div>
-              <div class="tile" id="tileTls"><span class="tile-k">Certificate</span><span class="tile-v"></span><span class="tile-n"></span></div>
-            </div>
-            <a class="check-full" id="checkFull" href="https://dns.hetops.dev" target="_blank" rel="noopener" data-umami-event="project-link" data-umami-event-project="check-full-report">Full report: 26 checks <i class="ph ph-arrow-up-right" aria-hidden="true"></i></a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- The estate: the production I run myself, live -->
-    <section class="estate wrap" id="live" data-section="estate" aria-labelledby="estate-h">
-      <header class="head">
-        <h2 id="estate-h">Production I run myself</h2>
-        <p class="sub">Six services on one server I pay for, held to the bar I keep at work: watched from outside, backed up offsite, and every backup restored and checked every six hours. The numbers below are live.</p>
-      </header>
-      <div class="estate-board" id="estate">
-        <div class="tier">
-          <p class="tier-k"><b>01</b>Watched</p>
-          <div class="watchers">
-            <a class="watcher" href="https://status.hetops.dev" target="_blank" rel="noopener" data-umami-event="outbound" data-umami-event-target="estate-status">
-              <img src="/assets/brand/status-icon.webp" width="40" height="40" alt="">
-              <span><b>Status</b><small>Probes every service from outside, every 60 seconds</small></span>
-            </a>
-            <span class="watch-link" aria-hidden="true"><i></i>watched by</span>
-            <div class="watcher">
-              <span class="watcher-ic"><i class="ph ph-terminal-window" aria-hidden="true"></i></span>
-              <span><b>Watchdog</b><small>GitHub Actions checks Status itself every 10 minutes</small></span>
-            </div>
-          </div>
-        </div>
-        <div class="tier">
-          <p class="tier-k"><b>02</b>Serving <span class="tier-n" id="estUp"></span></p>
-          <ul class="svcs">
-            <li class="svc" data-svc="hetops.dev"><i class="led"></i><b>hetops.dev</b><span data-ms>&nbsp;</span></li>
-            <li class="svc" data-svc="DNS Intelligence"><i class="led"></i><b>DNS Intelligence</b><span data-ms>&nbsp;</span><em>restore-tested</em></li>
-            <li class="svc" data-svc="Radar Cloud"><i class="led"></i><b>Radar Cloud</b><span data-ms>&nbsp;</span><em>restore-tested</em></li>
-            <li class="svc" data-svc="Dev Toolkit"><i class="led"></i><b>Dev Toolkit</b><span data-ms>&nbsp;</span></li>
-            <li class="svc" data-svc="Status"><i class="led"></i><b>Status</b><span data-ms>&nbsp;</span></li>
-            <li class="svc" data-svc="Analytics"><i class="led"></i><b>Analytics</b><span data-ms>&nbsp;</span><em>restore-tested</em></li>
-          </ul>
-        </div>
-        <div class="tier">
-          <p class="tier-k"><b>03</b>Restored</p>
-          <ol class="drills">
-            <li class="drill" data-drill="DNS Intelligence"><header><b>DNS Intelligence</b><span>SQLite</span><i class="stamp" data-k="stamp"></i></header>
-              <dl><div><dt>Backup age</dt><dd data-k="age">&nbsp;</dd></div><div><dt>Restored in</dt><dd data-k="restore">&nbsp;</dd></div><div><dt>Checks</dt><dd data-k="checks">&nbsp;</dd></div></dl>
-              <p data-k="when">Waiting for the drill</p></li>
-            <li class="drill" data-drill="Radar Cloud"><header><b>Radar Cloud</b><span>SQLite</span><i class="stamp" data-k="stamp"></i></header>
-              <dl><div><dt>Backup age</dt><dd data-k="age">&nbsp;</dd></div><div><dt>Restored in</dt><dd data-k="restore">&nbsp;</dd></div><div><dt>Checks</dt><dd data-k="checks">&nbsp;</dd></div></dl>
-              <p data-k="when">Waiting for the drill</p></li>
-            <li class="drill" data-drill="Analytics (Umami)"><header><b>Analytics</b><span>PostgreSQL</span><i class="stamp" data-k="stamp"></i></header>
-              <dl><div><dt>Backup age</dt><dd data-k="age">&nbsp;</dd></div><div><dt>Restored in</dt><dd data-k="restore">&nbsp;</dd></div><div><dt>Checks</dt><dd data-k="checks">&nbsp;</dd></div></dl>
-              <p data-k="when">Waiting for the drill</p></li>
-          </ol>
-        </div>
-        <p class="estate-foot"><span id="estAt">Live from the HetOps watch and Restore Drill APIs.</span>
-          <a href="https://drill.hetops.dev" target="_blank" rel="noopener" data-umami-event="outbound" data-umami-event-target="estate-drill">Drill evidence <i class="ph ph-arrow-up-right"></i></a>
-          <a href="https://status.hetops.dev" target="_blank" rel="noopener" data-umami-event="outbound" data-umami-event-target="estate-status-foot">Status page <i class="ph ph-arrow-up-right"></i></a></p>
-      </div>
-      <div class="wiring" aria-labelledby="wiring-h">
-        <h3 id="wiring-h">How it's wired</h3>
-        <div class="wire-grid">
-          <div class="wnode w-visit"><b>Visitors</b><small>HTTPS to *.hetops.dev</small></div>
-          <div class="wnode w-dns"><b>Cloudflare DNS</b><small>every hostname points at one server</small></div>
-          <div class="wlink w-a1" aria-hidden="true"><i></i><span>HTTPS</span></div>
-          <div class="wbox w-host">
-            <p class="wbox-k">One Oracle Cloud VM · Coolify · TLS at the proxy</p>
-            <ul>
-              <li data-svc="hetops.dev"><i class="led"></i>hetops.dev</li>
-              <li data-svc="DNS Intelligence"><i class="led"></i>DNS Intelligence<small>SQLite</small></li>
-              <li data-svc="Radar Cloud"><i class="led"></i>Radar Cloud<small>SQLite</small></li>
-              <li data-svc="Dev Toolkit"><i class="led"></i>Dev Toolkit</li>
-              <li data-svc="Analytics"><i class="led"></i>Analytics<small>Umami + PostgreSQL</small></li>
-              <li data-svc="Status"><i class="led"></i>Status<small>Uptime Kuma, every 60 s</small></li>
-              <li class="w-drill"><i class="led"></i>Restore Drill<small>restores every 6 h</small></li>
-            </ul>
-          </div>
-          <div class="wlink w-a2" aria-hidden="true"><i></i><span>backups, daily</span></div>
-          <div class="wlink w-a3 back" aria-hidden="true"><i></i><span>read-only restore</span></div>
-          <div class="wnode w-r2"><b>Cloudflare R2</b><small>offsite copies of every database</small></div>
-          <div class="wlink w-a4 back" aria-hidden="true"><i></i><span>deploy · watchdog</span></div>
-          <div class="wnode w-gh"><b>GitHub</b><small>CI on every PR; Actions checks Status every 10 min from outside</small></div>
-        </div>
-        <p class="sr">Visitors reach every HetOps hostname over HTTPS through Cloudflare DNS, all on one Oracle Cloud VM run by Coolify. Each database is backed up daily to Cloudflare R2, Restore Drill restores those backups with a read-only key every six hours, Uptime Kuma probes every service every minute, and a GitHub Actions watchdog checks the status page every ten minutes from outside.</p>
-      </div>
-    </section>
-
-    <!-- How I ship: the release ring -->
-    <section class="ship wrap" id="how-i-ship" data-section="how-i-ship">
-      <header class="head">
-        <h2>How I ship</h2>
-        <p class="sub">The same bar for side projects as for production. Nothing reaches main until the ring closes, and nothing reaches npm until I approve it with 2FA.</p>
-      </header>
-      <div class="ship-grid">
-        <div class="ring" aria-hidden="true">
-          <svg viewBox="0 0 400 400"><circle class="ring-track" cx="200" cy="200" r="170"/><circle class="ring-prog" id="ringProg" cx="200" cy="200" r="170" pathLength="100"/></svg>
-          <span class="ring-core">main</span>
-        </div>
-        <ol class="pipe" id="pipe" aria-label="Release pipeline">
-          <li data-s="ok"><b>test</b><span>Node 20, 22 and 24, plus a real run of the built artifact</span></li>
-          <li data-s="ok"><b>hygiene</b><span>workflow audit, secret scan, signed and conventional commits</span></li>
-          <li data-s="ok"><b>analyze</b><span>CodeQL security and quality queries</span></li>
-          <li data-s="ok"><b>stage</b><span>npm publish staged from CI, with provenance</span></li>
-          <li data-s="ok"><b>approve</b><span>a human, with a second factor</span></li>
-        </ol>
-      </div>
-      <div class="ship-notes">
-        <div><h3>Signed, protected main</h3><p>Signed commits, linear history, required checks and no force-push on every repository.</p>
-          <ul class="commits">
-            <li><i class="ph ph-seal-check" role="img" aria-label="Signed"></i>feat(spf): count DNS lookups through nested includes</li>
-            <li><i class="ph ph-seal-check" role="img" aria-label="Signed"></i>fix(security): block IPv4-mapped IPv6 in every written form</li>
-            <li><i class="ph ph-seal-check" role="img" aria-label="Signed"></i>fix(auth): never build sign-in links from request headers</li>
-          </ul>
-        </div>
-        <div><h3>Careful dependencies</h3><p>Dependabot waits 7 days before proposing a release, every Action is pinned to a commit, and new dependencies are reviewed for advisories and licences.</p></div>
-        <div><h3>Least privilege</h3><p>Read-only by design where possible, enforced by tests. Credentials hashed at rest. Releases need no stored token.</p>
-          <a class="more" href="https://github.com/Het101/retirement-radar/blob/main/SECURITY.md" target="_blank" rel="noopener" data-umami-event="outbound" data-umami-event-target="security-md">Read a SECURITY.md <i class="ph ph-arrow-up-right"></i></a></div>
-      </div>
     </section>
 
     <!-- The real Kubernetes lab: defence in depth drawn as an iris, live numbers from the cluster -->
@@ -486,67 +336,8 @@
           </div>
         </div>
       </div>
-      <ul class="lab-watch-list hl-list">
-        <li><span class="lab-watch-k">GitOps</span><p>Argo CD makes git the only way in. Delete a deployment by hand and it is recreated from git within a minute.</p></li>
-        <li><span class="lab-watch-k">SLO</span><p>99% of visits must succeed over any 7 days. When the error budget is spent, experiments freeze until it recovers.</p></li>
-        <li data-layers="mesh data"><span class="lab-watch-k">mTLS</span><p>Linkerd encrypts every hop from the ingress to the database. Postgres accepts four named identities only: a pod that passed the network rules was still refused.</p></li>
-        <li data-layers="ingress"><span class="lab-watch-k">Logs</span><p>Every request, from ingress to database, lands in Elasticsearch on one timeline.</p></li>
-        <li data-layers="runtime"><span class="lab-watch-k">Audit</span><p>The Kubernetes audit log records who did what. A shell opened in a pod raises an alert mapped to MITRE ATT&amp;CK.</p></li>
-        <li data-layers="runtime"><span class="lab-watch-k">Runtime</span><p>Falco watches system calls on the node and reports what actually ran inside a container, down to the command.</p></li>
-        <li data-layers="edge"><span class="lab-watch-k">Edge</span><p>CrowdSec spots scanners in the access logs, and their IP is blocked at Cloudflare&rsquo;s edge within two minutes.</p></li>
-        <li><span class="lab-watch-k">Images</span><p>Every running image is scanned weekly. The first scan found 75 high and critical CVEs; today it finds none.</p></li>
-        <li class="hl-span"><span class="lab-watch-k">Changes</span><p>All of it lands in one feed: every deploy, scale, sync, experiment and alert. When an alert fires, the <a href="/lab/#lab-timeline">Change Timeline</a> lists the changes just before it; a killed pod shows up 0.2 seconds after the click.</p></li>
-      </ul>
-    </section>
-
-    <!-- Testimonials -->
-    <section class="words wrap" data-section="testimonials" aria-labelledby="words-h">
-      <h2 id="words-h">From people I've worked with</h2>
-      <div class="quotes">
-        <figure class="quote lead">
-          <blockquote>“What sets Het apart is their ability to accelerate deployments while simultaneously strengthening security measures.”</blockquote>
-          <figcaption><b>Yashvardhan Singh Nathawat</b> DevOps Engineer, Certa.ai</figcaption>
-        </figure>
-        <figure class="quote">
-          <blockquote>“Proactive and really intelligent about his approach to development and documentation.”</blockquote>
-          <figcaption><b>Dillon Omane</b> Senior Software Engineer, Verisk</figcaption>
-        </figure>
-        <figure class="quote">
-          <blockquote>“Het's communication and writing skills make him stand out from the crowd.”</blockquote>
-          <figcaption><b>Iliyas Maner</b> Lead Cloud Engineer, DataGrokr</figcaption>
-        </figure>
-      </div>
-      <a class="more" href="https://www.linkedin.com/in/het11/details/recommendations/" target="_blank" rel="noopener" data-umami-event="outbound" data-umami-event-target="linkedin-recommendations">All recommendations on LinkedIn <i class="ph ph-arrow-up-right"></i></a>
-    </section>
-
-    <!-- Activity -->
-    <section class="activity wrap" data-section="activity" aria-labelledby="activity-h">
-      <div class="activity-head">
-        <h2 id="activity-h">Shipping, most days</h2>
-        <dl class="activity-stats">
-          <div data-live-hide hidden><dt>Public repos</dt><dd data-live="repos"></dd></div>
-          <div data-live-hide hidden><dt>Pull requests</dt><dd data-live="prs"></dd></div>
-          <div data-live-hide hidden><dt>Contributions, 12 months</dt><dd data-live="contributions"></dd></div>
-        </dl>
-      </div>
-      <div class="heatmap" id="heatmap" role="img" aria-label="GitHub contributions over the last year"><p class="heatmap-empty">Loading contributions…</p></div>
-      <p class="activity-note">Combined across github.com/Het101 and github.com/Hetu29.</p>
-      <div class="shipped">
-        <h3>Shipped recently</h3>
-        <ol class="shipped-list">
-          <li><time datetime="2026-10-07">7 Oct 2026</time><span class="shipped-tag radar">Radar Cloud</span><span>Deadline Radar: certificates that will not renew, Reserved Instances, Savings Plans and domains with auto-renew off now sit on the same radar as old versions.</span></li>
-          <li><time datetime="2026-10-07">7 Oct 2026</time><span class="shipped-tag radar">Radar Cloud</span><span>Dashboard rebuilt around the deadline radar: what each account costs, the radar centre stage, and every finding one click from its blip.</span></li>
-          <li><time datetime="2026-10-07">7 Oct 2026</time><span class="shipped-tag drill">Restore Drill</span><span>0.3.0: alerts by Slack, Discord, webhook or email when a drill fails, recovers, or stays broken. Results are <a href="#live">live on this page</a>.</span></li>
-          <li><time datetime="2026-10-07">7 Oct 2026</time><span class="shipped-tag drill">Restore Drill</span><span>0.2.0: PostgreSQL dumps restored into a throwaway server started inside the agent, no Docker socket needed.</span></li>
-          <li><time datetime="2026-10-07">7 Oct 2026</time><span class="shipped-tag drill">Restore Drill</span><span>Live at <a href="https://drill.hetops.dev" target="_blank" rel="noopener">drill.hetops.dev</a> and <a href="https://github.com/Het101/restore-drill" target="_blank" rel="noopener">open source</a>: every few hours the newest offsite backup of DNS Intelligence and Radar Cloud is restored into a throwaway copy and checked.</span></li>
-          <li><time datetime="2026-10-06">6 Oct 2026</time><span class="shipped-tag radar">Radar Cloud</span><span>Live at <a href="https://radar.hetops.dev" target="_blank" rel="noopener">radar.hetops.dev</a>: scheduled scans through a read-only IAM role, alerts by email and Slack, Free, Pro and Team plans.</span></li>
-          <li><time datetime="2026-10-05">5 Oct 2026</time><span class="shipped-tag radar">Retirement Radar</span><span>0.3.0: ElastiCache, OpenSearch and MSK; every date re-checked against AWS.</span></li>
-          <li><time datetime="2026-10-05">5 Oct 2026</time><span class="shipped-tag dns">DNS</span><span>SPF lookups counted through nested includes, a <a href="https://dns.hetops.dev/spf-checker" target="_blank" rel="noopener">public SPF checker</a>, and alerts when a domain crosses the limit.</span></li>
-          <li><time datetime="2026-10-05">5 Oct 2026</time><span class="shipped-tag dns">DNS</span><span>Security pass: 62 code-scanning alerts to 0, SSRF checks on every outbound hop, credentials hashed at rest.</span></li>
-          <li><time datetime="2026-10-04">4 Oct 2026</time><span class="shipped-tag dns">DNS</span><span>Paid Pro and Team plans: monitoring, alerts and automatic DMARC report collection.</span></li>
-          <li><time datetime="2026-10-04">4 Oct 2026</time><span class="shipped-tag radar">Retirement Radar</span><span>First release on npm, then a staged, provenance-signed release pipeline.</span></li>
-        </ol>
-      </div>
+      <p class="hl-more"><a class="more" href="/lab/">What each ring does, and how it was tested by attacking it <i class="ph ph-arrow-right" aria-hidden="true"></i></a></p>
+      <p class="hl-estate">Outside the lab I run six services on one server I pay for: watched from outside, and every backup restored and checked every six hours. <a class="more" href="/live/" data-umami-event="estate-open" data-umami-event-from="home">See it live <i class="ph ph-arrow-right" aria-hidden="true"></i></a></p>
     </section>
 
     <!-- Writing -->
@@ -606,6 +397,8 @@
         <a href="/work/radar-cloud/">Radar Cloud</a>
         <a href="/work/restore-drill/">Restore Drill</a>
         <a href="/writing/">Writing</a>
+        <a href="/live/">Production, live</a>
+        <a href="/now/">Now</a>
       </nav>
       <nav aria-label="Elsewhere">
         <h2>Elsewhere</h2>
@@ -618,7 +411,7 @@
     </div>
     <div class="foot-bottom">
       <span>© 2026 Het Patel</span>
-      <span>Hand-written HTML, CSS and JavaScript, served by nginx from the server in the diagram above.</span>
+      <span>Hand-written HTML, CSS and JavaScript, served by nginx from the server on the <a href="/live/">live page</a>.</span>
     </div>
   </footer>
 

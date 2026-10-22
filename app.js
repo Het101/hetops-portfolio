@@ -20,7 +20,26 @@ const hasGsap = !!(window.gsap && window.ScrollTrigger) && !reduce;
 if (hasGsap) gsap.registerPlugin(ScrollTrigger);
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 
-const scrollToId = (id) => { const el = document.getElementById(id); if (el) el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' }); };
+// Short hops glide. A long jump cuts instead (a quick fade, then there), so "Contact" does not scrub every
+// scene on the way down.
+const scrollToId = (id) => {
+  const el = document.getElementById(id);
+  if (!el) return;
+  if (reduce || Math.abs(el.getBoundingClientRect().top) < innerHeight * 2.5) { el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' }); return; }
+  const root = document.documentElement;
+  root.classList.add('cut');
+  setTimeout(() => { el.scrollIntoView({ behavior: 'instant' }); requestAnimationFrame(() => root.classList.remove('cut')); }, 160);
+};
+// Deep links (hetops.dev/#work from a résumé or LinkedIn): the browser jumps before the scenes above the
+// target have their height, and lands short. Land again once the page settles, unless the visitor has moved.
+(() => {
+  const el = location.hash.length > 1 && document.getElementById(decodeURIComponent(location.hash.slice(1)));
+  if (!el) return;
+  let moved = false;
+  for (const ev of ['wheel', 'touchstart', 'keydown', 'pointerdown']) addEventListener(ev, () => { moved = true; }, { once: true, passive: true });
+  const land = () => { if (!moved) el.scrollIntoView({ behavior: 'instant' }); };
+  addEventListener('load', () => { land(); setTimeout(land, 700); setTimeout(land, 1800); }, { once: true });
+})();
 document.addEventListener('click', (e) => {
   const a = e.target.closest('a[href^="#"]');
   if (!a) return;
@@ -43,8 +62,8 @@ const spy = new IntersectionObserver((entries) => {
 navLinks.forEach((a) => { const el = document.getElementById(a.dataset.nav); if (el) spy.observe(el); });
 
 const menu = $('#menu'), menuBtn = $('#menuBtn');
-function closeMenu() { if (menu.hidden) return; menu.hidden = true; menuBtn.setAttribute('aria-expanded', 'false'); menuBtn.querySelector('i').className = 'ph ph-list'; }
-menuBtn.addEventListener('click', () => {
+function closeMenu() { if (!menu || menu.hidden) return; menu.hidden = true; menuBtn.setAttribute('aria-expanded', 'false'); menuBtn.querySelector('i').className = 'ph ph-list'; }
+if (menuBtn) menuBtn.addEventListener('click', () => {
   const open = menu.hidden;
   menu.hidden = !open; menuBtn.setAttribute('aria-expanded', String(open));
   menuBtn.querySelector('i').className = open ? 'ph ph-x' : 'ph ph-list';
@@ -73,15 +92,16 @@ window.HETOPS = { PRODUCTS, track };
 
 // ── Command palette ─────────────────────────────────────────────
 const palette = $('#palette'), pInput = $('#paletteInput'), pList = $('#paletteList');
+if (palette) {
 const go = (id) => () => scrollToId(id);
 const open = (url) => () => window.open(url, '_blank', 'noopener');
 const ACTIONS = [
   { group: 'Sections', icon: 'ph-eye', label: 'Experience: read the chart', run: go('experience') },
   { group: 'Sections', icon: 'ph-magnifying-glass-plus', label: 'Work: under the lens', run: go('work') },
   { group: 'Sections', icon: 'ph-skull', label: 'Lab: break my real Kubernetes cluster', run: go('lab') },
-  { group: 'Sections', icon: 'ph-globe-hemisphere-west', label: 'Check a domain', run: go('check') },
-  { group: 'Sections', icon: 'ph-seal-check', label: 'Live: production I run myself', run: go('live') },
-  { group: 'Sections', icon: 'ph-circle-notch', label: 'How I ship', run: go('how-i-ship') },
+  { group: 'Sections', icon: 'ph-seal-check', label: 'Live: production I run myself', run: () => { location.href = '/live/'; } },
+  { group: 'Sections', icon: 'ph-circle-notch', label: 'Now: how I ship, what shipped lately', run: () => { location.href = '/now/'; } },
+  { group: 'Projects', icon: 'ph-globe-hemisphere-west', label: 'Check a domain', hint: 'dns.hetops.dev', run: open('https://dns.hetops.dev') },
   { group: 'Sections', icon: 'ph-pen-nib', label: 'Writing', run: go('writing') },
   { group: 'Sections', icon: 'ph-envelope-simple', label: 'Contact', run: go('contact') },
   ...PRODUCTS.filter((p) => p.url.startsWith('http')).map((p) => ({ group: 'Projects', img: p.icon, label: p.name, hint: p.link, run: open(p.url) })),
@@ -124,9 +144,11 @@ addEventListener('keydown', (e) => {
   if ((e.key === 'k' && (e.metaKey || e.ctrlKey)) || (e.key === '/' && !typing)) { e.preventDefault(); openPalette(); track('palette-open', { from: 'keyboard' }); }
 });
 if (/Mac|iPhone|iPad/.test(navigator.platform)) $('#paletteBtn kbd').textContent = '⌘K';
+}
 
 // ── Story: the active step drives the round stage ───────────────
 const steps = $$('.step'), panels = $$('.panel'), stageProg = $('#stageProg');
+if (stageProg) {
 const showStep = (i) => {
   steps.forEach((s, j) => s.classList.toggle('is-active', j === i));
   panels.forEach((p, j) => p.classList.toggle('is-active', j === i));
@@ -138,6 +160,7 @@ const storyObs = new IntersectionObserver((entries) => {
 }, { rootMargin: '-40% 0px -55% 0px' });
 steps.forEach((s) => storyObs.observe(s));
 addEventListener('beforeprint', () => panels.forEach((p) => p.classList.add('is-active')));
+}
 
 // ── Lens: a loupe over each screenshot, for reading the fine print ─
 if (finePointer) $$('.lens').forEach((lens) => {
@@ -155,7 +178,7 @@ if (finePointer) $$('.lens').forEach((lens) => {
 
 // Tallybank rule wires draw in when visible.
 $$('.rule-wire').forEach((w) => w.style.setProperty('--w', reduce ? 1 : 0));
-new IntersectionObserver(([e], ob) => {
+if ($('.rule')) new IntersectionObserver(([e], ob) => {
   if (!e.isIntersecting) return; ob.disconnect();
   $$('.rule-wire').forEach((w, i) => setTimeout(() => w.style.setProperty('--w', 1), 150 * i));
 }, { threshold: 0.4 }).observe($('.rule'));
@@ -163,6 +186,7 @@ new IntersectionObserver(([e], ob) => {
 // ── Release ring: the stages run in order, only while visible ───
 (() => {
   const pipe = $('#pipe'), ring = $('.ring'), prog = $('#ringProg');
+  if (!pipe) return;
   const items = $$('li', pipe), n = items.length;
   const labels = items.map((li, i) => {
     const s = document.createElement('span'); s.className = 'ring-stage'; s.style.setProperty('--a', `${(i / n) * 360}deg`);
@@ -185,6 +209,7 @@ new IntersectionObserver(([e], ob) => {
 // ── Contact: a small eye that closes as the page ends ───────────
 (() => {
   const up = $('#miniUp'), low = $('#miniLow'), clip = $('#miniClipPath'), pupil = $('#miniPupil');
+  if (!up) return;
   const st = { o: 1 };
   const draw = () => {
     const uy = 48 - 50.7 * st.o, ly = 48 + 50.7 * st.o * 0.85;
@@ -309,6 +334,7 @@ Promise.all(['threadvault', 'retirement-radar'].map((pkg) => getJSON(`https://ap
   });
 
 (async () => {
+  if (!$('#heatmap')) return;
   // ponytail: contributions come from a third-party public API; move to a server-side job if it disappears.
   const per = await Promise.all(ACCOUNTS.map(async (u) => {
     const [cal, repos, prs] = await Promise.all([
@@ -365,7 +391,8 @@ Promise.all(['threadvault', 'retirement-radar'].map((pkg) => getJSON(`https://ap
 
 // ── The estate: every service's health and every backup drill, live ──
 (() => {
-  const board = $('#estate'); if (!board) return;
+  const board = $('#estate');
+  if (!board && !$('[data-proof]')) return;
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const ago = (iso) => {
     const m = Math.max(0, Math.round((Date.now() - Date.parse(iso)) / 60000));
@@ -391,18 +418,18 @@ Promise.all(['threadvault', 'retirement-radar'].map((pkg) => getJSON(`https://ap
       getJSON('https://drill.hetops.dev/api/health'),
     ]);
     if (watch?.services) {
-      for (const s of watch.services) {
+      if (board) for (const s of watch.services) {
         const el = board.querySelector(`[data-svc="${CSS.escape(s.name)}"]`); if (!el) continue;
         el.dataset.state = s.up ? 'up' : 'down';
         document.querySelectorAll(`.wiring [data-svc="${CSS.escape(s.name)}"]`).forEach((w) => { w.dataset.state = s.up ? 'up' : 'down'; });
         show(el.querySelector('[data-ms]'), s.up ? ms(s.ms) : 'down');
       }
-      $('#estUp').textContent = `${watch.up}/${watch.total} up`;
+      if (board) $('#estUp').textContent = `${watch.up}/${watch.total} up`;
       const up = $('[data-proof="up"]');
       if (up) { up.hidden = false; up.dataset.state = watch.up === watch.total ? 'ok' : 'bad'; up.querySelector('b').textContent = `${watch.up}/${watch.total}`; }
-      $('#estAt').textContent = `Checked ${ago(watch.checkedAt)}. Drills run every ${drill?.every || '6 h'}.`;
+      if (board) $('#estAt').textContent = `Checked ${ago(watch.checkedAt)}. Drills run every ${drill?.every || '6 h'}.`;
     }
-    for (const d of drill?.drills || []) {
+    if (board) for (const d of drill?.drills || []) {
       const el = board.querySelector(`[data-drill="${CSS.escape(d.name)}"]`); if (!el || d.pending) continue;
       const k = (key) => el.querySelector(`[data-k="${key}"]`);
       const passed = (d.checks || []).filter((c) => c.ok).length;

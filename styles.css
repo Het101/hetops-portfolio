@@ -1251,3 +1251,20 @@ html.intro-landed .hero-copy > :nth-child(4) { transition-delay: 0.36s; }
   .links a, .more, .social a, .case-link, .foot-top nav a { display: inline-flex; align-items: center; min-height: 44px; }
   .work-index a, .skip { min-height: 44px; }
 }
+
+/* ── Flow (22 Oct): long jumps cut instead of scrubbing every scene; the pages the homepage now links to ── */
+main { transition: opacity 0.32s var(--ease); }
+html.cut main { opacity: 0; transition-duration: 0.16s; }
+.sub-main > section:first-child { padding-top: calc(var(--nav-h) + 96px); }
+.sub-main .estate h1, .now-hero h1 { font-size: clamp(2.6rem, 5vw, 4.2rem); font-stretch: 112%; font-weight: 760; letter-spacing: -0.045em; line-height: 0.98; margin-bottom: 20px; }
+.now-hero { padding-bottom: 0; }
+.now-hero .sub a, .hl-estate a { color: var(--moss-text); }
+.sub-main > section + section { padding-top: 140px; }
+.sub-main > section:last-child { padding-bottom: 140px; }
+.hl-more { margin-top: 40px; }
+.hl-estate { margin-top: 28px; padding-top: 28px; border-top: 1px solid var(--line); max-width: 62ch; color: var(--text-2); }
+.hl-estate .more { margin-left: 6px; }
+@media (max-width: 760px) {
+  .sub-main > section:first-child { padding-top: calc(var(--nav-h) + 56px); }
+  .sub-main > section + section { padding-top: 96px; }
+}
