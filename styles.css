@@ -19,6 +19,7 @@
 .ph-globe-hemisphere-west { --ph: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 256 256%22 fill=%22currentColor%22%3E%3Cpath d=%22M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm88,104a87.62,87.62,0,0,1-6.4,32.94l-44.7-27.49a15.92,15.92,0,0,0-6.24-2.23l-22.82-3.08a16.11,16.11,0,0,0-16,7.86h-8.72l-3.8-7.86a15.91,15.91,0,0,0-11-8.67l-8-1.73L96.14,104h16.71a16.06,16.06,0,0,0,7.73-2l12.25-6.76a16.62,16.62,0,0,0,3-2.14l26.91-24.34A15.93,15.93,0,0,0,166,49.1l-.36-.65A88.11,88.11,0,0,1,216,128ZM143.31,41.34,152,56.9,125.09,81.24,112.85,88H96.14a16,16,0,0,0-13.88,8l-8.73,15.23L63.38,84.19,74.32,58.32a87.87,87.87,0,0,1,69-17ZM40,128a87.53,87.53,0,0,1,8.54-37.8l11.34,30.27a16,16,0,0,0,11.62,10l21.43,4.61L96.74,143a16.09,16.09,0,0,0,14.4,9h1.48l-7.23,16.23a16,16,0,0,0,2.86,17.37l.14.14L128,205.94l-1.94,10A88.11,88.11,0,0,1,40,128Zm102.58,86.78,1.13-5.81a16.09,16.09,0,0,0-4-13.9,1.85,1.85,0,0,1-.14-.14L120,174.74,133.7,144l22.82,3.08,45.72,28.12A88.18,88.18,0,0,1,142.58,214.78Z%22/%3E%3C/svg%3E"); }
 .ph-house { --ph: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 256 256%22 fill=%22currentColor%22%3E%3Cpath d=%22M219.31,108.68l-80-80a16,16,0,0,0-22.62,0l-80,80A15.87,15.87,0,0,0,32,120v96a8,8,0,0,0,8,8h64a8,8,0,0,0,8-8V160h32v56a8,8,0,0,0,8,8h64a8,8,0,0,0,8-8V120A15.87,15.87,0,0,0,219.31,108.68ZM208,208H160V152a8,8,0,0,0-8-8H104a8,8,0,0,0-8,8v56H48V120l80-80,80,80Z%22/%3E%3C/svg%3E"); }
 .ph-linkedin-logo { --ph: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 256 256%22 fill=%22currentColor%22%3E%3Cpath d=%22M216,24H40A16,16,0,0,0,24,40V216a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V40A16,16,0,0,0,216,24Zm0,192H40V40H216V216ZM96,112v64a8,8,0,0,1-16,0V112a8,8,0,0,1,16,0Zm88,28v36a8,8,0,0,1-16,0V140a20,20,0,0,0-40,0v36a8,8,0,0,1-16,0V112a8,8,0,0,1,15.79-1.78A36,36,0,0,1,184,140ZM100,84A12,12,0,1,1,88,72,12,12,0,0,1,100,84Z%22/%3E%3C/svg%3E"); }
+.ph-github-logo { --ph: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 256 256%22 fill=%22currentColor%22%3E%3Cpath d=%22M208.31,75.68A59.78,59.78,0,0,0,202.93,28,8,8,0,0,0,196,24a59.75,59.75,0,0,0-48,24H124A59.75,59.75,0,0,0,76,24a8,8,0,0,0-6.93,4,59.78,59.78,0,0,0-5.38,47.68A58.14,58.14,0,0,0,56,104v8a56.06,56.06,0,0,0,48.44,55.47A39.8,39.8,0,0,0,96,192v8H72a24,24,0,0,1-24-24A40,40,0,0,0,8,136a8,8,0,0,0,0,16,24,24,0,0,1,24,24,40,40,0,0,0,40,40H96v16a8,8,0,0,0,16,0V192a24,24,0,0,1,48,0v40a8,8,0,0,0,16,0V192a39.8,39.8,0,0,0-8.44-24.53A56.06,56.06,0,0,0,216,112v-8A58.14,58.14,0,0,0,208.31,75.68ZM200,112a40,40,0,0,1-40,40H112a40,40,0,0,1-40-40v-8a41.74,41.74,0,0,1,6.9-22.48A8,8,0,0,0,80,73.83a43.81,43.81,0,0,1,.79-33.58,43.88,43.88,0,0,1,32.32,20.06A8,8,0,0,0,119.82,64h32.35a8,8,0,0,0,6.74-3.69,43.87,43.87,0,0,1,32.32-20.06A43.81,43.81,0,0,1,192,73.83a8.09,8.09,0,0,0,1,7.65A41.72,41.72,0,0,1,200,104Z%22/%3E%3C/svg%3E"); }
 .ph-list { --ph: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 256 256%22 fill=%22currentColor%22%3E%3Cpath d=%22M224,128a8,8,0,0,1-8,8H40a8,8,0,0,1,0-16H216A8,8,0,0,1,224,128ZM40,72H216a8,8,0,0,0,0-16H40a8,8,0,0,0,0,16ZM216,184H40a8,8,0,0,0,0,16H216a8,8,0,0,0,0-16Z%22/%3E%3C/svg%3E"); }
 .ph-lock-key-open { --ph: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 256 256%22 fill=%22currentColor%22%3E%3Cpath d=%22M208,80H96V56a32,32,0,0,1,32-32c15.37,0,29.2,11,32.16,25.59a8,8,0,0,0,15.68-3.18C171.32,24.15,151.2,8,128,8A48.05,48.05,0,0,0,80,56V80H48A16,16,0,0,0,32,96V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V96A16,16,0,0,0,208,80Zm0,128H48V96H208V208Zm-80-96a28,28,0,0,0-8,54.83V184a8,8,0,0,0,16,0V166.83A28,28,0,0,0,128,112Zm0,40a12,12,0,1,1,12-12A12,12,0,0,1,128,152Z%22/%3E%3C/svg%3E"); }
 .ph-magnifying-glass { --ph: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 256 256%22 fill=%22currentColor%22%3E%3Cpath d=%22M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z%22/%3E%3C/svg%3E"); }
@@ -1251,3 +1252,136 @@ html.intro-landed .hero-copy > :nth-child(4) { transition-delay: 0.36s; }
   .links a, .more, .social a, .case-link, .foot-top nav a { display: inline-flex; align-items: center; min-height: 44px; }
   .work-index a, .skip { min-height: 44px; }
 }
+
+/* ── The space instrument (22 Oct): the controls of a craft flying through the eye. Things you press are raised,
+   things that report are set in, one light from the top left. Three durations: 120 ms press, 320 ms release, 600 ms entrance. ── */
+:root {
+  --plate: #16191b; --plate-2: #1b1f21; --well: #0c0e0f; --glass: #07090a;
+  --raised: 0 1px 0 rgba(255, 255, 255, 0.09) inset, 0 -1px 0 rgba(0, 0, 0, 0.5) inset, 0 10px 22px -10px rgba(0, 0, 0, 0.8), 0 2px 4px -1px rgba(0, 0, 0, 0.62);
+  --inset: inset 0 2px 5px rgba(0, 0, 0, 0.8), inset 0 -1px 0 rgba(255, 255, 255, 0.055);
+  --pressed: inset 0 3px 8px rgba(0, 0, 0, 0.8), 0 1px 0 rgba(255, 255, 255, 0.055);
+  --t-press: 0.12s; --t-base: 0.32s; --t-enter: 0.6s;
+}
+
+/* Buttons and keys */
+.btn { border: 0; transition: background var(--t-base) var(--ease), box-shadow var(--t-base) var(--ease), translate var(--t-base) var(--ease); }
+.btn-gold:hover, .btn-line:hover { transform: none; translate: 0 -1px; }
+.btn:active, .btn-gold:active, .btn-line:active { transform: none; translate: 0 1px; transition-duration: var(--t-press); }
+.btn-gold {
+  background: linear-gradient(180deg, #f0bd5e, var(--gold) 55%, #d39a3a);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.45) inset, 0 -2px 0 rgba(0, 0, 0, 0.18) inset, 0 12px 24px -12px rgba(227, 169, 68, 0.55), 0 2px 4px -1px rgba(0, 0, 0, 0.62);
+}
+.btn-gold:hover { background: linear-gradient(180deg, #f5c86e, var(--gold-hi) 55%, #dba443); }
+.btn-gold:active { background: linear-gradient(180deg, #d39a3a, var(--gold)); box-shadow: inset 0 3px 7px rgba(70, 40, 0, 0.55), 0 1px 0 rgba(255, 255, 255, 0.055); }
+.btn-line { background: var(--plate-2); color: var(--text); box-shadow: var(--raised); }
+.btn-line:hover { background: #202528; }
+.btn-line:active { box-shadow: var(--pressed); }
+.key {
+  display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 16px; border: 0; border-radius: 999px;
+  background: var(--plate-2); box-shadow: var(--raised); color: var(--text); font: 600 14px var(--sans); white-space: nowrap; cursor: pointer;
+  text-decoration: none; transition: box-shadow var(--t-base) var(--ease), translate var(--t-base) var(--ease);
+}
+.key:hover { translate: 0 -1px; }
+.key:active { translate: 0 1px; box-shadow: var(--pressed); transition-duration: var(--t-press); }
+
+/* Nav: a recessed rail; the section you are in is a raised key. */
+.nav-links { gap: 2px; padding: 5px; border-radius: 999px; background: var(--well); box-shadow: var(--inset); }
+.nav-links a { padding: 8px 14px; border-radius: 999px; transition: color var(--t-base) var(--ease), background var(--t-base) var(--ease), box-shadow var(--t-base) var(--ease); }
+.nav-links a::after { display: none; }
+.nav-links a.active, .nav-links a[aria-current="page"] { background: var(--plate-2); box-shadow: var(--raised); color: var(--text); }
+.nav-btn, .nav-cv { border: 0; background: var(--plate-2); box-shadow: var(--raised); }
+.nav-btn:active, .nav-cv:active { box-shadow: var(--pressed); }
+
+/* Feedback and the palette */
+.toast { background: var(--plate-2); color: var(--text); box-shadow: var(--raised); font-weight: 600; padding: 12px 18px; border-radius: 14px; }
+.palette-box { background: var(--plate); border: 0; box-shadow: var(--raised), 0 40px 80px -30px rgba(0, 0, 0, 0.9); }
+.palette-search { margin: 12px 12px 4px; padding: 12px 14px; border: 0; border-radius: 12px; background: var(--well); box-shadow: var(--inset); }
+.palette-item { transition: background var(--t-base) var(--ease), box-shadow var(--t-base) var(--ease); }
+.palette-item[aria-selected="true"] { background: var(--plate-2); box-shadow: var(--raised); }
+.palette-item[aria-selected="true"] i { color: var(--gold); }
+
+/* Journey rail through the eye: a recessed groove that fills with gold; each stop a well, the current one a lit knob. */
+.inside-rail::before { right: 4px; width: 7px; border-radius: 7px; background: var(--well); box-shadow: var(--inset); }
+.inside-rail::after { right: 6px; width: 3px; border-radius: 3px; box-shadow: 0 0 10px rgba(227, 169, 68, 0.55); }
+.inside-rail button::after { border: 0; background: var(--well); box-shadow: var(--inset); }
+.inside-rail button.on::after { background: radial-gradient(circle at 40% 30%, #f5c86e, var(--gold) 60%, #b9842f); box-shadow: 0 0 0 3px rgba(227, 169, 68, 0.14), 0 0 14px rgba(227, 169, 68, 0.6); }
+.inside-rail button { transition: color var(--t-base) var(--ease); }
+
+/* Work index: the same recessed rail as the nav. */
+.work-index { border: 0; background: rgba(12, 14, 15, 0.9); box-shadow: var(--inset), 0 10px 30px -14px rgba(0, 0, 0, 0.9); }
+.work-index a.on { background: var(--plate-2); box-shadow: var(--raised); }
+
+/* The Threadvault stage: an instrument window, not a porthole. The gold line traces the frame as the story moves. */
+.stage {
+  width: min(100%, 560px); aspect-ratio: 5 / 4; border-radius: 22px; clip-path: none;
+  background: linear-gradient(180deg, var(--plate-2), var(--plate)); box-shadow: var(--raised);
+}
+.stage::before {
+  content: ""; position: absolute; inset: 12px; border-radius: 13px; pointer-events: none;
+  background: radial-gradient(120% 90% at 50% 0%, #131719, var(--glass) 70%); box-shadow: inset 0 3px 10px #000, 0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+.stage-ring { rotate: none; z-index: 1; pointer-events: none; }
+.stage-ring rect { fill: none; stroke: rgba(255, 255, 255, 0.05); stroke-width: 0.35; }
+.stage-ring .stage-prog { stroke: var(--gold); stroke-width: 0.45; stroke-linecap: round; stroke-dasharray: 100; filter: drop-shadow(0 0 4px rgba(227, 169, 68, 0.6)); }
+.stage .panel { inset: 9% 8%; z-index: 2; }
+.stage .big { font-size: 15cqw; }
+.stage-shot { border: 0; border-radius: 10px; box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06), 0 14px 30px -12px #000; }
+
+/* Screenshots: a rectangular magnifier, and they open like a shutter slit, never through a circle. */
+.loupe { width: 280px; height: 170px; margin: -85px 0 0 -140px; border-radius: 10px; border: 0; box-shadow: 0 0 0 2px var(--gold), 0 20px 40px -12px rgba(0, 0, 0, 0.85); }
+.pre-aperture { clip-path: inset(50% 0 50% 0 round 14px); transition: clip-path 1s cubic-bezier(0.65, 0, 0.2, 1); }
+.pre-aperture.apertured { clip-path: inset(0 0 0 0 round 14px); }
+.stage.pre-aperture { clip-path: inset(50% 0 50% 0 round 22px); }
+.stage.pre-aperture.apertured { clip-path: inset(-40px round 22px); }
+.ring.pre-aperture { clip-path: circle(0% at 50% 50%); }
+.ring.pre-aperture.apertured { clip-path: circle(50% at 50% 50%); }
+
+/* Contact: one recessed field holds the address, Copy and the gold key. */
+.copybox { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; width: fit-content; max-width: 100%; margin-top: 36px; padding: 8px 8px 8px 22px; border-radius: 999px; background: var(--well); box-shadow: var(--inset); }
+.copybox .addr { margin-right: 10px; font: 500 16px var(--mono); color: var(--text); }
+.copybox .key, .copybox .btn { height: 44px; padding: 0 20px; }
+.social { gap: 10px; margin-top: 18px; }
+.social a.key { color: var(--text); font-size: 14px; text-decoration: none; }
+.social a.key::after { display: none; }
+
+/* Phones: a dock within thumb reach on every page. */
+.dock { display: none; }
+@media (max-width: 760px) {
+  .dock {
+    position: fixed; left: 12px; right: 12px; bottom: max(12px, env(safe-area-inset-bottom)); z-index: 60;
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; padding: 5px; border-radius: 999px;
+    background: rgba(12, 14, 15, 0.92); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); box-shadow: var(--inset), 0 10px 30px -10px rgba(0, 0, 0, 0.9);
+  }
+  .dock a { display: grid; place-items: center; height: 46px; border-radius: 999px; color: var(--text-2); font-size: 14px; font-weight: 600; }
+  .dock a[aria-current="page"] { background: var(--plate-2); box-shadow: var(--raised); color: var(--text); }
+  .dock .dock-mail { color: var(--gold-ink); background: linear-gradient(180deg, #f0bd5e, var(--gold)); }
+  body { padding-bottom: 84px; }
+  .toast { bottom: 88px; }
+  .copybox { border-radius: 22px; padding: 14px; }
+  .copybox .addr { flex-basis: 100%; margin: 0 0 4px 6px; font-size: 15px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .btn, .key, .nav-links a, .pre-aperture { transition: none; }
+}
+@media (max-width: 760px) { .eye-body.docked { inset: auto 12px 88px auto; } }
+
+/* Hero: the same night sky the dive flies into, two star layers twinkling out of step. Pure CSS, no GPU cost. */
+.hero { position: relative; isolation: isolate; }
+.hero::before, .hero::after {
+  content: ""; position: absolute; z-index: -1; pointer-events: none; top: calc(-1 * var(--nav-h)); bottom: -12vh; left: calc(50% - 50vw); right: calc(50% - 50vw);
+  -webkit-mask-image: linear-gradient(transparent, #000 12%, #000 70%, transparent); mask-image: linear-gradient(transparent, #000 12%, #000 70%, transparent);
+}
+.hero::before {
+  background-image: radial-gradient(1px 1px at 23px 41px, rgba(207, 233, 255, 0.9), transparent), radial-gradient(1px 1px at 141px 12px, rgba(207, 233, 255, 0.7), transparent),
+    radial-gradient(1.5px 1.5px at 87px 163px, rgba(255, 255, 255, 0.85), transparent), radial-gradient(1px 1px at 211px 97px, rgba(207, 233, 255, 0.6), transparent),
+    radial-gradient(1px 1px at 182px 221px, rgba(240, 189, 94, 0.8), transparent), radial-gradient(1px 1px at 52px 238px, rgba(207, 233, 255, 0.55), transparent);
+  background-size: 260px 260px; animation: twinkle 6s ease-in-out infinite alternate;
+}
+.hero::after {
+  background-image: radial-gradient(1px 1px at 61px 77px, rgba(116, 211, 171, 0.8), transparent), radial-gradient(2px 2px at 297px 141px, rgba(255, 255, 255, 0.75), transparent),
+    radial-gradient(1px 1px at 173px 309px, rgba(207, 233, 255, 0.7), transparent), radial-gradient(1px 1px at 331px 23px, rgba(240, 189, 94, 0.6), transparent),
+    radial-gradient(1.5px 1.5px at 19px 341px, rgba(207, 233, 255, 0.65), transparent);
+  background-size: 370px 370px; animation: twinkle 9s ease-in-out -4s infinite alternate;
+}
+@keyframes twinkle { from { opacity: 0.35; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .hero::before, .hero::after { animation: none; opacity: 0.7; } }
