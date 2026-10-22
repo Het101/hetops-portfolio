@@ -1312,8 +1312,9 @@ html.intro-landed .hero-copy > :nth-child(4) { transition-delay: 0.36s; }
 .work-index a.on { background: var(--plate-2); box-shadow: var(--raised); }
 
 /* The Threadvault stage: an instrument window, not a porthole. The gold line traces the frame as the story moves. */
+/* It sticks below the work index (nav + 10px + ~56px), not under it, and shrinks to fit short windows. */
 .stage {
-  width: min(100%, 560px); aspect-ratio: 5 / 4; border-radius: 22px; clip-path: none;
+  top: calc(var(--nav-h) + 84px); width: min(100%, 560px, (100dvh - var(--nav-h) - 120px) * 1.25); aspect-ratio: 5 / 4; border-radius: 22px; clip-path: none;
   background: linear-gradient(180deg, var(--plate-2), var(--plate)); box-shadow: var(--raised);
 }
 .stage::before {
@@ -1364,6 +1365,7 @@ html.intro-landed .hero-copy > :nth-child(4) { transition-delay: 0.36s; }
   .btn, .key, .nav-links a, .pre-aperture { transition: none; }
 }
 @media (max-width: 760px) { .eye-body.docked { inset: auto 12px 88px auto; } }
+@media (max-width: 1024px) { .stage { top: calc(var(--nav-h) + 72px); } }
 
 /* Hero: the same night sky the dive flies into, two star layers twinkling out of step. Pure CSS, no GPU cost. */
 .hero { position: relative; isolation: isolate; }
