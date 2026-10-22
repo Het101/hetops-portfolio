@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Production I run myself · Het Patel</title>
+  <meta name="description" content="Six services on one server, watched from outside, backed up offsite, and every backup restored and checked every six hours. Live numbers.">
+  <link rel="canonical" href="https://hetops.dev/live/">
+  <meta name="theme-color" content="#08090a">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://hetops.dev/live/">
+  <meta property="og:title" content="Production I run myself · Het Patel">
+  <meta property="og:description" content="Six services on one server, watched from outside, backed up offsite, and every backup restored and checked every six hours. Live numbers.">
+  <meta property="og:image" content="https://hetops.dev/assets/og/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:image" content="https://hetops.dev/assets/og/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preload" href="/assets/fonts/Archivo.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/styles.css">
+  <script defer src="https://analytics.hetops.dev/script.js" data-website-id="3b6004b2-abef-471c-a807-fdacd7981321" data-domains="hetops.dev"></script>
+</head>
+<body class="sub-page">
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="nav scrolled" id="nav">
+    <a class="brand" href="/" aria-label="HetOps home"><svg class="brand-mark" aria-hidden="true" viewBox="10 22 80 56"><rect x="10" y="22" width="24" height="56" rx="5"/><rect x="66" y="22" width="24" height="56" rx="5"/><rect x="33" y="46" width="34" height="8"/><circle cx="50" cy="50" r="11"/></svg><span>HetOps</span></a>
+    <nav class="nav-links" aria-label="Sections">
+      <a href="/#experience">Experience</a>
+      <a href="/#work">Work</a>
+      <a href="/lab/">Lab</a>
+      <a href="/live/" aria-current="page">Live</a>
+      <a href="/#contact">Contact</a>
+    </nav>
+    <div class="nav-actions">
+      <a class="nav-cv" href="/Het_Patel_Resume.pdf" target="_blank" rel="noopener" data-umami-event="resume-download" data-umami-event-from="live">Résumé</a>
+    </div>
+  </header>
+  <main id="main" class="sub-main">
+    <!-- The estate: the production I run myself, live -->
+    <section class="estate wrap" id="live" data-section="estate" aria-labelledby="estate-h">
+      <header class="head">
+        <h1 id="estate-h">Production I run myself</h1>
+        <p class="sub">Six services on one server I pay for, held to the bar I keep at work: watched from outside, backed up offsite, and every backup restored and checked every six hours. The numbers below are live.</p>
+      </header>
+      <div class="estate-board" id="estate">
+        <div class="tier">
+          <p class="tier-k"><b>01</b>Watched</p>
+          <div class="watchers">
+            <a class="watcher" href="https://status.hetops.dev" target="_blank" rel="noopener" data-umami-event="outbound" data-umami-event-target="estate-status">
+              <img src="/assets/brand/status-icon.webp" width="40" height="40" alt="">
+              <span><b>Status</b><small>Probes every service from outside, every 60 seconds</small></span>
+            </a>
+            <span class="watch-link" aria-hidden="true"><i></i>watched by</span>
+            <div class="watcher">
+              <span class="watcher-ic"><i class="ph ph-terminal-window" aria-hidden="true"></i></span>
+              <span><b>Watchdog</b><small>GitHub Actions checks Status itself every 10 minutes</small></span>
+            </div>
+          </div>
+        </div>
+        <div class="tier">
+          <p class="tier-k"><b>02</b>Serving <span class="tier-n" id="estUp"></span></p>
+          <ul class="svcs">
+            <li class="svc" data-svc="hetops.dev"><i class="led"></i><b>hetops.dev</b><span data-ms>&nbsp;</span></li>
+            <li class="svc" data-svc="DNS Intelligence"><i class="led"></i><b>DNS Intelligence</b><span data-ms>&nbsp;</span><em>restore-tested</em></li>
+            <li class="svc" data-svc="Radar Cloud"><i class="led"></i><b>Radar Cloud</b><span data-ms>&nbsp;</span><em>restore-tested</em></li>
+            <li class="svc" data-svc="Dev Toolkit"><i class="led"></i><b>Dev Toolkit</b><span data-ms>&nbsp;</span></li>
+            <li class="svc" data-svc="Status"><i class="led"></i><b>Status</b><span data-ms>&nbsp;</span></li>
+            <li class="svc" data-svc="Analytics"><i class="led"></i><b>Analytics</b><span data-ms>&nbsp;</span><em>restore-tested</em></li>
+          </ul>
+        </div>
+        <div class="tier">
+          <p class="tier-k"><b>03</b>Restored</p>
+          <ol class="drills">
+            <li class="drill" data-drill="DNS Intelligence"><header><b>DNS Intelligence</b><span>SQLite</span><i class="stamp" data-k="stamp"></i></header>
+              <dl><div><dt>Backup age</dt><dd data-k="age">&nbsp;</dd></div><div><dt>Restored in</dt><dd data-k="restore">&nbsp;</dd></div><div><dt>Checks</dt><dd data-k="checks">&nbsp;</dd></div></dl>
+              <p data-k="when">Waiting for the drill</p></li>
+            <li class="drill" data-drill="Radar Cloud"><header><b>Radar Cloud</b><span>SQLite</span><i class="stamp" data-k="stamp"></i></header>
+              <dl><div><dt>Backup age</dt><dd data-k="age">&nbsp;</dd></div><div><dt>Restored in</dt><dd data-k="restore">&nbsp;</dd></div><div><dt>Checks</dt><dd data-k="checks">&nbsp;</dd></div></dl>
+              <p data-k="when">Waiting for the drill</p></li>
+            <li class="drill" data-drill="Analytics (Umami)"><header><b>Analytics</b><span>PostgreSQL</span><i class="stamp" data-k="stamp"></i></header>
+              <dl><div><dt>Backup age</dt><dd data-k="age">&nbsp;</dd></div><div><dt>Restored in</dt><dd data-k="restore">&nbsp;</dd></div><div><dt>Checks</dt><dd data-k="checks">&nbsp;</dd></div></dl>
+              <p data-k="when">Waiting for the drill</p></li>
+          </ol>
+        </div>
+        <p class="estate-foot"><span id="estAt">Live from the HetOps watch and Restore Drill APIs.</span>
+          <a href="https://drill.hetops.dev" target="_blank" rel="noopener" data-umami-event="outbound" data-umami-event-target="estate-drill">Drill evidence <i class="ph ph-arrow-up-right"></i></a>
+          <a href="https://status.hetops.dev" target="_blank" rel="noopener" data-umami-event="outbound" data-umami-event-target="estate-status-foot">Status page <i class="ph ph-arrow-up-right"></i></a></p>
+      </div>
+      <div class="wiring" aria-labelledby="wiring-h">
+        <h3 id="wiring-h">How it's wired</h3>
+        <div class="wire-grid">
+          <div class="wnode w-visit"><b>Visitors</b><small>HTTPS to *.hetops.dev</small></div>
+          <div class="wnode w-dns"><b>Cloudflare DNS</b><small>every hostname points at one server</small></div>
+          <div class="wlink w-a1" aria-hidden="true"><i></i><span>HTTPS</span></div>
+          <div class="wbox w-host">
+            <p class="wbox-k">One Oracle Cloud VM · Coolify · TLS at the proxy</p>
+            <ul>
+              <li data-svc="hetops.dev"><i class="led"></i>hetops.dev</li>
+              <li data-svc="DNS Intelligence"><i class="led"></i>DNS Intelligence<small>SQLite</small></li>
+              <li data-svc="Radar Cloud"><i class="led"></i>Radar Cloud<small>SQLite</small></li>
+              <li data-svc="Dev Toolkit"><i class="led"></i>Dev Toolkit</li>
+              <li data-svc="Analytics"><i class="led"></i>Analytics<small>Umami + PostgreSQL</small></li>
+              <li data-svc="Status"><i class="led"></i>Status<small>Uptime Kuma, every 60 s</small></li>
+              <li class="w-drill"><i class="led"></i>Restore Drill<small>restores every 6 h</small></li>
+            </ul>
+          </div>
+          <div class="wlink w-a2" aria-hidden="true"><i></i><span>backups, daily</span></div>
+          <div class="wlink w-a3 back" aria-hidden="true"><i></i><span>read-only restore</span></div>
+          <div class="wnode w-r2"><b>Cloudflare R2</b><small>offsite copies of every database</small></div>
+          <div class="wlink w-a4 back" aria-hidden="true"><i></i><span>deploy · watchdog</span></div>
+          <div class="wnode w-gh"><b>GitHub</b><small>CI on every PR; Actions checks Status every 10 min from outside</small></div>
+        </div>
+        <p class="sr">Visitors reach every HetOps hostname over HTTPS through Cloudflare DNS, all on one Oracle Cloud VM run by Coolify. Each database is backed up daily to Cloudflare R2, Restore Drill restores those backups with a read-only key every six hours, Uptime Kuma probes every service every minute, and a GitHub Actions watchdog checks the status page every ten minutes from outside.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer wrap">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <span class="brand"><svg class="brand-mark" aria-hidden="true" viewBox="10 22 80 56"><rect x="10" y="22" width="24" height="56" rx="5"/><rect x="66" y="22" width="24" height="56" rx="5"/><rect x="33" y="46" width="34" height="8"/><circle cx="50" cy="50" r="11"/></svg><span>HetOps</span></span>
+        <p>Het Patel, DevOps engineer in Mumbai. I turn production incidents into tools.</p>
+        <a class="watch-pill" href="https://status.hetops.dev" target="_blank" rel="noopener" data-watch hidden data-umami-event="outbound" data-umami-event-target="status-footer"><i></i><span></span></a>
+      </div>
+      <nav aria-label="Products">
+        <h2>Products</h2>
+        <a href="https://dns.hetops.dev" target="_blank" rel="noopener">DNS Intelligence</a>
+        <a href="https://radar.hetops.dev" target="_blank" rel="noopener">Radar Cloud</a>
+        <a href="https://drill.hetops.dev" target="_blank" rel="noopener">Restore Drill</a>
+        <a href="https://status.hetops.dev" target="_blank" rel="noopener">Status</a>
+        <a href="https://tools.hetops.dev" target="_blank" rel="noopener">Dev Toolkit</a>
+        <a href="https://www.npmjs.com/package/threadvault" target="_blank" rel="noopener">Threadvault on npm</a>
+        <a href="https://www.npmjs.com/package/retirement-radar" target="_blank" rel="noopener">Retirement Radar on npm</a>
+      </nav>
+      <nav aria-label="Case studies">
+        <h2>Case studies</h2>
+        <a href="/work/threadvault/">Threadvault</a>
+        <a href="/work/dns-intelligence/">DNS Intelligence</a>
+        <a href="/work/retirement-radar/">Retirement Radar</a>
+        <a href="/work/radar-cloud/">Radar Cloud</a>
+        <a href="/work/restore-drill/">Restore Drill</a>
+        <a href="/writing/">Writing</a>
+        <a href="/live/">Production, live</a>
+        <a href="/now/">Now</a>
+      </nav>
+      <nav aria-label="Elsewhere">
+        <h2>Elsewhere</h2>
+        <a href="https://github.com/Het101" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.linkedin.com/in/het11/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://medium.com/@het101" target="_blank" rel="noopener">Medium</a>
+        <a href="/Het_Patel_Resume.pdf" target="_blank" rel="noopener" data-umami-event="resume-download" data-umami-event-from="footer">Résumé (PDF)</a>
+        <a href="mailto:patel.x.het@gmail.com" data-umami-event="email-click" data-umami-event-from="footer">patel.x.het@gmail.com</a>
+      </nav>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Het Patel</span>
+      <span>Hand-written HTML, CSS and JavaScript, served by nginx from the server on the <a href="/live/">live page</a>.</span>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+  <script src="/app.js" defer></script>
+</body>
+</html>
