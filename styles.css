@@ -199,10 +199,6 @@ h3 { font-size: 24px; font-stretch: 108%; }
 }
 .orb-tool img { width: 32px; height: 32px; border-radius: 8px; }
 .orb-tool button:hover, .orb-tool button:focus-visible, .orb-tool.on button { border-color: var(--gold); scale: 1.16; }
-.orb-num, .orb-tag { white-space: nowrap; text-align: center; line-height: 1.15; }
-.orb-num b { display: block; font-size: 20px; font-stretch: 116%; font-weight: 760; color: var(--gold); font-variant-numeric: tabular-nums; }
-.orb-num span { font-size: 12px; color: var(--text-2); }
-.orb-tag span { display: inline-block; padding: 5px 12px; border-radius: 999px; border: 1px solid var(--line-2); background: rgba(8, 9, 10, 0.7); font-size: 12.5px; color: var(--text-2); }
 .eye-fallback { position: absolute; inset: 26%; border-radius: 50%; display: none; background: radial-gradient(circle, #050505 0 17%, #7a5420 18%, #b07a24 32%, #4f8a68 52%, #173328 66%, #cfc6b5 70%, #7b746a 100%); }
 .no-gl .eye-fallback { display: block; }
 
@@ -620,11 +616,8 @@ a.watcher:hover { border-color: var(--line-2); }
   .nav-cv { display: none; }
   .hero { grid-template-columns: minmax(0, 1fr); padding: calc(var(--nav-h) + 8px) 20px 40px; gap: 8px; align-content: start; }
   .eye-stage { order: -1; max-height: none; width: calc(100% + 24px); margin: 0 -12px; aspect-ratio: 1.2; }
-  .orb-tag { display: none; }
   .orb-tool button { width: 40px; height: 40px; }
   .orb-tool img { width: 24px; height: 24px; border-radius: 6px; }
-  .orb-num b { font-size: 16px; }
-  .orb-num span { font-size: 12px; }
   .eye-caption { min-height: 0; margin-top: 26px; }
   .exp, .work, .check, .ship, .words, .activity, .writing { padding-top: 112px; }
   .head { margin-bottom: 40px; }
@@ -733,29 +726,7 @@ html.intro .intro-overlay.gone { opacity: 0; pointer-events: none; }
 .scope.scanning::after { animation-duration: 1.1s; }
 
 /* ── Inside the eye: a pinned 3D flight driven by scroll ───────── */
-.inside { position: relative; height: 620vh; }
-.inside-sticky { position: sticky; top: 0; height: 100dvh; overflow: hidden; }
-.inside-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-.inside-caps { position: absolute; inset: 0; pointer-events: none; }
-.inside-cap {
-  position: absolute; left: max(32px, calc((100vw - 1180px) / 2 + 32px)); bottom: 12vh; max-width: 560px;
-  opacity: 0; transform: translateY(18px); filter: blur(6px); transition: opacity 0.6s var(--ease), transform 0.6s var(--ease), filter 0.6s var(--ease);
-}
-.inside-cap.on { opacity: 1; transform: none; filter: none; }
-.inside-cap h2 { font-size: clamp(2rem, 4vw, 3.4rem); text-shadow: 0 2px 30px rgba(0, 0, 0, 0.8); }
-.inside-cap h2 span { color: var(--gold); font-variant-numeric: tabular-nums; }
-.inside-cap p { margin-top: 12px; font-size: 18px; color: var(--text-2); max-width: 44ch; text-shadow: 0 1px 16px rgba(0, 0, 0, 0.9); }
 /* Without WebGL or with reduced motion: the stops as a plain list. */
-.inside.static { height: auto; padding-top: 140px; }
-.inside.static .inside-sticky { position: static; height: auto; overflow: visible; }
-.inside.static .inside-canvas { display: none; }
-.inside.static .inside-caps { position: static; display: grid; gap: 48px; width: 100%; max-width: var(--wrap); margin: 0 auto; padding: 0 32px; }
-.inside.static .inside-cap { position: static; opacity: 1; transform: none; filter: none; max-width: 640px; }
-@media (max-width: 760px) {
-  .inside { height: 520vh; }
-  .inside-cap { left: 20px; right: 20px; bottom: 10vh; }
-  .inside-cap p { font-size: 16px; }
-}
 
 /* ── Break production ─────────────────────────────────────────── */
 /* Home: the real lab. Defence in depth drawn as an iris; hover a ring to light the rows that guard it. */
@@ -840,35 +811,8 @@ html.intro .intro-overlay.gone { opacity: 0; pointer-events: none; }
 
 /* ── Polish: flow between sections ──────────────────────────── */
 /* The journey fades in from the page and back out into it; no hard edges. */
-.inside::before, .inside::after { content: ""; position: absolute; left: 0; right: 0; height: 28vh; z-index: 3; pointer-events: none; }
-.inside::before { top: 0; background: linear-gradient(var(--ink), transparent); }
-.inside::after { bottom: 0; background: linear-gradient(transparent, var(--ink)); }
-.inside.static::before, .inside.static::after { display: none; }
 
 /* Journey rail: the five stops, current one lit. */
-.inside-rail { position: absolute; right: max(24px, calc((100vw - 1180px) / 2)); top: 50%; translate: 0 -50%; z-index: 2; display: grid; gap: 4px; width: 150px; }
-.inside-rail li { display: flex; justify-content: flex-end; }
-.inside-rail::before { content: ""; position: absolute; right: 7px; top: 14px; bottom: 14px; width: 1px; background: var(--line-2); }
-.inside-rail::after {
-  content: ""; position: absolute; right: 7px; top: 14px; width: 1px; height: calc((100% - 28px) * var(--journey, 0));
-  background: var(--gold); transition: height 0.2s linear;
-}
-.inside-rail button {
-  position: relative; width: 100%; display: flex; align-items: center; justify-content: flex-end; gap: 12px; min-height: 36px; padding: 0 0 0 12px;
-  background: none; border: 0; cursor: pointer; color: var(--text-3); font: 500 13px var(--sans); transition: color 0.3s;
-}
-.inside-rail button::after {
-  content: ""; width: 15px; height: 15px; border-radius: 50%; border: 1px solid var(--line-2); background: var(--ink);
-  transition: background 0.3s, border-color 0.3s, scale 0.4s var(--ease);
-}
-.inside-rail button span { opacity: 0; }
-.inside-rail button:hover, .inside-rail button.on { color: var(--text); }
-.inside-rail button.on::after { background: var(--gold); border-color: var(--gold); scale: 1.15; }
-.inside.static .inside-rail { display: none; }
-@media (max-width: 760px) {
-  .inside-rail { right: 12px; top: auto; bottom: 34vh; translate: none; width: 15px; }
-  .inside-rail button { font-size: 0; gap: 0; min-height: 28px; }
-}
 
 /* Reading progress: a hairline under the nav, driven by the scroll itself. */
 @supports (animation-timeline: scroll()) {
@@ -905,9 +849,6 @@ html.intro-landed .hero-copy > :nth-child(4) { transition-delay: 0.36s; }
   html.intro .hero-copy > * { opacity: 1; filter: none; transform: none; }
 }
 /* Only the current stop is named; hovering the rail names them all. */
-.inside-rail button:not(.on) { color: transparent; }
-.inside-rail:hover button, .inside-rail:focus-within button { color: var(--text-3); }
-.inside-rail:hover button.on, .inside-rail button.on { color: var(--text); }
 /* The watcher sleeps in the bottom-right corner at the end of the page; keep the footer clear of it. */
 .footer { padding-right: max(32px, 168px); }
 @media (max-width: 760px) { .footer { padding-right: 20px; padding-bottom: 120px; } }
@@ -923,8 +864,6 @@ html.intro-landed .hero-copy > :nth-child(4) { transition-delay: 0.36s; }
 .watch-pill[data-state="degraded"] i { background: var(--gold); box-shadow: 0 0 0 3px rgba(227, 169, 68, 0.2); }
 .watch-pill[data-state="down"] i { background: var(--err); box-shadow: 0 0 0 3px rgba(239, 122, 100, 0.2); }
 @keyframes livePulse { 50% { box-shadow: 0 0 0 6px rgba(116, 211, 171, 0); } }
-.hero-watch { position: absolute; left: 50%; bottom: 6%; translate: -50% 0; z-index: 4; }
-.eye-stage:not(.awake) .hero-watch { opacity: 0; }
 .dock-watch { display: none; }
 .docked .dock-watch { display: inline-flex; position: absolute; right: 0; bottom: calc(100% + 8px); }
 
@@ -1246,7 +1185,6 @@ html.intro-landed .hero-copy > :nth-child(4) { transition-delay: 0.36s; }
 /* Touch screens: every control at least 44px (critique, 22 Oct). Inline links inside sentences are exempt. */
 @media (pointer: coarse) {
   .orb-tool button { width: 44px; height: 44px; }
-  .inside-rail button { min-height: 44px; }
   .proof a, .watch-pill { min-height: 44px; }
   .links a, .more, .social a, .case-link, .foot-top nav a { display: inline-flex; align-items: center; min-height: 44px; }
   .work-index a, .skip { min-height: 44px; }
@@ -1267,4 +1205,52 @@ html.cut main { opacity: 0; transition-duration: 0.16s; }
 @media (max-width: 760px) {
   .sub-main > section:first-child { padding-top: calc(var(--nav-h) + 56px); }
   .sub-main > section + section { padding-top: 96px; }
+}
+
+/* ── Hero (22 Oct): the eye sits in a lens housing; one status rail; the caption appears only for a picked tool ── */
+.eye-housing {
+  position: absolute; left: 50%; top: 50%; width: calc(var(--eye-r, 120px) * 2.72); aspect-ratio: 1; translate: -50% -50%;
+  border-radius: 50%; pointer-events: none;
+  background: conic-gradient(from 215deg, #5b6266, #1b1f22 18%, #3b4246 32%, #15181a 50%, #4a5155 66%, #1b1f22 82%, #5b6266);
+  -webkit-mask: radial-gradient(closest-side, transparent 0 85%, #000 85.6%); mask: radial-gradient(closest-side, transparent 0 85%, #000 85.6%);
+  filter: drop-shadow(0 24px 40px rgba(0, 0, 0, 0.7));
+}
+/* the inner bevel: a hairline of gold where the glass meets the metal, and a soft edge on the outside */
+.eye-housing::after {
+  content: ""; position: absolute; inset: 0; border-radius: 50%;
+  background: radial-gradient(closest-side, transparent 0 85.4%, rgba(227, 169, 68, 0.55) 85.6%, rgba(227, 169, 68, 0) 87%, transparent 98%, rgba(255, 255, 255, 0.12) 99.4%, transparent 100%);
+}
+.eye-canvas { z-index: 1; }
+.eye-body.docked .eye-housing { width: calc(var(--eye-r, 50px) * 2.3); }
+.eye-caption:empty { visibility: hidden; }
+.proof { gap: 10px; }
+.proof a {
+  gap: 10px; padding: 10px 14px; border: 0; border-radius: 13px; background: #0c0e0f; font-size: 14px;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.8), inset 0 -1px 0 rgba(255, 255, 255, 0.055);
+}
+.proof a:hover { background: #101314; }
+.proof .led { width: 9px; height: 9px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #b7f3d8, var(--moss) 55%, #1f6b50); box-shadow: 0 0 0 3px rgba(69, 184, 141, 0.12), 0 0 9px rgba(69, 184, 141, 0.45); }
+
+/* ── The aperture: the iris opens and the pupil (the page's own ground) fills the screen ── */
+.aperture { position: relative; height: 170vh; --p: 0; }
+.ap-sticky { position: sticky; top: 0; height: 100dvh; overflow: hidden; display: grid; place-items: center; }
+.ap-iris {
+  position: relative; width: min(64vmin, 560px); aspect-ratio: 1; border-radius: 50%;
+  background:
+    repeating-conic-gradient(from 3deg, rgba(0, 0, 0, 0.22) 0 1.2deg, transparent 1.2deg 3.4deg),
+    radial-gradient(circle, #3a2a12 26%, #b4842f 40%, #d8a64c 49%, #8a6424 58%, #4f8f6f 70%, #1f3a2e 82%, #0b0d0e 90%, var(--ink) 92%);
+  transform: scale(calc(0.62 + var(--p) * var(--p) * 5.4));
+  opacity: calc(1 - max(0, var(--p) - 0.82) * 5.5);
+  will-change: transform;
+}
+.ap-pupil { position: absolute; left: 50%; top: 50%; width: calc(26% + var(--p) * 70%); aspect-ratio: 1; translate: -50% -50%; border-radius: 50%; background: var(--ink); box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.6); }
+.ap-cap {
+  position: absolute; left: 50%; bottom: 12vh; translate: -50% 0; margin: 0; width: max-content; max-width: calc(100vw - 40px);
+  text-align: center; font-size: 18px; color: var(--text-2); opacity: calc(1 - var(--p) * 1.9);
+}
+@media (prefers-reduced-motion: reduce) {
+  .aperture { height: auto; padding: 120px 0 40px; }
+  .ap-sticky { position: static; height: auto; gap: 28px; }
+  .ap-iris { width: min(40vmin, 280px); transform: none; }
+  .ap-cap { position: static; translate: none; opacity: 1; }
 }
