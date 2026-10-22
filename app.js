@@ -149,7 +149,7 @@ if (finePointer) $$('.lens').forEach((lens) => {
     loupe.style.left = x + 'px'; loupe.style.top = y + 'px';
     loupe.style.backgroundImage = `url("${img.currentSrc || img.src}")`;
     loupe.style.backgroundSize = `${r.width * Z}px auto`;
-    loupe.style.backgroundPosition = `${-(x * Z - 95)}px ${-(y * Z - 95)}px`;
+    loupe.style.backgroundPosition = `${-(x * Z - 140)}px ${-(y * Z - 85)}px`; // half the 280x170 window
   });
 });
 

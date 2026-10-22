@@ -192,7 +192,7 @@
             </li>
           </ol>
           <div class="stage" aria-hidden="true">
-            <svg class="stage-ring" viewBox="0 0 100 100"><circle cx="50" cy="50" r="48"/><circle class="stage-prog" id="stageProg" cx="50" cy="50" r="48" pathLength="100"/></svg>
+            <svg class="stage-ring" viewBox="0 0 125 100"><rect x="0.3" y="0.3" width="124.4" height="99.4" rx="4.9"/><rect class="stage-prog" id="stageProg" x="0.3" y="0.3" width="124.4" height="99.4" rx="4.9" pathLength="100"/></svg>
             <div class="panel is-active" data-panel="0">
               <span class="big">7,200</span><span class="big-lbl">threads replayed</span>
               <div class="flow"><span class="fnode">Old resource</span><span class="wire"><i></i></span><span class="fnode">New resource</span></div>
@@ -568,15 +568,16 @@
       <svg class="mini-eye" id="miniEye" viewBox="0 0 240 96" aria-hidden="true"><defs><clipPath id="miniClip"><path id="miniClipPath"/></clipPath></defs><g clip-path="url(#miniClip)"><circle class="mini-iris" cx="120" cy="48" r="34"/><circle class="mini-pupil" id="miniPupil" cx="120" cy="48" r="13"/></g><path class="mini-lid" id="miniUp"/><path class="mini-lid low" id="miniLow"/></svg>
       <h2>Got a production problem worth solving?</h2>
       <p>Infrastructure, migrations, or a tool that should exist. I reply to every email.</p>
-      <div class="contact-row">
-        <a class="btn btn-gold btn-lg" id="contactEmail" href="mailto:patel.x.het@gmail.com" data-umami-event="email-click" data-umami-event-from="contact"><i class="ph ph-envelope-simple" aria-hidden="true"></i>Email me</a>
-        <button class="copy" type="button" data-copy="patel.x.het@gmail.com" data-umami-event="email-copy">patel.x.het@gmail.com <i class="ph ph-copy" aria-hidden="true"></i></button>
+      <div class="copybox">
+        <span class="addr">patel.x.het@gmail.com</span>
+        <button class="key" type="button" data-copy="patel.x.het@gmail.com" data-umami-event="email-copy"><i class="ph ph-copy" aria-hidden="true"></i>Copy</button>
+        <a class="btn btn-gold" id="contactEmail" href="mailto:patel.x.het@gmail.com" data-umami-event="email-click" data-umami-event-from="contact"><i class="ph ph-envelope-simple" aria-hidden="true"></i>Email me</a>
       </div>
       <div class="social">
-        <a href="https://www.linkedin.com/in/het11/" target="_blank" rel="noopener" data-umami-event="outbound" data-umami-event-target="linkedin">LinkedIn</a>
-        <a href="https://github.com/Het101" target="_blank" rel="noopener" data-umami-event="outbound" data-umami-event-target="github">GitHub</a>
-        <a href="https://medium.com/@het101" target="_blank" rel="noopener" data-umami-event="outbound" data-umami-event-target="medium">Medium</a>
-        <a href="/Het_Patel_Resume.pdf" target="_blank" rel="noopener" data-umami-event="resume-download" data-umami-event-from="contact">Résumé</a>
+        <a class="key" href="https://www.linkedin.com/in/het11/" target="_blank" rel="noopener" data-umami-event="outbound" data-umami-event-target="linkedin"><i class="ph ph-linkedin-logo" aria-hidden="true"></i>LinkedIn</a>
+        <a class="key" href="https://github.com/Het101" target="_blank" rel="noopener" data-umami-event="outbound" data-umami-event-target="github"><i class="ph ph-github-logo" aria-hidden="true"></i>GitHub</a>
+        <a class="key" href="https://medium.com/@het101" target="_blank" rel="noopener" data-umami-event="outbound" data-umami-event-target="medium"><i class="ph ph-pen-nib" aria-hidden="true"></i>Medium</a>
+        <a class="key" href="/Het_Patel_Resume.pdf" target="_blank" rel="noopener" data-umami-event="resume-download" data-umami-event-from="contact"><i class="ph ph-file-text" aria-hidden="true"></i>Résumé</a>
       </div>
     </section>
   </main>
@@ -630,5 +631,6 @@
   <script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/" } }</script>
   <script type="module" src="/eye3d.js"></script>
   <script type="module" src="/home-lab.js"></script>
+  <nav class="dock" aria-label="Quick links"><a href="#work">Work</a><a href="/lab/">Lab</a><a href="#lab">Live</a><a class="dock-mail" href="mailto:patel.x.het@gmail.com" data-umami-event="email-click" data-umami-event-from="dock">Email</a></nav>
 </body>
 </html>
