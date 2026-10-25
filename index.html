@@ -384,8 +384,10 @@
           <div class="wnode w-r2"><b>Cloudflare R2</b><small>offsite copies of every database</small></div>
           <div class="wlink w-a4 back" aria-hidden="true"><i></i><span>deploy · watchdog</span></div>
           <div class="wnode w-gh"><b>GitHub</b><small>CI on every PR; Actions checks Status every 10 min from outside</small></div>
+          <div class="wnode w-stage"><b>Staging VM</b><small>a second Oracle VM: every server change lands here first (Ansible)</small></div>
+          <div class="wlink w-a5" aria-hidden="true"><i></i><span>then live</span></div>
         </div>
-        <p class="sr">Visitors reach every HetOps hostname over HTTPS through Cloudflare DNS, all on one Oracle Cloud VM run by Coolify. Each database is backed up daily to Cloudflare R2, Restore Drill restores those backups with a read-only key every six hours, Uptime Kuma probes every service every minute, and a GitHub Actions watchdog checks the status page every ten minutes from outside.</p>
+        <p class="sr">Visitors reach every HetOps hostname over HTTPS through Cloudflare DNS, all on one Oracle Cloud VM run by Coolify. Each database is backed up daily to Cloudflare R2, Restore Drill restores those backups with a read-only key every six hours, Uptime Kuma probes every service every minute, and a GitHub Actions watchdog checks the status page every ten minutes from outside. A second Oracle VM is staging: Ansible applies every server change and Kubernetes upgrade there first, and only then to the live server.</p>
       </div>
     </section>
 

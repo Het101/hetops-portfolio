@@ -416,9 +416,10 @@ a.watcher:hover { border-color: var(--line-2); }
 .wiring { margin-top: 18px; padding: 34px 44px 30px; border: 1px solid var(--line); border-radius: 22px; background: var(--ink-2); }
 .wiring h3 { font-size: 19px; margin-bottom: 26px; }
 .wire-grid { display: grid; grid-template-columns: minmax(0, 0.9fr) 110px minmax(0, 1.5fr) 130px minmax(0, 0.9fr);
-  grid-template-areas: "visit a1 host a2 r2" "dns . host a3 r2" ". . host a4 gh"; gap: 12px 0; align-items: center; }
+  grid-template-areas: "visit a1 host a2 r2" "dns . host a3 r2" "stage a5 host a4 gh"; gap: 12px 0; align-items: center; }
 .w-visit { grid-area: visit; } .w-dns { grid-area: dns; } .w-host { grid-area: host; } .w-r2 { grid-area: r2; } .w-gh { grid-area: gh; }
 .w-a1 { grid-area: a1; } .w-a2 { grid-area: a2; } .w-a3 { grid-area: a3; } .w-a4 { grid-area: a4; }
+.w-stage { grid-area: stage; } .w-a5 { grid-area: a5; }
 .wnode { display: grid; gap: 4px; padding: 14px 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--ink); }
 .wnode b { font-size: 15px; }
 .wnode small { font-size: 12.5px; color: var(--text-3); line-height: 1.45; }
@@ -441,7 +442,7 @@ a.watcher:hover { border-color: var(--line-2); }
 .wlink i { position: absolute; left: 8px; right: 8px; top: calc(50% - 3px); height: 6px; opacity: 0.95;
   background: radial-gradient(circle, var(--gold-hi) 0 2.4px, transparent 3px) 0 0 / 6px 6px no-repeat; animation: packet 2.6s linear infinite; }
 .wlink.back i { animation-direction: reverse; }
-.w-a2 i { animation-delay: -0.9s; } .w-a3 i { animation-delay: -1.7s; } .w-a4 i { animation-delay: -0.4s; animation-duration: 3.4s; }
+.w-a2 i { animation-delay: -0.9s; } .w-a3 i { animation-delay: -1.7s; } .w-a4 i { animation-delay: -0.4s; animation-duration: 3.4s; } .w-a5 i { animation-delay: -2.1s; }
 @keyframes packet { from { background-position: 0 0; opacity: 0; } 12% { opacity: 1; } 88% { opacity: 1; } to { background-position: 100% 0; opacity: 0; } }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
@@ -607,8 +608,8 @@ a.watcher:hover { border-color: var(--line-2); }
   .foot-top { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px 20px; }
   .foot-brand { grid-column: 1 / -1; }
   .wiring { padding: 24px 18px; }
-  .wire-grid { grid-template-columns: minmax(0, 1fr); grid-template-areas: "visit" "dns" "a1" "host" "a2" "r2" "a3" "a4" "gh"; gap: 8px; }
-  .w-a3, .w-a4 { display: none; }
+  .wire-grid { grid-template-columns: minmax(0, 1fr); grid-template-areas: "visit" "dns" "a1" "host" "a2" "r2" "a3" "a4" "gh" "stage" "a5"; gap: 8px; }
+  .w-a3, .w-a4, .w-a5 { display: none; }
   .wlink { height: 40px; }
   .wlink::before { left: 50%; right: auto; top: 4px; bottom: 6px; width: 1px; height: auto; background: repeating-linear-gradient(var(--gold) 0 5px, transparent 5px 9px); }
   .wlink::after { right: auto; left: calc(50% - 4px); top: auto; bottom: 2px; border: 4px solid transparent; border-top: 6px solid var(--gold); border-bottom: 0; }
