@@ -139,23 +139,25 @@
         <li><span class="lab-watch-k">Runtime</span><p>Falco watches system calls on the node and reports what actually ran inside a container, down to the command.</p></li>
         <li><span class="lab-watch-k">Edge</span><p>CrowdSec spots scanners in the access logs, and their IP is blocked at Cloudflare&rsquo;s edge within two minutes. Its agent signs in with a certificate (mTLS, issued by cert-manager), so it comes back on its own after a reboot.</p></li>
         <li><span class="lab-watch-k">Images</span><p>Every running image is scanned weekly. The first scan found 75 high and critical CVEs; today it finds none.</p></li>
+        <li><span class="lab-watch-k">Outside</span><p>All of the above runs on this server, so if it dies, so does the alarm. A second server, in a separate Oracle account, checks every public site each minute and alerts on Telegram. The two also watch each other: if this server&rsquo;s alerting goes quiet for five minutes, the outside watcher raises the alarm; if the watcher stops, this server sends an email. Both directions were tested by switching each side off.</p></li>
       </ul>
     </section>
 
     <!-- Below Kubernetes: Bedrock, the servers themselves as Ansible. Figures come from the rebuild job on GitHub. -->
     <section class="lab-watch lab-bedrock" aria-labelledby="lab-bedrock-h">
       <h2 id="lab-bedrock-h">Below Kubernetes</h2>
-      <p class="lab-watch-sub">The servers under the cluster are code too. Every change rebuilds a server from a blank machine, and the same playbook, run against both live servers, finds nothing to change.</p>
+      <p class="lab-watch-sub">The servers under the cluster are code too. Every change rebuilds a server from a blank machine, and the same playbook, run against every live server, finds nothing to change.</p>
       <dl id="lab-bedrock-proof" class="lab-bedrock-proof">
         <div><dt>Blank machine to a running cluster</dt><dd id="lab-bedrock-secs">85 s</dd></div>
         <div><dt>Changes on a second run</dt><dd id="lab-bedrock-again">0</dd></div>
         <div><dt>Last proven</dt><dd><a id="lab-bedrock-run" href="https://github.com/Het101/hetops-k8s-lab/actions/workflows/bedrock.yml" target="_blank" rel="noopener">21 Oct 2026</a></dd></div>
       </dl>
       <ul class="lab-watch-list">
-        <li><span class="lab-watch-k">Fleet</span><p>Two servers: this one, and a second Oracle VM that joined on 25 Oct as staging. Patches and Kubernetes upgrades land there first; if anything fails, the run stops before it reaches this one. Every night the whole fleet is checked against git, and any drift shows on the change timeline.</p></li>
+        <li><span class="lab-watch-k">Fleet</span><p>Three servers: this one; a second Oracle VM, staging since 25 Oct, where patches and Kubernetes upgrades land first, and if anything fails the run stops before it reaches this one; and since 28 Oct a third, in its own Oracle account, running a small ops cluster for the tools that watch this one. Every night the whole fleet is checked against git, and any drift shows on the change timeline.</p></li>
         <li><span class="lab-watch-k">OS</span><p>SSH takes keys only, three tries, and drops dead sessions. A pending reboot is reported, never done: the same server runs every live site.</p></li>
         <li><span class="lab-watch-k">Runtime</span><p>One containerd runs both the cluster and the sites, so it is pinned and held. A routine upgrade can no longer restart everything at once.</p></li>
         <li><span class="lab-watch-k">Upgrades</span><p>Kubernetes went from 1.31 to 1.32 after a rehearsal on a throwaway cluster. The first live try failed safely and rolled back; the rehearsal then reproduced that exact half-upgraded state before the second try. Audit logging survived, and 16 of 16 experiments still healed afterwards. 1.32 is now past end of life, so the next three steps went through staging first: it reached 1.35 on 25 Oct, etcd 3.6 included, and this cluster followed the same morning. The live sites answered every one of 593 checks during the upgrade.</p></li>
+        <li><span class="lab-watch-k">Network</span><p>Linking the servers over Tailscale exposed a clash: Calico marked every packet leaving a pod with the very bit Tailscale reads as &ldquo;skip the tunnel&rdquo;, so replies left by the public network card and vanished. A packet capture proved it. Calico now uses a mark range clear of Tailscale&rsquo;s, set by Ansible on every server, and a CI test fails if the two ever overlap again.</p></li>
         <li><span class="lab-watch-k">Rebuild</span><p>The first rebuild found what the live server quietly depended on: a directory SSH creates on first login, a package nobody listed, a second copy of Ansible. Each is now in code.</p></li>
       </ul>
       <p class="lab-bedrock-src">Ansible, in <a href="https://github.com/Het101/hetops-k8s-lab/tree/main/bedrock" target="_blank" rel="noopener">bedrock/</a> of the lab repo.</p>
