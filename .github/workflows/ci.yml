@@ -18,7 +18,7 @@ jobs:
       # before it runs, and this is the only thing that notices something
       # misbehaving while it runs. Audit mode records destinations without
       # blocking, which is what an allowlist for block mode has to be built from.
-      - uses: step-security/harden-runner@e14015d583714f6e62063499dc959a02595150a1 # v2.21.1
+      - uses: step-security/harden-runner@dc2769abcc0fcfbadfc1df54081c1608579ef6b2 # v2.22.2
         with:
           egress-policy: audit
 
@@ -126,7 +126,7 @@ jobs:
     steps:
       # First step on purpose, so it sees every step after it. Audit mode
       # records network destinations without blocking.
-      - uses: step-security/harden-runner@e14015d583714f6e62063499dc959a02595150a1 # v2.21.1
+      - uses: step-security/harden-runner@dc2769abcc0fcfbadfc1df54081c1608579ef6b2 # v2.22.2
         with:
           egress-policy: audit
 
